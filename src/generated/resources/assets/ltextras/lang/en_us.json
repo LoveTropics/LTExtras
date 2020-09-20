@@ -1,0 +1,10 @@
+{
+  "block.ltextras.buoy": "Buoy",
+  "block.ltextras.gold_block_fence": "Gold Block Fence",
+  "block.ltextras.gold_block_stairs": "Gold Block Stairs",
+  "block.ltextras.gold_block_wall": "Gold Block Wall",
+  "block.ltextras.quartz_block_fence": "Quartz Block Fence",
+  "block.ltextras.quartz_block_wall": "Quartz Block Wall",
+  "block.ltextras.water_barrier": "Water Barrier",
+  "itemGroup.ltextras": "LTExtras"
+}

@@ -1,0 +1,10 @@
+{
+  "block.ltextras.buoy": "\u028Eon\u15FA",
+  "block.ltextras.gold_block_fence": "\u01DD\u0254u\u01DD\u2132 \u029E\u0254o\u05DF\u15FA p\u05DFo\u2141",
+  "block.ltextras.gold_block_stairs": "s\u0279\u0131\u0250\u0287S \u029E\u0254o\u05DF\u15FA p\u05DFo\u2141",
+  "block.ltextras.gold_block_wall": "\u05DF\u05DF\u0250M \u029E\u0254o\u05DF\u15FA p\u05DFo\u2141",
+  "block.ltextras.quartz_block_fence": "\u01DD\u0254u\u01DD\u2132 \u029E\u0254o\u05DF\u15FA z\u0287\u0279\u0250n\u1F49",
+  "block.ltextras.quartz_block_wall": "\u05DF\u05DF\u0250M \u029E\u0254o\u05DF\u15FA z\u0287\u0279\u0250n\u1F49",
+  "block.ltextras.water_barrier": "\u0279\u01DD\u0131\u0279\u0279\u0250\u15FA \u0279\u01DD\u0287\u0250M",
+  "itemGroup.ltextras": "s\u0250\u0279\u0287x\u018E\u27D8\uA780"
+}

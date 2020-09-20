@@ -1,0 +1,130 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
+}
+plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+
+group = 'com.lovetropics.extras'
+archivesBaseName = 'LTExtras'
+
+ext.buildnumber = 0
+project.buildnumber = System.getenv('BUILD_NUMBER') ?: 'custom'
+version = "${mod_version}-${release_type}+${buildnumber}"
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+minecraft {
+    mappings channel: 'snapshot', version: '20200515-1.15.1'
+    
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        client {
+        	taskName 'ltextras_client'
+        	
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                ltextras {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+        	taskName 'ltextras_server'
+        
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                ltextras {
+                    source sourceSets.main
+                }
+            }
+        }
+        
+        data {
+        	taskName 'ltextras_data'
+        
+            workingDirectory project.file('run')
+            
+            environment 'target', 'fmluserdevdata'
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                ltextras {
+                    source sourceSets.main
+                }
+            }
+            
+			args '--mod', 'ltextras', '--all', '--output', '"' + rootProject.file('src/generated/resources/') + '"',
+				 '--existing', '"' + sourceSets.main.resources.srcDirs[0] + '"' 
+			
+        }
+    }
+}
+
+sourceSets.main.resources {
+	srcDir 'src/generated/resources'
+}
+
+repositories {
+	mavenLocal()
+}
+
+configurations {
+	shade
+}
+
+repositories {
+	maven { // Registrate
+		url "http://maven.tterrag.com/"
+	}
+	mavenLocal()
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    
+	def registrate = "com.tterrag.registrate:Registrate:MC${minecraft_version}-${registrate_version}"
+    implementation fg.deobf(registrate)
+    shade registrate
+}
+
+shadowJar {
+    configurations = [project.configurations.shade]
+    relocate 'com.tterrag.registrate', 'com.tropicraft.ltextras.repack.registrate'
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "ltextras",
+            "Specification-Vendor": "lovetropics",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"lovetropics",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
