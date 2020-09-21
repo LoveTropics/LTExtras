@@ -5,8 +5,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
-import com.lovetropics.extras.block.CustomShapeBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
+import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
