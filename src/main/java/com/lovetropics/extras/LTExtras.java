@@ -1,9 +1,9 @@
 package com.lovetropics.extras;
 
+import com.lovetropics.extras.client.particle.ExtraParticles;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.NonNullLazyValue;
@@ -60,6 +60,8 @@ public class LTExtras {
 		ExtraBlocks.init();
 
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+		ExtraParticles.REGISTER.register(modBus);
 
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			modBus.addListener(this::registerItemColors);
