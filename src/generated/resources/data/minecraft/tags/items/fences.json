@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "ltextras:gold_block_fence",
-    "ltextras:quartz_block_fence"
+    "ltextras:quartz_block_fence",
+    "ltextras:stone_fence",
+    "ltextras:stone_bricks_fence"
   ]
 }
