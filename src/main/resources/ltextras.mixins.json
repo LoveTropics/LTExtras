@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.lovetropics.extras.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "ltextras.refmap.json",
+  "mixins": [
+  	"TeamCommandMixin"
+  ],
+  "client":[
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

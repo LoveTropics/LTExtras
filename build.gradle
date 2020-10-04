@@ -4,9 +4,11 @@ buildscript {
         jcenter()
         mavenCentral()
         mavenLocal()
+        maven {url='https://dist.creeper.host/Sponge/maven'}
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 plugins {
@@ -14,6 +16,7 @@ plugins {
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
+apply plugin: 'org.spongepowered.mixin'
 
 group = 'com.lovetropics.extras'
 archivesBaseName = 'LTExtras'
@@ -34,6 +37,7 @@ minecraft {
             taskName 'ltextras_client'
             
             workingDirectory project.file('run')
+            arg "-mixin.config=ltextras.mixins.json"
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
@@ -49,6 +53,7 @@ minecraft {
             taskName 'ltextras_server'
         
             workingDirectory project.file('run')
+            arg "-mixin.config=ltextras.mixins.json"
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
@@ -64,7 +69,8 @@ minecraft {
             taskName 'ltextras_data'
         
             workingDirectory project.file('run')
-            
+            arg "-mixin.config=ltextras.mixins.json"
+
             environment 'target', 'fmluserdevdata'
 
             property 'forge.logging.markers', 'REGISTRIES'
@@ -112,6 +118,13 @@ dependencies {
     def ltlib = "com.lovetropics.lib:LTLib:${ltlib_version}"
     implementation fg.deobf(ltlib)
     shade ltlib
+
+    // Annotation Processors
+    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
+}
+
+mixin {
+    add sourceSets.main, "ltextras.refmap.json"
 }
 
 shadowJar {
@@ -127,7 +140,6 @@ reobf {
 
 build.dependsOn shadowJar
 build.dependsOn reobfShadowJar
-
 
 jar {
     classifier = 'slim'
