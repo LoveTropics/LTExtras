@@ -73,6 +73,8 @@ public class LTExtras {
 
     @OnlyIn(Dist.CLIENT)
     private void registerItemColors(ColorHandlerEvent.Item evt) {
-        evt.getItemColors().register((stack, index) -> index == 0 ? Fluids.WATER.getAttributes().getColor() : -1, ExtraBlocks.WATER_BARRIER.get());
+        evt.getItemColors().register((stack, index) -> index == 0 ? Fluids.WATER.getAttributes().getColor() : -1,
+        		ExtraBlocks.WATER_BARRIER.get(),
+        		ExtraBlocks.FAKE_WATER.get());
     }
 }

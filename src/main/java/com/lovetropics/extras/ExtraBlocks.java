@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
+import com.lovetropics.extras.block.FakeWaterBlock;
 import com.lovetropics.extras.block.SpeedyBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.lib.block.CustomShapeBlock;
@@ -42,6 +43,15 @@ public class ExtraBlocks {
                     prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
             .item()
                 .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/water_still"), new ResourceLocation("item/barrier")))
+                .build()
+            .register();
+    
+    public static final BlockEntry<FakeWaterBlock> FAKE_WATER = REGISTRATE.block("fake_water", FakeWaterBlock::new)
+            .properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
+            .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), 
+                    prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("block/water_still"))))
+            .item()
+                .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("item/barrier"), new ResourceLocation("block/water_still")))
                 .build()
             .register();
 
