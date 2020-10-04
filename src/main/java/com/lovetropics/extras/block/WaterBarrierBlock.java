@@ -5,6 +5,7 @@ import net.minecraft.block.BarrierBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -53,6 +54,14 @@ public class WaterBarrierBlock extends BarrierBlock implements IWaterLoggable {
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> container) {
         container.add(WATERLOGGED);
+    }
+
+    @Override
+    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player,     		boolean willHarvest, IFluidState fluid) {
+    	// Copied from super
+        getBlock().onBlockHarvested(world, pos, state, player);
+        // Changed to set air instead of the fluid state
+        return world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
     }
 
     @Override
