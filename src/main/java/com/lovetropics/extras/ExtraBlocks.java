@@ -51,7 +51,7 @@ public class ExtraBlocks {
             .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), 
                     prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("block/water_still"))))
             .item()
-                .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("item/barrier"), new ResourceLocation("block/water_still")))
+                .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/water_still")))
                 .build()
             .register();
 
