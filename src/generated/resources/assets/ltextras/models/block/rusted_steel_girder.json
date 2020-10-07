@@ -1,0 +1,6 @@
+{
+  "parent": "ltextras:block/girder_straight",
+  "textures": {
+    "texture": "ltextras:block/rusted_steel_girder"
+  }
+}

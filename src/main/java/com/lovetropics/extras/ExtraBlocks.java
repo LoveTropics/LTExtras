@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
 import com.lovetropics.extras.block.FakeWaterBlock;
+import com.lovetropics.extras.block.GirderBlock;
 import com.lovetropics.extras.block.PanelBlock;
 import com.lovetropics.extras.block.SpeedyBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
@@ -27,11 +28,17 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelProvider;
+import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
+import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder.PartBuilder;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class ExtraBlocks {
@@ -94,6 +101,52 @@ public class ExtraBlocks {
     			.model((ctx, prov) -> prov.trapdoorBottom(ctx.getName(), prov.mcLoc("block/glass")))
     			.build()
     		.register();
+    
+    public static final Tag<Block> TAG_STEEL_GIRDERS = new BlockTags.Wrapper(new ResourceLocation(LTExtras.MODID, "steel_girders"));
+
+    public static final BlockEntry<GirderBlock> STEEL_GIRDER = steelGirder("");
+    public static final BlockEntry<GirderBlock> RUSTING_STEEL_GIRDER = steelGirder("rusting");
+    public static final BlockEntry<GirderBlock> RUSTED_STEEL_GIRDER = steelGirder("rusted");
+
+    private static BlockEntry<GirderBlock> steelGirder(String name) {
+    	return REGISTRATE.block((name.isEmpty() ? name : (name + "_")) + "steel_girder", p -> new GirderBlock(TAG_STEEL_GIRDERS, p))
+			.initialProperties(() -> Blocks.IRON_BARS)
+			.tag(TAG_STEEL_GIRDERS)
+			.blockstate(ExtraBlocks::steelGirderBlockstate)
+			.simpleItem()
+			.register();
+    }
+
+    private static void steelGirderBlockstate(DataGenContext<Block, GirderBlock> ctx, RegistrateBlockstateProvider prov) {
+		ResourceLocation template = prov.modLoc("block/girder_straight");
+		ModelFile model = prov.models().singleTexture(ctx.getName(), template, prov.modLoc("block/" + ctx.getName()));
+
+		MultiPartBlockStateBuilder builder = prov.getMultipartBuilder(ctx.get());
+
+		// Add variants for each single axis with one condition on that axis
+		addSteelGirderVariants(builder.part(), model, 90, 90)
+			.addModel().condition(GirderBlock.PROPS.get(Axis.X), true).end();
+		addSteelGirderVariants(builder.part(), model, 0, 0)
+			.addModel().condition(GirderBlock.PROPS.get(Axis.Y), true).end();
+		addSteelGirderVariants(builder.part(), model, 90, 0)
+			.addModel().condition(GirderBlock.PROPS.get(Axis.Z), true).end();
+
+		// Add fallback variant when all axis properties are false
+		ConfiguredModel.Builder<PartBuilder> allModels =
+				    addSteelGirderVariants(builder.part(), model, 90, 90);
+		allModels = addSteelGirderVariants(allModels, model, 0, 0);
+		allModels = addSteelGirderVariants(allModels, model, 90, 0);
+
+		PartBuilder allParts = allModels.addModel();
+		for (Axis a : Axis.values()) {
+			allParts = allParts.condition(GirderBlock.PROPS.get(a), false);
+		}
+		allParts.end();	
+    }
+
+    private static ConfiguredModel.Builder<PartBuilder> addSteelGirderVariants(ConfiguredModel.Builder<PartBuilder> builder, ModelFile model, int xRot, int yRot) {
+    	return builder.modelFile(model).rotationX(xRot).rotationY(yRot).weight(1).uvLock(true);
+    }
 
     // Speedy blocks
 

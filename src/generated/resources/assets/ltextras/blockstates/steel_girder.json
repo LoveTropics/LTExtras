@@ -1,0 +1,46 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "x": "true"
+      },
+      "apply": {
+        "model": "ltextras:block/steel_girder",
+        "x": 90,
+        "y": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "y": "true"
+      },
+      "apply": {
+        "model": "ltextras:block/steel_girder",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "z": "true"
+      },
+      "apply": {
+        "model": "ltextras:block/steel_girder",
+        "x": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "x": "false",
+        "y": "false",
+        "z": "false"
+      },
+      "apply": {
+        "model": "ltextras:block/steel_girder",
+        "x": 90,
+        "uvlock": true
+      }
+    }
+  ]
+}
