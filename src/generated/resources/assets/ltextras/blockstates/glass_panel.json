@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "ltextras:block/glass_panel",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "ltextras:block/glass_panel"
+    },
+    "facing=north": {
+      "model": "ltextras:block/glass_panel",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "ltextras:block/glass_panel",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "ltextras:block/glass_panel",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east": {
+      "model": "ltextras:block/glass_panel",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

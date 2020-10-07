@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
 import com.lovetropics.extras.block.FakeWaterBlock;
+import com.lovetropics.extras.block.PanelBlock;
 import com.lovetropics.extras.block.SpeedyBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.lib.block.CustomShapeBlock;
@@ -22,6 +23,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.block.WallBlock;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Direction;
@@ -80,6 +83,17 @@ public class ExtraBlocks {
                             .end()))
             .simpleItem()
             .register();
+
+    public static final BlockEntry<PanelBlock> GLASS_PANEL = REGISTRATE.block("glass_panel", PanelBlock::new)
+    		.initialProperties(() -> Blocks.GLASS)
+    		.blockstate((ctx, prov) -> prov.directionalBlock(ctx.get(), prov.models()
+    				.trapdoorTop(ctx.getName(), prov.blockTexture(Blocks.GLASS))))
+    		.loot(BlockLootTables::registerSilkTouch)
+    		.addLayer(() -> RenderType::getCutout)
+    		.item()
+    			.model((ctx, prov) -> prov.trapdoorBottom(ctx.getName(), prov.mcLoc("block/glass")))
+    			.build()
+    		.register();
 
     // Speedy blocks
 
