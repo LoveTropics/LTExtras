@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
+import com.lovetropics.extras.block.CheckpointBlock;
 import com.lovetropics.extras.block.FakeWaterBlock;
 import com.lovetropics.extras.block.GirderBlock;
 import com.lovetropics.extras.block.PanelBlock;
@@ -55,7 +56,7 @@ public class ExtraBlocks {
                 .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/water_still"), new ResourceLocation("item/barrier")))
                 .build()
             .register();
-    
+
     public static final BlockEntry<FakeWaterBlock> FAKE_WATER = REGISTRATE.block("fake_water", FakeWaterBlock::new)
             .properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
             .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), 
@@ -147,6 +148,15 @@ public class ExtraBlocks {
     private static ConfiguredModel.Builder<PartBuilder> addSteelGirderVariants(ConfiguredModel.Builder<PartBuilder> builder, ModelFile model, int xRot, int yRot) {
     	return builder.modelFile(model).rotationX(xRot).rotationY(yRot).weight(1).uvLock(true);
     }
+
+    public static final BlockEntry<CheckpointBlock> CHECKPOINT = REGISTRATE.block("checkpoint", CheckpointBlock::new)
+            .properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
+    		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
+				.getBuilder(ctx.getName()).texture("particle", prov.mcLoc("item/structure_void"))))
+            .item()
+	            .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("item/structure_void")))
+	            .build()
+    		.register();
 
     // Speedy blocks
 
