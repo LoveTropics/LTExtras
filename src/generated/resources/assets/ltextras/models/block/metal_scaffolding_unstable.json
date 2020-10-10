@@ -1,0 +1,9 @@
+{
+  "parent": "block/scaffolding_unstable",
+  "textures": {
+    "bottom": "ltextras:block/metal_scaffolding_bottom",
+    "top": "ltextras:block/metal_scaffolding_top",
+    "side": "ltextras:block/metal_scaffolding_side",
+    "particle": "ltextras:block/metal_scaffolding_top"
+  }
+}

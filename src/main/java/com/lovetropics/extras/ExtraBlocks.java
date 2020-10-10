@@ -23,11 +23,12 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FenceBlock;
-import net.minecraft.block.SlabBlock;
+import net.minecraft.block.ScaffoldingBlock;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.block.WallBlock;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.item.ScaffoldingItem;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -158,6 +159,28 @@ public class ExtraBlocks {
 	            .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("item/structure_void")))
 	            .build()
     		.register();
+
+    public static final BlockEntry<ScaffoldingBlock> METAL_SCAFFOLDING = REGISTRATE.block("metal_scaffolding", p -> (ScaffoldingBlock) new ScaffoldingBlock(p) {})
+    		.initialProperties(() -> Blocks.SCAFFOLDING)
+    		.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
+    				.partialState().with(ScaffoldingBlock.field_220120_c, true)
+    					.addModels(scaffoldingModel(ctx, prov, "unstable"))
+    				.partialState().with(ScaffoldingBlock.field_220120_c, false)
+    					.addModels(scaffoldingModel(ctx, prov, "stable")))
+    		.addLayer(() -> RenderType::getCutout)
+    		.item(ScaffoldingItem::new)
+    			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/metal_scaffolding_stable")))
+    			.build()
+    		.register();
+
+    private static ConfiguredModel scaffoldingModel(DataGenContext<Block, ScaffoldingBlock> ctx, RegistrateBlockstateProvider prov, String suffix) {
+    	return new ConfiguredModel(prov.models()
+			.withExistingParent(ctx.getName() + "_" + suffix, "scaffolding" + "_" + suffix)
+				.texture("bottom", prov.modLoc("block/metal_scaffolding_bottom"))
+				.texture("top", prov.modLoc("block/metal_scaffolding_top"))
+				.texture("side", prov.modLoc("block/metal_scaffolding_side"))
+				.texture("particle", prov.modLoc("block/metal_scaffolding_top")));
+    }
 
     // Speedy blocks
 
