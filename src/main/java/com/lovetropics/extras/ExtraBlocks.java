@@ -11,6 +11,7 @@ import com.lovetropics.extras.block.GirderBlock;
 import com.lovetropics.extras.block.PanelBlock;
 import com.lovetropics.extras.block.SpeedyBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
+import com.lovetropics.extras.item.BouyBlockItem;
 import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -91,7 +92,7 @@ public class ExtraBlocks {
                             .to(13, 14, 13)
                             .textureAll("beacon")
                             .end()))
-            .simpleItem()
+            .item(BouyBlockItem::new).build()
             .register();
 
     public static final BlockEntry<PanelBlock> GLASS_PANEL = REGISTRATE.block("glass_panel", PanelBlock::new)
