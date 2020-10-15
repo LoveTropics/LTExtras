@@ -25,6 +25,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.ScaffoldingBlock;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.block.WallBlock;
 import net.minecraft.client.renderer.RenderType;
@@ -187,6 +188,7 @@ public class ExtraBlocks {
 
     public static final BlockEntry<SpeedyBlock> SPEEDY_QUARTZ = speedyBlock(Blocks.QUARTZ_BLOCK.delegate, SpeedyBlock::opaque);
     public static final BlockEntry<SpeedyBlock> SPEEDY_STONE_BRICKS = speedyBlock(Blocks.STONE_BRICKS.delegate, SpeedyBlock::opaque);
+    public static final BlockEntry<SpeedyBlock> SPEEDY_CRACKED_STONE_BRICKS = speedyBlock(Blocks.CRACKED_STONE_BRICKS.delegate, SpeedyBlock::opaque);
     public static final BlockEntry<SpeedyBlock> SPEEDY_SMOOTH_STONE = speedyBlock(Blocks.SMOOTH_STONE.delegate, SpeedyBlock::opaque);
 
     private static final VoxelShape PATH_SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
@@ -211,6 +213,13 @@ public class ExtraBlocks {
 
     private static final Map<IRegistryDelegate<Block>, TextureType> STAIR_TEMPLATES = ImmutableMap.<IRegistryDelegate<Block>, TextureType>builder()
     		.put(Blocks.GOLD_BLOCK.delegate, TextureType.NORMAL)
+    		.put(Blocks.CRACKED_STONE_BRICKS.delegate, TextureType.NORMAL)
+    		.put(Blocks.BLACK_CONCRETE_POWDER.delegate, TextureType.NORMAL)
+    		.build();
+
+    private static final Map<IRegistryDelegate<Block>, TextureType> SLAB_TEMPLATES = ImmutableMap.<IRegistryDelegate<Block>, TextureType>builder()
+    		.put(Blocks.CRACKED_STONE_BRICKS.delegate, TextureType.NORMAL)
+    		.put(Blocks.BLACK_CONCRETE_POWDER.delegate, TextureType.NORMAL)
     		.build();
 
     private static final Map<IRegistryDelegate<Block>, TextureType> FENCE_TEMPLATES = ImmutableMap.<IRegistryDelegate<Block>, TextureType>builder()
@@ -218,12 +227,14 @@ public class ExtraBlocks {
     		.put(Blocks.QUARTZ_BLOCK.delegate, TextureType.SIDE_TOP)
     		.put(Blocks.STONE.delegate, TextureType.NORMAL)
     		.put(Blocks.STONE_BRICKS.delegate, TextureType.NORMAL)
+    		.put(Blocks.CRACKED_STONE_BRICKS.delegate, TextureType.NORMAL)
     		.build();
 
     private static final Map<IRegistryDelegate<Block>, TextureType> WALL_TEMPLATES = ImmutableMap.<IRegistryDelegate<Block>, TextureType>builder()
     		.put(Blocks.GOLD_BLOCK.delegate, TextureType.NORMAL)
     		.put(Blocks.QUARTZ_BLOCK.delegate, TextureType.SIDE_TOP)
     		.put(Blocks.STONE.delegate, TextureType.NORMAL)
+    		.put(Blocks.CRACKED_STONE_BRICKS.delegate, TextureType.NORMAL)
     		.build();
 
     public static final Map<IRegistryDelegate<Block>, BlockEntry<? extends StairsBlock>> STAIRS = STAIR_TEMPLATES.entrySet().stream()
@@ -232,6 +243,17 @@ public class ExtraBlocks {
     				.initialProperties(NonNullSupplier.of(e.getKey()))
     				.tag(BlockTags.STAIRS)
     				.blockstate(stairsBlock(e))
+    				.item()
+    					.tag(ItemTags.STAIRS)
+    					.build()
+    				.register()));
+
+    public static final Map<IRegistryDelegate<Block>, BlockEntry<? extends SlabBlock>> SLABS = SLAB_TEMPLATES.entrySet().stream()
+    		.collect(Collectors.toMap(Entry::getKey, e -> REGISTRATE
+    				.block(e.getKey().name().getPath() + "_slab", SlabBlock::new)
+    				.initialProperties(NonNullSupplier.of(e.getKey()))
+    				.tag(BlockTags.STAIRS)
+    				.blockstate(slabBlock(e))
     				.item()
     					.tag(ItemTags.STAIRS)
     					.build()
@@ -288,6 +310,17 @@ public class ExtraBlocks {
 			return (ctx, prov) -> prov.stairsBlock(ctx.getEntry(), prov.blockTexture(entry.getKey().get()));
 		case SIDE_TOP:
 			return (ctx, prov) -> prov.stairsBlock(ctx.getEntry(), blockTexture(prov.models(), entry.getKey().get(), "side"), blockTexture(prov.models(), entry.getKey().get(), "top"), blockTexture(prov.models(), entry.getKey().get(), "top"));
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
+
+    private static <T extends SlabBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> slabBlock(Map.Entry<IRegistryDelegate<Block>, TextureType> entry) {
+		switch (entry.getValue()) {
+		case NORMAL:
+			return (ctx, prov) -> prov.slabBlock(ctx.getEntry(), prov.blockTexture(entry.getKey().get()), prov.blockTexture(entry.getKey().get()));
+		case SIDE_TOP:
+			return (ctx, prov) -> prov.slabBlock(ctx.getEntry(), blockTexture(prov.models(), entry.getKey().get(), "side"), blockTexture(prov.models(), entry.getKey().get(), "side"), blockTexture(prov.models(), entry.getKey().get(), "top"), blockTexture(prov.models(), entry.getKey().get(), "top"));
 		default:
 			throw new IllegalArgumentException();
 		}

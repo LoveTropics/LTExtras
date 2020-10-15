@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
-    "ltextras:gold_block_stairs"
+    "ltextras:gold_block_stairs",
+    "ltextras:cracked_stone_bricks_stairs",
+    "ltextras:black_concrete_powder_stairs",
+    "ltextras:cracked_stone_bricks_slab",
+    "ltextras:black_concrete_powder_slab"
   ]
 }

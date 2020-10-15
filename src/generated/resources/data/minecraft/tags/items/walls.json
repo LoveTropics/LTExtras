@@ -3,6 +3,7 @@
   "values": [
     "ltextras:gold_block_wall",
     "ltextras:quartz_block_wall",
-    "ltextras:stone_wall"
+    "ltextras:stone_wall",
+    "ltextras:cracked_stone_bricks_wall"
   ]
 }

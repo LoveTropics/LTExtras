@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=top": {
+      "model": "ltextras:block/black_concrete_powder_slab_top"
+    },
+    "type=bottom": {
+      "model": "ltextras:block/black_concrete_powder_slab"
+    },
+    "type=double": {
+      "model": "minecraft:block/black_concrete_powder"
+    }
+  }
+}
