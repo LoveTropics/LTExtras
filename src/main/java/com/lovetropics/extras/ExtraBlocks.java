@@ -24,6 +24,7 @@ import com.lovetropics.extras.data.TextureType;
 import com.lovetropics.extras.item.BouyBlockItem;
 import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
+import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -31,14 +32,17 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FenceBlock;
+import net.minecraft.block.GlassBlock;
 import net.minecraft.block.LadderBlock;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.block.ScaffoldingBlock;
 import net.minecraft.block.SlabBlock;
+import net.minecraft.block.StainedGlassBlock;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.block.WallBlock;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ScaffoldingItem;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -170,6 +174,13 @@ public class ExtraBlocks {
 
     public static final BlockEntry<Block> RUSTY_PAINTED_METAL = REGISTRATE.block("rusty_painted_metal", Block::new)
     		.initialProperties(() -> Blocks.IRON_BLOCK)
+    		.simpleItem()
+    		.register();
+
+    public static final BlockEntry<StainedGlassBlock> SMOOTH_LIGHT_GRAY_STAINED_GLASS = REGISTRATE.block("smooth_light_gray_stained_glass", p -> new StainedGlassBlock(DyeColor.LIGHT_GRAY, p))
+    		.initialProperties(() -> Blocks.LIGHT_GRAY_STAINED_GLASS)
+    		.loot(RegistrateBlockLootTables::registerSilkTouch)
+    		.addLayer(() -> RenderType::getTranslucent)
     		.simpleItem()
     		.register();
 
