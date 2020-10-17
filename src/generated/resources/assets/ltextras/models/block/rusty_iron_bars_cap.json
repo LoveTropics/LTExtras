@@ -1,0 +1,8 @@
+{
+  "parent": "block/iron_bars_cap",
+  "textures": {
+    "bars": "ltextras:block/rusty_iron_bars",
+    "edge": "ltextras:block/rusty_iron_bars",
+    "particle": "ltextras:block/rusty_iron_bars"
+  }
+}

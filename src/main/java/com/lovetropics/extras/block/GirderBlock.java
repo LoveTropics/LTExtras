@@ -10,9 +10,14 @@ import com.google.common.collect.Maps;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -25,7 +30,9 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 
-public class GirderBlock extends Block {
+public class GirderBlock extends Block implements IWaterLoggable {
+
+	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	public static final Map<Axis, BooleanProperty> PROPS = Arrays.stream(Axis.values())
 			.collect(Maps.toImmutableEnumMap(Function.identity(), a -> BooleanProperty.create(a.getName())));
@@ -53,12 +60,18 @@ public class GirderBlock extends Block {
 		super(properties);
 		this.connectionTag = connectionTag;
 		setDefaultState(PROPS.keySet().stream()
-				.reduce(getStateContainer().getBaseState(), (s, a) -> s.with(PROPS.get(a), false), (s1, s2) -> s1));
+				.reduce(getStateContainer().getBaseState(), (s, a) -> s.with(PROPS.get(a), false), (s1, s2) -> s1)
+				.with(WATERLOGGED, false));
 	}
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(PROPS.values().toArray(new BooleanProperty[0]));
+		builder.add(PROPS.values().toArray(new BooleanProperty[0])).add(WATERLOGGED);
+	}
+
+	@Override
+	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+		return !state.get(WATERLOGGED);
 	}
 
 	@Override
@@ -67,8 +80,20 @@ public class GirderBlock extends Block {
 	}
 
 	@Override
+	@Deprecated
+	public IFluidState getFluidState(BlockState state) {
+		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+	}
+
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+		return false;
+	}
+
+	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = super.getStateForPlacement(context);
+	    IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
 		boolean connected = false;
 		for (Direction dir : Direction.values()) {
 			if (context.getWorld().getBlockState(context.getPos().offset(dir)).isIn(connectionTag)) {
@@ -79,12 +104,15 @@ public class GirderBlock extends Block {
 		if (!connected) {
 			state = state.with(PROPS.get(context.getFace().getAxis()), true);
 		}
-		return state;
+		return state.with(WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
 	}
 
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
+		if (stateIn.get(WATERLOGGED)) {
+			worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+		}
 		BlockState ret = stateIn;
 		boolean connected = false;
 		for (Axis a : Axis.values()) {

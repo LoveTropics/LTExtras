@@ -1,5 +1,13 @@
 package com.lovetropics.extras;
 
+import static com.lovetropics.extras.data.ModelGenUtil.barsBlock;
+import static com.lovetropics.extras.data.ModelGenUtil.fenceBlock;
+import static com.lovetropics.extras.data.ModelGenUtil.getMainTexture;
+import static com.lovetropics.extras.data.ModelGenUtil.scaffoldingModel;
+import static com.lovetropics.extras.data.ModelGenUtil.slabBlock;
+import static com.lovetropics.extras.data.ModelGenUtil.stairsBlock;
+import static com.lovetropics.extras.data.ModelGenUtil.wallBlock;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -11,19 +19,20 @@ import com.lovetropics.extras.block.GirderBlock;
 import com.lovetropics.extras.block.PanelBlock;
 import com.lovetropics.extras.block.SpeedyBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
+import com.lovetropics.extras.data.ModelGenUtil;
+import com.lovetropics.extras.data.TextureType;
 import com.lovetropics.extras.item.BouyBlockItem;
 import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FenceBlock;
+import net.minecraft.block.LadderBlock;
+import net.minecraft.block.PaneBlock;
 import net.minecraft.block.ScaffoldingBlock;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.StairsBlock;
@@ -35,15 +44,9 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.ModelProvider;
-import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
-import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder.PartBuilder;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class ExtraBlocks {
@@ -117,40 +120,9 @@ public class ExtraBlocks {
     	return REGISTRATE.block((name.isEmpty() ? name : (name + "_")) + "steel_girder", p -> new GirderBlock(TAG_STEEL_GIRDERS, p))
 			.initialProperties(() -> Blocks.IRON_BARS)
 			.tag(TAG_STEEL_GIRDERS)
-			.blockstate(ExtraBlocks::steelGirderBlockstate)
+			.blockstate(ModelGenUtil::steelGirderBlockstate)
 			.simpleItem()
 			.register();
-    }
-
-    private static void steelGirderBlockstate(DataGenContext<Block, GirderBlock> ctx, RegistrateBlockstateProvider prov) {
-		ResourceLocation template = prov.modLoc("block/girder_straight");
-		ModelFile model = prov.models().singleTexture(ctx.getName(), template, prov.modLoc("block/" + ctx.getName()));
-
-		MultiPartBlockStateBuilder builder = prov.getMultipartBuilder(ctx.get());
-
-		// Add variants for each single axis with one condition on that axis
-		addSteelGirderVariants(builder.part(), model, 90, 90)
-			.addModel().condition(GirderBlock.PROPS.get(Axis.X), true).end();
-		addSteelGirderVariants(builder.part(), model, 0, 0)
-			.addModel().condition(GirderBlock.PROPS.get(Axis.Y), true).end();
-		addSteelGirderVariants(builder.part(), model, 90, 0)
-			.addModel().condition(GirderBlock.PROPS.get(Axis.Z), true).end();
-
-		// Add fallback variant when all axis properties are false
-		ConfiguredModel.Builder<PartBuilder> allModels =
-				    addSteelGirderVariants(builder.part(), model, 90, 90);
-		allModels = addSteelGirderVariants(allModels, model, 0, 0);
-		allModels = addSteelGirderVariants(allModels, model, 90, 0);
-
-		PartBuilder allParts = allModels.addModel();
-		for (Axis a : Axis.values()) {
-			allParts = allParts.condition(GirderBlock.PROPS.get(a), false);
-		}
-		allParts.end();	
-    }
-
-    private static ConfiguredModel.Builder<PartBuilder> addSteelGirderVariants(ConfiguredModel.Builder<PartBuilder> builder, ModelFile model, int xRot, int yRot) {
-    	return builder.modelFile(model).rotationX(xRot).rotationY(yRot).weight(1).uvLock(true);
     }
 
     public static final BlockEntry<CheckpointBlock> CHECKPOINT = REGISTRATE.block("checkpoint", CheckpointBlock::new)
@@ -175,14 +147,31 @@ public class ExtraBlocks {
     			.build()
     		.register();
 
-    private static ConfiguredModel scaffoldingModel(DataGenContext<Block, ScaffoldingBlock> ctx, RegistrateBlockstateProvider prov, String suffix) {
-    	return new ConfiguredModel(prov.models()
-			.withExistingParent(ctx.getName() + "_" + suffix, "scaffolding" + "_" + suffix)
-				.texture("bottom", prov.modLoc("block/metal_scaffolding_bottom"))
-				.texture("top", prov.modLoc("block/metal_scaffolding_top"))
-				.texture("side", prov.modLoc("block/metal_scaffolding_side"))
-				.texture("particle", prov.modLoc("block/metal_scaffolding_top")));
-    }
+    public static final BlockEntry<PaneBlock> RUSTY_IRON_BARS = REGISTRATE.block("rusty_iron_bars", p -> (PaneBlock) new PaneBlock(p) {})
+    		.initialProperties(() -> Blocks.IRON_BARS)
+    		.blockstate((ctx, prov) -> barsBlock(ctx, prov))
+    		.addLayer(() -> RenderType::getCutout)
+    		.item()
+    			.model((ctx, prov) -> prov.blockSprite(ctx))
+    			.build()
+    		.register();
+
+    public static final BlockEntry<LadderBlock> METAL_LADDER = REGISTRATE.block("metal_ladder", p -> (LadderBlock) new LadderBlock(p) {})
+    		.initialProperties(() -> Blocks.IRON_BARS)
+    		.blockstate((ctx, prov) -> prov.horizontalBlock(ctx.getEntry(), prov.models()
+    				.withExistingParent(ctx.getName(), "block/ladder")
+    				.texture("texture", prov.blockTexture(ctx.getEntry()))
+    				.texture("particle", prov.blockTexture(ctx.getEntry()))))
+    		.addLayer(() -> RenderType::getCutout)
+    		.item()
+    			.model((ctx, prov) -> prov.blockSprite(ctx))
+    			.build()
+    		.register();
+
+    public static final BlockEntry<Block> RUSTY_PAINTED_METAL = REGISTRATE.block("rusty_painted_metal", Block::new)
+    		.initialProperties(() -> Blocks.IRON_BLOCK)
+    		.simpleItem()
+    		.register();
 
     // Speedy blocks
 
@@ -204,12 +193,6 @@ public class ExtraBlocks {
     }
 
     // Custom stairs/fences/walls/etc
-
-    private enum TextureType {
-    	NORMAL,
-    	SIDE_TOP,
-    	;
-    }
 
     private static final Map<IRegistryDelegate<Block>, TextureType> STAIR_TEMPLATES = ImmutableMap.<IRegistryDelegate<Block>, TextureType>builder()
     		.put(Blocks.GOLD_BLOCK.delegate, TextureType.NORMAL)
@@ -282,71 +265,6 @@ public class ExtraBlocks {
 						.model((ctx, prov) -> prov.wallInventory(ctx.getName(), getMainTexture(prov, e.getKey().get(), e.getValue())))
 						.build()
 					.register()));
-
-    private static ResourceLocation blockTexture(ModelProvider<?> prov, Block block) {
-    	ResourceLocation base = block.getRegistryName();
-    	return new ResourceLocation(base.getNamespace(), "block/" + base.getPath());
-    }
-
-    private static ResourceLocation blockTexture(ModelProvider<?> prov, Block block, String suffix) {
-    	ResourceLocation base = blockTexture(prov, block);
-    	return new ResourceLocation(base.getNamespace(), base.getPath() + "_" + suffix);
-    }
-
-    private static ResourceLocation getMainTexture(ModelProvider<?> prov, Block block, TextureType texture) {
-    	switch (texture) {
-    	case NORMAL:
-    		return blockTexture(prov, block);
-    	case SIDE_TOP:
-    		return blockTexture(prov, block, "side");
-    	default:
-    		throw new IllegalArgumentException();
-    	}
-    }
-
-    private static <T extends StairsBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> stairsBlock(Map.Entry<IRegistryDelegate<Block>, TextureType> entry) {
-		switch (entry.getValue()) {
-		case NORMAL:
-			return (ctx, prov) -> prov.stairsBlock(ctx.getEntry(), prov.blockTexture(entry.getKey().get()));
-		case SIDE_TOP:
-			return (ctx, prov) -> prov.stairsBlock(ctx.getEntry(), blockTexture(prov.models(), entry.getKey().get(), "side"), blockTexture(prov.models(), entry.getKey().get(), "top"), blockTexture(prov.models(), entry.getKey().get(), "top"));
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
-
-    private static <T extends SlabBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> slabBlock(Map.Entry<IRegistryDelegate<Block>, TextureType> entry) {
-		switch (entry.getValue()) {
-		case NORMAL:
-			return (ctx, prov) -> prov.slabBlock(ctx.getEntry(), prov.blockTexture(entry.getKey().get()), prov.blockTexture(entry.getKey().get()));
-		case SIDE_TOP:
-			return (ctx, prov) -> prov.slabBlock(ctx.getEntry(), blockTexture(prov.models(), entry.getKey().get(), "side"), blockTexture(prov.models(), entry.getKey().get(), "side"), blockTexture(prov.models(), entry.getKey().get(), "top"), blockTexture(prov.models(), entry.getKey().get(), "top"));
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
-
-    private static <T extends FenceBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> fenceBlock(Map.Entry<IRegistryDelegate<Block>, TextureType> entry) {
-		switch (entry.getValue()) {
-		case NORMAL:
-			return (ctx, prov) -> prov.fenceBlock(ctx.getEntry(), prov.blockTexture(entry.getKey().get()));
-		case SIDE_TOP:
-			return (ctx, prov) -> prov.fenceBlock(ctx.getEntry(), getMainTexture(prov.models(), entry.getKey().get(), entry.getValue()));
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
-
-    private static <T extends WallBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> wallBlock(Map.Entry<IRegistryDelegate<Block>, TextureType> entry) {
-		switch (entry.getValue()) {
-		case NORMAL:
-			return (ctx, prov) -> prov.wallBlock(ctx.getEntry(), prov.blockTexture(entry.getKey().get()));
-		case SIDE_TOP:
-			return (ctx, prov) -> prov.wallBlock(ctx.getEntry(), getMainTexture(prov.models(), entry.getKey().get(), entry.getValue()));
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
 
 	public static void init() {
 	}
