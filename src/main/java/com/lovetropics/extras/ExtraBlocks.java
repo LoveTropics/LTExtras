@@ -82,7 +82,7 @@ public class ExtraBlocks {
                             Block.makeCuboidShape(2, 0, 2, 14, 3, 14),
                             Block.makeCuboidShape(3, 3, 3, 13, 14, 13)),
                     p))
-            .properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
+            .properties(p -> Block.Properties.from(Blocks.BEACON))
             .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
                     .withExistingParent(ctx.getName(), new ResourceLocation("block/block"))
                         .ao(false)
