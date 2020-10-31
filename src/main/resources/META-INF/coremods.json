@@ -1,3 +1,3 @@
 {
-  "scaffolding_instanceof": "asm/scaffolding-instanceof.js"
+  "scaffolding_instanceof": "asm/equals-to-instanceof.js"
 }
