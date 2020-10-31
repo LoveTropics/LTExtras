@@ -38,7 +38,7 @@ function fixBlockCheck(method) {
     
 	for (i = 0, len = method.instructions.size(); i < len; i++) {
 		var instr = method.instructions.get(i);
-		if (instr.opcode == Opcodes.GETSTATIC && instr.name == 'SCAFFOLDING') {
+		if (instr.opcode == Opcodes.GETSTATIC && instr.name == ASM.mapField('field_222420_lI')) { // Blocks.SCAFFOLDING
 			var next = instr.getNext();
 			method.instructions.set(instr, new TypeInsnNode(Opcodes.INSTANCEOF, 'net/minecraft/block/ScaffoldingBlock'));
 			method.instructions.set(next, new JumpInsnNode(next.opcode == Opcodes.IF_ACMPEQ ? Opcodes.IFNE : Opcodes.IFEQ, next.label));
