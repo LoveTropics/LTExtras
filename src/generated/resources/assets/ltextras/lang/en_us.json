@@ -31,5 +31,7 @@
   "block.ltextras.stone_fence": "Stone Fence",
   "block.ltextras.stone_wall": "Stone Wall",
   "block.ltextras.water_barrier": "Water Barrier",
+  "entity.ltextras.dummy_player": "Dummy Player",
+  "item.ltextras.dummy_player": "Dummy Player",
   "itemGroup.ltextras": "LTExtras"
 }
