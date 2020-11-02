@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.lovetropics.extras.client.particle.ExtraParticles;
-import com.lovetropics.extras.client.renderer.DummyPlayerEntityRenderer;
+import com.lovetropics.extras.client.renderer.dummy.DummyPlayerEntityRenderer;
 import com.lovetropics.extras.entity.DummyPlayerEntity;
 import com.lovetropics.extras.entity.UpdateDummyTexturesMessage;
 import com.tterrag.registrate.Registrate;

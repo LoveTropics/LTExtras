@@ -265,6 +265,14 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 		}
 	}
 
+	public ResourceLocation getCape() {
+		return playerTextures.get(Type.CAPE);
+	}
+
+	public ResourceLocation getElytra() {
+		return playerTextures.getOrDefault(Type.ELYTRA, getCape());
+	}
+
 	public String getSkinType() {
 		return this.skinType == null ? DefaultPlayerSkin.getSkinType(getSkinUUID()) : this.skinType;
 	}

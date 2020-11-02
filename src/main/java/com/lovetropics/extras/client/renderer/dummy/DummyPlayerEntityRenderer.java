@@ -1,4 +1,4 @@
-package com.lovetropics.extras.client.renderer;
+package com.lovetropics.extras.client.renderer.dummy;
 
 import com.lovetropics.extras.entity.DummyPlayerEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
-import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HeadLayer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.util.ResourceLocation;
@@ -21,8 +20,9 @@ public class DummyPlayerEntityRenderer extends LivingRenderer<DummyPlayerEntity,
 		super(rendererManager, DEFAULT, 0.5f);
 		this.addLayer(new BipedArmorLayer<>(this, new DummyPlayerArmorModel(0.5F), new DummyPlayerArmorModel(1.0F)));
 		this.addLayer(new HeldItemLayer<>(this));
-		this.addLayer(new ElytraLayer<>(this));
+		this.addLayer(new DummyCapeLayer(this));
 		this.addLayer(new HeadLayer<>(this));
+		this.addLayer(new DummyElytraLayer(this));
 	}
 
 	@Override

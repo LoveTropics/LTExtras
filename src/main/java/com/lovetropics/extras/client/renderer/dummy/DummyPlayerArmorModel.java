@@ -1,4 +1,4 @@
-package com.lovetropics.extras.client.renderer;
+package com.lovetropics.extras.client.renderer.dummy;
 
 import com.lovetropics.extras.entity.DummyPlayerEntity;
 
