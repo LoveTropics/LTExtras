@@ -13,8 +13,6 @@ public class DummyPlayerModel extends PlayerModel<DummyPlayerEntity> {
 	}
 
 	static void setArmorStandAngles(ArmorStandEntity entityIn, BipedModel<? extends ArmorStandEntity> model) {
-		model.bipedLeftArm.showModel = true;
-		model.bipedRightArm.showModel = true;
 		model.bipedHead.rotateAngleX = ((float) Math.PI / 180F) * entityIn.getHeadRotation().getX();
 		model.bipedHead.rotateAngleY = ((float) Math.PI / 180F) * entityIn.getHeadRotation().getY();
 		model.bipedHead.rotateAngleZ = ((float) Math.PI / 180F) * entityIn.getHeadRotation().getZ();
@@ -42,6 +40,8 @@ public class DummyPlayerModel extends PlayerModel<DummyPlayerEntity> {
 	public void setRotationAngles(DummyPlayerEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		setArmorStandAngles(entityIn, this);
+		this.bipedLeftArm.showModel = true;
+		this.bipedRightArm.showModel = true;
 		this.bipedBodyWear.copyModelAngles(this.bipedBody);
 		this.bipedLeftArmwear.copyModelAngles(this.bipedLeftArm);
 		this.bipedRightArmwear.copyModelAngles(this.bipedRightArm);
