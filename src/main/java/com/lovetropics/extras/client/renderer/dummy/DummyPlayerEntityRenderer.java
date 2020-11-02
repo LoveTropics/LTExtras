@@ -17,7 +17,8 @@ public class DummyPlayerEntityRenderer extends LivingRenderer<DummyPlayerEntity,
 	private static final DummyPlayerModel DEFAULT = new DummyPlayerModel(0, false);
 	
 	public DummyPlayerEntityRenderer(EntityRendererManager rendererManager) {
-		super(rendererManager, DEFAULT, 0.5f);
+		super(rendererManager, DEFAULT, 0);
+		this.addLayer(new DummyStandLayer(this));
 		this.addLayer(new BipedArmorLayer<>(this, new DummyPlayerArmorModel(0.5F), new DummyPlayerArmorModel(1.0F)));
 		this.addLayer(new HeldItemLayer<>(this));
 		this.addLayer(new DummyCapeLayer(this));
@@ -42,6 +43,7 @@ public class DummyPlayerEntityRenderer extends LivingRenderer<DummyPlayerEntity,
 
 	@Override
 	protected void preRenderCallback(DummyPlayerEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+		matrixStackIn.translate(0, -1f / 16f, 0);
 		float f = 0.9375F;
 		matrixStackIn.scale(f, f, f);
 	}

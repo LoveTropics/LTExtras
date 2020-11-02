@@ -37,6 +37,7 @@ public class DummyPlayerModel extends PlayerModel<DummyPlayerEntity> {
 		model.bipedHeadwear.copyModelAngles(model.bipedHead);
 	}
 
+	@Override
 	public void setRotationAngles(DummyPlayerEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		setArmorStandAngles(entityIn, this);
