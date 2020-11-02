@@ -37,7 +37,7 @@ public class DummyPlayerEntityRenderer extends LivingRenderer<DummyPlayerEntity,
 
 	@Override
 	protected boolean canRenderName(DummyPlayerEntity entity) {
-		return entity.getProfessionName().getUnformattedComponentText().length() > 0;
+		return entity.getName().getUnformattedComponentText().length() > 0;
 	}
 
 	@Override
