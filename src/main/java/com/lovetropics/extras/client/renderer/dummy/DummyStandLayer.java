@@ -36,6 +36,7 @@ public class DummyStandLayer extends LayerRenderer<DummyPlayerEntity, DummyPlaye
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, DummyPlayerEntity entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    	if (entityIn.hasNoBasePlate()) return;
         this.standBase.rotateAngleY = ((float)Math.PI / 180F) * -MathHelper.interpolateAngle(partialTicks, entityIn.prevRotationYaw, entityIn.rotationYaw);
         matrixStackIn.push();
         matrixStackIn.translate(0, 1f / 16f, 0);
