@@ -43,7 +43,9 @@ public class DummyPlayerEntityRenderer extends LivingRenderer<DummyPlayerEntity,
 
 	@Override
 	protected void preRenderCallback(DummyPlayerEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
-		matrixStackIn.translate(0, -1f / 16f, 0);
+		if (!entitylivingbaseIn.hasNoBasePlate()) {
+			matrixStackIn.translate(0, -1f / 16f, 0);
+		}
 		float f = 0.9375F;
 		matrixStackIn.scale(f, f, f);
 	}
