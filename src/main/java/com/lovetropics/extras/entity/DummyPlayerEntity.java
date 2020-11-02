@@ -7,6 +7,8 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
+
 import com.google.common.collect.Maps;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.item.DummyPlayerItem;
@@ -45,10 +47,7 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 
 	public static final RegistryEntry<EntityType<DummyPlayerEntity>> DUMMY_PLAYER = LTExtras.registrate().object("dummy_player")
 			.<DummyPlayerEntity>entity(DummyPlayerEntity::new, EntityClassification.MISC)
-			.properties(b -> b
-					.setShouldReceiveVelocityUpdates(false)
-					.setTrackingRange(12)
-					.setUpdateInterval(100))
+			.properties(b -> b.size(0.6F, 1.8F)) // Copied from player definition
 			.register();
 
 	public static final ItemEntry<DummyPlayerItem> SPAWNER = LTExtras.registrate()
@@ -203,38 +202,12 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 		}
 	}
 
-	@Nullable
-	@OnlyIn(Dist.CLIENT)
-	protected void updateSkinTexture() {
-		if (getProfile() == null || getProfile().getId() == null) return;
-		if (reloadTextures) {
-			synchronized (this) {
-				if (reloadTextures) {
-					reloadTextures = false;
-					Minecraft.getInstance().getSkinManager().loadProfileTextures(getProfile(),
-							(p_210250_1_, p_210250_2_, p_210250_3_) -> {
-								synchronized (playerTextures) {
-									this.playerTextures.put(p_210250_1_, p_210250_2_);
-									if (p_210250_1_ == Type.SKIN) {
-										this.skinType = p_210250_3_.getMetadata("model");
-										if (this.skinType == null) {
-											this.skinType = "default";
-										}
-									}
-								}
-
-							}, true);
-				}
-			}
-		}
-	}
-
-	public ResourceLocation getSkin() {
-		updateSkinTexture();
-		synchronized (playerTextures) {
-			return playerTextures.computeIfAbsent(Type.SKIN,
-					$ -> getProfile() == null || getProfile().getId() == null ? DefaultPlayerSkin.getDefaultSkin(getUniqueID())
-							: DefaultPlayerSkin.getDefaultSkin(getProfile().getId()));
+	@Override
+	public void tick() {
+		super.tick();
+		if (!world.isRemote && reloadTextures) {
+			LTExtras.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new UpdateDummyTexturesMessage(this.getEntityId()));
+			reloadTextures = false;
 		}
 	}
 
@@ -250,8 +223,50 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 			return ret == null ? profile : ret;
 		}).thenAcceptAsync(gp -> {
 			DummyPlayerEntity.this.dataManager.set(GAME_PROFILE, gp);
-			LTExtras.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new UpdateDummyTexturesMessage(this.getEntityId()));
+			reloadTextures();
 		}, getServer());
+	}
+
+	@Nullable
+	@OnlyIn(Dist.CLIENT)
+	protected void updateSkinTexture() {
+		if (getProfile() == null || getProfile().getId() == null) return;
+		if (reloadTextures) {
+			synchronized (this) {
+				if (reloadTextures) {
+					reloadTextures = false;
+					LogManager.getLogger().info("Loading skin data for GameProfile: " + getProfile());
+					Minecraft.getInstance().getSkinManager().loadProfileTextures(getProfile(), (p_210250_1_, p_210250_2_, p_210250_3_) -> {
+						synchronized (playerTextures) {
+							this.playerTextures.put(p_210250_1_, p_210250_2_);
+							if (p_210250_1_ == Type.SKIN) {
+								this.skinType = p_210250_3_.getMetadata("model");
+								if (this.skinType == null) {
+									this.skinType = "default";
+								}
+							}
+						}
+
+					}, true);
+				}
+			}
+		}
+	}
+
+	private UUID getSkinUUID() {
+		return getProfile() == null || getProfile().getId() == null ? getUniqueID() : getProfile().getId();
+	}
+
+	public ResourceLocation getSkin() {
+		updateSkinTexture();
+		synchronized (playerTextures) {
+			return playerTextures.computeIfAbsent(Type.SKIN,
+					$ -> DefaultPlayerSkin.getDefaultSkin(getSkinUUID()));
+		}
+	}
+
+	public String getSkinType() {
+		return this.skinType == null ? DefaultPlayerSkin.getSkinType(getSkinUUID()) : this.skinType;
 	}
 
 	void reloadTextures() {
