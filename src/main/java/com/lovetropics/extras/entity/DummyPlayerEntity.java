@@ -7,6 +7,7 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 
 import com.google.common.collect.Maps;
@@ -136,7 +137,7 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 
 	@Override
 	public ITextComponent getProfessionName() {
-		return new StringTextComponent(getProfile() == null ? "" : getProfile().getName());
+		return getProfile() == null ? super.getProfessionName() : new StringTextComponent(getProfile().getName());
 	}
 
 	@Override
@@ -192,14 +193,17 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 		}
 
 		if (compound.contains("ProfileName", Constants.NBT.TAG_STRING)) {
-			this.dataManager.set(GAME_PROFILE, new GameProfile(null, compound.getString("ProfileName")));
+			String name = compound.getString("ProfileName");
+			if (!StringUtils.isBlank(name)) {
+				this.dataManager.set(GAME_PROFILE, new GameProfile(null, compound.getString("ProfileName")));
+			} else {
+				this.dataManager.set(GAME_PROFILE, null);
+			}
 		} else if (compound.hasUniqueId("ProfileID")) {
 			String existingName = getProfile() == null ? null : getProfile().getName();
 			this.dataManager.set(GAME_PROFILE, new GameProfile(compound.getUniqueId("ProfileID"), existingName));
 		}
-		if (getProfile() != null) {
-			fillProfile();
-		}
+		fillProfile();
 	}
 
 	@Override
@@ -213,6 +217,9 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 
 	void fillProfile() {
 		final GameProfile profile = getProfile();
+		if (profile == null) {
+			reloadTextures();
+		}
 		CompletableFuture.supplyAsync(() -> {
 			GameProfile ret;
 			if (profile.getId() != null) {
@@ -230,11 +237,12 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
 	protected void updateSkinTexture() {
-		if (getProfile() == null || getProfile().getId() == null) return;
 		if (reloadTextures) {
 			synchronized (this) {
 				if (reloadTextures) {
+					this.playerTextures.clear();
 					reloadTextures = false;
+					if (getProfile() == null || getProfile().getId() == null) return;
 					LogManager.getLogger().info("Loading skin data for GameProfile: " + getProfile());
 					Minecraft.getInstance().getSkinManager().loadProfileTextures(getProfile(), (p_210250_1_, p_210250_2_, p_210250_3_) -> {
 						synchronized (playerTextures) {
