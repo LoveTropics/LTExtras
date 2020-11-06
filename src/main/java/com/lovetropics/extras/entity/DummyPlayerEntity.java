@@ -199,11 +199,18 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 			} else {
 				this.dataManager.set(GAME_PROFILE, null);
 			}
+			fillProfile();
 		} else if (compound.hasUniqueId("ProfileID")) {
 			String existingName = getProfile() == null ? null : getProfile().getName();
-			this.dataManager.set(GAME_PROFILE, new GameProfile(compound.getUniqueId("ProfileID"), existingName));
+			UUID newId = compound.getUniqueId("ProfileID");
+			if (getProfile() == null || getProfile().getId() == null && getProfile().getName() == null
+					|| !getProfile().getId().equals(newId)) {
+				// Only update the profile (and thus the texture) if it has changed in some way
+				// Avoids unnecessary texture reloads on the client when changing pose/name
+				this.dataManager.set(GAME_PROFILE, new GameProfile(compound.getUniqueId("ProfileID"), existingName));
+				fillProfile();
+			}
 		}
-		fillProfile();
 	}
 
 	@Override
