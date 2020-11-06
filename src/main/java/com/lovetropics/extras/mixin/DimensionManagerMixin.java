@@ -9,11 +9,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(DimensionManager.class)
+@Mixin(value = DimensionManager.class, remap = false)
 public class DimensionManagerMixin {
 	private static long lastPrintTime;
 
-	@Inject(method = "getWorld", at = @At(value = "FIELD", target = "Lnet/minecraftforge/common/DimensionManager$Data;ticksWaited:I"))
+	@Inject(method = "getWorld", at = @At(value = "FIELD", target = "Lnet/minecraftforge/common/DimensionManager$Data;ticksWaited:I", remap = false), remap = false)
 	private static void resetTicksWaiting(MinecraftServer server, DimensionType dim, boolean resetUnloadDelay, boolean forceLoad, CallbackInfoReturnable<ServerWorld> ci) {
 		if (dim.getRegistryName().getPath().equals("signature_run_game")) {
 			long time = server.getTickCounter();
