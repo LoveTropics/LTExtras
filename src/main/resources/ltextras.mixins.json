@@ -6,7 +6,7 @@
   "mixins": [
     "TeamCommandMixin"
   ],
-  "client": [],
+  "client": ["client.perf.Matrix4fMixin", "client.perf.MatrixStackMixin"],
   "injectors": {
     "defaultRequire": 1
   },
