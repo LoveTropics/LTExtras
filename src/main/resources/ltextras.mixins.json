@@ -4,10 +4,9 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "ltextras.refmap.json",
   "mixins": [
-    "TeamCommandMixin",
-    "DimensionManagerMixin"
+    "TeamCommandMixin"
   ],
-  "client": ["client.perf.Matrix4fMixin", "client.perf.MatrixStackMixin"],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   },
