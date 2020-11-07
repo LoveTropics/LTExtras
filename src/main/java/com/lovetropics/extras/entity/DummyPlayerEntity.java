@@ -137,7 +137,7 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 
 	@Override
 	public ITextComponent getProfessionName() {
-		return getProfile() == null ? super.getProfessionName() : new StringTextComponent(getProfile().getName());
+		return getProfile() == null || getProfile().getName() == null ? super.getProfessionName() : new StringTextComponent(getProfile().getName());
 	}
 
 	@Override
