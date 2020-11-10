@@ -18,6 +18,7 @@ public class MatrixStackMixin {
 
 	/**
 	 * @reason Remove allocation and matrix multiplication for translate operation. We can do so much simpler!
+	 * TODO: remove in 1.17: integrated into vanilla
 	 * @author gegy1000
 	 */
 	@Overwrite
