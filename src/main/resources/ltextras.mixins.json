@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "ltextras.refmap.json",
   "mixins": [
+    "ItemStackMixin",
+    "TagCollectionMixin",
     "TeamCommandMixin",
     "perf.ChunkManagerMixin",
     "perf.ServerChunkProviderMixin"

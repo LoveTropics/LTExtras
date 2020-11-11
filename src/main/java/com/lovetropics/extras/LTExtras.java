@@ -12,19 +12,23 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.NetworkTagManager;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Comparator;
 import java.util.List;
@@ -89,8 +93,16 @@ public class LTExtras {
 			modBus.addListener(this::registerItemColors);
 		});
 
+		MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
+
 		registrate()
 			.addDataGenerator(ProviderType.LANG, p -> p.add(ITEM_GROUP, "LTExtras"));
+	}
+
+	private void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+		NetworkTagManager tagManager = event.getServer().getNetworkTagManager();
+		EverythingTag.addTo(tagManager.getBlocks(), ForgeRegistries.BLOCKS);
+		EverythingTag.addTo(tagManager.getItems(), ForgeRegistries.ITEMS);
 	}
 
 	@OnlyIn(Dist.CLIENT)
