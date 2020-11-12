@@ -1,0 +1,39 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "minecraft:item/apple.png",
+            "ascent": 16,
+			"height": 16,
+            "chars": ["\uE000"]
+        },
+		{
+			"type": "bitmap",
+			"file": "minecraft:item/ltgeneral/blank_icon.png",
+			"ascent": 9,
+			"height": 9,
+			"chars": ["\uE001"]
+		},
+		{
+            "type": "bitmap",
+            "file": "minecraft:item/signature_run/code_violation.png",
+            "ascent": 7.5,
+			"height": 9,
+            "chars": ["\uE002"]
+        },
+		{
+            "type": "bitmap",
+            "file": "minecraft:item/signature_run/collect_signature_icon.png",
+            "ascent": 7.5,
+			"height": 9,
+            "chars": ["\uE003"]
+        },
+		{
+            "type": "bitmap",
+            "file": "minecraft:item/ltgeneral/blank_square_icon.png",
+            "ascent": 9,
+			"height": 9,
+            "chars": ["\uE004"]
+        }
+	]
+}

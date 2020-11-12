@@ -1,0 +1,14 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "item/coal"
+    },
+	"overrides": [
+		{"predicate": {"custom_model_data": 1}, "model": "item/collect_signature_icon"},
+		{"predicate": {"custom_model_data": 2}, "model": "item/general_interact_icon"},
+		{"predicate": {"custom_model_data": 3}, "model": "item/to_disaster_icon"},
+		{"predicate": {"custom_model_data": 4}, "model": "item/to_ohno_icon"}
+	]
+
+	
+}

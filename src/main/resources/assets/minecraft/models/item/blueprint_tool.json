@@ -1,0 +1,7 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "item/signature_run/blueprint_tool"
+	},
+	"gui_light": "front"
+}
