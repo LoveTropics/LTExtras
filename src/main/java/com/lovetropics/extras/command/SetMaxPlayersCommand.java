@@ -18,6 +18,7 @@ public final class SetMaxPlayersCommand {
 		dispatcher.register(
 			literal("setmaxplayers")
 				.then(argument("max", IntegerArgumentType.integer(1))
+				.requires(source -> source.hasPermissionLevel(4))
 				.executes(SetMaxPlayersCommand::setMaxPlayers)
 			)
 		);
