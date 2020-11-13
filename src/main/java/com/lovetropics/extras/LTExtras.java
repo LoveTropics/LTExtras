@@ -1,14 +1,25 @@
 package com.lovetropics.extras;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.client.renderer.dummy.DummyPlayerEntityRenderer;
+import com.lovetropics.extras.command.GenerateCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
 import com.lovetropics.extras.entity.DummyPlayerEntity;
 import com.lovetropics.extras.entity.UpdateDummyTexturesMessage;
+import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
+
+import net.minecraft.command.CommandSource;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -21,7 +32,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.*;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -32,12 +47,6 @@ import net.minecraftforge.fml.network.FMLNetworkConstants;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @Mod("ltextras")
 public class LTExtras {
@@ -122,7 +131,9 @@ public class LTExtras {
 		EverythingTag.addTo(tagManager.getBlocks(), ForgeRegistries.BLOCKS);
 		EverythingTag.addTo(tagManager.getItems(), ForgeRegistries.ITEMS);
 
-		SetMaxPlayersCommand.register(event.getServer().getCommandManager().getDispatcher());
+		CommandDispatcher<CommandSource> dispatcher = event.getServer().getCommandManager().getDispatcher();
+		SetMaxPlayersCommand.register(dispatcher);
+		GenerateCommand.register(dispatcher);
 	}
 
 	@OnlyIn(Dist.CLIENT)
