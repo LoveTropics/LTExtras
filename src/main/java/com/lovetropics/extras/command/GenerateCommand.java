@@ -67,7 +67,7 @@ public class GenerateCommand {
 		Path output = Paths.get("export", "generated", "tags", "item", StringArgumentType.getString(ctx, "name") + ".json");
 		try {
 			Files.createDirectories(output.getParent());
-			Files.write(output, Collections.singleton(GSON.toJson(json)), StandardOpenOption.TRUNCATE_EXISTING);
+			Files.write(output, Collections.singleton(GSON.toJson(json)), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			throw FAILED_TO_WRITE.create(e1);
