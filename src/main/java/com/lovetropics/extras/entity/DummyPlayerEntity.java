@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import com.google.common.collect.Maps;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.item.DummyPlayerItem;
+import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -217,7 +218,7 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 	public void tick() {
 		super.tick();
 		if (!world.isRemote && reloadTextures) {
-			LTExtras.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new UpdateDummyTexturesMessage(this.getEntityId()));
+			LTExtrasNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new UpdateDummyTexturesMessage(this.getEntityId()));
 			reloadTextures = false;
 		}
 	}

@@ -13,7 +13,7 @@ import com.lovetropics.extras.client.renderer.dummy.DummyPlayerEntityRenderer;
 import com.lovetropics.extras.command.GenerateCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
 import com.lovetropics.extras.entity.DummyPlayerEntity;
-import com.lovetropics.extras.entity.UpdateDummyTexturesMessage;
+import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
@@ -27,7 +27,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.NetworkTagManager;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -45,25 +44,12 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod("ltextras")
 public class LTExtras {
 
 	public static final String MODID = "ltextras";
-
-	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-			new ResourceLocation(MODID, "main"),
-			() -> getCompatVersion(),
-			LTExtras::isCompatibleVersion,
-			LTExtras::isCompatibleVersion
-	);
-
-	static {
-		CHANNEL.registerMessage(0, UpdateDummyTexturesMessage.class, UpdateDummyTexturesMessage::toBytes, UpdateDummyTexturesMessage::fromBytes, UpdateDummyTexturesMessage::handle);
-	}
 
 	public static final ItemGroup ITEM_GROUP = new ItemGroup(MODID) {
 
@@ -127,6 +113,8 @@ public class LTExtras {
 	            )
 	        );
 		});
+
+		LTExtrasNetwork.register();
 	}
 
     private static final Pattern QUALIFIER = Pattern.compile("-\\w+\\+\\d+");
