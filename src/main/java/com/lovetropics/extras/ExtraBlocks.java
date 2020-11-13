@@ -177,6 +177,12 @@ public class ExtraBlocks {
     		.simpleItem()
     		.register();
 
+	public static final BlockEntry<Block> BLACK_CONCRETE_POWDER_FAKE = REGISTRATE.block("black_concrete_powder_fake", Block::new)
+			.initialProperties(() -> Blocks.DIRT)
+			.simpleItem()
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(new ResourceLocation("block/black_concrete_powder"))))
+			.register();
+
     public static final BlockEntry<StainedGlassBlock> SMOOTH_LIGHT_GRAY_STAINED_GLASS = REGISTRATE.block("smooth_light_gray_stained_glass", p -> new StainedGlassBlock(DyeColor.LIGHT_GRAY, p))
     		.initialProperties(() -> Blocks.LIGHT_GRAY_STAINED_GLASS)
     		.loot(RegistrateBlockLootTables::registerSilkTouch)
