@@ -3,6 +3,7 @@ package com.lovetropics.extras;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -52,13 +53,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class LTExtras {
 
 	public static final String MODID = "ltextras";
-	private static final String PROTOCOL_VERSION = "1";
 
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
 			new ResourceLocation(MODID, "main"),
-			() -> PROTOCOL_VERSION,
-			PROTOCOL_VERSION::equals,
-			PROTOCOL_VERSION::equals
+			() -> getCompatVersion(),
+			LTExtras::isCompatibleVersion,
+			LTExtras::isCompatibleVersion
 	);
 
 	static {
@@ -95,6 +95,9 @@ public class LTExtras {
     }
 
 	public LTExtras() {
+    	// Compatible with all versions that match the semver (excluding the qualifier e.g. "-beta+42")
+    	ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(LTExtras::getCompatVersion, (s, v) -> LTExtras.isCompatibleVersion(s)));
+
 		ExtraBlocks.init();
 
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -125,6 +128,17 @@ public class LTExtras {
 	        );
 		});
 	}
+
+    private static final Pattern QUALIFIER = Pattern.compile("-\\w+\\+\\d+");
+    public static String getCompatVersion() {
+    	return getCompatVersion(ModList.get().getModContainerById(MODID).orElseThrow(IllegalStateException::new).getModInfo().getVersion().toString());
+    }
+    private static String getCompatVersion(String fullVersion) {
+    	return QUALIFIER.matcher(fullVersion).replaceAll("");
+    }
+    public static boolean isCompatibleVersion(String version) {
+    	return getCompatVersion().equals(getCompatVersion(version));
+    }
 
 	private void onServerAboutToStart(FMLServerAboutToStartEvent event) {
 		NetworkTagManager tagManager = event.getServer().getNetworkTagManager();
