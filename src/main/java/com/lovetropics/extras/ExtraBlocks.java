@@ -179,7 +179,9 @@ public class ExtraBlocks {
 
 	public static final BlockEntry<Block> BLACK_CONCRETE_POWDER_FAKE = REGISTRATE.block("black_concrete_powder_fake", Block::new)
 			.initialProperties(() -> Blocks.DIRT)
-			.simpleItem()
+			.item()
+				.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("block/black_concrete_powder")))
+				.build()
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), ConfiguredModel.allYRotations(prov.models().getExistingFile(new ResourceLocation("block/black_concrete_powder")), 0, false)))
 			.register();
 
