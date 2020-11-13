@@ -32,7 +32,6 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FenceBlock;
-import net.minecraft.block.GlassBlock;
 import net.minecraft.block.LadderBlock;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.block.ScaffoldingBlock;
@@ -51,6 +50,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class ExtraBlocks {
@@ -61,7 +61,7 @@ public class ExtraBlocks {
 
     public static final BlockEntry<WaterBarrierBlock> WATER_BARRIER = REGISTRATE.block("water_barrier", WaterBarrierBlock::new)
             .properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
-            .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), 
+            .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
                     prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
             .item()
                 .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/water_still"), new ResourceLocation("item/barrier")))
@@ -180,7 +180,7 @@ public class ExtraBlocks {
 	public static final BlockEntry<Block> BLACK_CONCRETE_POWDER_FAKE = REGISTRATE.block("black_concrete_powder_fake", Block::new)
 			.initialProperties(() -> Blocks.DIRT)
 			.simpleItem()
-			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(new ResourceLocation("block/black_concrete_powder"))))
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), ConfiguredModel.allYRotations(prov.models().getExistingFile(new ResourceLocation("block/black_concrete_powder")), 0, false)))
 			.register();
 
     public static final BlockEntry<StainedGlassBlock> SMOOTH_LIGHT_GRAY_STAINED_GLASS = REGISTRATE.block("smooth_light_gray_stained_glass", p -> new StainedGlassBlock(DyeColor.LIGHT_GRAY, p))
