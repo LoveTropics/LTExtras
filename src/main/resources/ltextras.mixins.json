@@ -9,7 +9,8 @@
     "TagCollectionMixin",
     "TeamCommandMixin",
     "perf.ChunkManagerMixin",
-    "perf.ServerChunkProviderMixin"
+    "perf.ServerChunkProviderMixin",
+    "perf.MapDataMixin"
   ],
   "client": ["client.perf.Matrix4fMixin", "client.perf.MatrixStackMixin"],
   "injectors": {
