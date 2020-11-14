@@ -16,7 +16,7 @@ public class NetworkSystemMixin {
 					remap = false
 			)
 	)
-	private static void warn(Logger logger, String message, Object p0, Object p1) {
+	private void warn(Logger logger, String message, Object p0, Object p1) {
 		((Exception) p1).printStackTrace();
 	}
 }
