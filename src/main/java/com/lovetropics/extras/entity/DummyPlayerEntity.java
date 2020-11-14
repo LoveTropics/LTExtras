@@ -1,5 +1,9 @@
 package com.lovetropics.extras.entity;
 
+import java.io.File;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,6 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.item.DummyPlayerItem;
 import com.lovetropics.extras.network.LTExtrasNetwork;
@@ -32,7 +39,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.server.management.PlayerProfileCache;
-import net.minecraft.tileentity.SkullTileEntity;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
@@ -42,8 +48,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class DummyPlayerEntity extends ArmorStandEntity {
 
@@ -104,8 +110,10 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 	private static final DataParameter<Optional<ITextComponent>> PREFIX = EntityDataManager.createKey(DummyPlayerEntity.class, DataSerializers.OPTIONAL_TEXT_COMPONENT);
 	private static final DataParameter<Optional<ITextComponent>> SUFFIX = EntityDataManager.createKey(DummyPlayerEntity.class, DataSerializers.OPTIONAL_TEXT_COMPONENT);
 
-	private static final LazyValue<PlayerProfileCache> PROFILE_CACHE = new LazyValue<>(() -> 
-		ObfuscationReflectionHelper.getPrivateValue(SkullTileEntity.class, null, "field_184298_j"));
+	// TODO is this ok in singleplayer
+	private static final LazyValue<PlayerProfileCache> PROFILE_CACHE = new LazyValue<>(() ->
+    	new PlayerProfileCache(ServerLifecycleHooks.getCurrentServer().getGameProfileRepository(), new File(".", "dummyplayercache.json"))
+	);
 
 	public static void register() {}
 
@@ -231,9 +239,24 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 		CompletableFuture.supplyAsync(() -> {
 			GameProfile ret;
 			if (profile.getId() != null) {
-				ret = PROFILE_CACHE.getValue().getProfileByUUID(getProfile().getId());
+				try {
+					// fuck it time
+					HttpURLConnection con = (HttpURLConnection) new URL("https://playerdb.co/api/player/minecraft/" + getProfile().getId().toString()).openConnection();
+					con.setRequestProperty("User-Agent", "LTDonations 1.0 (lovetropics.com)");
+					con.setRequestProperty("Content-Type", "application/json");
+					JsonObject response = new Gson().<JsonObject>fromJson(new JsonReader(new InputStreamReader(con.getInputStream())), JsonObject.class);
+					String username = response.getAsJsonObject("data").getAsJsonObject("player").get("username").getAsString();
+					return new GameProfile(getProfile().getId(), username);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return profile;
+				}
+//				ret = PROFILE_CACHE.getValue().getProfileByUUID(getProfile().getId());
 			} else {
-				ret = PROFILE_CACHE.getValue().getGameProfileForUsername(getProfile().getName());
+				PlayerProfileCache cache = PROFILE_CACHE.getValue();
+				synchronized (cache) {
+					ret = cache.getGameProfileForUsername(getProfile().getName());
+				}
 			}
 			return ret == null ? profile : ret;
 		}).thenAcceptAsync(gp -> {
