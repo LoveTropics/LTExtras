@@ -239,6 +239,8 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 		CompletableFuture.supplyAsync(() -> {
 			GameProfile ret;
 			if (profile.getId() != null) {
+				ret = PROFILE_CACHE.getValue().getProfileByUUID(getProfile().getId());
+				if (ret != null) return ret;
 				try {
 					// fuck it time
 					HttpURLConnection con = (HttpURLConnection) new URL("https://playerdb.co/api/player/minecraft/" + getProfile().getId().toString()).openConnection();
@@ -251,7 +253,6 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 					e.printStackTrace();
 					return profile;
 				}
-//				ret = PROFILE_CACHE.getValue().getProfileByUUID(getProfile().getId());
 			} else {
 				PlayerProfileCache cache = PROFILE_CACHE.getValue();
 				synchronized (cache) {
