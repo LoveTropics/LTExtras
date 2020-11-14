@@ -5,12 +5,13 @@
   "refmap": "ltextras.refmap.json",
   "mixins": [
     "ItemStackMixin",
+    "NetworkSystemMixin",
     "PlayerListMixin",
     "TagCollectionMixin",
     "TeamCommandMixin",
     "perf.ChunkManagerMixin",
-    "perf.ServerChunkProviderMixin",
-    "perf.MapDataMixin"
+    "perf.MapDataMixin",
+    "perf.ServerChunkProviderMixin"
   ],
   "client": ["client.perf.Matrix4fMixin", "client.perf.MatrixStackMixin"],
   "injectors": {
