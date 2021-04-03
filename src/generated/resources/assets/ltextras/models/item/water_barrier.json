@@ -1,7 +1,7 @@
 {
-  "parent": "item/generated",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "block/water_still",
-    "layer1": "item/barrier"
+    "layer0": "minecraft:block/water_still",
+    "layer1": "minecraft:item/barrier"
   }
 }

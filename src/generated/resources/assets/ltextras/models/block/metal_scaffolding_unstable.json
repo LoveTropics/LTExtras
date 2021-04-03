@@ -1,5 +1,5 @@
 {
-  "parent": "block/scaffolding_unstable",
+  "parent": "minecraft:block/scaffolding_unstable",
   "textures": {
     "bottom": "ltextras:block/metal_scaffolding_bottom",
     "top": "ltextras:block/metal_scaffolding_top",

@@ -1,10 +1,10 @@
 {
-  "parent": "block/block",
+  "parent": "minecraft:block/block",
   "ambientocclusion": false,
   "textures": {
-    "beacon": "block/beacon",
-    "base": "block/dark_prismarine",
-    "particle": "block/dark_prismarine"
+    "beacon": "minecraft:block/beacon",
+    "base": "minecraft:block/dark_prismarine",
+    "particle": "minecraft:block/dark_prismarine"
   },
   "elements": [
     {
@@ -53,22 +53,22 @@
       ],
       "faces": {
         "down": {
-          "texture": "beacon"
+          "texture": "minecraft:beacon"
         },
         "up": {
-          "texture": "beacon"
+          "texture": "minecraft:beacon"
         },
         "north": {
-          "texture": "beacon"
+          "texture": "minecraft:beacon"
         },
         "south": {
-          "texture": "beacon"
+          "texture": "minecraft:beacon"
         },
         "west": {
-          "texture": "beacon"
+          "texture": "minecraft:beacon"
         },
         "east": {
-          "texture": "beacon"
+          "texture": "minecraft:beacon"
         }
       }
     }

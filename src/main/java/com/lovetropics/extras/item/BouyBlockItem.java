@@ -3,22 +3,16 @@ package com.lovetropics.extras.item;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -61,13 +55,13 @@ public class BouyBlockItem extends BlockItem {
 				BlockPos blockpos1 = blockpos.up();
 				BlockState blockstate = worldIn.getBlockState(blockpos);
 				Material material = blockstate.getMaterial();
-				IFluidState ifluidstate = worldIn.getFluidState(blockpos);
+				FluidState ifluidstate = worldIn.getFluidState(blockpos);
 				if ((ifluidstate.getFluid() == Fluids.WATER || material == Material.ICE)
 						&& worldIn.isAirBlock(blockpos1)) {
 
 					// special case for handling block placement with water lilies
 					net.minecraftforge.common.util.BlockSnapshot blocksnapshot = net.minecraftforge.common.util.BlockSnapshot
-							.getBlockSnapshot(worldIn, blockpos1);
+							.create(worldIn.getDimensionKey(), worldIn, blockpos1);
 					worldIn.setBlockState(blockpos1, getBlock().getDefaultState(), 11);
 					if (net.minecraftforge.event.ForgeEventFactory.onBlockPlace(playerIn, blocksnapshot,
 							net.minecraft.util.Direction.UP)) {

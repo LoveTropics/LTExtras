@@ -1,7 +1,22 @@
 package com.lovetropics.extras.command;
 
-import static net.minecraft.command.Commands.argument;
-import static net.minecraft.command.Commands.literal;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.lovetropics.extras.LTExtras;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import net.minecraft.command.CommandSource;
+import net.minecraft.item.Item;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,28 +25,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-
-import net.minecraft.command.CommandSource;
-import net.minecraft.item.Item;
-import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagCollection;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.registries.ForgeRegistries;
+import static net.minecraft.command.Commands.argument;
+import static net.minecraft.command.Commands.literal;
 
 public class GenerateCommand {
 
@@ -54,15 +51,16 @@ public class GenerateCommand {
 	private static int generateItemTag(CommandContext<CommandSource> ctx) throws CommandSyntaxException {
 		Pattern pattern = Pattern.compile(StringArgumentType.getString(ctx, "pattern"));
 
-		Tag.Builder<Item> tagBuilder = new Tag.Builder<>();
-		for (Entry<ResourceLocation, Item> e : ForgeRegistries.ITEMS.getEntries()) {
-			if (pattern.matcher(e.getKey().toString()).matches()) {
-				tagBuilder.add(e.getValue());
+		Tag.Builder tagBuilder = new Tag.Builder();
+
+		for (Entry<RegistryKey<Item>, Item> e : ForgeRegistries.ITEMS.getEntries()) {
+			ResourceLocation id = e.getKey().getLocation();
+			if (pattern.matcher(id.toString()).matches()) {
+				tagBuilder.addItemEntry(id, LTExtras.MODID);
 			}
 		}
-		TagCollection<Item> tagcollection = new TagCollection<>($ -> Optional.empty(), "", false, "generated");
-		tagcollection.registerAll(Maps.newHashMap(ImmutableMap.of(new ResourceLocation("generated"), tagBuilder)));
-		JsonObject json = tagcollection.getTagMap().values().iterator().next().serialize(ForgeRegistries.ITEMS::getKey);
+
+		JsonObject json = tagBuilder.serialize();
 
 		Path output = Paths.get("export", "generated", "tags", "item", StringArgumentType.getString(ctx, "name") + ".json");
 		try {

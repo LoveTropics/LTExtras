@@ -4,10 +4,12 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "ltextras.refmap.json",
   "mixins": [
+    "FluidStateMixin",
     "ItemStackMixin",
     "NetworkSystemMixin",
     "PlayerListMixin",
-    "TagCollectionMixin",
+    "ScaffoldingBlockMixin",
+    "TagCollectionReaderMixin",
     "TeamCommandMixin",
     "perf.ChunkManagerMixin",
     "perf.MapDataMixin",

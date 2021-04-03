@@ -1,5 +1,5 @@
 {
   "textures": {
-    "particle": "item/structure_void"
+    "particle": "minecraft:item/structure_void"
   }
 }

@@ -1,10 +1,6 @@
 package com.lovetropics.extras.block;
 
-import java.util.List;
-import java.util.Random;
-
 import com.lovetropics.extras.client.particle.ExtraParticles;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -29,6 +25,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
+
+import java.util.List;
+import java.util.Random;
 
 public class CheckpointBlock extends Block {
 
@@ -72,7 +71,7 @@ public class CheckpointBlock extends Block {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		tooltip.add(new StringTextComponent("Stage: ")
 				.appendSibling(new StringTextComponent(Integer.toString(getStage(stack)))
-						.applyTextStyle(TextFormatting.AQUA)));
+						.mergeStyle(TextFormatting.AQUA)));
 	}
 
 	@Override

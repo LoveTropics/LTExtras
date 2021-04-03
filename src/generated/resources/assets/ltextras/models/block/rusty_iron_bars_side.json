@@ -1,5 +1,5 @@
 {
-  "parent": "block/iron_bars_side",
+  "parent": "minecraft:block/iron_bars_side",
   "textures": {
     "bars": "ltextras:block/rusty_iron_bars",
     "edge": "ltextras:block/rusty_iron_bars",

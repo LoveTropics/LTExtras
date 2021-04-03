@@ -1,7 +1,7 @@
 package com.lovetropics.extras.mixin.client.perf;
 
 import com.lovetropics.extras.client.perf.Matrix4fExt;
-import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.util.math.vector.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 

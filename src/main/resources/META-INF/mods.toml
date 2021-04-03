@@ -1,15 +1,15 @@
-modLoader="javafml" #mandatory
-loaderVersion="[25,)" #mandatory (24 is current forge version)
+modLoader="javafml"
+loaderVersion="[36,)"
 issueTrackerURL="https://github.com/LoveTropics/LTExtras/issues"
+license="All Rights Reserved"
 
 [[mods]]
 modId="ltextras"
 version="${file.jarVersion}"
-displayName="LTExtras" #mandatory
+displayName="LTExtras"
 displayURL="https://lovetropics.com"
-#logoFile="examplemod.png" #optional
-credits="" #optional
-authors="tterrag" #optional
+credits=""
+authors="tterrag"
 description='''
 Extra content for the LoveTropics map build.
 '''

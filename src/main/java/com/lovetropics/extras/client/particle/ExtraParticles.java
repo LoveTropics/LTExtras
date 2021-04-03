@@ -8,7 +8,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public final class ExtraParticles {
-	public static final DeferredRegister<ParticleType<?>> REGISTER = new DeferredRegister<>(ForgeRegistries.PARTICLE_TYPES, LTExtras.MODID);
+	public static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, LTExtras.MODID);
 
 	public static final RegistryObject<BasicParticleType> WATER_BARRIER = REGISTER.register("water_barrier", () -> new BasicParticleType(false));
 	public static final RegistryObject<BasicParticleType> CHECKPOINT = REGISTER.register("checkpoint", () -> new BasicParticleType(false));

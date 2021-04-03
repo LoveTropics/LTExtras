@@ -7,10 +7,10 @@
     },
     {
       "when": {
-        "west": "false",
+        "north": "false",
         "east": "false",
         "south": "false",
-        "north": "false"
+        "west": "false"
       },
       "apply": {
         "model": "ltextras:block/rusty_iron_bars_post"
@@ -18,10 +18,10 @@
     },
     {
       "when": {
-        "west": "false",
+        "north": "true",
         "east": "false",
         "south": "false",
-        "north": "true"
+        "west": "false"
       },
       "apply": {
         "model": "ltextras:block/rusty_iron_bars_cap"
@@ -29,10 +29,10 @@
     },
     {
       "when": {
-        "west": "false",
+        "north": "false",
         "east": "true",
         "south": "false",
-        "north": "false"
+        "west": "false"
       },
       "apply": {
         "model": "ltextras:block/rusty_iron_bars_cap",
@@ -41,10 +41,10 @@
     },
     {
       "when": {
-        "west": "false",
+        "north": "false",
         "east": "false",
         "south": "true",
-        "north": "false"
+        "west": "false"
       },
       "apply": {
         "model": "ltextras:block/rusty_iron_bars_cap_alt"
@@ -52,10 +52,10 @@
     },
     {
       "when": {
-        "west": "true",
+        "north": "false",
         "east": "false",
         "south": "false",
-        "north": "false"
+        "west": "true"
       },
       "apply": {
         "model": "ltextras:block/rusty_iron_bars_cap_alt",

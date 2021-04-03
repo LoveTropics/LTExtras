@@ -1,23 +1,8 @@
 package com.lovetropics.extras.entity;
 
-import java.io.File;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.item.DummyPlayerItem;
 import com.lovetropics.extras.network.LTExtrasNetwork;
@@ -25,7 +10,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.EntityClassification;
@@ -42,6 +26,7 @@ import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -50,6 +35,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+
+import javax.annotation.Nullable;
+import java.net.HttpURLConnection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class DummyPlayerEntity extends ArmorStandEntity {
 
@@ -151,7 +145,7 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 
 	@Override
 	public ITextComponent getDisplayName() {
-		ITextComponent ret = super.getDisplayName().deepCopy();
+		IFormattableTextComponent ret = super.getDisplayName().deepCopy();
 		ITextComponent prefix = this.dataManager.get(PREFIX).orElse(null);
 		ITextComponent suffix = this.dataManager.get(SUFFIX).orElse(null);
 		if (prefix != null) {
@@ -195,10 +189,10 @@ public class DummyPlayerEntity extends ArmorStandEntity {
 		super.readAdditional(compound);
 
 		if (compound.contains("NamePrefix", Constants.NBT.TAG_STRING)) {
-			this.dataManager.set(PREFIX, Optional.ofNullable(ITextComponent.Serializer.fromJson(compound.getString("NamePrefix"))));
+			this.dataManager.set(PREFIX, Optional.ofNullable(ITextComponent.Serializer.getComponentFromJson(compound.getString("NamePrefix"))));
 		}
 		if (compound.contains("NameSuffix", Constants.NBT.TAG_STRING)) {
-			this.dataManager.set(SUFFIX, Optional.ofNullable(ITextComponent.Serializer.fromJson(compound.getString("NameSuffix"))));
+			this.dataManager.set(SUFFIX, Optional.ofNullable(ITextComponent.Serializer.getComponentFromJson(compound.getString("NameSuffix"))));
 		}
 
 		if (compound.contains("ProfileName", Constants.NBT.TAG_STRING)) {

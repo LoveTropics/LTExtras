@@ -139,7 +139,7 @@ public abstract class ServerChunkProviderMixin {
 	 */
 	@Overwrite
 	@Nullable
-	public Chunk getChunkWithoutLoading(int x, int z) {
+	public Chunk getChunkNow(int x, int z) {
 		return (Chunk) this.getExistingChunk(x, z, ChunkStatus.FULL);
 	}
 

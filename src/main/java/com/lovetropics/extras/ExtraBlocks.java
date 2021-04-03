@@ -1,24 +1,7 @@
 package com.lovetropics.extras;
 
-import static com.lovetropics.extras.data.ModelGenUtil.barsBlock;
-import static com.lovetropics.extras.data.ModelGenUtil.fenceBlock;
-import static com.lovetropics.extras.data.ModelGenUtil.getMainTexture;
-import static com.lovetropics.extras.data.ModelGenUtil.scaffoldingModel;
-import static com.lovetropics.extras.data.ModelGenUtil.slabBlock;
-import static com.lovetropics.extras.data.ModelGenUtil.stairsBlock;
-import static com.lovetropics.extras.data.ModelGenUtil.wallBlock;
-
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.ImmutableMap;
-import com.lovetropics.extras.block.CheckpointBlock;
-import com.lovetropics.extras.block.FakeWaterBlock;
-import com.lovetropics.extras.block.GirderBlock;
-import com.lovetropics.extras.block.PanelBlock;
-import com.lovetropics.extras.block.SpeedyBlock;
-import com.lovetropics.extras.block.WaterBarrierBlock;
+import com.lovetropics.extras.block.*;
 import com.lovetropics.extras.data.ModelGenUtil;
 import com.lovetropics.extras.data.TextureType;
 import com.lovetropics.extras.item.BouyBlockItem;
@@ -28,30 +11,29 @@ import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FenceBlock;
-import net.minecraft.block.LadderBlock;
-import net.minecraft.block.PaneBlock;
-import net.minecraft.block.ScaffoldingBlock;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.StainedGlassBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.block.WallBlock;
+import net.minecraft.block.*;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ScaffoldingItem;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IWorldReader;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.registries.IRegistryDelegate;
+
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import static com.lovetropics.extras.data.ModelGenUtil.*;
 
 public class ExtraBlocks {
 
@@ -114,7 +96,7 @@ public class ExtraBlocks {
     			.build()
     		.register();
     
-    public static final Tag<Block> TAG_STEEL_GIRDERS = new BlockTags.Wrapper(new ResourceLocation(LTExtras.MODID, "steel_girders"));
+    public static final ITag.INamedTag<Block> TAG_STEEL_GIRDERS = BlockTags.makeWrapperTag(LTExtras.MODID +":steel_girders");
 
     public static final BlockEntry<GirderBlock> STEEL_GIRDER = steelGirder("");
     public static final BlockEntry<GirderBlock> RUSTING_STEEL_GIRDER = steelGirder("rusting");
@@ -138,12 +120,17 @@ public class ExtraBlocks {
 	            .build()
     		.register();
 
-    public static final BlockEntry<ScaffoldingBlock> METAL_SCAFFOLDING = REGISTRATE.block("metal_scaffolding", p -> (ScaffoldingBlock) new ScaffoldingBlock(p) {})
+    public static final BlockEntry<ScaffoldingBlock> METAL_SCAFFOLDING = REGISTRATE.block("metal_scaffolding", p -> (ScaffoldingBlock) new ScaffoldingBlock(p) {
+		@Override
+		public boolean isScaffolding(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity) {
+			return true;
+		}
+	})
     		.initialProperties(() -> Blocks.SCAFFOLDING)
     		.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
-    				.partialState().with(ScaffoldingBlock.field_220120_c, true)
+    				.partialState().with(ScaffoldingBlock.BOTTOM, true)
     					.addModels(scaffoldingModel(ctx, prov, "unstable"))
-    				.partialState().with(ScaffoldingBlock.field_220120_c, false)
+    				.partialState().with(ScaffoldingBlock.BOTTOM, false)
     					.addModels(scaffoldingModel(ctx, prov, "stable")))
     		.addLayer(() -> RenderType::getCutout)
     		.item(ScaffoldingItem::new)

@@ -1,13 +1,5 @@
 package com.lovetropics.extras;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.client.renderer.dummy.DummyPlayerEntityRenderer;
 import com.lovetropics.extras.command.GenerateCommand;
@@ -19,32 +11,32 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tags.NetworkTagManager;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ExtensionPoint;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.*;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
-import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Mod("ltextras")
 public class LTExtras {
@@ -96,7 +88,7 @@ public class LTExtras {
 			modBus.addListener(this::registerItemColors);
 		});
 
-		MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
+		MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
 
 		registrate()
 			.addDataGenerator(ProviderType.LANG, p -> p.add(ITEM_GROUP, "LTExtras"));
@@ -128,12 +120,8 @@ public class LTExtras {
     	return getCompatVersion().equals(getCompatVersion(version));
     }
 
-	private void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-		NetworkTagManager tagManager = event.getServer().getNetworkTagManager();
-		EverythingTag.addTo(tagManager.getBlocks(), ForgeRegistries.BLOCKS);
-		EverythingTag.addTo(tagManager.getItems(), ForgeRegistries.ITEMS);
-
-		CommandDispatcher<CommandSource> dispatcher = event.getServer().getCommandManager().getDispatcher();
+	private void onRegisterCommands(RegisterCommandsEvent event) {
+		CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
 		SetMaxPlayersCommand.register(dispatcher);
 		GenerateCommand.register(dispatcher);
 	}

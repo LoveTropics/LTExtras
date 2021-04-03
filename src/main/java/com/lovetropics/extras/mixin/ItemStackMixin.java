@@ -5,12 +5,13 @@ import com.lovetropics.extras.EverythingTag;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.Collection;
+import java.util.List;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
@@ -20,12 +21,15 @@ public class ItemStackMixin {
 			method = "getPlacementTooltip",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/tags/Tag;getAllElements()Ljava/util/Collection;"
+					target = "Lnet/minecraft/tags/ITag;getAllElements()Ljava/util/List;"
 			)
 	)
-	private static Collection<Block> getPlacementTooltipForTag(Tag<Block> tag) {
-		if (tag.getId().equals(EverythingTag.ID)) {
-			return TAG_FALLBACK;
+	private static List<Block> getPlacementTooltipForTag(ITag<Block> tag) {
+		if (tag instanceof ITag.INamedTag) {
+			ResourceLocation name = ((ITag.INamedTag<Block>) tag).getName();
+			if (name.equals(EverythingTag.ID)) {
+				return TAG_FALLBACK;
+			}
 		}
 		return tag.getAllElements();
 	}
