@@ -3,6 +3,7 @@ package com.lovetropics.extras.entity;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.item.DummyPlayerItem;
 import com.lovetropics.extras.network.LTExtrasNetwork;
@@ -39,7 +40,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nullable;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
