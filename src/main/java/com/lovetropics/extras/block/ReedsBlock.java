@@ -24,7 +24,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.Constants;
 
 import java.util.Random;
 
@@ -70,25 +69,13 @@ public final class ReedsBlock extends Block implements IWaterLoggable, IPlantabl
             world.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
-        if (facing == Direction.UP && facingState.matchesBlock(this)) {
-            world.setBlockState(currentPos, state.with(TYPE, Type.BOTTOM), Constants.BlockFlags.BLOCK_UPDATE);
-        }
-
-        return super.updatePostPlacement(state, facing, facingState, world, currentPos, facingPos);
+        return state.with(TYPE, this.getAppropriateTypeAt(world, currentPos));
     }
 
-    @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-        if (block == this) {
-            Type type = this.getAppropriateTypeAt(world, pos);
-            if (type != state.get(TYPE)) {
-                world.setBlockState(pos, state.with(TYPE, type), Constants.BlockFlags.BLOCK_UPDATE);
-            }
+    private Type getAppropriateTypeAt(IWorld world, BlockPos pos) {
+        if (world.getBlockState(pos.up()).matchesBlock(this)) {
+            return Type.BOTTOM;
         }
-        super.neighborChanged(state, world, pos, block, fromPos, isMoving);
-    }
-
-    private Type getAppropriateTypeAt(World world, BlockPos pos) {
         return world.getBlockState(pos.down()).matchesBlock(this) ? Type.TOP : Type.SINGLE;
     }
 
