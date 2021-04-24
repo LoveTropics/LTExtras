@@ -1,0 +1,32 @@
+{
+  "variants": {
+    "type=single,waterlogged=false": {
+      "model": "ltextras:block/reeds_top_short"
+    },
+    "type=bottom,waterlogged=false": {
+      "model": "ltextras:block/reeds_bottom"
+    },
+    "type=top,waterlogged=false": [
+      {
+        "model": "ltextras:block/reeds_top_tall"
+      },
+      {
+        "model": "ltextras:block/reeds_top_short"
+      }
+    ],
+    "type=single,waterlogged=true": {
+      "model": "ltextras:block/reeds_top_short"
+    },
+    "type=bottom,waterlogged=true": {
+      "model": "ltextras:block/reeds_bottom"
+    },
+    "type=top,waterlogged=true": [
+      {
+        "model": "ltextras:block/reeds_top_tall"
+      },
+      {
+        "model": "ltextras:block/reeds_top_short"
+      }
+    ]
+  }
+}

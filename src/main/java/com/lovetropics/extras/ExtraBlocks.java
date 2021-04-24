@@ -179,7 +179,38 @@ public class ExtraBlocks {
     		.simpleItem()
     		.register();
 
-    // Speedy blocks
+	public static final BlockEntry<ReedsBlock> REEDS = REGISTRATE.block("reeds", ReedsBlock::new)
+			.properties(p -> Block.Properties.from(Blocks.SUGAR_CANE).noDrops())
+			.blockstate((ctx, prov) -> {
+				prov.getVariantBuilder(ctx.getEntry())
+						.forAllStates(state -> {
+							ReedsBlock.Type type = state.get(ReedsBlock.TYPE);
+							ConfiguredModel.Builder<?> builder = ConfiguredModel.builder();
+
+							String[] textures = type.getTextures();
+							for (int i = 0; i < textures.length; i++) {
+								String texture = textures[i];
+								ResourceLocation textureLoc = prov.modLoc("block/" + texture);
+								builder.modelFile(prov.models()
+										.withExistingParent(texture, "block/crop")
+										.texture("crop", textureLoc)
+										.texture("particle", textureLoc)
+								);
+								if (i < textures.length - 1) {
+									builder = builder.nextModel();
+								}
+							}
+
+							return builder.build();
+						});
+			})
+			.addLayer(() -> RenderType::getCutout)
+			.item()
+			.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/reeds_top_tall")))
+			.build()
+			.register();
+
+	// Speedy blocks
 
     public static final BlockEntry<SpeedyBlock> SPEEDY_QUARTZ = speedyBlock(Blocks.QUARTZ_BLOCK.delegate, SpeedyBlock::opaque);
     public static final BlockEntry<SpeedyBlock> SPEEDY_STONE_BRICKS = speedyBlock(Blocks.STONE_BRICKS.delegate, SpeedyBlock::opaque);

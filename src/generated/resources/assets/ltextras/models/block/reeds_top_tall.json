@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "ltextras:block/reeds_top_tall",
+    "particle": "ltextras:block/reeds_top_tall"
+  }
+}
