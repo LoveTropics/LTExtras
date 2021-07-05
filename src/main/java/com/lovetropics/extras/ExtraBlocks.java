@@ -80,7 +80,7 @@ public class ExtraBlocks {
                         .element()
                             .from(3, 3, 3)
                             .to(13, 14, 13)
-                            .textureAll("beacon")
+                            .textureAll("#beacon")
                             .end()))
             .item(BouyBlockItem::new).build()
             .register();

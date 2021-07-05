@@ -53,22 +53,22 @@
       ],
       "faces": {
         "down": {
-          "texture": "minecraft:beacon"
+          "texture": "#beacon"
         },
         "up": {
-          "texture": "minecraft:beacon"
+          "texture": "#beacon"
         },
         "north": {
-          "texture": "minecraft:beacon"
+          "texture": "#beacon"
         },
         "south": {
-          "texture": "minecraft:beacon"
+          "texture": "#beacon"
         },
         "west": {
-          "texture": "minecraft:beacon"
+          "texture": "#beacon"
         },
         "east": {
-          "texture": "minecraft:beacon"
+          "texture": "#beacon"
         }
       }
     }

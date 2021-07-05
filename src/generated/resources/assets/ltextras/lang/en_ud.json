@@ -33,7 +33,5 @@
   "block.ltextras.stone_fence": "\u01DD\u0254u\u01DD\u2132 \u01DDuo\u0287S",
   "block.ltextras.stone_wall": "\u05DF\u05DF\u0250M \u01DDuo\u0287S",
   "block.ltextras.water_barrier": "\u0279\u01DD\u0131\u0279\u0279\u0250\u15FA \u0279\u01DD\u0287\u0250M",
-  "entity.ltextras.dummy_player": "\u0279\u01DD\u028E\u0250\u05DF\u0500 \u028E\u026F\u026Fn\u15E1",
-  "item.ltextras.dummy_player": "\u0279\u01DD\u028E\u0250\u05DF\u0500 \u028E\u026F\u026Fn\u15E1",
   "itemGroup.ltextras": "s\u0250\u0279\u0287x\u018E\u27D8\uA780"
 }
