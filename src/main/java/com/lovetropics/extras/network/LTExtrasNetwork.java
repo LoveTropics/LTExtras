@@ -1,7 +1,6 @@
 package com.lovetropics.extras.network;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.entity.UpdateDummyTexturesMessage;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -17,7 +16,6 @@ public class LTExtrasNetwork {
 	);
 
 	public static void register() {
-		CHANNEL.registerMessage(0, UpdateDummyTexturesMessage.class, UpdateDummyTexturesMessage::toBytes, UpdateDummyTexturesMessage::fromBytes, UpdateDummyTexturesMessage::handle);
 	}
 }
 
