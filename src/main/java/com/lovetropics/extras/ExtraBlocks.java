@@ -12,6 +12,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.entity.LivingEntity;
@@ -26,7 +27,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IWorldReader;
+import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 import java.util.Map;
@@ -52,7 +55,7 @@ public class ExtraBlocks {
 
     public static final BlockEntry<FakeWaterBlock> FAKE_WATER = REGISTRATE.block("fake_water", FakeWaterBlock::new)
             .properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
-            .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), 
+            .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
                     prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("block/water_still"))))
             .item()
                 .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/water_still")))
@@ -95,7 +98,7 @@ public class ExtraBlocks {
     			.model((ctx, prov) -> prov.trapdoorBottom(ctx.getName(), prov.mcLoc("block/glass")))
     			.build()
     		.register();
-    
+
     public static final ITag.INamedTag<Block> TAG_STEEL_GIRDERS = BlockTags.makeWrapperTag(LTExtras.MODID +":steel_girders");
 
     public static final BlockEntry<GirderBlock> STEEL_GIRDER = steelGirder("");
@@ -149,7 +152,8 @@ public class ExtraBlocks {
 
     public static final BlockEntry<LadderBlock> METAL_LADDER = REGISTRATE.block("metal_ladder", p -> (LadderBlock) new LadderBlock(p) {})
     		.initialProperties(() -> Blocks.IRON_BARS)
-    		.blockstate((ctx, prov) -> prov.horizontalBlock(ctx.getEntry(), prov.models()
+			.tag(BlockTags.CLIMBABLE)
+			.blockstate((ctx, prov) -> prov.horizontalBlock(ctx.getEntry(), prov.models()
     				.withExistingParent(ctx.getName(), "block/ladder")
     				.texture("texture", prov.blockTexture(ctx.getEntry()))
     				.texture("particle", prov.blockTexture(ctx.getEntry()))))
@@ -210,6 +214,41 @@ public class ExtraBlocks {
 			.build()
 			.register();
 
+	public static final BlockEntry<PianguasBlock> PIANGUAS = REGISTRATE.block("pianguas", PianguasBlock::new)
+			.properties(p -> AbstractBlock.Properties.create(Material.ROCK).doesNotBlockMovement().zeroHardnessAndResistance())
+			.blockstate((ctx, prov) -> {
+				BlockModelBuilder model = prov.models().getBuilder("pianguas")
+						.ao(false)
+						.texture("base", "block/pianguas")
+						.texture("particle", "block/pianguas")
+						.element()
+							.from(0, 0, 0.1F)
+							.to(16, 16, 0.1F)
+							.face(Direction.SOUTH)
+								.uvs(16, 0, 0, 16)
+								.texture("#base")
+								.end()
+						.end();
+
+				MultiPartBlockStateBuilder builder = prov.getMultipartBuilder(ctx.getEntry());
+				PianguasBlock.ATTACHMENTS.forEach((direction, property) -> {
+					if (direction.getAxis().isHorizontal()) {
+						int rotationY = (((int) direction.getHorizontalAngle()) + 180) % 360;
+						builder.part().modelFile(model).rotationY(rotationY).uvLock(true).addModel()
+								.condition(property, true);
+					} else {
+						int rotationX = direction == Direction.DOWN ? 90 : 270;
+						builder.part().modelFile(model).rotationX(rotationX).uvLock(true).addModel()
+								.condition(property, true);
+					}
+				});
+			})
+			.addLayer(() -> RenderType::getCutout)
+			.item()
+			.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/pianguas")))
+			.build()
+			.register();
+
 	// Speedy blocks
 
     public static final BlockEntry<SpeedyBlock> SPEEDY_QUARTZ = speedyBlock(Blocks.QUARTZ_BLOCK.delegate, SpeedyBlock::opaque);
@@ -221,7 +260,7 @@ public class ExtraBlocks {
     public static final BlockEntry<SpeedyBlock> SPEEDY_GRASS_PATH = speedyBlock(Blocks.GRASS_PATH.delegate, p -> SpeedyBlock.transparent(PATH_SHAPE, p));
 
     private static <T extends SpeedyBlock> BlockEntry<T> speedyBlock(IRegistryDelegate<Block> source, NonNullFunction<Block.Properties, T> creator) {
-    	return REGISTRATE 
+    	return REGISTRATE
 			.block("speedy_" + source.name().getPath(), creator)
 			.initialProperties(source::get)
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(source.name())))
