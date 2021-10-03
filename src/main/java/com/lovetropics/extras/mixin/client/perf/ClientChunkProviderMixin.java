@@ -21,7 +21,7 @@ public class ClientChunkProviderMixin {
     @Unique
     private int tableShift;
 
-    @Redirect(method = "<init>(Lnet/minecraft/client/multiplayer/ClientChunkProvider;I)V", at = @At(value = "NEW", target = "Ljava/util/concurrent/atomic/AtomicReferenceArray;<init>(I)V"))
+    @Redirect(method = "<init>", at = @At(value = "NEW", target = "Ljava/util/concurrent/atomic/AtomicReferenceArray;<init>(I)V", remap = false))
     private AtomicReferenceArray<Chunk> createChunkArray(int length) {
         int tableSize = MathHelper.smallestEncompassingPowerOfTwo(this.sideLength);
         this.tableMask = tableSize - 1;
