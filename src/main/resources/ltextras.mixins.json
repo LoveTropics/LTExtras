@@ -15,7 +15,11 @@
     "perf.MapDataMixin",
     "perf.ServerChunkProviderMixin"
   ],
-  "client": ["client.perf.Matrix4fMixin", "client.perf.MatrixStackMixin"],
+  "client": [
+    "client.perf.Matrix4fMixin",
+    "client.perf.MatrixStackMixin",
+    "client.perf.ClientChunkProviderMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },
