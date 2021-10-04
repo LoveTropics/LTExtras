@@ -12,11 +12,13 @@
     "TagCollectionReaderMixin",
     "TeamCommandMixin",
     "perf.ChunkManagerMixin",
+    "perf.FuzzedBiomeMagnifierMixin",
     "perf.MapDataMixin",
     "perf.ServerChunkProviderMixin"
   ],
   "client": [
     "client.perf.BlockModelRendererCacheMixin",
+    "client.perf.ChunkRenderCacheMixin",
     "client.perf.ChunkRenderMixin",
     "client.perf.ClientChunkProviderChunkArrayMixin",
     "client.perf.ClientWorldMixin",

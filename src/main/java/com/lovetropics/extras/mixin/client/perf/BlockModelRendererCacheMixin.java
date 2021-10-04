@@ -8,6 +8,7 @@ import net.minecraft.world.IBlockDisplayReader;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -16,13 +17,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BlockModelRendererCacheMixin {
     @Shadow private boolean enabled;
 
-    private final LossyLightCache.Packed packedLightCache = new LossyLightCache.Packed(128);
-    private final LossyLightCache.Brightness brightnessCache = new LossyLightCache.Brightness(128);
+    @Unique
+    private final LossyLightCache.Packed fastPackedLightCache = new LossyLightCache.Packed(128);
+    @Unique
+    private final LossyLightCache.Brightness fastBrightnessCache = new LossyLightCache.Brightness(128);
 
     @Inject(method = "disable", at = @At("RETURN"))
     private void disable(CallbackInfo ci) {
-        this.packedLightCache.clear();
-        this.brightnessCache.clear();
+        this.fastPackedLightCache.clear();
+        this.fastBrightnessCache.clear();
     }
 
     /**
@@ -36,7 +39,7 @@ public class BlockModelRendererCacheMixin {
         }
 
         long posKey = pos.toLong();
-        LossyLightCache.Packed cache = this.packedLightCache;
+        LossyLightCache.Packed cache = this.fastPackedLightCache;
 
         int light = cache.get(posKey);
         if (light != Integer.MAX_VALUE) {
@@ -60,7 +63,7 @@ public class BlockModelRendererCacheMixin {
         }
 
         long posKey = pos.toLong();
-        LossyLightCache.Brightness cache = this.brightnessCache;
+        LossyLightCache.Brightness cache = this.fastBrightnessCache;
 
         float brightness = cache.get(posKey);
         if (!Float.isNaN(brightness)) {
