@@ -27,7 +27,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Arrays;
 import java.util.Collections;
 
-// note: this will not port to 1.18 given vertical biomes! sampling the whole chunk biome volume is too expensive.
 @Mixin(ChunkRenderCache.class)
 public abstract class ChunkRenderCacheMixin {
     @Shadow @Final protected World world;
@@ -38,7 +37,6 @@ public abstract class ChunkRenderCacheMixin {
     @Shadow
     protected abstract int getIndex(int x, int y, int z);
 
-    @Shadow @Final protected int chunkStartX;
     @Unique
     private ChunkPos chunkPos;
     @Unique
@@ -122,6 +120,7 @@ public abstract class ChunkRenderCacheMixin {
      * @reason redirect to local optimized cache for standard biome color accessors
      * @author Gegy
      */
+    // note: this will not port to 1.18 given vertical biomes! sampling the whole chunk biome volume is too expensive.
     @Overwrite
     public int getBlockColor(BlockPos pos, ColorResolver resolver) {
         if (resolver == BiomeColors.GRASS_COLOR) {

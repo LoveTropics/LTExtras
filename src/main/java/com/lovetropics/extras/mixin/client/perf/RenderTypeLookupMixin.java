@@ -33,8 +33,10 @@ public class RenderTypeLookupMixin {
 
     @Shadow @Final @Deprecated private static Map<Block, RenderType> TYPES_BY_BLOCK;
     @Shadow @Final @Deprecated private static Map<Fluid, RenderType> TYPES_BY_FLUID;
-    @Shadow @Mutable @Final private static Map<IRegistryDelegate<Block>, Predicate<RenderType>> blockRenderChecks;
-    @Shadow @Mutable @Final private static Map<IRegistryDelegate<Fluid>, Predicate<RenderType>> fluidRenderChecks;
+    @Shadow(remap = false)
+    @Mutable @Final private static Map<IRegistryDelegate<Block>, Predicate<RenderType>> blockRenderChecks;
+    @Shadow(remap = false)
+    @Mutable @Final private static Map<IRegistryDelegate<Fluid>, Predicate<RenderType>> fluidRenderChecks;
 
     @Unique
     private static final StampedLock RENDER_CHECK_LOCK = new StampedLock();
@@ -65,7 +67,7 @@ public class RenderTypeLookupMixin {
      * @reason avoid synchronized block for accessing render layer by instead using a read-write lock
      * @author Gegy
      */
-    @Overwrite
+    @Overwrite(remap = false)
     public static boolean canRenderInLayer(BlockState state, RenderType type) {
         Block block = state.getBlock();
         if (block instanceof LeavesBlock) {
@@ -79,7 +81,7 @@ public class RenderTypeLookupMixin {
      * @reason avoid synchronized block for accessing render layer by instead using a read-write lock
      * @author Gegy
      */
-    @Overwrite
+    @Overwrite(remap = false)
     public static boolean canRenderInLayer(FluidState fluid, RenderType type) {
         return canRenderInLayer(type, fluidRenderChecks, fluid.getFluid().delegate);
     }
@@ -109,7 +111,7 @@ public class RenderTypeLookupMixin {
      * @reason avoid synchronized block for accessing render layer by instead using a read-write lock
      * @author Gegy
      */
-    @Overwrite
+    @Overwrite(remap = false)
     public static synchronized void setRenderLayer(Block block, Predicate<RenderType> predicate) {
         long stamp = RENDER_CHECK_LOCK.writeLock();
         try {
@@ -123,7 +125,7 @@ public class RenderTypeLookupMixin {
      * @reason avoid synchronized block for accessing render layer by instead using a read-write lock
      * @author Gegy
      */
-    @Overwrite
+    @Overwrite(remap = false)
     public static synchronized void setRenderLayer(Fluid fluid, Predicate<RenderType> predicate) {
         long stamp = RENDER_CHECK_LOCK.writeLock();
         try {

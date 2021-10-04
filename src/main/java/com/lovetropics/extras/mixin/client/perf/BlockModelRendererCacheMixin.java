@@ -22,7 +22,7 @@ public class BlockModelRendererCacheMixin {
     @Unique
     private final LossyLightCache.Brightness fastBrightnessCache = new LossyLightCache.Brightness(128);
 
-    @Inject(method = "disable", at = @At("RETURN"))
+    @Inject(method = "disable()V", at = @At("RETURN"))
     private void disable(CallbackInfo ci) {
         this.fastPackedLightCache.clear();
         this.fastBrightnessCache.clear();
