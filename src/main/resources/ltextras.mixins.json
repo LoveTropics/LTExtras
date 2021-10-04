@@ -16,9 +16,14 @@
     "perf.ServerChunkProviderMixin"
   ],
   "client": [
+    "client.perf.ChunkRenderMixin",
+    "client.perf.ClientChunkProviderChunkArrayMixin",
+    "client.perf.ClientWorldMixin",
     "client.perf.Matrix4fMixin",
     "client.perf.MatrixStackMixin",
-    "client.perf.ClientChunkProviderChunkArrayMixin"
+    "client.perf.RenderTypeLookupMixin",
+    "client.perf.ViewFrustumAccess",
+    "client.perf.WorldRendererAccess"
   ],
   "injectors": {
     "defaultRequire": 1
