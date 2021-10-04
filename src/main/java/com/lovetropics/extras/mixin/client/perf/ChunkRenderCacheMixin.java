@@ -1,12 +1,18 @@
 package com.lovetropics.extras.mixin.client.perf;
 
 import com.lovetropics.extras.perf.BiomeColorSampler;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.chunk.ChunkRenderCache;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.palette.PalettedContainer;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.level.ColorResolver;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,13 +21,24 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 // note: this will not port to 1.18 given vertical biomes! sampling the whole chunk biome volume is too expensive.
 @Mixin(ChunkRenderCache.class)
-public class ChunkRenderCacheMixin {
+public abstract class ChunkRenderCacheMixin {
     @Shadow @Final protected World world;
 
+    @Shadow @Final protected BlockState[] blockStates;
+    @Shadow @Final protected FluidState[] fluidStates;
+
+    @Shadow
+    protected abstract int getIndex(int x, int y, int z);
+
+    @Shadow @Final protected int chunkStartX;
     @Unique
     private ChunkPos chunkPos;
     @Unique
@@ -42,6 +59,63 @@ public class ChunkRenderCacheMixin {
                 (startPos.getZ() + endPos.getZ()) / 2
         );
         this.chunkPos = new ChunkPos(centerPos.getX() >> 4, centerPos.getZ() >> 4);
+
+        this.fillBlockData(world, chunkStartX, chunkStartZ, chunks, startPos, endPos);
+    }
+
+    private void fillBlockData(World world, int minChunkX, int minChunkZ, Chunk[][] chunks, BlockPos startPos, BlockPos endPos) {
+        int minChunkY = 0;
+        int maxChunkX = minChunkX + chunks.length;
+        int maxChunkY = world.getHeight() >> 4;
+        int maxChunkZ = minChunkZ + chunks[0].length;
+
+        // we can fill chunk data a lot faster than vanilla by operating on the lower level data structures directly
+        BlockState[] blockStates = this.blockStates;
+        FluidState[] fluidStates = this.fluidStates;
+        Arrays.fill(blockStates, Blocks.AIR.getDefaultState());
+        Arrays.fill(fluidStates, Fluids.EMPTY.getDefaultState());
+
+        for (int chunkZ = minChunkZ; chunkZ < maxChunkZ; chunkZ++) {
+            int minBlockZ = Math.max(chunkZ << 4, startPos.getZ());
+            int maxBlockZ = Math.min((chunkZ << 4) + 15, endPos.getZ());
+
+            for (int chunkX = minChunkX; chunkX < maxChunkX; chunkX++) {
+                int minBlockX = Math.max(chunkX << 4, startPos.getX());
+                int maxBlockX = Math.min((chunkX << 4) + 15, endPos.getX());
+
+                Chunk chunk = chunks[chunkX - minChunkX][chunkZ - minChunkZ];
+                ChunkSection[] sections = chunk.getSections();
+                for (int chunkY = minChunkY; chunkY < maxChunkY; chunkY++) {
+                    ChunkSection section = sections[chunkY];
+                    if (section == null || section.isEmpty()) {
+                        continue;
+                    }
+
+                    PalettedContainer<BlockState> blocks = section.getData();
+
+                    int minBlockY = Math.max(chunkY << 4, startPos.getY());
+                    int maxBlockY = Math.min((chunkY << 4) + 15, endPos.getY());
+
+                    for (int y = minBlockY; y <= maxBlockY; y++) {
+                        for (int z = minBlockZ; z <= maxBlockZ; z++) {
+                            for (int x = minBlockX; x <= maxBlockX; x++) {
+                                BlockState block = blocks.get(x & 15, y & 15, z & 15);
+                                FluidState fluid = block.getFluidState();
+
+                                int index = this.getIndex(x, y, z);
+                                blockStates[index] = block;
+                                fluidStates[index] = fluid;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/BlockPos;getAllInBoxMutable(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;)Ljava/lang/Iterable;"))
+    private Iterable<BlockPos> initBlockAndFluidCaches(BlockPos firstPos, BlockPos secondPos) {
+        return Collections.emptyList();
     }
 
     /**

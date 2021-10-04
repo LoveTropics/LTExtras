@@ -39,7 +39,7 @@ public class BlockMixin {
         // an empty shape will never intersect with another face
         if (shape == VoxelShapes.empty()) return true;
 
-        VoxelShape adjacentShape = state.getRenderShape(world, adjacentPos);
+        VoxelShape adjacentShape = adjacentState.getRenderShape(world, adjacentPos);
 
         // an empty shape will never intersect with another face
         if (adjacentShape == VoxelShapes.empty()) return true;
