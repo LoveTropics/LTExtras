@@ -16,6 +16,7 @@
     "perf.ServerChunkProviderMixin"
   ],
   "client": [
+    "client.perf.BlockModelRendererCacheMixin",
     "client.perf.ChunkRenderMixin",
     "client.perf.ClientChunkProviderChunkArrayMixin",
     "client.perf.ClientWorldMixin",
