@@ -116,7 +116,7 @@ public final class BiomeColorSampler {
 
         Shape shape = this.sampleShape;
         Shape shapeX = shape.growAlong(Direction.Axis.X, -blendRadius);
-        Shape shapeZ = shape.growAlong(Direction.Axis.Z, -blendRadius);
+        Shape shapeZ = shapeX.growAlong(Direction.Axis.Z, -blendRadius);
 
         colors = blendAxis(shape, shapeX, blendRadius, colors, Direction.Axis.X);
         colors = blendAxis(shapeX, shapeZ, blendRadius, colors, Direction.Axis.Z);

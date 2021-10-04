@@ -11,6 +11,7 @@
     "ScaffoldingBlockMixin",
     "TagCollectionReaderMixin",
     "TeamCommandMixin",
+    "client.perf.BlockMixin",
     "perf.ChunkManagerMixin",
     "perf.FuzzedBiomeMagnifierMixin",
     "perf.MapDataMixin",
