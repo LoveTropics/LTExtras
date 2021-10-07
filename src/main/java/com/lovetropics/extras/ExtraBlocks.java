@@ -54,7 +54,7 @@ public class ExtraBlocks {
             .register();
 
 	public static final BlockEntry<LightweightBarrierBlock> LIGHTWEIGHT_BARRIER = REGISTRATE.block("lightweight_barrier", LightweightBarrierBlock::new)
-			.properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
+			.properties(p -> Block.Properties.from(Blocks.BARRIER).hardnessAndResistance(0.0F, 3.6e6f).noDrops())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
 			.item()
