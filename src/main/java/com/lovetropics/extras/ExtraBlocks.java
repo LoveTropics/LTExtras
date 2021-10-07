@@ -53,6 +53,15 @@ public class ExtraBlocks {
                 .build()
             .register();
 
+	public static final BlockEntry<LightweightBarrierBlock> LIGHTWEIGHT_BARRIER = REGISTRATE.block("lightweight_barrier", LightweightBarrierBlock::new)
+			.properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
+					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
+			.item()
+			.model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("item/barrier")))
+			.build()
+			.register();
+
     public static final BlockEntry<FakeWaterBlock> FAKE_WATER = REGISTRATE.block("fake_water", FakeWaterBlock::new)
             .properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
             .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
