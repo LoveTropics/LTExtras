@@ -2,6 +2,7 @@ package com.lovetropics.extras.block;
 
 import net.minecraft.block.BarrierBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,5 +43,10 @@ public class LightweightBarrierBlock extends BarrierBlock {
         Item item = this.asItem();
         return player.getHeldItemMainhand().getItem() == item
                 || player.getHeldItemOffhand().getItem() == item;
+    }
+
+    @Override
+    public PushReaction getPushReaction(BlockState state) {
+        return PushReaction.NORMAL;
     }
 }
