@@ -2,6 +2,7 @@
   "required": true,
   "package": "com.lovetropics.extras.mixin",
   "compatibilityLevel": "JAVA_8",
+  "plugin": "com.lovetropics.extras.mixin.LTExtrasMixinPlugin",
   "refmap": "ltextras.refmap.json",
   "mixins": [
     "FluidStateMixin",
