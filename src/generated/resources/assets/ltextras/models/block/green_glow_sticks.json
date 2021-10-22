@@ -1,0 +1,6 @@
+{
+  "parent": "ltextras:block/glow_sticks",
+  "textures": {
+    "glow_sticks": "ltextras:block/glow_sticks/green"
+  }
+}

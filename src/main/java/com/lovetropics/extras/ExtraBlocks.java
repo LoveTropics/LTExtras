@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.lovetropics.extras.block.CheckpointBlock;
 import com.lovetropics.extras.block.FakeWaterBlock;
 import com.lovetropics.extras.block.GirderBlock;
+import com.lovetropics.extras.block.GlowSticksBlock;
 import com.lovetropics.extras.block.LightweightBarrierBlock;
 import com.lovetropics.extras.block.PanelBlock;
 import com.lovetropics.extras.block.PianguasBlock;
@@ -53,8 +54,11 @@ import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.registries.IRegistryDelegate;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.lovetropics.extras.data.ModelGenUtil.*;
@@ -299,6 +303,28 @@ public class ExtraBlocks {
 				.build()
 				.register();
 	}
+
+	private static final List<DyeColor> GLOW_STICKS_DYES = Arrays.stream(DyeColor.values())
+			.filter(color -> color != DyeColor.BLACK && color != DyeColor.LIGHT_GRAY && color != DyeColor.GRAY)
+			.collect(Collectors.toList());
+
+	public static final Map<DyeColor, BlockEntry<GlowSticksBlock>> GLOW_STICKS = GLOW_STICKS_DYES.stream()
+			.collect(Collectors.toMap(Function.identity(), dyeColor -> {
+				String dyeName = dyeColor.getString();
+				String name = dyeName + "_glow_sticks";
+				return REGISTRATE.block(name, Material.GLASS, GlowSticksBlock::new)
+						.properties(p -> p.zeroHardnessAndResistance().doesNotBlockMovement().sound(SoundType.GLASS).notSolid()
+								.setLightLevel(value -> 6)
+						)
+						.blockstate((ctx, prov) -> {
+							BlockModelBuilder model = prov.models().withExistingParent(name, prov.modLoc("block/glow_sticks"))
+									.texture("glow_sticks", prov.modLoc("block/glow_sticks/" + dyeName));
+							prov.simpleBlock(ctx.get(), ConfiguredModel.allYRotations(model, 0, false));
+						})
+						.addLayer(() -> RenderType::getTranslucent)
+						.simpleItem()
+						.register();
+			}));
 
 	// Speedy blocks
 

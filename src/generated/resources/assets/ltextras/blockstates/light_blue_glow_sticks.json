@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "ltextras:block/light_blue_glow_sticks"
+      },
+      {
+        "model": "ltextras:block/light_blue_glow_sticks",
+        "y": 90
+      },
+      {
+        "model": "ltextras:block/light_blue_glow_sticks",
+        "y": 180
+      },
+      {
+        "model": "ltextras:block/light_blue_glow_sticks",
+        "y": 270
+      }
+    ]
+  }
+}
