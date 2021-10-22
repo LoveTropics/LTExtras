@@ -12,7 +12,6 @@ import com.lovetropics.extras.block.RopeBlock;
 import com.lovetropics.extras.block.SpeedyBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.data.ModelGenUtil;
-import com.lovetropics.extras.data.TextureType;
 import com.lovetropics.extras.item.BouyBlockItem;
 import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
@@ -52,6 +51,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
+import net.minecraftforge.fml.DatagenModLoader;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -330,6 +330,12 @@ public class ExtraBlocks {
 
 	// Speedy blocks
 
+	private static final ResourceLocation WEATHERED_LIMESTONE_ID = new ResourceLocation("create", "weathered_limestone");
+	private static final ResourceLocation POLISHED_WEATHERED_LIMESTONE_ID = new ResourceLocation("create", "polished_weathered_limestone");
+
+	private static final ResourceLocation WEATHERED_LIMESTONE_TEXTURE = new ResourceLocation("create", "block/palettes/weathered_limestone/plain");
+	private static final ResourceLocation POLISHED_WEATHERED_LIMESTONE_TEXTURE = new ResourceLocation("create", "block/palettes/weathered_limestone/polished");
+
 	private static final VoxelShape PATH_SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
 
 	private static final TemplateBuilder<SpeedyBlock, BlockFactory<SpeedyBlock>> SPEEDY_BLOCK_TEMPLATES = new TemplateBuilder<SpeedyBlock, BlockFactory<SpeedyBlock>>()
@@ -339,7 +345,9 @@ public class ExtraBlocks {
 			.add(Blocks.CRACKED_STONE_BRICKS, SpeedyBlock::opaque)
 			.add(Blocks.SMOOTH_STONE, SpeedyBlock::opaque)
 			.add(Blocks.GRAVEL, SpeedyBlock::opaque)
-			.add(Blocks.GRASS_PATH, p -> SpeedyBlock.transparent(PATH_SHAPE, p));
+			.add(Blocks.GRASS_PATH, p -> SpeedyBlock.transparent(PATH_SHAPE, p))
+			.add(WEATHERED_LIMESTONE_ID, SpeedyBlock::opaque)
+			.add(POLISHED_WEATHERED_LIMESTONE_ID, SpeedyBlock::opaque);
 
 	public static final Map<NamedSupplier<Block>, BlockEntry<? extends SpeedyBlock>> SPEEDY_BLOCKS = SPEEDY_BLOCK_TEMPLATES
 			.build((object, factory) -> REGISTRATE
@@ -353,34 +361,42 @@ public class ExtraBlocks {
     // Custom stairs/fences/walls/etc
 
 	private static final TemplateBuilder<StairsBlock, TextureType> STAIR_TEMPLATES = new TemplateBuilder<StairsBlock, TextureType>()
-			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
-			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.NORMAL)
-			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.NORMAL)
-			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
+			.add(Blocks.GOLD_BLOCK, TextureType.normal())
+			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
+			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.normal())
+			.add(RUSTY_PAINTED_METAL, TextureType.normal())
+			.add(WEATHERED_LIMESTONE_ID, TextureType.allTexture(WEATHERED_LIMESTONE_TEXTURE))
+			.add(POLISHED_WEATHERED_LIMESTONE_ID, TextureType.allTexture(POLISHED_WEATHERED_LIMESTONE_TEXTURE));
 
 	private static final TemplateBuilder<SlabBlock, TextureType> SLAB_TEMPLATES = new TemplateBuilder<SlabBlock, TextureType>()
-			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
-			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.NORMAL)
-			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.NORMAL)
-			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
+			.add(Blocks.GOLD_BLOCK, TextureType.normal())
+			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
+			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.normal())
+			.add(RUSTY_PAINTED_METAL, TextureType.normal())
+			.add(WEATHERED_LIMESTONE_ID, TextureType.allTexture(WEATHERED_LIMESTONE_TEXTURE))
+			.add(POLISHED_WEATHERED_LIMESTONE_ID, TextureType.allTexture(POLISHED_WEATHERED_LIMESTONE_TEXTURE));
 
 	private static final TemplateBuilder<FenceBlock, TextureType> FENCE_TEMPLATES = new TemplateBuilder<FenceBlock, TextureType>()
-			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
-			.add(Blocks.QUARTZ_BLOCK, TextureType.SIDE_TOP)
-			.add(Blocks.STONE, TextureType.NORMAL)
-			.add(Blocks.STONE_BRICKS, TextureType.NORMAL)
-			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.NORMAL)
-			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
+			.add(Blocks.GOLD_BLOCK, TextureType.normal())
+			.add(Blocks.QUARTZ_BLOCK, TextureType.sideTopSuffix())
+			.add(Blocks.STONE, TextureType.normal())
+			.add(Blocks.STONE_BRICKS, TextureType.normal())
+			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
+			.add(RUSTY_PAINTED_METAL, TextureType.normal())
+			.add(WEATHERED_LIMESTONE_ID, TextureType.allTexture(WEATHERED_LIMESTONE_TEXTURE))
+			.add(POLISHED_WEATHERED_LIMESTONE_ID, TextureType.allTexture(POLISHED_WEATHERED_LIMESTONE_TEXTURE));
 
 	private static final TemplateBuilder<WallBlock, TextureType> WALL_TEMPLATES = new TemplateBuilder<WallBlock, TextureType>()
-			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
-			.add(Blocks.QUARTZ_BLOCK, TextureType.SIDE_TOP)
-			.add(Blocks.STONE, TextureType.NORMAL)
-			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.NORMAL)
-			.add(Blocks.POLISHED_ANDESITE, TextureType.NORMAL)
-			.add(Blocks.POLISHED_GRANITE, TextureType.NORMAL)
-			.add(Blocks.POLISHED_DIORITE, TextureType.NORMAL)
-			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
+			.add(Blocks.GOLD_BLOCK, TextureType.normal())
+			.add(Blocks.QUARTZ_BLOCK, TextureType.sideTopSuffix())
+			.add(Blocks.STONE, TextureType.normal())
+			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
+			.add(Blocks.POLISHED_ANDESITE, TextureType.normal())
+			.add(Blocks.POLISHED_GRANITE, TextureType.normal())
+			.add(Blocks.POLISHED_DIORITE, TextureType.normal())
+			.add(RUSTY_PAINTED_METAL, TextureType.normal())
+			.add(WEATHERED_LIMESTONE_ID, TextureType.allTexture(WEATHERED_LIMESTONE_TEXTURE))
+			.add(POLISHED_WEATHERED_LIMESTONE_ID, TextureType.allTexture(POLISHED_WEATHERED_LIMESTONE_TEXTURE));
 
 	public static final Map<NamedSupplier<Block>, BlockEntry<? extends StairsBlock>> STAIRS = STAIR_TEMPLATES
 			.build((object, textureType) -> REGISTRATE
@@ -452,8 +468,13 @@ public class ExtraBlocks {
 		}
 
 		public TemplateBuilder<T, P> add(NamedSupplier<Block> block, P parameter) {
-			if (ModList.get().isLoaded(block.getId().getNamespace())) {
+			String namespace = block.getId().getNamespace();
+			if (ModList.get().isLoaded(namespace)) {
 				this.templates.put(block, parameter);
+			} else {
+				if (DatagenModLoader.isRunningDataGen()) {
+					throw new UnsupportedOperationException("All soft-dependent mods must be present for datagen! Missing: " + namespace);
+				}
 			}
 			return this;
 		}

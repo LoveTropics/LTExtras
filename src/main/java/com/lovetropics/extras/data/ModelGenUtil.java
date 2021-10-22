@@ -19,6 +19,8 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder.PartBuilder;
 
+import java.util.function.Function;
+
 public class ModelGenUtil {
 
     public static void steelGirderBlockstate(DataGenContext<Block, GirderBlock> ctx, RegistrateBlockstateProvider prov) {
@@ -129,57 +131,89 @@ public class ModelGenUtil {
     }
 
     public static ResourceLocation getMainTexture(NamedSupplier<Block> block, TextureType texture) {
-    	switch (texture) {
-    	case NORMAL:
-    		return blockTexture(block);
-    	case SIDE_TOP:
-    		return blockTexture(block, "side");
-    	default:
-    		throw new IllegalArgumentException();
-    	}
+    	return texture.getSideTexture(block);
     }
 
     public static <T extends StairsBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> stairsBlock(NamedSupplier<Block> object, TextureType textureType) {
-		switch (textureType) {
-		case NORMAL:
-			return (ctx, prov) -> prov.stairsBlock(ctx.getEntry(), blockTexture(object));
-		case SIDE_TOP:
-			return (ctx, prov) -> prov.stairsBlock(ctx.getEntry(), blockTexture(object, "side"), blockTexture(object, "top"), blockTexture(object, "top"));
-		default:
-			throw new IllegalArgumentException();
-		}
+		return (ctx, prov) -> {
+			ResourceLocation side = textureType.getSideTexture(object);
+			ResourceLocation top = textureType.getTopTexture(object);
+			prov.stairsBlock(ctx.getEntry(), side, top, top);
+		};
 	}
 
     public static <T extends SlabBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> slabBlock(NamedSupplier<Block> object, TextureType textureType) {
-		switch (textureType) {
-		case NORMAL:
-			return (ctx, prov) -> prov.slabBlock(ctx.getEntry(), blockTexture(object), blockTexture(object));
-		case SIDE_TOP:
-			return (ctx, prov) -> prov.slabBlock(ctx.getEntry(), blockTexture(object, "side"), blockTexture(object, "side"), blockTexture(object, "top"), blockTexture(object, "top"));
-		default:
-			throw new IllegalArgumentException();
-		}
+		return (ctx, prov) -> {
+			ResourceLocation model = textureType.getModel(object);
+			ResourceLocation side = textureType.getSideTexture(object);
+			ResourceLocation top = textureType.getTopTexture(object);
+			prov.slabBlock(ctx.getEntry(), model, side, top, top);
+		};
 	}
 
     public static <T extends FenceBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> fenceBlock(NamedSupplier<Block> object, TextureType textureType) {
-		switch (textureType) {
-		case NORMAL:
-			return (ctx, prov) -> prov.fenceBlock(ctx.getEntry(), blockTexture(object));
-		case SIDE_TOP:
-			return (ctx, prov) -> prov.fenceBlock(ctx.getEntry(), getMainTexture(object, textureType));
-		default:
-			throw new IllegalArgumentException();
-		}
+		return (ctx, prov) -> prov.fenceBlock(ctx.getEntry(), textureType.getTopTexture(object));
 	}
 
     public static <T extends WallBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> wallBlock(NamedSupplier<Block> object, TextureType textureType) {
-		switch (textureType) {
-		case NORMAL:
-			return (ctx, prov) -> prov.wallBlock(ctx.getEntry(), blockTexture(object));
-		case SIDE_TOP:
-			return (ctx, prov) -> prov.wallBlock(ctx.getEntry(), getMainTexture(object, textureType));
-		default:
-			throw new IllegalArgumentException();
+		return (ctx, prov) -> prov.wallBlock(ctx.getEntry(), textureType.getSideTexture(object));
+	}
+
+	public interface TextureType {
+		static TextureType normal() {
+			return TextureType.allTexture(ModelGenUtil::blockTexture);
 		}
+
+		static TextureType sideTopSuffix() {
+			return new TextureType() {
+				@Override
+				public ResourceLocation getModel(NamedSupplier<Block> block) {
+					return ModelGenUtil.blockTexture(block);
+				}
+
+				@Override
+				public ResourceLocation getSideTexture(NamedSupplier<Block> block) {
+					return ModelGenUtil.blockTexture(block, "side");
+				}
+
+				@Override
+				public ResourceLocation getTopTexture(NamedSupplier<Block> block) {
+					return ModelGenUtil.blockTexture(block, "top");
+				}
+			};
+		}
+
+		static TextureType allTexture(ResourceLocation texture) {
+			return allTexture(b -> texture);
+		}
+
+		static TextureType allTexture(Function<NamedSupplier<Block>, ResourceLocation> texture) {
+			return simple(ModelGenUtil::blockTexture, texture);
+		}
+
+		static TextureType simple(Function<NamedSupplier<Block>, ResourceLocation> model, Function<NamedSupplier<Block>, ResourceLocation> texture) {
+			return new TextureType() {
+				@Override
+				public ResourceLocation getModel(NamedSupplier<Block> block) {
+					return model.apply(block);
+				}
+
+				@Override
+				public ResourceLocation getSideTexture(NamedSupplier<Block> block) {
+					return texture.apply(block);
+				}
+
+				@Override
+				public ResourceLocation getTopTexture(NamedSupplier<Block> block) {
+					return texture.apply(block);
+				}
+			};
+		}
+
+		ResourceLocation getModel(NamedSupplier<Block> block);
+
+		ResourceLocation getSideTexture(NamedSupplier<Block> block);
+
+		ResourceLocation getTopTexture(NamedSupplier<Block> block);
 	}
 }

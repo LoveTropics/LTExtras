@@ -69,7 +69,7 @@ minecraft {
             taskName 'ltextras_data'
         
             workingDirectory project.file('run')
-            arg "-mixin.config=ltextras.mixins.json"
+            arg "-mixin.config=ltextras.mixins.json --existing-mod \"create\""
 
             environment 'target', 'fmluserdevdata'
 

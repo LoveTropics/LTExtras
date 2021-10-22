@@ -3,8 +3,10 @@
   "values": [
     "ltextras:stone_fence",
     "ltextras:gold_block_fence",
+    "ltextras:weathered_limestone_fence",
     "ltextras:cracked_stone_bricks_fence",
     "ltextras:rusty_painted_metal_fence",
+    "ltextras:polished_weathered_limestone_fence",
     "ltextras:quartz_block_fence",
     "ltextras:stone_bricks_fence"
   ]

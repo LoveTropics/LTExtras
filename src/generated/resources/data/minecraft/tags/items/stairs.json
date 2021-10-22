@@ -2,12 +2,16 @@
   "replace": false,
   "values": [
     "ltextras:gold_block_stairs",
+    "ltextras:weathered_limestone_stairs",
     "ltextras:cracked_stone_bricks_stairs",
     "ltextras:black_concrete_powder_stairs",
     "ltextras:rusty_painted_metal_stairs",
+    "ltextras:polished_weathered_limestone_stairs",
     "ltextras:gold_block_slab",
+    "ltextras:weathered_limestone_slab",
     "ltextras:cracked_stone_bricks_slab",
     "ltextras:black_concrete_powder_slab",
-    "ltextras:rusty_painted_metal_slab"
+    "ltextras:rusty_painted_metal_slab",
+    "ltextras:polished_weathered_limestone_slab"
   ]
 }
