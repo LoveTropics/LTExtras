@@ -1,7 +1,16 @@
 package com.lovetropics.extras;
 
 import com.google.common.collect.ImmutableMap;
-import com.lovetropics.extras.block.*;
+import com.lovetropics.extras.block.CheckpointBlock;
+import com.lovetropics.extras.block.FakeWaterBlock;
+import com.lovetropics.extras.block.GirderBlock;
+import com.lovetropics.extras.block.LightweightBarrierBlock;
+import com.lovetropics.extras.block.PanelBlock;
+import com.lovetropics.extras.block.PianguasBlock;
+import com.lovetropics.extras.block.ReedsBlock;
+import com.lovetropics.extras.block.RopeBlock;
+import com.lovetropics.extras.block.SpeedyBlock;
+import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.data.ModelGenUtil;
 import com.lovetropics.extras.data.TextureType;
 import com.lovetropics.extras.item.BouyBlockItem;
@@ -11,7 +20,19 @@ import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import net.minecraft.block.*;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FenceBlock;
+import net.minecraft.block.LadderBlock;
+import net.minecraft.block.PaneBlock;
+import net.minecraft.block.ScaffoldingBlock;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.StainedGlassBlock;
+import net.minecraft.block.StairsBlock;
+import net.minecraft.block.WallBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.loot.BlockLootTables;
@@ -257,6 +278,27 @@ public class ExtraBlocks {
 			.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/pianguas")))
 			.build()
 			.register();
+
+	public static final BlockEntry<RopeBlock> OLD_ROPE = rope("old_rope");
+	public static final BlockEntry<RopeBlock> PARACORD = rope("paracord");
+
+	private static BlockEntry<RopeBlock> rope(String name) {
+		return REGISTRATE.block(name, Material.WOOL, RopeBlock::new)
+				.properties(p -> p.zeroHardnessAndResistance().doesNotBlockMovement().sound(SoundType.CLOTH))
+				.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
+						.forAllStates(state -> {
+							String modelName = state.get(RopeBlock.KNOT) ? name + "_knot" : name;
+							return ConfiguredModel.builder()
+									.modelFile(prov.models().cross(modelName, prov.modLoc("block/" + modelName)))
+									.build();
+						}))
+				.addLayer(() -> RenderType::getCutout)
+				.tag(BlockTags.CLIMBABLE)
+				.item()
+				.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/" + name + "_knot")))
+				.build()
+				.register();
+	}
 
 	// Speedy blocks
 

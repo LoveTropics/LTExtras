@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "knot=false": {
+      "model": "ltextras:block/paracord"
+    },
+    "knot=true": {
+      "model": "ltextras:block/paracord_knot"
+    }
+  }
+}

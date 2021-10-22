@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "knot=false": {
+      "model": "ltextras:block/old_rope"
+    },
+    "knot=true": {
+      "model": "ltextras:block/old_rope_knot"
+    }
+  }
+}

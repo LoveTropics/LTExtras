@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "ltextras:metal_ladder"
+    "ltextras:metal_ladder",
+    "ltextras:old_rope",
+    "ltextras:paracord"
   ]
 }
