@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=top": {
+      "model": "ltextras:block/weathered_limestone_slab_top"
+    },
+    "type=bottom": {
+      "model": "ltextras:block/weathered_limestone_slab"
+    },
+    "type=double": {
+      "model": "create:block/weathered_limestone"
+    }
+  }
+}
