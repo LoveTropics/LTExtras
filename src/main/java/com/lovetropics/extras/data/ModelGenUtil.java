@@ -1,5 +1,6 @@
 package com.lovetropics.extras.data;
 
+import com.lovetropics.extras.NamedSupplier;
 import com.lovetropics.extras.block.GirderBlock;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
@@ -17,7 +18,6 @@ import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder.PartBuilder;
-import net.minecraftforge.fml.RegistryObject;
 
 public class ModelGenUtil {
 
@@ -118,17 +118,17 @@ public class ModelGenUtil {
 			.texture("bars", tex).texture("edge", tex).texture("particle", tex);
     }
 
-    private static ResourceLocation blockTexture(RegistryObject<Block> block) {
+    private static ResourceLocation blockTexture(NamedSupplier<Block> block) {
     	ResourceLocation base = block.getId();
     	return new ResourceLocation(base.getNamespace(), "block/" + base.getPath());
     }
 
-    private static ResourceLocation blockTexture(RegistryObject<Block> block, String suffix) {
+    private static ResourceLocation blockTexture(NamedSupplier<Block> block, String suffix) {
     	ResourceLocation base = blockTexture(block);
     	return new ResourceLocation(base.getNamespace(), base.getPath() + "_" + suffix);
     }
 
-    public static ResourceLocation getMainTexture(RegistryObject<Block> block, TextureType texture) {
+    public static ResourceLocation getMainTexture(NamedSupplier<Block> block, TextureType texture) {
     	switch (texture) {
     	case NORMAL:
     		return blockTexture(block);
@@ -139,7 +139,7 @@ public class ModelGenUtil {
     	}
     }
 
-    public static <T extends StairsBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> stairsBlock(RegistryObject<Block> object, TextureType textureType) {
+    public static <T extends StairsBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> stairsBlock(NamedSupplier<Block> object, TextureType textureType) {
 		switch (textureType) {
 		case NORMAL:
 			return (ctx, prov) -> prov.stairsBlock(ctx.getEntry(), blockTexture(object));
@@ -150,7 +150,7 @@ public class ModelGenUtil {
 		}
 	}
 
-    public static <T extends SlabBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> slabBlock(RegistryObject<Block> object, TextureType textureType) {
+    public static <T extends SlabBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> slabBlock(NamedSupplier<Block> object, TextureType textureType) {
 		switch (textureType) {
 		case NORMAL:
 			return (ctx, prov) -> prov.slabBlock(ctx.getEntry(), blockTexture(object), blockTexture(object));
@@ -161,7 +161,7 @@ public class ModelGenUtil {
 		}
 	}
 
-    public static <T extends FenceBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> fenceBlock(RegistryObject<Block> object, TextureType textureType) {
+    public static <T extends FenceBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> fenceBlock(NamedSupplier<Block> object, TextureType textureType) {
 		switch (textureType) {
 		case NORMAL:
 			return (ctx, prov) -> prov.fenceBlock(ctx.getEntry(), blockTexture(object));
@@ -172,7 +172,7 @@ public class ModelGenUtil {
 		}
 	}
 
-    public static <T extends WallBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> wallBlock(RegistryObject<Block> object, TextureType textureType) {
+    public static <T extends WallBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> wallBlock(NamedSupplier<Block> object, TextureType textureType) {
 		switch (textureType) {
 		case NORMAL:
 			return (ctx, prov) -> prov.wallBlock(ctx.getEntry(), blockTexture(object));

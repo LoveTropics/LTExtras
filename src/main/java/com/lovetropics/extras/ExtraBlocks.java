@@ -53,9 +53,7 @@ import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -332,39 +330,41 @@ public class ExtraBlocks {
 
 	// Speedy blocks
 
-    public static final BlockEntry<SpeedyBlock> SPEEDY_QUARTZ = speedyBlock(Blocks.QUARTZ_BLOCK.delegate, SpeedyBlock::opaque);
-    public static final BlockEntry<SpeedyBlock> SPEEDY_STONE_BRICKS = speedyBlock(Blocks.STONE_BRICKS.delegate, SpeedyBlock::opaque);
-    public static final BlockEntry<SpeedyBlock> SPEEDY_CRACKED_STONE_BRICKS = speedyBlock(Blocks.CRACKED_STONE_BRICKS.delegate, SpeedyBlock::opaque);
-    public static final BlockEntry<SpeedyBlock> SPEEDY_SMOOTH_STONE = speedyBlock(Blocks.SMOOTH_STONE.delegate, SpeedyBlock::opaque);
-	public static final BlockEntry<SpeedyBlock> SPEEDY_GRAVEL = speedyBlock(Blocks.GRAVEL.delegate, SpeedyBlock::opaque);
+	private static final VoxelShape PATH_SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
 
-    private static final VoxelShape PATH_SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
-    public static final BlockEntry<SpeedyBlock> SPEEDY_GRASS_PATH = speedyBlock(Blocks.GRASS_PATH.delegate, p -> SpeedyBlock.transparent(PATH_SHAPE, p));
+	private static final TemplateBuilder<SpeedyBlock, BlockFactory<SpeedyBlock>> SPEEDY_BLOCK_TEMPLATES = new TemplateBuilder<SpeedyBlock, BlockFactory<SpeedyBlock>>()
+			.add(Blocks.QUARTZ_BLOCK, SpeedyBlock::opaque)
+			.add(Blocks.STONE_BRICKS, SpeedyBlock::opaque)
+			.add(Blocks.CRACKED_STONE_BRICKS, SpeedyBlock::opaque)
+			.add(Blocks.CRACKED_STONE_BRICKS, SpeedyBlock::opaque)
+			.add(Blocks.SMOOTH_STONE, SpeedyBlock::opaque)
+			.add(Blocks.GRAVEL, SpeedyBlock::opaque)
+			.add(Blocks.GRASS_PATH, p -> SpeedyBlock.transparent(PATH_SHAPE, p));
 
-    private static <T extends SpeedyBlock> BlockEntry<T> speedyBlock(IRegistryDelegate<Block> source, NonNullFunction<Block.Properties, T> creator) {
-    	return REGISTRATE
-			.block("speedy_" + source.name().getPath(), creator)
-			.initialProperties(source::get)
-			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(source.name())))
-			.simpleItem()
-			.register();
-    }
-
+	public static final Map<NamedSupplier<Block>, BlockEntry<? extends SpeedyBlock>> SPEEDY_BLOCKS = SPEEDY_BLOCK_TEMPLATES
+			.build((object, factory) -> REGISTRATE
+					.block("speedy_" + object.getId().getPath(), factory)
+					.initialProperties(NonNullSupplier.of(object))
+					.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(object.getId())))
+					.simpleItem()
+					.register()
+			);
+	
     // Custom stairs/fences/walls/etc
 
-	private static final TemplateBuilder<StairsBlock> STAIR_TEMPLATES = new TemplateBuilder<StairsBlock>()
+	private static final TemplateBuilder<StairsBlock, TextureType> STAIR_TEMPLATES = new TemplateBuilder<StairsBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.NORMAL)
 			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.NORMAL)
 			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
 
-	private static final TemplateBuilder<SlabBlock> SLAB_TEMPLATES = new TemplateBuilder<SlabBlock>()
+	private static final TemplateBuilder<SlabBlock, TextureType> SLAB_TEMPLATES = new TemplateBuilder<SlabBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.NORMAL)
 			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.NORMAL)
 			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
 
-	private static final TemplateBuilder<FenceBlock> FENCE_TEMPLATES = new TemplateBuilder<FenceBlock>()
+	private static final TemplateBuilder<FenceBlock, TextureType> FENCE_TEMPLATES = new TemplateBuilder<FenceBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
 			.add(Blocks.QUARTZ_BLOCK, TextureType.SIDE_TOP)
 			.add(Blocks.STONE, TextureType.NORMAL)
@@ -372,7 +372,7 @@ public class ExtraBlocks {
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.NORMAL)
 			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
 
-	private static final TemplateBuilder<WallBlock> WALL_TEMPLATES = new TemplateBuilder<WallBlock>()
+	private static final TemplateBuilder<WallBlock, TextureType> WALL_TEMPLATES = new TemplateBuilder<WallBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
 			.add(Blocks.QUARTZ_BLOCK, TextureType.SIDE_TOP)
 			.add(Blocks.STONE, TextureType.NORMAL)
@@ -382,7 +382,7 @@ public class ExtraBlocks {
 			.add(Blocks.POLISHED_DIORITE, TextureType.NORMAL)
 			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
 
-	public static final Map<RegistryObject<Block>, BlockEntry<? extends StairsBlock>> STAIRS = STAIR_TEMPLATES
+	public static final Map<NamedSupplier<Block>, BlockEntry<? extends StairsBlock>> STAIRS = STAIR_TEMPLATES
 			.build((object, textureType) -> REGISTRATE
 					.block(object.getId().getPath() + "_stairs", p -> new StairsBlock(() -> object.get().getDefaultState(), p))
 					.initialProperties(NonNullSupplier.of(object))
@@ -394,7 +394,7 @@ public class ExtraBlocks {
 					.register()
 			);
 
-	public static final Map<RegistryObject<Block>, BlockEntry<? extends SlabBlock>> SLABS = SLAB_TEMPLATES
+	public static final Map<NamedSupplier<Block>, BlockEntry<? extends SlabBlock>> SLABS = SLAB_TEMPLATES
 			.build((object, textureType) -> REGISTRATE
 					.block(object.getId().getPath() + "_slab", SlabBlock::new)
 					.initialProperties(NonNullSupplier.of(object))
@@ -406,28 +406,28 @@ public class ExtraBlocks {
 					.register()
 			);
 
-	public static final Map<RegistryObject<Block>, BlockEntry<? extends FenceBlock>> FENCES = FENCE_TEMPLATES
-			.build((object, textureType) -> REGISTRATE
-					.block(object.getId().getPath() + "_fence", FenceBlock::new)
-					.initialProperties(NonNullSupplier.of(object))
+	public static final Map<NamedSupplier<Block>, BlockEntry<? extends FenceBlock>> FENCES = FENCE_TEMPLATES
+			.build((block, textureType) -> REGISTRATE
+					.block(block.getId().getPath() + "_fence", FenceBlock::new)
+					.initialProperties(NonNullSupplier.of(block))
 					.tag(BlockTags.FENCES)
-					.blockstate(fenceBlock(object, textureType))
+					.blockstate(fenceBlock(block, textureType))
 					.item()
 						.tag(ItemTags.FENCES)
-						.model((ctx, prov) -> prov.fenceInventory(ctx.getName(), getMainTexture(object, textureType)))
+						.model((ctx, prov) -> prov.fenceInventory(ctx.getName(), getMainTexture(block, textureType)))
 						.build()
 					.register()
 			);
 
-	public static final Map<RegistryObject<Block>, BlockEntry<? extends WallBlock>> WALLS = WALL_TEMPLATES
-			.build((object, textureType) -> REGISTRATE
-					.block(object.getId().getPath() + "_wall", WallBlock::new)
-					.initialProperties(NonNullSupplier.of(object))
+	public static final Map<NamedSupplier<Block>, BlockEntry<? extends WallBlock>> WALLS = WALL_TEMPLATES
+			.build((block, textureType) -> REGISTRATE
+					.block(block.getId().getPath() + "_wall", WallBlock::new)
+					.initialProperties(NonNullSupplier.of(block))
 					.tag(BlockTags.WALLS)
-					.blockstate(wallBlock(object, textureType))
+					.blockstate(wallBlock(block, textureType))
 					.item()
 						.tag(ItemTags.WALLS)
-						.model((ctx, prov) -> prov.wallInventory(ctx.getName(), getMainTexture(object, textureType)))
+						.model((ctx, prov) -> prov.wallInventory(ctx.getName(), getMainTexture(block, textureType)))
 						.build()
 					.register()
 			);
@@ -435,28 +435,31 @@ public class ExtraBlocks {
 	public static void init() {
 	}
 
-	public static final class TemplateBuilder<T extends Block> {
-		private final Map<RegistryObject<Block>, TextureType> templates = new Object2ObjectOpenHashMap<>();
+	public static final class TemplateBuilder<T extends Block, P> {
+		private final Map<NamedSupplier<Block>, P> templates = new Object2ObjectOpenHashMap<>();
 
-		public TemplateBuilder<T> add(Block block, TextureType textureType) {
-			return this.add(block.getRegistryName(), textureType);
+		public TemplateBuilder<T, P> add(Block block, P parameter) {
+			return this.add(NamedSupplier.of(block), parameter);
 		}
 
-		public TemplateBuilder<T> add(BlockEntry<Block> block, TextureType textureType) {
-			return this.add(block.getId(), textureType);
+		public TemplateBuilder<T, P> add(ResourceLocation id, P parameter) {
+			NamedSupplier<Block> block = NamedSupplier.of(ForgeRegistries.BLOCKS, id);
+			return this.add(block, parameter);
 		}
 
-		public TemplateBuilder<T> add(ResourceLocation id, TextureType textureType) {
-			if (ModList.get().isLoaded(id.getNamespace())) {
-				RegistryObject<Block> object = RegistryObject.of(id, ForgeRegistries.BLOCKS);
-				object.updateReference(ForgeRegistries.BLOCKS); // hack! don't think about it
-				this.templates.put(object, textureType);
+		public TemplateBuilder<T, P> add(BlockEntry<Block> block, P parameter) {
+			return this.add(NamedSupplier.of(block), parameter);
+		}
+
+		public TemplateBuilder<T, P> add(NamedSupplier<Block> block, P parameter) {
+			if (ModList.get().isLoaded(block.getId().getNamespace())) {
+				this.templates.put(block, parameter);
 			}
 			return this;
 		}
 
-		public Map<RegistryObject<Block>, BlockEntry<? extends T>> build(
-				BiFunction<RegistryObject<Block>, TextureType, BlockEntry<? extends T>> factory
+		public Map<NamedSupplier<Block>, BlockEntry<? extends T>> build(
+				BiFunction<NamedSupplier<Block>, P, BlockEntry<? extends T>> factory
 		) {
 			return this.templates.entrySet().stream()
 					.collect(Collectors.toMap(
@@ -464,5 +467,10 @@ public class ExtraBlocks {
 							entry -> factory.apply(entry.getKey(), entry.getValue())
 					));
 		}
+	}
+
+	interface BlockFactory<T extends Block> extends NonNullFunction<AbstractBlock.Properties, T> {
+		@Override
+		T apply(AbstractBlock.Properties properties);
 	}
 }
