@@ -355,6 +355,7 @@ public class ExtraBlocks {
     		.build();
 
     private static final Map<IRegistryDelegate<Block>, TextureType> SLAB_TEMPLATES = ImmutableMap.<IRegistryDelegate<Block>, TextureType>builder()
+			.put(Blocks.GOLD_BLOCK.delegate, TextureType.NORMAL)
     		.put(Blocks.CRACKED_STONE_BRICKS.delegate, TextureType.NORMAL)
     		.put(Blocks.BLACK_CONCRETE_POWDER.delegate, TextureType.NORMAL)
     		.build();
@@ -372,7 +373,10 @@ public class ExtraBlocks {
     		.put(Blocks.QUARTZ_BLOCK.delegate, TextureType.SIDE_TOP)
     		.put(Blocks.STONE.delegate, TextureType.NORMAL)
     		.put(Blocks.CRACKED_STONE_BRICKS.delegate, TextureType.NORMAL)
-    		.build();
+			.put(Blocks.POLISHED_ANDESITE.delegate, TextureType.NORMAL)
+			.put(Blocks.POLISHED_GRANITE.delegate, TextureType.NORMAL)
+			.put(Blocks.POLISHED_DIORITE.delegate, TextureType.NORMAL)
+			.build();
 
     public static final Map<IRegistryDelegate<Block>, BlockEntry<? extends StairsBlock>> STAIRS = STAIR_TEMPLATES.entrySet().stream()
     		.collect(Collectors.toMap(Entry::getKey, e -> REGISTRATE
