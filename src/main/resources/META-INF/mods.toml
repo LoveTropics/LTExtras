@@ -21,9 +21,16 @@ Extra content for the LoveTropics map build.
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.create]]
+[[dependencies.ltextras]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2,1.16)"
+    versionRange="[1.16,)"
     ordering="NONE"
+    side="BOTH"
+
+[[dependencies.ltextras]]
+    modId="create"
+    mandatory=false
+    versionRange="*"
+    ordering="AFTER"
     side="BOTH"

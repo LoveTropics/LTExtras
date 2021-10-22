@@ -4,8 +4,10 @@
     "ltextras:gold_block_stairs",
     "ltextras:cracked_stone_bricks_stairs",
     "ltextras:black_concrete_powder_stairs",
+    "ltextras:rusty_painted_metal_stairs",
     "ltextras:gold_block_slab",
     "ltextras:cracked_stone_bricks_slab",
-    "ltextras:black_concrete_powder_slab"
+    "ltextras:black_concrete_powder_slab",
+    "ltextras:rusty_painted_metal_slab"
   ]
 }

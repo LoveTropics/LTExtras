@@ -1,6 +1,5 @@
 package com.lovetropics.extras;
 
-import com.google.common.collect.ImmutableMap;
 import com.lovetropics.extras.block.CheckpointBlock;
 import com.lovetropics.extras.block.FakeWaterBlock;
 import com.lovetropics.extras.block.GirderBlock;
@@ -21,6 +20,7 @@ import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -52,12 +52,16 @@ import net.minecraft.world.IWorldReader;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -348,82 +352,117 @@ public class ExtraBlocks {
 
     // Custom stairs/fences/walls/etc
 
-    private static final Map<IRegistryDelegate<Block>, TextureType> STAIR_TEMPLATES = ImmutableMap.<IRegistryDelegate<Block>, TextureType>builder()
-    		.put(Blocks.GOLD_BLOCK.delegate, TextureType.NORMAL)
-    		.put(Blocks.CRACKED_STONE_BRICKS.delegate, TextureType.NORMAL)
-    		.put(Blocks.BLACK_CONCRETE_POWDER.delegate, TextureType.NORMAL)
-    		.build();
+	private static final TemplateBuilder<StairsBlock> STAIR_TEMPLATES = new TemplateBuilder<StairsBlock>()
+			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
+			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.NORMAL)
+			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.NORMAL)
+			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
 
-    private static final Map<IRegistryDelegate<Block>, TextureType> SLAB_TEMPLATES = ImmutableMap.<IRegistryDelegate<Block>, TextureType>builder()
-			.put(Blocks.GOLD_BLOCK.delegate, TextureType.NORMAL)
-    		.put(Blocks.CRACKED_STONE_BRICKS.delegate, TextureType.NORMAL)
-    		.put(Blocks.BLACK_CONCRETE_POWDER.delegate, TextureType.NORMAL)
-    		.build();
+	private static final TemplateBuilder<SlabBlock> SLAB_TEMPLATES = new TemplateBuilder<SlabBlock>()
+			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
+			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.NORMAL)
+			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.NORMAL)
+			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
 
-    private static final Map<IRegistryDelegate<Block>, TextureType> FENCE_TEMPLATES = ImmutableMap.<IRegistryDelegate<Block>, TextureType>builder()
-    		.put(Blocks.GOLD_BLOCK.delegate, TextureType.NORMAL)
-    		.put(Blocks.QUARTZ_BLOCK.delegate, TextureType.SIDE_TOP)
-    		.put(Blocks.STONE.delegate, TextureType.NORMAL)
-    		.put(Blocks.STONE_BRICKS.delegate, TextureType.NORMAL)
-    		.put(Blocks.CRACKED_STONE_BRICKS.delegate, TextureType.NORMAL)
-    		.build();
+	private static final TemplateBuilder<FenceBlock> FENCE_TEMPLATES = new TemplateBuilder<FenceBlock>()
+			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
+			.add(Blocks.QUARTZ_BLOCK, TextureType.SIDE_TOP)
+			.add(Blocks.STONE, TextureType.NORMAL)
+			.add(Blocks.STONE_BRICKS, TextureType.NORMAL)
+			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.NORMAL)
+			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
 
-    private static final Map<IRegistryDelegate<Block>, TextureType> WALL_TEMPLATES = ImmutableMap.<IRegistryDelegate<Block>, TextureType>builder()
-    		.put(Blocks.GOLD_BLOCK.delegate, TextureType.NORMAL)
-    		.put(Blocks.QUARTZ_BLOCK.delegate, TextureType.SIDE_TOP)
-    		.put(Blocks.STONE.delegate, TextureType.NORMAL)
-    		.put(Blocks.CRACKED_STONE_BRICKS.delegate, TextureType.NORMAL)
-			.put(Blocks.POLISHED_ANDESITE.delegate, TextureType.NORMAL)
-			.put(Blocks.POLISHED_GRANITE.delegate, TextureType.NORMAL)
-			.put(Blocks.POLISHED_DIORITE.delegate, TextureType.NORMAL)
-			.build();
+	private static final TemplateBuilder<WallBlock> WALL_TEMPLATES = new TemplateBuilder<WallBlock>()
+			.add(Blocks.GOLD_BLOCK, TextureType.NORMAL)
+			.add(Blocks.QUARTZ_BLOCK, TextureType.SIDE_TOP)
+			.add(Blocks.STONE, TextureType.NORMAL)
+			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.NORMAL)
+			.add(Blocks.POLISHED_ANDESITE, TextureType.NORMAL)
+			.add(Blocks.POLISHED_GRANITE, TextureType.NORMAL)
+			.add(Blocks.POLISHED_DIORITE, TextureType.NORMAL)
+			.add(RUSTY_PAINTED_METAL, TextureType.NORMAL);
 
-    public static final Map<IRegistryDelegate<Block>, BlockEntry<? extends StairsBlock>> STAIRS = STAIR_TEMPLATES.entrySet().stream()
-    		.collect(Collectors.toMap(Entry::getKey, e -> REGISTRATE
-    				.block(e.getKey().name().getPath() + "_stairs", p -> new StairsBlock(() -> e.getKey().get().getDefaultState(), p))
-    				.initialProperties(NonNullSupplier.of(e.getKey()))
-    				.tag(BlockTags.STAIRS)
-    				.blockstate(stairsBlock(e))
-    				.item()
-    					.tag(ItemTags.STAIRS)
-    					.build()
-    				.register()));
-
-    public static final Map<IRegistryDelegate<Block>, BlockEntry<? extends SlabBlock>> SLABS = SLAB_TEMPLATES.entrySet().stream()
-    		.collect(Collectors.toMap(Entry::getKey, e -> REGISTRATE
-    				.block(e.getKey().name().getPath() + "_slab", SlabBlock::new)
-    				.initialProperties(NonNullSupplier.of(e.getKey()))
-    				.tag(BlockTags.STAIRS)
-    				.blockstate(slabBlock(e))
-    				.item()
-    					.tag(ItemTags.STAIRS)
-    					.build()
-    				.register()));
-
-    public static final Map<IRegistryDelegate<Block>, BlockEntry<? extends FenceBlock>> FENCES = FENCE_TEMPLATES.entrySet().stream()
-    		.collect(Collectors.toMap(Entry::getKey, e -> REGISTRATE
-    				.block(e.getKey().name().getPath() + "_fence", FenceBlock::new)
-    				.initialProperties(NonNullSupplier.of(e.getKey()))
-    				.tag(BlockTags.FENCES)
-    				.blockstate(fenceBlock(e))
-    				.item()
-    					.tag(ItemTags.FENCES)
-    					.model((ctx, prov) -> prov.fenceInventory(ctx.getName(), getMainTexture(prov, e.getKey().get(), e.getValue())))
-    					.build()
-    				.register()));
-
-    public static final Map<IRegistryDelegate<Block>, BlockEntry<? extends WallBlock>> WALLS = WALL_TEMPLATES.entrySet().stream()
-    		.collect(Collectors.toMap(Entry::getKey, e -> REGISTRATE
-    				.block(e.getKey().name().getPath() + "_wall", WallBlock::new)
-    				.initialProperties(NonNullSupplier.of(e.getKey()))
-    				.tag(BlockTags.WALLS)
-    				.blockstate(wallBlock(e))
-    				.item()
-    					.tag(ItemTags.WALLS)
-						.model((ctx, prov) -> prov.wallInventory(ctx.getName(), getMainTexture(prov, e.getKey().get(), e.getValue())))
+	public static final Map<RegistryObject<Block>, BlockEntry<? extends StairsBlock>> STAIRS = STAIR_TEMPLATES
+			.build((object, textureType) -> REGISTRATE
+					.block(object.getId().getPath() + "_stairs", p -> new StairsBlock(() -> object.get().getDefaultState(), p))
+					.initialProperties(NonNullSupplier.of(object))
+					.tag(BlockTags.STAIRS)
+					.blockstate(stairsBlock(object, textureType))
+					.item()
+						.tag(ItemTags.STAIRS)
 						.build()
-					.register()));
+					.register()
+			);
+
+	public static final Map<RegistryObject<Block>, BlockEntry<? extends SlabBlock>> SLABS = SLAB_TEMPLATES
+			.build((object, textureType) -> REGISTRATE
+					.block(object.getId().getPath() + "_slab", SlabBlock::new)
+					.initialProperties(NonNullSupplier.of(object))
+					.tag(BlockTags.STAIRS)
+					.blockstate(slabBlock(object, textureType))
+					.item()
+						.tag(ItemTags.STAIRS)
+						.build()
+					.register()
+			);
+
+	public static final Map<RegistryObject<Block>, BlockEntry<? extends FenceBlock>> FENCES = FENCE_TEMPLATES
+			.build((object, textureType) -> REGISTRATE
+					.block(object.getId().getPath() + "_fence", FenceBlock::new)
+					.initialProperties(NonNullSupplier.of(object))
+					.tag(BlockTags.FENCES)
+					.blockstate(fenceBlock(object, textureType))
+					.item()
+						.tag(ItemTags.FENCES)
+						.model((ctx, prov) -> prov.fenceInventory(ctx.getName(), getMainTexture(object, textureType)))
+						.build()
+					.register()
+			);
+
+	public static final Map<RegistryObject<Block>, BlockEntry<? extends WallBlock>> WALLS = WALL_TEMPLATES
+			.build((object, textureType) -> REGISTRATE
+					.block(object.getId().getPath() + "_wall", WallBlock::new)
+					.initialProperties(NonNullSupplier.of(object))
+					.tag(BlockTags.WALLS)
+					.blockstate(wallBlock(object, textureType))
+					.item()
+						.tag(ItemTags.WALLS)
+						.model((ctx, prov) -> prov.wallInventory(ctx.getName(), getMainTexture(object, textureType)))
+						.build()
+					.register()
+			);
 
 	public static void init() {
+	}
+
+	public static final class TemplateBuilder<T extends Block> {
+		private final Map<RegistryObject<Block>, TextureType> templates = new Object2ObjectOpenHashMap<>();
+
+		public TemplateBuilder<T> add(Block block, TextureType textureType) {
+			return this.add(block.getRegistryName(), textureType);
+		}
+
+		public TemplateBuilder<T> add(BlockEntry<Block> block, TextureType textureType) {
+			return this.add(block.getId(), textureType);
+		}
+
+		public TemplateBuilder<T> add(ResourceLocation id, TextureType textureType) {
+			if (ModList.get().isLoaded(id.getNamespace())) {
+				RegistryObject<Block> object = RegistryObject.of(id, ForgeRegistries.BLOCKS);
+				object.updateReference(ForgeRegistries.BLOCKS); // hack! don't think about it
+				this.templates.put(object, textureType);
+			}
+			return this;
+		}
+
+		public Map<RegistryObject<Block>, BlockEntry<? extends T>> build(
+				BiFunction<RegistryObject<Block>, TextureType, BlockEntry<? extends T>> factory
+		) {
+			return this.templates.entrySet().stream()
+					.collect(Collectors.toMap(
+							Entry::getKey,
+							entry -> factory.apply(entry.getKey(), entry.getValue())
+					));
+		}
 	}
 }

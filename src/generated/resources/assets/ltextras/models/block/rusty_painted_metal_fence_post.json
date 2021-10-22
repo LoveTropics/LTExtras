@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/fence_post",
+  "textures": {
+    "texture": "ltextras:block/rusty_painted_metal"
+  }
+}

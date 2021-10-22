@@ -1,12 +1,9 @@
 package com.lovetropics.extras.data;
 
-import java.util.Map;
-
 import com.lovetropics.extras.block.GirderBlock;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.PaneBlock;
@@ -18,10 +15,9 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.ModelProvider;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder.PartBuilder;
-import net.minecraftforge.registries.IRegistryDelegate;
+import net.minecraftforge.fml.RegistryObject;
 
 public class ModelGenUtil {
 
@@ -122,66 +118,66 @@ public class ModelGenUtil {
 			.texture("bars", tex).texture("edge", tex).texture("particle", tex);
     }
 
-    private static ResourceLocation blockTexture(ModelProvider<?> prov, Block block) {
-    	ResourceLocation base = block.getRegistryName();
+    private static ResourceLocation blockTexture(RegistryObject<Block> block) {
+    	ResourceLocation base = block.getId();
     	return new ResourceLocation(base.getNamespace(), "block/" + base.getPath());
     }
 
-    private static ResourceLocation blockTexture(ModelProvider<?> prov, Block block, String suffix) {
-    	ResourceLocation base = blockTexture(prov, block);
+    private static ResourceLocation blockTexture(RegistryObject<Block> block, String suffix) {
+    	ResourceLocation base = blockTexture(block);
     	return new ResourceLocation(base.getNamespace(), base.getPath() + "_" + suffix);
     }
 
-    public static ResourceLocation getMainTexture(ModelProvider<?> prov, Block block, TextureType texture) {
+    public static ResourceLocation getMainTexture(RegistryObject<Block> block, TextureType texture) {
     	switch (texture) {
     	case NORMAL:
-    		return blockTexture(prov, block);
+    		return blockTexture(block);
     	case SIDE_TOP:
-    		return blockTexture(prov, block, "side");
+    		return blockTexture(block, "side");
     	default:
     		throw new IllegalArgumentException();
     	}
     }
 
-    public static <T extends StairsBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> stairsBlock(Map.Entry<IRegistryDelegate<Block>, TextureType> entry) {
-		switch (entry.getValue()) {
+    public static <T extends StairsBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> stairsBlock(RegistryObject<Block> object, TextureType textureType) {
+		switch (textureType) {
 		case NORMAL:
-			return (ctx, prov) -> prov.stairsBlock(ctx.getEntry(), prov.blockTexture(entry.getKey().get()));
+			return (ctx, prov) -> prov.stairsBlock(ctx.getEntry(), blockTexture(object));
 		case SIDE_TOP:
-			return (ctx, prov) -> prov.stairsBlock(ctx.getEntry(), blockTexture(prov.models(), entry.getKey().get(), "side"), blockTexture(prov.models(), entry.getKey().get(), "top"), blockTexture(prov.models(), entry.getKey().get(), "top"));
+			return (ctx, prov) -> prov.stairsBlock(ctx.getEntry(), blockTexture(object, "side"), blockTexture(object, "top"), blockTexture(object, "top"));
 		default:
 			throw new IllegalArgumentException();
 		}
 	}
 
-    public static <T extends SlabBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> slabBlock(Map.Entry<IRegistryDelegate<Block>, TextureType> entry) {
-		switch (entry.getValue()) {
+    public static <T extends SlabBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> slabBlock(RegistryObject<Block> object, TextureType textureType) {
+		switch (textureType) {
 		case NORMAL:
-			return (ctx, prov) -> prov.slabBlock(ctx.getEntry(), prov.blockTexture(entry.getKey().get()), prov.blockTexture(entry.getKey().get()));
+			return (ctx, prov) -> prov.slabBlock(ctx.getEntry(), blockTexture(object), blockTexture(object));
 		case SIDE_TOP:
-			return (ctx, prov) -> prov.slabBlock(ctx.getEntry(), blockTexture(prov.models(), entry.getKey().get(), "side"), blockTexture(prov.models(), entry.getKey().get(), "side"), blockTexture(prov.models(), entry.getKey().get(), "top"), blockTexture(prov.models(), entry.getKey().get(), "top"));
+			return (ctx, prov) -> prov.slabBlock(ctx.getEntry(), blockTexture(object, "side"), blockTexture(object, "side"), blockTexture(object, "top"), blockTexture(object, "top"));
 		default:
 			throw new IllegalArgumentException();
 		}
 	}
 
-    public static <T extends FenceBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> fenceBlock(Map.Entry<IRegistryDelegate<Block>, TextureType> entry) {
-		switch (entry.getValue()) {
+    public static <T extends FenceBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> fenceBlock(RegistryObject<Block> object, TextureType textureType) {
+		switch (textureType) {
 		case NORMAL:
-			return (ctx, prov) -> prov.fenceBlock(ctx.getEntry(), prov.blockTexture(entry.getKey().get()));
+			return (ctx, prov) -> prov.fenceBlock(ctx.getEntry(), blockTexture(object));
 		case SIDE_TOP:
-			return (ctx, prov) -> prov.fenceBlock(ctx.getEntry(), getMainTexture(prov.models(), entry.getKey().get(), entry.getValue()));
+			return (ctx, prov) -> prov.fenceBlock(ctx.getEntry(), getMainTexture(object, textureType));
 		default:
 			throw new IllegalArgumentException();
 		}
 	}
 
-    public static <T extends WallBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> wallBlock(Map.Entry<IRegistryDelegate<Block>, TextureType> entry) {
-		switch (entry.getValue()) {
+    public static <T extends WallBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> wallBlock(RegistryObject<Block> object, TextureType textureType) {
+		switch (textureType) {
 		case NORMAL:
-			return (ctx, prov) -> prov.wallBlock(ctx.getEntry(), prov.blockTexture(entry.getKey().get()));
+			return (ctx, prov) -> prov.wallBlock(ctx.getEntry(), blockTexture(object));
 		case SIDE_TOP:
-			return (ctx, prov) -> prov.wallBlock(ctx.getEntry(), getMainTexture(prov.models(), entry.getKey().get(), entry.getValue()));
+			return (ctx, prov) -> prov.wallBlock(ctx.getEntry(), getMainTexture(object, textureType));
 		default:
 			throw new IllegalArgumentException();
 		}
