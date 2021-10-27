@@ -72,10 +72,8 @@ public final class RopeBlock extends Block {
 
     private boolean canHangFrom(IWorldReader world, BlockPos attachPos, BlockState attachState) {
         return attachState.matchesBlock(this) ||
-                attachState.isSolidSide(world, attachPos, Direction.DOWN) ||
-                attachState.isIn(BlockTags.LEAVES) ||
-                attachState.isIn(BlockTags.FENCES) ||
-                attachState.isIn(BlockTags.WALLS);
+                Block.hasEnoughSolidSide(world, attachPos, Direction.DOWN) ||
+                attachState.isIn(BlockTags.LEAVES);
     }
 
     private boolean isKnottedAt(IWorldReader world, BlockPos pos) {
