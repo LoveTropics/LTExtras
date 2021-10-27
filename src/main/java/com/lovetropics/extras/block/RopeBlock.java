@@ -6,6 +6,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -70,7 +71,11 @@ public final class RopeBlock extends Block {
     }
 
     private boolean canHangFrom(IWorldReader world, BlockPos attachPos, BlockState attachState) {
-        return attachState.matchesBlock(this) || attachState.isSolidSide(world, attachPos, Direction.DOWN);
+        return attachState.matchesBlock(this) ||
+                attachState.isSolidSide(world, attachPos, Direction.DOWN) ||
+                attachState.isIn(BlockTags.LEAVES) ||
+                attachState.isIn(BlockTags.FENCES) ||
+                attachState.isIn(BlockTags.WALLS);
     }
 
     private boolean isKnottedAt(IWorldReader world, BlockPos pos) {
