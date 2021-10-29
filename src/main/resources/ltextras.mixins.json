@@ -5,6 +5,7 @@
   "plugin": "com.lovetropics.extras.mixin.LTExtrasMixinPlugin",
   "refmap": "ltextras.refmap.json",
   "mixins": [
+    "BlockPropertiesMixin",
     "FluidStateMixin",
     "ItemStackMixin",
     "NetworkSystemMixin",

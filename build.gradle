@@ -121,6 +121,9 @@ dependencies {
 
     // Annotation Processors
     annotationProcessor 'org.spongepowered:mixin:0.8:processor'
+
+    runtimeOnly fg.deobf('com.jozufozu.flywheel:Flywheel:1.16-0.2.4.50')
+	runtimeOnly fg.deobf('com.simibubi.create:Create:mc1.16.5_v0.3.2f+464')
 }
 
 mixin {

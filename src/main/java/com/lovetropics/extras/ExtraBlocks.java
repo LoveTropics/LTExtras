@@ -13,6 +13,7 @@ import com.lovetropics.extras.block.SpeedyBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.data.ModelGenUtil;
 import com.lovetropics.extras.item.BouyBlockItem;
+import com.lovetropics.extras.mixin.BlockPropertiesMixin;
 import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
@@ -32,6 +33,7 @@ import net.minecraft.block.SlabBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.StainedGlassBlock;
 import net.minecraft.block.StairsBlock;
+import net.minecraft.block.VineBlock;
 import net.minecraft.block.WallBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
@@ -47,7 +49,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.FoliageColors;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
@@ -246,8 +250,8 @@ public class ExtraBlocks {
 			})
 			.addLayer(() -> RenderType::getCutout)
 			.item()
-			.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/reeds_top_tall")))
-			.build()
+				.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/reeds_top_tall")))
+				.build()
 			.register();
 
 	public static final BlockEntry<PianguasBlock> PIANGUAS = REGISTRATE.block("pianguas", PianguasBlock::new)
@@ -281,8 +285,8 @@ public class ExtraBlocks {
 			})
 			.addLayer(() -> RenderType::getCutout)
 			.item()
-			.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/pianguas")))
-			.build()
+				.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/pianguas")))
+				.build()
 			.register();
 
 	public static final BlockEntry<RopeBlock> OLD_ROPE = rope("old_rope");
@@ -301,8 +305,8 @@ public class ExtraBlocks {
 				.addLayer(() -> RenderType::getCutout)
 				.tag(BlockTags.CLIMBABLE)
 				.item()
-				.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/" + name + "_knot")))
-				.build()
+					.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/" + name + "_knot")))
+					.build()
 				.register();
 	}
 
@@ -327,6 +331,21 @@ public class ExtraBlocks {
 						.simpleItem()
 						.register();
 			}));
+
+	public static final BlockEntry<VineBlock> INFERTILE_VINE = REGISTRATE.block("infertile_vine", VineBlock::new)
+			.initialProperties(() -> Blocks.VINE)
+			// Mixin annoyance, accessor setters can't return self
+			.properties(p -> { ((BlockPropertiesMixin)p).setTicksRandomly(false); return p; })
+			.blockstate((ctx, prov) -> {}) // NO-OP, it's easier to just copy the file out of vanilla...
+			.addLayer(() -> RenderType::getCutout)
+			.color(() -> () -> (state, reader, pos, color) -> reader != null && pos != null
+					? BiomeColors.getFoliageColor(reader, pos)
+					: FoliageColors.getDefault())
+			.item()
+				.model((ctx, prov) -> prov.generated(ctx, new ResourceLocation("block/vine"), new ResourceLocation("item/barrier")))
+				.color(() -> () -> ($, layer) -> layer == 0 ? FoliageColors.getDefault() : -1)
+				.build()
+			.register();
 
 	// Speedy blocks
 
