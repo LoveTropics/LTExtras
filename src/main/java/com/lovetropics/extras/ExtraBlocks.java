@@ -10,6 +10,7 @@ import com.lovetropics.extras.block.PianguasBlock;
 import com.lovetropics.extras.block.ReedsBlock;
 import com.lovetropics.extras.block.RopeBlock;
 import com.lovetropics.extras.block.SpeedyBlock;
+import com.lovetropics.extras.block.ThornStemBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.data.ModelGenUtil;
 import com.lovetropics.extras.item.BouyBlockItem;
@@ -29,6 +30,7 @@ import net.minecraft.block.FenceBlock;
 import net.minecraft.block.LadderBlock;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.block.ScaffoldingBlock;
+import net.minecraft.block.SixWayBlock;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.StainedGlassBlock;
@@ -54,6 +56,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.fml.DatagenModLoader;
 import net.minecraftforge.fml.ModList;
@@ -346,6 +349,35 @@ public class ExtraBlocks {
 				.model((ctx, prov) -> prov.generated(ctx, new ResourceLocation("block/vine"), new ResourceLocation("item/barrier")))
 				.color(() -> () -> ($, layer) -> layer == 0 ? FoliageColors.getDefault() : -1)
 				.build()
+			.register();
+
+	public static final BlockEntry<ThornStemBlock> THORN_STEM = REGISTRATE.block("thorn_stem", ThornStemBlock::new)
+			.initialProperties(() -> Blocks.ACACIA_LEAVES)
+			.properties(p -> p.notSolid().setOpaque((state, world, pos) -> false))
+			.blockstate((ctx, prov) -> {
+				ModelFile.ExistingModelFile core = prov.models().getExistingFile(prov.modLoc("block/thorn_stem"));
+				ModelFile.ExistingModelFile connection = prov.models().getExistingFile(prov.modLoc("block/thorn_stem_connection"));
+				MultiPartBlockStateBuilder multipart = prov.getMultipartBuilder(ctx.get())
+						.part().modelFile(core).addModel().end();
+				SixWayBlock.FACING_TO_PROPERTY_MAP.forEach((direction, value) -> {
+					ConfiguredModel.Builder<MultiPartBlockStateBuilder.PartBuilder> part = multipart.part()
+							.modelFile(connection).uvLock(true);
+
+					if (direction.getAxis().isHorizontal()) {
+						int angleY = (int) direction.getHorizontalAngle() % 360;
+						part.rotationY(angleY);
+						part.rotationX(90);
+					} else {
+						part.rotationX(direction == Direction.DOWN ? 0 : 180);
+					}
+
+					part
+							.addModel()
+							.condition(value, true);
+				});
+			})
+			.addLayer(() -> RenderType::getCutout)
+			.simpleItem()
 			.register();
 
 	// Speedy blocks

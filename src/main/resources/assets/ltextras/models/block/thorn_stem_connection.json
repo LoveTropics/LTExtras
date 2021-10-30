@@ -1,0 +1,21 @@
+{
+  "textures": {
+    "stem": "ltextras:block/thorn_stem",
+    "thorns": "ltextras:block/thorns",
+    "particle": "#stem"
+  },
+  "elements": [
+    {
+      "from": [5, 0, 5],
+      "to": [11, 5, 11],
+      "faces": {
+        "north": {"uv": [5, 11, 11, 16], "texture": "#stem"},
+        "east": {"uv": [0, 11, 6, 16], "texture": "#stem"},
+        "south": {"uv": [5, 11, 11, 16], "texture": "#stem"},
+        "west": {"uv": [10, 11, 16, 16], "texture": "#stem"},
+        "up": {"uv": [0, 11, 6, 16], "texture": "#stem"},
+        "down": {"uv": [0, 11, 6, 16], "texture": "#stem"}
+      }
+    }
+  ]
+}

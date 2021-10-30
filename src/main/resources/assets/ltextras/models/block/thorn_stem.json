@@ -1,0 +1,70 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "stem": "ltextras:block/thorn_stem",
+    "thorns": "ltextras:block/thorns",
+    "particle": "#stem"
+  },
+  "elements": [
+    {
+      "from": [5, 5, 5],
+      "to": [11, 11, 11],
+      "faces": {
+        "north": {"uv": [5, 5, 11, 11], "texture": "#stem"},
+        "east": {"uv": [0, 5, 6, 11], "texture": "#stem"},
+        "south": {"uv": [5, 5, 11, 11], "texture": "#stem"},
+        "west": {"uv": [10, 5, 16, 11], "texture": "#stem"},
+        "up": {"uv": [0, 0, 6, 6], "texture": "#stem"},
+        "down": {"uv": [0, 10, 6, 16], "texture": "#stem"}
+      }
+    },
+    {
+      "from": [0, 5, 6],
+      "to": [16, 11, 6],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 6], "texture": "#thorns"},
+        "south": {"uv": [0, 0, 16, 6], "texture": "#thorns"}
+      }
+    },
+    {
+      "from": [0, 5, 10],
+      "to": [16, 11, 10],
+      "faces": {
+        "north": {"uv": [0, 6, 16, 12], "texture": "#thorns"},
+        "south": {"uv": [0, 6, 16, 12], "texture": "#thorns"}
+      }
+    },
+    {
+      "from": [6, 5, 0],
+      "to": [6, 11, 16],
+      "faces": {
+        "east": {"uv": [0, 0, 16, 6], "texture": "#thorns"},
+        "west": {"uv": [0, 0, 16, 6], "texture": "#thorns"}
+      }
+    },
+    {
+      "from": [10, 5, 0],
+      "to": [10, 11, 16],
+      "faces": {
+        "east": {"uv": [0, 6, 16, 12], "texture": "#thorns"},
+        "west": {"uv": [0, 6, 16, 12], "texture": "#thorns"}
+      }
+    },
+    {
+      "from": [10, 0, 5],
+      "to": [10, 16, 11],
+      "faces": {
+        "east": {"uv": [0, 0, 16, 6], "rotation": 270, "texture": "#thorns"},
+        "west": {"uv": [0, 0, 16, 6], "rotation": 90, "texture": "#thorns"}
+      }
+    },
+    {
+      "from": [6, 0, 5],
+      "to": [6, 16, 11],
+      "faces": {
+        "east": {"uv": [0, 6, 16, 12], "rotation": 270, "texture": "#thorns"},
+        "west": {"uv": [0, 6, 16, 12], "rotation": 90, "texture": "#thorns"}
+      }
+    }
+  ]
+}
