@@ -176,6 +176,7 @@ public class ExtraBlocks {
     				.partialState().with(ScaffoldingBlock.BOTTOM, false)
     					.addModels(scaffoldingModel(ctx, prov, "stable")))
     		.addLayer(() -> RenderType::getCutout)
+			.tag(BlockTags.CLIMBABLE)
     		.item(ScaffoldingItem::new)
     			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/metal_scaffolding_stable")))
     			.build()
