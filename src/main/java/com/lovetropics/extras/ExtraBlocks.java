@@ -341,6 +341,7 @@ public class ExtraBlocks {
 			.initialProperties(() -> Blocks.VINE)
 			// Mixin annoyance, accessor setters can't return self
 			.properties(p -> { ((BlockPropertiesMixin)p).setTicksRandomly(false); return p; })
+			.tag(BlockTags.CLIMBABLE)
 			.blockstate((ctx, prov) -> {}) // NO-OP, it's easier to just copy the file out of vanilla...
 			.addLayer(() -> RenderType::getCutout)
 			.color(() -> () -> (state, reader, pos, color) -> reader != null && pos != null
