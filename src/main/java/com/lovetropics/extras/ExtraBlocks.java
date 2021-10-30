@@ -48,6 +48,7 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -409,7 +410,24 @@ public class ExtraBlocks {
 					.simpleItem()
 					.register()
 			);
-	
+
+	// Imposter blocks
+
+	private static final TemplateBuilder<Block, Unit> IMPOSTER_BLOCK_TEMPLATES = new TemplateBuilder<Block, Unit>()
+			.add(Blocks.BRAIN_CORAL_BLOCK, Unit.INSTANCE)
+			.add(Blocks.BUBBLE_CORAL_BLOCK, Unit.INSTANCE)
+			.add(Blocks.HORN_CORAL_BLOCK, Unit.INSTANCE)
+			.add(Blocks.TUBE_CORAL_BLOCK, Unit.INSTANCE);
+
+	public static final Map<NamedSupplier<Block>, BlockEntry<? extends Block>> IMPOSTER_BLOCKS = IMPOSTER_BLOCK_TEMPLATES
+			.build((object, u) -> REGISTRATE
+					.block("imposter_" + object.getId().getPath(), Block::new)
+					.initialProperties(NonNullSupplier.of(object))
+					.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(object.getId())))
+					.simpleItem()
+					.register()
+			);
+
     // Custom stairs/fences/walls/etc
 
 	private static final TemplateBuilder<StairsBlock, TextureType> STAIR_TEMPLATES = new TemplateBuilder<StairsBlock, TextureType>()
