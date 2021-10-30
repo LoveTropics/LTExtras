@@ -16,7 +16,6 @@
     "client.perf.BlockMixin",
     "perf.ChunkManagerMixin",
     "perf.FuzzedBiomeMagnifierMixin",
-    "perf.MapDataMixin",
     "perf.ServerChunkProviderMixin"
   ],
   "client": [
