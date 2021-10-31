@@ -6,6 +6,7 @@ import com.lovetropics.extras.block.GirderBlock;
 import com.lovetropics.extras.block.GlowSticksBlock;
 import com.lovetropics.extras.block.LightweightBarrierBlock;
 import com.lovetropics.extras.block.PanelBlock;
+import com.lovetropics.extras.block.PassableBarrierBlock;
 import com.lovetropics.extras.block.PianguasBlock;
 import com.lovetropics.extras.block.ReedsBlock;
 import com.lovetropics.extras.block.RopeBlock;
@@ -90,6 +91,15 @@ public class ExtraBlocks {
 
 	public static final BlockEntry<LightweightBarrierBlock> LIGHTWEIGHT_BARRIER = REGISTRATE.block("lightweight_barrier", LightweightBarrierBlock::new)
 			.properties(p -> Block.Properties.from(Blocks.BARRIER).hardnessAndResistance(0.0F, 3.6e6f).noDrops())
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
+					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
+			.item()
+			.model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("item/barrier")))
+			.build()
+			.register();
+
+	public static final BlockEntry<PassableBarrierBlock> PASSABLE_BARRIER = REGISTRATE.block("passable_barrier", PassableBarrierBlock::new)
+			.properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
 			.item()
