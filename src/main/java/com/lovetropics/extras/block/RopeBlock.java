@@ -3,9 +3,13 @@ package com.lovetropics.extras.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.IWaterLoggable;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -18,14 +22,15 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public final class RopeBlock extends Block {
+public final class RopeBlock extends Block implements IWaterLoggable {
     private static final VoxelShape SHAPE = Block.makeCuboidShape(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
 
     public static final BooleanProperty KNOT = BooleanProperty.create("knot");
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public RopeBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(KNOT, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(KNOT, false).with(WATERLOGGED, false));
     }
 
     @Override
@@ -37,6 +42,10 @@ public final class RopeBlock extends Block {
     public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
         if (facing == Direction.UP && !this.canHangFrom(world, facingPos, facingState)) {
             return Blocks.AIR.getDefaultState();
+        }
+
+        if (state.get(WATERLOGGED)) {
+            world.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
         if (facing == Direction.DOWN) {
@@ -53,7 +62,9 @@ public final class RopeBlock extends Block {
         BlockPos pos = context.getPos();
 
         if (this.canHangAt(world, pos)) {
-            return this.getDefaultState().with(KNOT, this.isKnottedAt(world, pos));
+            return this.getDefaultState()
+                    .with(KNOT, this.isKnottedAt(world, pos))
+                    .with(WATERLOGGED, context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER);
         } else {
             return null;
         }
@@ -80,8 +91,12 @@ public final class RopeBlock extends Block {
         return !world.getBlockState(pos.down()).matchesBlock(this);
     }
 
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
+
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(KNOT);
+        builder.add(KNOT, WATERLOGGED);
     }
 }
