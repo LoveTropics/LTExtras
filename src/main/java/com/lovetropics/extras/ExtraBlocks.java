@@ -8,10 +8,10 @@ import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.AbstractCoralPlantBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -37,7 +37,6 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -299,12 +298,12 @@ public class ExtraBlocks {
 		return REGISTRATE.block(name, Material.WOOL, RopeBlock::new)
 				.properties(p -> p.zeroHardnessAndResistance().doesNotBlockMovement().sound(SoundType.CLOTH))
 				.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
-						.forAllStates(state -> {
+						.forAllStatesExcept(state -> {
 							String modelName = state.get(RopeBlock.KNOT) ? name + "_knot" : name;
 							return ConfiguredModel.builder()
 									.modelFile(prov.models().cross(modelName, prov.modLoc("block/" + modelName)))
 									.build();
-						}))
+						}, RopeBlock.WATERLOGGED))
 				.addLayer(() -> RenderType::getCutout)
 				.tag(BlockTags.CLIMBABLE)
 				.item()
@@ -421,17 +420,21 @@ public class ExtraBlocks {
 
 	// Imposter blocks
 
-	private static final TemplateBuilder<Block, Unit> IMPOSTER_BLOCK_TEMPLATES = new TemplateBuilder<Block, Unit>()
-			.add(Blocks.BRAIN_CORAL_BLOCK, Unit.INSTANCE)
-			.add(Blocks.BUBBLE_CORAL_BLOCK, Unit.INSTANCE)
-			.add(Blocks.HORN_CORAL_BLOCK, Unit.INSTANCE)
-			.add(Blocks.TUBE_CORAL_BLOCK, Unit.INSTANCE);
+	private static final TemplateBuilder<Block, ImposterBlockTemplate> IMPOSTER_BLOCK_TEMPLATES = new TemplateBuilder<Block, ImposterBlockTemplate>()
+			.add(Blocks.BRAIN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
+			.add(Blocks.BUBBLE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
+			.add(Blocks.HORN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
+			.add(Blocks.TUBE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
+			.add(Blocks.BRAIN_CORAL, ImposterBlockTemplate.cross(AbstractCoralPlantBlock::new))
+			.add(Blocks.BUBBLE_CORAL, ImposterBlockTemplate.cross(AbstractCoralPlantBlock::new))
+			.add(Blocks.HORN_CORAL, ImposterBlockTemplate.cross(AbstractCoralPlantBlock::new))
+			.add(Blocks.TUBE_CORAL, ImposterBlockTemplate.cross(AbstractCoralPlantBlock::new));
 
 	public static final Map<NamedSupplier<Block>, BlockEntry<? extends Block>> IMPOSTER_BLOCKS = IMPOSTER_BLOCK_TEMPLATES
-			.build((object, u) -> REGISTRATE
-					.block("imposter_" + object.getId().getPath(), Block::new)
+			.build((object, template) -> REGISTRATE
+					.block("imposter_" + object.getId().getPath(), template.factory)
 					.initialProperties(NonNullSupplier.of(object))
-					.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(object.getId())))
+					.blockstate((ctx, prov) -> template.model.apply(ctx, prov, object.getId()))
 					.simpleItem()
 					.register()
 			);
@@ -566,10 +569,5 @@ public class ExtraBlocks {
 							entry -> factory.apply(entry.getKey(), entry.getValue())
 					));
 		}
-	}
-
-	interface BlockFactory<T extends Block> extends NonNullFunction<AbstractBlock.Properties, T> {
-		@Override
-		T apply(AbstractBlock.Properties properties);
 	}
 }
