@@ -1,3 +1,6 @@
 {
-  "parent": "ltextras:block/imposter_tube_coral"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:block/tube_coral"
+  }
 }

@@ -64,7 +64,7 @@ public final class RopeBlock extends Block implements IWaterLoggable {
         if (this.canHangAt(world, pos)) {
             return this.getDefaultState()
                     .with(KNOT, this.isKnottedAt(world, pos))
-                    .with(WATERLOGGED, context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER);
+                    .with(WATERLOGGED, world.getFluidState(pos).getFluid() == Fluids.WATER);
         } else {
             return null;
         }
@@ -91,6 +91,7 @@ public final class RopeBlock extends Block implements IWaterLoggable {
         return !world.getBlockState(pos.down()).matchesBlock(this);
     }
 
+    @Override
     public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }

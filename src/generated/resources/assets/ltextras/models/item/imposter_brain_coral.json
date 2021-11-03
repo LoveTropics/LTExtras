@@ -1,3 +1,6 @@
 {
-  "parent": "ltextras:block/imposter_brain_coral"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:block/brain_coral"
+  }
 }

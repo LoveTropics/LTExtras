@@ -1,9 +1,10 @@
 package com.lovetropics.extras.data;
 
 import com.lovetropics.extras.BlockFactory;
-import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.Registrate;
+import com.tterrag.registrate.builders.BlockBuilder;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ResourceLocation;
 
 public final class ImposterBlockTemplate {
@@ -31,18 +32,25 @@ public final class ImposterBlockTemplate {
         CUBE,
         CROSS;
 
-        public void apply(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, ResourceLocation id) {
+        public BlockBuilder<? extends Block, Registrate> apply(BlockBuilder<? extends Block, Registrate> block, ResourceLocation id) {
             switch (this) {
                 case CUBE: {
-                    prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(id));
-                    break;
+                    return block.blockstate((ctx, prov) -> {
+                                prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(id));
+                            })
+                            .simpleItem();
                 }
                 case CROSS: {
                     ResourceLocation texture = new ResourceLocation(id.getNamespace(), "block/" + id.getPath());
-                    prov.simpleBlock(ctx.getEntry(), prov.models().cross(ctx.getName(), texture));
-                    break;
+                    return block.blockstate((ctx, prov) -> {
+                                prov.simpleBlock(ctx.getEntry(), prov.models().cross(ctx.getName(), texture));
+                            })
+                            .item()
+                            .model((ctx, prov) -> prov.generated(ctx, texture))
+                            .build()
+                            .addLayer(() -> RenderType::getCutout);
                 }
-                default: throw new UnsupportedOperationException();
+                default: return block;
             }
         }
     }
