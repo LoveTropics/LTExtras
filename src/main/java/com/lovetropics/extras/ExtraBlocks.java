@@ -1,6 +1,7 @@
 package com.lovetropics.extras;
 
 import com.lovetropics.extras.block.*;
+import com.lovetropics.extras.data.ImposterBlockTemplate;
 import com.lovetropics.extras.data.ModelGenUtil;
 import com.lovetropics.extras.item.BouyBlockItem;
 import com.lovetropics.extras.mixin.BlockPropertiesMixin;
