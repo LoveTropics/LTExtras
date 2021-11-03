@@ -1,18 +1,6 @@
 package com.lovetropics.extras;
 
-import com.lovetropics.extras.block.CheckpointBlock;
-import com.lovetropics.extras.block.FakeWaterBlock;
-import com.lovetropics.extras.block.GirderBlock;
-import com.lovetropics.extras.block.GlowSticksBlock;
-import com.lovetropics.extras.block.LightweightBarrierBlock;
-import com.lovetropics.extras.block.PanelBlock;
-import com.lovetropics.extras.block.PassableBarrierBlock;
-import com.lovetropics.extras.block.PianguasBlock;
-import com.lovetropics.extras.block.ReedsBlock;
-import com.lovetropics.extras.block.RopeBlock;
-import com.lovetropics.extras.block.SpeedyBlock;
-import com.lovetropics.extras.block.ThornStemBlock;
-import com.lovetropics.extras.block.WaterBarrierBlock;
+import com.lovetropics.extras.block.*;
 import com.lovetropics.extras.data.ModelGenUtil;
 import com.lovetropics.extras.item.BouyBlockItem;
 import com.lovetropics.extras.mixin.BlockPropertiesMixin;
@@ -361,6 +349,15 @@ public class ExtraBlocks {
 				.model((ctx, prov) -> prov.generated(ctx, new ResourceLocation("block/vine"), new ResourceLocation("item/barrier")))
 				.color(() -> () -> ($, layer) -> layer == 0 ? FoliageColors.getDefault() : -1)
 				.build()
+			.register();
+
+	public static final BlockEntry<HeavyDoorBlock> HEAVY_SPRUCE_DOOR = REGISTRATE.block("heavy_spruce_door", HeavyDoorBlock::new)
+			.initialProperties(() -> Blocks.SPRUCE_DOOR)
+			.blockstate((ctx, prov) -> {})
+			.addLayer(() -> RenderType::getCutout)
+			.item()
+			.model((ctx, prov) -> prov.generated(ctx, new ResourceLocation("item/spruce_door")))
+			.build()
 			.register();
 
 	public static final BlockEntry<ThornStemBlock> THORN_STEM = REGISTRATE.block("thorn_stem", ThornStemBlock::new)

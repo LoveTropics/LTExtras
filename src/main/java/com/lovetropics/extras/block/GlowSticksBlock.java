@@ -36,7 +36,7 @@ public final class GlowSticksBlock extends Block implements IWaterLoggable {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         FluidState fluidstate = context.getWorld().getFluidState(context.getPos());
         boolean flag = fluidstate.getFluid() == Fluids.WATER;
-        return super.getStateForPlacement(context).with(WATERLOGGED, Boolean.valueOf(flag));
+        return super.getStateForPlacement(context).with(WATERLOGGED, flag);
     }
 
     public FluidState getFluidState(BlockState state) {

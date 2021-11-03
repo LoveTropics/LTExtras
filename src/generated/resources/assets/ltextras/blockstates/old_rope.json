@@ -1,9 +1,15 @@
 {
   "variants": {
-    "knot=false": {
+    "knot=false,waterlogged=false": {
       "model": "ltextras:block/old_rope"
     },
-    "knot=true": {
+    "knot=true,waterlogged=false": {
+      "model": "ltextras:block/old_rope_knot"
+    },
+    "knot=false,waterlogged=true": {
+      "model": "ltextras:block/old_rope"
+    },
+    "knot=true,waterlogged=true": {
       "model": "ltextras:block/old_rope_knot"
     }
   }
