@@ -7,6 +7,7 @@ import com.lovetropics.extras.item.BouyBlockItem;
 import com.lovetropics.extras.mixin.BlockPropertiesMixin;
 import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
+import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -432,12 +433,12 @@ public class ExtraBlocks {
 			.add(Blocks.TUBE_CORAL, ImposterBlockTemplate.cross(AbstractCoralPlantBlock::new));
 
 	public static final Map<NamedSupplier<Block>, BlockEntry<? extends Block>> IMPOSTER_BLOCKS = IMPOSTER_BLOCK_TEMPLATES
-			.build((object, template) -> REGISTRATE
-					.block("imposter_" + object.getId().getPath(), template.factory)
-					.initialProperties(NonNullSupplier.of(object))
-					.blockstate((ctx, prov) -> template.model.apply(ctx, prov, object.getId()))
-					.simpleItem()
-					.register()
+			.build((object, template) -> {
+						BlockBuilder<? extends Block, Registrate> block = REGISTRATE
+								.block("imposter_" + object.getId().getPath(), template.factory)
+								.initialProperties(NonNullSupplier.of(object));
+						return template.model.apply(block, object.getId()).register();
+					}
 			);
 
     // Custom stairs/fences/walls/etc

@@ -1,17 +1,19 @@
 package com.lovetropics.extras.mixin;
 
+import com.google.common.collect.ImmutableList;
+import cpw.mods.modlauncher.Launcher;
+import cpw.mods.modlauncher.api.IEnvironment;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public final class LTExtrasMixinPlugin implements IMixinConfigPlugin {
     private static final String MIXIN_PACKAGE = "com.lovetropics.extras.mixin";
     private static final String MIXIN_CLIENT_PERF_PACKAGE = MIXIN_PACKAGE + ".client.perf";
-
-    private static final boolean APPLY_CLIENT_PERF = !isOptifineLoaded();
 
     @Override
     public void onLoad(String mixinPackage) {
@@ -25,7 +27,7 @@ public final class LTExtrasMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.startsWith(MIXIN_CLIENT_PERF_PACKAGE)) {
-            return APPLY_CLIENT_PERF;
+            return !isOptifineLoaded();
         }
 
         return true;
@@ -49,11 +51,15 @@ public final class LTExtrasMixinPlugin implements IMixinConfigPlugin {
     }
 
     private static boolean isOptifineLoaded() {
-        try {
-            Class.forName("net.optifine.Config");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
+        List<Map<String, String>> maps = Launcher.INSTANCE.environment().getProperty(IEnvironment.Keys.MODLIST.get())
+                .orElse(ImmutableList.of());
+
+        for (Map<String, String> map : maps) {
+            if ("optifine".equalsIgnoreCase(map.get("name"))) {
+                return true;
+            }
         }
+
+        return false;
     }
 }

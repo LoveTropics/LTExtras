@@ -16,8 +16,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 
-import javax.annotation.Nullable;
-
 public final class GlowSticksBlock extends Block implements IWaterLoggable {
     public static final VoxelShape SHAPE = makeCuboidShape(0.0, 0.0, 0.0, 16.0, 4.0, 16.0);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -32,24 +30,26 @@ public final class GlowSticksBlock extends Block implements IWaterLoggable {
         return SHAPE;
     }
 
-    @Nullable
+    @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        FluidState fluidstate = context.getWorld().getFluidState(context.getPos());
-        boolean flag = fluidstate.getFluid() == Fluids.WATER;
-        return super.getStateForPlacement(context).with(WATERLOGGED, flag);
+        FluidState fluid = context.getWorld().getFluidState(context.getPos());
+        boolean waterlogged = fluid.getFluid() == Fluids.WATER;
+        return super.getStateForPlacement(context).with(WATERLOGGED, waterlogged);
     }
 
+    @Override
     public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+
+    @Override
+    public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
+        if (state.get(WATERLOGGED)) {
+            world.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
-        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return super.updatePostPlacement(state, facing, facingState, world, currentPos, facingPos);
     }
-
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
