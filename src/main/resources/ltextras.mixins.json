@@ -6,6 +6,7 @@
   "refmap": "ltextras.refmap.json",
   "mixins": [
     "BlockPropertiesMixin",
+    "CreatureEntityMixin",
     "FluidStateMixin",
     "ItemStackMixin",
     "NetworkSystemMixin",
