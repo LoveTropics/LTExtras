@@ -114,8 +114,8 @@ public class MobControllerBlockEntity extends TileEntity implements ITickableTil
 
             long ticks = world.getGameTime();
 
-            // Update positions- this is probably safe enough to run every tick but it needs some testing!
-            if (this.loadState) {
+            // Update positions semi frequently
+            if (this.loadState && ticks % 5 == 0) {
                 for (UUID uuid : this.uuids) {
                     Entity entity = serverWorld.getEntityByUuid(uuid);
 
