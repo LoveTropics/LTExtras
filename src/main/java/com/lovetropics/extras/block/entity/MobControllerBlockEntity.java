@@ -1,7 +1,6 @@
 package com.lovetropics.extras.block.entity;
 
 import com.lovetropics.extras.entity.ExtendedCreatureEntity;
-import com.simibubi.create.foundation.utility.NBTHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
