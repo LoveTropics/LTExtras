@@ -160,6 +160,10 @@ public class MobControllerBlockEntity extends TileEntity implements ITickableTil
                                 if (entity instanceof MobEntity) {
                                     ((MobEntity)entity).onInitialSpawn(serverWorld, world.getDifficultyForLocation(pos), SpawnReason.MOB_SUMMONED, null, null);
                                 }
+
+                                if (entity instanceof ExtendedCreatureEntity) {
+                                    ((ExtendedCreatureEntity)entity).linkToBlockEntity(this);
+                                }
                             }
                         }
                     }
