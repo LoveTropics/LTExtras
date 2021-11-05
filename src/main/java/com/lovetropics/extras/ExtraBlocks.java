@@ -1,15 +1,20 @@
 package com.lovetropics.extras;
 
 import com.lovetropics.extras.block.*;
+import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
 import com.lovetropics.extras.data.ModelGenUtil;
 import com.lovetropics.extras.item.BouyBlockItem;
+import com.lovetropics.extras.item.EntityWandItem;
 import com.lovetropics.extras.mixin.BlockPropertiesMixin;
 import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.entry.ItemEntry;
+import com.tterrag.registrate.util.entry.TileEntityEntry;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.AbstractBlock;
@@ -33,10 +38,13 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.Item;
 import net.minecraft.item.ScaffoldingItem;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -212,6 +220,15 @@ public class ExtraBlocks {
     		.simpleItem()
     		.register();
 
+	public static final BlockEntry<MobControllerBlock> MOB_CONTROLLER = REGISTRATE.block("mob_controller", MobControllerBlock::new)
+			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.simpleItem()
+			.tileEntity(MobControllerBlockEntity::new)
+				.build()
+			.register();
+
+	public static final TileEntityEntry<MobControllerBlockEntity> MOB_CONTROLLER_BE = TileEntityEntry.cast(MOB_CONTROLLER.getSibling(ForgeRegistries.TILE_ENTITIES));
+
 	public static final BlockEntry<Block> BLACK_CONCRETE_POWDER_FAKE = REGISTRATE.block("black_concrete_powder_fake", Block::new)
 			.initialProperties(() -> Blocks.DIRT)
 			.item()
@@ -359,6 +376,11 @@ public class ExtraBlocks {
 			.item()
 			.model((ctx, prov) -> prov.generated(ctx, new ResourceLocation("item/spruce_door")))
 			.build()
+			.register();
+
+	public static final ItemEntry<EntityWandItem> ENTITY_WAND = REGISTRATE.item("entity_wand", EntityWandItem::new)
+			.initialProperties(() -> new Item.Properties().maxStackSize(1))
+			.defaultModel()
 			.register();
 
 	public static final BlockEntry<ThornStemBlock> THORN_STEM = REGISTRATE.block("thorn_stem", ThornStemBlock::new)

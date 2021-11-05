@@ -1,5 +1,7 @@
 package com.lovetropics.extras.mixin;
 
+import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
+import com.lovetropics.extras.entity.ExtendedCreatureEntity;
 import com.lovetropics.extras.entity.ai.MoveBackToOriginGoal;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -7,16 +9,20 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(CreatureEntity.class)
-public abstract class CreatureEntityMixin extends MobEntity {
+public abstract class CreatureEntityMixin extends MobEntity implements ExtendedCreatureEntity {
+    // home
     private boolean theresNoPlaceLikeHome;
     private Vector3d homePos;
     private int homeRange;
+
+    // external controller
 
     protected CreatureEntityMixin(EntityType<? extends MobEntity> type, World worldIn) {
         super(type, worldIn);
@@ -62,5 +68,13 @@ public abstract class CreatureEntityMixin extends MobEntity {
 
             nbt.put("HomePos", pos);
         }
+    }
+
+    @Override
+    public void linkToBlockEntity(MobControllerBlockEntity controller) {
+        BlockPos pos = controller.getPos();
+        this.theresNoPlaceLikeHome = true;
+        this.homePos = new Vector3d(pos.getX(), pos.getY(), pos.getZ());
+        this.homeRange = 32; // static for now
     }
 }

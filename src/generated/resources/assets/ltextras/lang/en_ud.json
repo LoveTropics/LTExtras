@@ -34,6 +34,7 @@
   "block.ltextras.magenta_glow_sticks": "s\u029E\u0254\u0131\u0287S \u028Do\u05DF\u2141 \u0250\u0287u\u01DDb\u0250W",
   "block.ltextras.metal_ladder": "\u0279\u01DDpp\u0250\uA780 \u05DF\u0250\u0287\u01DDW",
   "block.ltextras.metal_scaffolding": "bu\u0131p\u05DFo\u025F\u025F\u0250\u0254S \u05DF\u0250\u0287\u01DDW",
+  "block.ltextras.mob_controller": "\u0279\u01DD\u05DF\u05DFo\u0279\u0287uo\u0186 qoW",
   "block.ltextras.old_rope": "\u01DDdo\u1D1A p\u05DFO",
   "block.ltextras.orange_glow_sticks": "s\u029E\u0254\u0131\u0287S \u028Do\u05DF\u2141 \u01DDbu\u0250\u0279O",
   "block.ltextras.paracord": "p\u0279o\u0254\u0250\u0279\u0250\u0500",
@@ -81,5 +82,6 @@
   "block.ltextras.weathered_limestone_wall": "\u05DF\u05DF\u0250M \u01DDuo\u0287s\u01DD\u026F\u0131\uA780 p\u01DD\u0279\u01DD\u0265\u0287\u0250\u01DDM",
   "block.ltextras.white_glow_sticks": "s\u029E\u0254\u0131\u0287S \u028Do\u05DF\u2141 \u01DD\u0287\u0131\u0265M",
   "block.ltextras.yellow_glow_sticks": "s\u029E\u0254\u0131\u0287S \u028Do\u05DF\u2141 \u028Do\u05DF\u05DF\u01DD\u028E",
+  "item.ltextras.entity_wand": "pu\u0250M \u028E\u0287\u0131\u0287u\u018E",
   "itemGroup.ltextras": "s\u0250\u0279\u0287x\u018E\u27D8\uA780"
 }

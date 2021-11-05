@@ -34,6 +34,7 @@
   "block.ltextras.magenta_glow_sticks": "Magenta Glow Sticks",
   "block.ltextras.metal_ladder": "Metal Ladder",
   "block.ltextras.metal_scaffolding": "Metal Scaffolding",
+  "block.ltextras.mob_controller": "Mob Controller",
   "block.ltextras.old_rope": "Old Rope",
   "block.ltextras.orange_glow_sticks": "Orange Glow Sticks",
   "block.ltextras.paracord": "Paracord",
@@ -81,5 +82,6 @@
   "block.ltextras.weathered_limestone_wall": "Weathered Limestone Wall",
   "block.ltextras.white_glow_sticks": "White Glow Sticks",
   "block.ltextras.yellow_glow_sticks": "Yellow Glow Sticks",
+  "item.ltextras.entity_wand": "Entity Wand",
   "itemGroup.ltextras": "LTExtras"
 }
