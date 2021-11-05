@@ -128,7 +128,7 @@ public class MobControllerBlockEntity extends TileEntity implements ITickableTil
             // Every second
             if (ticks % 20 == 0) {
                 BlockPos pos = this.getPos();
-                PlayerEntity player = world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 8, EntityPredicates.NOT_SPECTATING);
+                PlayerEntity player = world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 32, EntityPredicates.NOT_SPECTATING);
 
                 if (this.loadState) {
                     if (player == null) {
