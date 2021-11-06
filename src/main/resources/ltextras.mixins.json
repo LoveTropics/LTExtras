@@ -17,7 +17,8 @@
     "client.perf.BlockMixin",
     "perf.ChunkManagerMixin",
     "perf.FuzzedBiomeMagnifierMixin",
-    "perf.ServerChunkProviderMixin"
+    "perf.ServerChunkProviderMixin",
+    "perf.MapDataMixin"
   ],
   "client": [
     "client.perf.BlockModelRendererCacheMixin",
