@@ -34,15 +34,15 @@ public class MobControllerBlockEntity extends TileEntity implements ITickableTil
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
 
         ListNBT mobUuids = nbt.getList("Mobs", Constants.NBT.TAG_COMPOUND);
 
         this.uuids.clear();
         for (INBT mobNbt : mobUuids) {
             CompoundNBT compoundNBT = (CompoundNBT) mobNbt;
-            UUID uuid = compoundNBT.getUniqueId("UUID");
+            UUID uuid = compoundNBT.getUUID("UUID");
             String type = compoundNBT.getString("Type");
 
             ListNBT pos = compoundNBT.getList("Pos", Constants.NBT.TAG_DOUBLE);
@@ -57,13 +57,13 @@ public class MobControllerBlockEntity extends TileEntity implements ITickableTil
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
 
         ListNBT mobs = new ListNBT();
         for (UUID uuid : this.uuids) {
             CompoundNBT compoundNBT = new CompoundNBT();
-            compoundNBT.putUniqueId("UUID", uuid);
+            compoundNBT.putUUID("UUID", uuid);
             compoundNBT.putString("Type", EntityType.getKey(this.types.get(uuid)).toString());
 
             Vector3d pos = this.positions.get(uuid);
@@ -94,22 +94,22 @@ public class MobControllerBlockEntity extends TileEntity implements ITickableTil
 
             ex.linkToBlockEntity(this);
 
-            UUID uuid = entity.getUniqueID();
+            UUID uuid = entity.getUUID();
             this.uuids.add(uuid);
             this.types.put(uuid, entity.getType());
-            this.positions.put(uuid, entity.getPositionVec());
+            this.positions.put(uuid, entity.position());
         }
     }
 
     @Override
     public void tick() {
-        World world = this.getWorld();
+        World world = this.getLevel();
 
         if (world == null) {
             return;
         }
 
-        if (!world.isRemote()) {
+        if (!world.isClientSide()) {
             ServerWorld serverWorld = (ServerWorld) world;
 
             long ticks = world.getGameTime();
@@ -117,18 +117,18 @@ public class MobControllerBlockEntity extends TileEntity implements ITickableTil
             // Update positions semi frequently
             if (this.loadState && ticks % 5 == 0) {
                 for (UUID uuid : this.uuids) {
-                    Entity entity = serverWorld.getEntityByUuid(uuid);
+                    Entity entity = serverWorld.getEntity(uuid);
 
                     if (entity != null) {
-                        this.positions.put(uuid, entity.getPositionVec());
+                        this.positions.put(uuid, entity.position());
                     }
                 }
             }
 
             // Every second
             if (ticks % 20 == 0) {
-                BlockPos pos = this.getPos();
-                PlayerEntity player = world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 32, EntityPredicates.NOT_SPECTATING);
+                BlockPos pos = this.getBlockPos();
+                PlayerEntity player = world.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 32, EntityPredicates.NO_SPECTATORS);
 
                 if (this.loadState) {
                     if (player == null) {
@@ -136,7 +136,7 @@ public class MobControllerBlockEntity extends TileEntity implements ITickableTil
 
                         // Unload!
                         for (UUID uuid : this.uuids) {
-                            Entity entity = serverWorld.getEntityByUuid(uuid);
+                            Entity entity = serverWorld.getEntity(uuid);
 
                             if (entity != null) {
                                 entity.remove();
@@ -152,13 +152,13 @@ public class MobControllerBlockEntity extends TileEntity implements ITickableTil
                             Vector3d mobPos = this.positions.get(uuid);
 
                             if (entity != null) {
-                                entity.setLocationAndAngles(mobPos.getX(), mobPos.getY(), mobPos.getZ(), 0, 0);
+                                entity.moveTo(mobPos.x(), mobPos.y(), mobPos.z(), 0, 0);
 
-                                entity.setUniqueId(uuid);
-                                world.addEntity(entity);
+                                entity.setUUID(uuid);
+                                world.addFreshEntity(entity);
 
                                 if (entity instanceof MobEntity) {
-                                    ((MobEntity)entity).onInitialSpawn(serverWorld, world.getDifficultyForLocation(pos), SpawnReason.MOB_SUMMONED, null, null);
+                                    ((MobEntity)entity).finalizeSpawn(serverWorld, world.getCurrentDifficultyAt(pos), SpawnReason.MOB_SUMMONED, null, null);
                                 }
 
                                 if (entity instanceof ExtendedCreatureEntity) {

@@ -71,6 +71,8 @@ import java.util.stream.Collectors;
 
 import static com.lovetropics.extras.data.ModelGenUtil.*;
 
+import com.lovetropics.extras.data.ModelGenUtil.TextureType;
+
 public class ExtraBlocks {
 
 	public static final Registrate REGISTRATE = LTExtras.registrate();
@@ -78,7 +80,7 @@ public class ExtraBlocks {
 	// One-off custom blocks
 
     public static final BlockEntry<WaterBarrierBlock> WATER_BARRIER = REGISTRATE.block("water_barrier", WaterBarrierBlock::new)
-            .properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
+            .properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
             .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
                     prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
             .item()
@@ -87,7 +89,7 @@ public class ExtraBlocks {
             .register();
 
 	public static final BlockEntry<LightweightBarrierBlock> LIGHTWEIGHT_BARRIER = REGISTRATE.block("lightweight_barrier", LightweightBarrierBlock::new)
-			.properties(p -> Block.Properties.from(Blocks.BARRIER).hardnessAndResistance(0.0F, 3.6e6f).noDrops())
+			.properties(p -> Block.Properties.copy(Blocks.BARRIER).strength(0.0F, 3.6e6f).noDrops())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
 			.item()
@@ -96,7 +98,7 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<PassableBarrierBlock> PASSABLE_BARRIER = REGISTRATE.block("passable_barrier", PassableBarrierBlock::new)
-			.properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
+			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
 			.item()
@@ -105,7 +107,7 @@ public class ExtraBlocks {
 			.register();
 
     public static final BlockEntry<FakeWaterBlock> FAKE_WATER = REGISTRATE.block("fake_water", FakeWaterBlock::new)
-            .properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
+            .properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
             .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
                     prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("block/water_still"))))
             .item()
@@ -115,10 +117,10 @@ public class ExtraBlocks {
 
     public static final BlockEntry<CustomShapeBlock> BUOY = REGISTRATE.block("buoy", p -> new CustomShapeBlock(
                     VoxelShapes.or(
-                            Block.makeCuboidShape(2, 0, 2, 14, 3, 14),
-                            Block.makeCuboidShape(3, 3, 3, 13, 14, 13)),
+                            Block.box(2, 0, 2, 14, 3, 14),
+                            Block.box(3, 3, 3, 13, 14, 13)),
                     p))
-            .properties(p -> Block.Properties.from(Blocks.BEACON))
+            .properties(p -> Block.Properties.copy(Blocks.BEACON))
             .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
                     .withExistingParent(ctx.getName(), new ResourceLocation("block/block"))
                         .ao(false)
@@ -143,14 +145,14 @@ public class ExtraBlocks {
     		.initialProperties(() -> Blocks.GLASS)
     		.blockstate((ctx, prov) -> prov.directionalBlock(ctx.get(), prov.models()
     				.trapdoorTop(ctx.getName(), prov.blockTexture(Blocks.GLASS))))
-    		.loot(BlockLootTables::registerSilkTouch)
-    		.addLayer(() -> RenderType::getCutout)
+    		.loot(BlockLootTables::dropWhenSilkTouch)
+    		.addLayer(() -> RenderType::cutout)
     		.item()
     			.model((ctx, prov) -> prov.trapdoorBottom(ctx.getName(), prov.mcLoc("block/glass")))
     			.build()
     		.register();
 
-    public static final ITag.INamedTag<Block> TAG_STEEL_GIRDERS = BlockTags.makeWrapperTag(LTExtras.MODID +":steel_girders");
+    public static final ITag.INamedTag<Block> TAG_STEEL_GIRDERS = BlockTags.bind(LTExtras.MODID +":steel_girders");
 
     public static final BlockEntry<GirderBlock> STEEL_GIRDER = steelGirder("");
     public static final BlockEntry<GirderBlock> RUSTING_STEEL_GIRDER = steelGirder("rusting");
@@ -166,7 +168,7 @@ public class ExtraBlocks {
     }
 
     public static final BlockEntry<CheckpointBlock> CHECKPOINT = REGISTRATE.block("checkpoint", CheckpointBlock::new)
-            .properties(p -> Block.Properties.from(Blocks.BARRIER).noDrops())
+            .properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
     		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
 				.getBuilder(ctx.getName()).texture("particle", prov.mcLoc("item/structure_void"))))
             .item()
@@ -186,7 +188,7 @@ public class ExtraBlocks {
     					.addModels(scaffoldingModel(ctx, prov, "unstable"))
     				.partialState().with(ScaffoldingBlock.BOTTOM, false)
     					.addModels(scaffoldingModel(ctx, prov, "stable")))
-    		.addLayer(() -> RenderType::getCutout)
+    		.addLayer(() -> RenderType::cutout)
 			.tag(BlockTags.CLIMBABLE)
     		.item(ScaffoldingItem::new)
     			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/metal_scaffolding_stable")))
@@ -196,7 +198,7 @@ public class ExtraBlocks {
     public static final BlockEntry<PaneBlock> RUSTY_IRON_BARS = REGISTRATE.block("rusty_iron_bars", p -> (PaneBlock) new PaneBlock(p) {})
     		.initialProperties(() -> Blocks.IRON_BARS)
     		.blockstate((ctx, prov) -> barsBlock(ctx, prov))
-    		.addLayer(() -> RenderType::getCutout)
+    		.addLayer(() -> RenderType::cutout)
     		.item()
     			.model((ctx, prov) -> prov.blockSprite(ctx))
     			.build()
@@ -209,7 +211,7 @@ public class ExtraBlocks {
     				.withExistingParent(ctx.getName(), "block/ladder")
     				.texture("texture", prov.blockTexture(ctx.getEntry()))
     				.texture("particle", prov.blockTexture(ctx.getEntry()))))
-    		.addLayer(() -> RenderType::getCutout)
+    		.addLayer(() -> RenderType::cutout)
     		.item()
     			.model((ctx, prov) -> prov.blockSprite(ctx))
     			.build()
@@ -239,17 +241,17 @@ public class ExtraBlocks {
 
     public static final BlockEntry<StainedGlassBlock> SMOOTH_LIGHT_GRAY_STAINED_GLASS = REGISTRATE.block("smooth_light_gray_stained_glass", p -> new StainedGlassBlock(DyeColor.LIGHT_GRAY, p))
     		.initialProperties(() -> Blocks.LIGHT_GRAY_STAINED_GLASS)
-    		.loot(RegistrateBlockLootTables::registerSilkTouch)
-    		.addLayer(() -> RenderType::getTranslucent)
+    		.loot(RegistrateBlockLootTables::dropWhenSilkTouch)
+    		.addLayer(() -> RenderType::translucent)
     		.simpleItem()
     		.register();
 
 	public static final BlockEntry<ReedsBlock> REEDS = REGISTRATE.block("reeds", ReedsBlock::new)
-			.properties(p -> Block.Properties.from(Blocks.SUGAR_CANE).noDrops())
+			.properties(p -> Block.Properties.copy(Blocks.SUGAR_CANE).noDrops())
 			.blockstate((ctx, prov) -> {
 				prov.getVariantBuilder(ctx.getEntry())
 						.forAllStates(state -> {
-							ReedsBlock.Type type = state.get(ReedsBlock.TYPE);
+							ReedsBlock.Type type = state.getValue(ReedsBlock.TYPE);
 							ConfiguredModel.Builder<?> builder = ConfiguredModel.builder();
 
 							String[] textures = type.getTextures();
@@ -269,14 +271,14 @@ public class ExtraBlocks {
 							return builder.build();
 						});
 			})
-			.addLayer(() -> RenderType::getCutout)
+			.addLayer(() -> RenderType::cutout)
 			.item()
 				.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/reeds_top_tall")))
 				.build()
 			.register();
 
 	public static final BlockEntry<PianguasBlock> PIANGUAS = REGISTRATE.block("pianguas", PianguasBlock::new)
-			.properties(p -> AbstractBlock.Properties.create(Material.ROCK).doesNotBlockMovement().zeroHardnessAndResistance())
+			.properties(p -> AbstractBlock.Properties.of(Material.STONE).noCollission().instabreak())
 			.blockstate((ctx, prov) -> {
 				BlockModelBuilder model = prov.models().getBuilder("pianguas")
 						.ao(false)
@@ -294,7 +296,7 @@ public class ExtraBlocks {
 				MultiPartBlockStateBuilder builder = prov.getMultipartBuilder(ctx.getEntry());
 				PianguasBlock.ATTACHMENTS.forEach((direction, property) -> {
 					if (direction.getAxis().isHorizontal()) {
-						int rotationY = (((int) direction.getHorizontalAngle()) + 180) % 360;
+						int rotationY = (((int) direction.toYRot()) + 180) % 360;
 						builder.part().modelFile(model).rotationY(rotationY).uvLock(true).addModel()
 								.condition(property, true);
 					} else {
@@ -304,7 +306,7 @@ public class ExtraBlocks {
 					}
 				});
 			})
-			.addLayer(() -> RenderType::getCutout)
+			.addLayer(() -> RenderType::cutout)
 			.item()
 				.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/pianguas")))
 				.build()
@@ -315,15 +317,15 @@ public class ExtraBlocks {
 
 	private static BlockEntry<RopeBlock> rope(String name) {
 		return REGISTRATE.block(name, Material.WOOL, RopeBlock::new)
-				.properties(p -> p.zeroHardnessAndResistance().doesNotBlockMovement().sound(SoundType.CLOTH))
+				.properties(p -> p.instabreak().noCollission().sound(SoundType.WOOL))
 				.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
 						.forAllStatesExcept(state -> {
-							String modelName = state.get(RopeBlock.KNOT) ? name + "_knot" : name;
+							String modelName = state.getValue(RopeBlock.KNOT) ? name + "_knot" : name;
 							return ConfiguredModel.builder()
 									.modelFile(prov.models().cross(modelName, prov.modLoc("block/" + modelName)))
 									.build();
 						}, RopeBlock.WATERLOGGED))
-				.addLayer(() -> RenderType::getCutout)
+				.addLayer(() -> RenderType::cutout)
 				.tag(BlockTags.CLIMBABLE)
 				.item()
 					.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/" + name + "_knot")))
@@ -337,18 +339,18 @@ public class ExtraBlocks {
 
 	public static final Map<DyeColor, BlockEntry<GlowSticksBlock>> GLOW_STICKS = GLOW_STICKS_DYES.stream()
 			.collect(Collectors.toMap(Function.identity(), dyeColor -> {
-				String dyeName = dyeColor.getString();
+				String dyeName = dyeColor.getSerializedName();
 				String name = dyeName + "_glow_sticks";
 				return REGISTRATE.block(name, Material.GLASS, GlowSticksBlock::new)
-						.properties(p -> p.zeroHardnessAndResistance().doesNotBlockMovement().sound(SoundType.GLASS).notSolid()
-								.setLightLevel(value -> 6)
+						.properties(p -> p.instabreak().noCollission().sound(SoundType.GLASS).noOcclusion()
+								.lightLevel(value -> 6)
 						)
 						.blockstate((ctx, prov) -> {
 							BlockModelBuilder model = prov.models().withExistingParent(name, prov.modLoc("block/glow_sticks"))
 									.texture("glow_sticks", prov.modLoc("block/glow_sticks/" + dyeName));
 							prov.simpleBlock(ctx.get(), ConfiguredModel.allYRotations(model, 0, false));
 						})
-						.addLayer(() -> RenderType::getTranslucent)
+						.addLayer(() -> RenderType::translucent)
 						.simpleItem()
 						.register();
 			}));
@@ -356,47 +358,47 @@ public class ExtraBlocks {
 	public static final BlockEntry<VineBlock> INFERTILE_VINE = REGISTRATE.block("infertile_vine", VineBlock::new)
 			.initialProperties(() -> Blocks.VINE)
 			// Mixin annoyance, accessor setters can't return self
-			.properties(p -> { ((BlockPropertiesMixin)p).setTicksRandomly(false); return p; })
+			.properties(p -> { ((BlockPropertiesMixin)p).setIsRandomlyTicking(false); return p; })
 			.tag(BlockTags.CLIMBABLE)
 			.blockstate((ctx, prov) -> {}) // NO-OP, it's easier to just copy the file out of vanilla...
-			.addLayer(() -> RenderType::getCutout)
+			.addLayer(() -> RenderType::cutout)
 			.color(() -> () -> (state, reader, pos, color) -> reader != null && pos != null
-					? BiomeColors.getFoliageColor(reader, pos)
-					: FoliageColors.getDefault())
+					? BiomeColors.getAverageFoliageColor(reader, pos)
+					: FoliageColors.getDefaultColor())
 			.item()
 				.model((ctx, prov) -> prov.generated(ctx, new ResourceLocation("block/vine"), new ResourceLocation("item/barrier")))
-				.color(() -> () -> ($, layer) -> layer == 0 ? FoliageColors.getDefault() : -1)
+				.color(() -> () -> ($, layer) -> layer == 0 ? FoliageColors.getDefaultColor() : -1)
 				.build()
 			.register();
 
 	public static final BlockEntry<HeavyDoorBlock> HEAVY_SPRUCE_DOOR = REGISTRATE.block("heavy_spruce_door", HeavyDoorBlock::new)
 			.initialProperties(() -> Blocks.SPRUCE_DOOR)
 			.blockstate((ctx, prov) -> {})
-			.addLayer(() -> RenderType::getCutout)
+			.addLayer(() -> RenderType::cutout)
 			.item()
 			.model((ctx, prov) -> prov.generated(ctx, new ResourceLocation("item/spruce_door")))
 			.build()
 			.register();
 
 	public static final ItemEntry<EntityWandItem> ENTITY_WAND = REGISTRATE.item("entity_wand", EntityWandItem::new)
-			.initialProperties(() -> new Item.Properties().maxStackSize(1))
+			.initialProperties(() -> new Item.Properties().stacksTo(1))
 			.defaultModel()
 			.register();
 
 	public static final BlockEntry<ThornStemBlock> THORN_STEM = REGISTRATE.block("thorn_stem", ThornStemBlock::new)
 			.initialProperties(() -> Blocks.ACACIA_LEAVES)
-			.properties(p -> p.notSolid().setOpaque((state, world, pos) -> false))
+			.properties(p -> p.noOcclusion().isRedstoneConductor((state, world, pos) -> false))
 			.blockstate((ctx, prov) -> {
 				ModelFile.ExistingModelFile core = prov.models().getExistingFile(prov.modLoc("block/thorn_stem"));
 				ModelFile.ExistingModelFile connection = prov.models().getExistingFile(prov.modLoc("block/thorn_stem_connection"));
 				MultiPartBlockStateBuilder multipart = prov.getMultipartBuilder(ctx.get())
 						.part().modelFile(core).addModel().end();
-				SixWayBlock.FACING_TO_PROPERTY_MAP.forEach((direction, value) -> {
+				SixWayBlock.PROPERTY_BY_DIRECTION.forEach((direction, value) -> {
 					ConfiguredModel.Builder<MultiPartBlockStateBuilder.PartBuilder> part = multipart.part()
 							.modelFile(connection).uvLock(true);
 
 					if (direction.getAxis().isHorizontal()) {
-						int angleY = (int) direction.getHorizontalAngle() % 360;
+						int angleY = (int) direction.toYRot() % 360;
 						part.rotationY(angleY);
 						part.rotationX(90);
 					} else {
@@ -408,7 +410,7 @@ public class ExtraBlocks {
 							.condition(value, true);
 				});
 			})
-			.addLayer(() -> RenderType::getCutout)
+			.addLayer(() -> RenderType::cutout)
 			.simpleItem()
 			.register();
 
@@ -420,7 +422,7 @@ public class ExtraBlocks {
 	private static final ResourceLocation WEATHERED_LIMESTONE_TEXTURE = new ResourceLocation("create", "block/palettes/weathered_limestone/plain");
 	private static final ResourceLocation POLISHED_WEATHERED_LIMESTONE_TEXTURE = new ResourceLocation("create", "block/palettes/weathered_limestone/polished");
 
-	private static final VoxelShape PATH_SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
+	private static final VoxelShape PATH_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
 
 	private static final TemplateBuilder<SpeedyBlock, BlockFactory<SpeedyBlock>> SPEEDY_BLOCK_TEMPLATES = new TemplateBuilder<SpeedyBlock, BlockFactory<SpeedyBlock>>()
 			.add(Blocks.QUARTZ_BLOCK, SpeedyBlock::opaque)
@@ -505,7 +507,7 @@ public class ExtraBlocks {
 
 	public static final Map<NamedSupplier<Block>, BlockEntry<? extends StairsBlock>> STAIRS = STAIR_TEMPLATES
 			.build((object, textureType) -> REGISTRATE
-					.block(object.getId().getPath() + "_stairs", p -> new StairsBlock(() -> object.get().getDefaultState(), p))
+					.block(object.getId().getPath() + "_stairs", p -> new StairsBlock(() -> object.get().defaultBlockState(), p))
 					.initialProperties(NonNullSupplier.of(object))
 					.tag(BlockTags.STAIRS)
 					.blockstate(stairsBlock(object, textureType))

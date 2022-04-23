@@ -18,39 +18,39 @@ import org.spongepowered.asm.mixin.Shadow;
 public class BlockMixin {
     @Shadow
     @Final
-    private static ThreadLocal<Object2ByteLinkedOpenHashMap<Block.RenderSideCacheKey>> SHOULD_SIDE_RENDER_CACHE;
+    private static ThreadLocal<Object2ByteLinkedOpenHashMap<Block.RenderSideCacheKey>> OCCLUSION_CACHE;
 
     /**
      * @reason add fast path for simple full cubes
      * @author Gegy
      */
     @Overwrite
-    public static boolean shouldSideBeRendered(BlockState state, IBlockReader world, BlockPos pos, Direction direction) {
-        BlockPos adjacentPos = pos.offset(direction);
+    public static boolean shouldRenderFace(BlockState state, IBlockReader world, BlockPos pos, Direction direction) {
+        BlockPos adjacentPos = pos.relative(direction);
         BlockState adjacentState = world.getBlockState(adjacentPos);
-        if (state.isSideInvisible(adjacentState, direction)) {
+        if (state.skipRendering(adjacentState, direction)) {
             return false;
-        } else if (!adjacentState.isSolid()) {
+        } else if (!adjacentState.canOcclude()) {
             return true;
         }
 
-        VoxelShape shape = state.getRenderShape(world, pos);
+        VoxelShape shape = state.getOcclusionShape(world, pos);
 
         // an empty shape will never intersect with another face
         if (shape == VoxelShapes.empty()) return true;
 
-        VoxelShape adjacentShape = adjacentState.getRenderShape(world, adjacentPos);
+        VoxelShape adjacentShape = adjacentState.getOcclusionShape(world, adjacentPos);
 
         // an empty shape will never intersect with another face
         if (adjacentShape == VoxelShapes.empty()) return true;
 
         // two full cubes will always occlude each other
-        if (shape == VoxelShapes.fullCube() && adjacentShape == VoxelShapes.fullCube()) {
+        if (shape == VoxelShapes.block() && adjacentShape == VoxelShapes.block()) {
             return false;
         }
 
         Block.RenderSideCacheKey cacheKey = new Block.RenderSideCacheKey(state, adjacentState, direction);
-        Object2ByteLinkedOpenHashMap<Block.RenderSideCacheKey> cache = SHOULD_SIDE_RENDER_CACHE.get();
+        Object2ByteLinkedOpenHashMap<Block.RenderSideCacheKey> cache = OCCLUSION_CACHE.get();
         byte cacheResult = cache.getAndMoveToFirst(cacheKey);
         if (cacheResult != 127) {
             return cacheResult != 0;
@@ -58,7 +58,7 @@ public class BlockMixin {
 
         VoxelShape faceShape = VoxelShapes.getFaceShape(shape, direction);
         VoxelShape adjacentFaceShape = VoxelShapes.getFaceShape(adjacentShape, direction.getOpposite());
-        boolean visible = VoxelShapes.compare(faceShape, adjacentFaceShape, IBooleanFunction.ONLY_FIRST);
+        boolean visible = VoxelShapes.joinIsNotEmpty(faceShape, adjacentFaceShape, IBooleanFunction.ONLY_FIRST);
 
         if (cache.size() == 2048) {
             cache.removeLastByte();

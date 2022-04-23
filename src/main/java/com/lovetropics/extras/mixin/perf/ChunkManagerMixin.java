@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ChunkManager.class)
 public class ChunkManagerMixin {
 	@Inject(
-			method = "updatePlayerPosition",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/SectionPos;getSectionX()I"),
+			method = "move",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/SectionPos;x()I"),
 			locals = LocalCapture.CAPTURE_FAILHARD,
 			cancellable = true
 	)

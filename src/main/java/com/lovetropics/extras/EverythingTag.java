@@ -30,7 +30,7 @@ public final class EverythingTag<T extends IForgeRegistryEntry<T>> implements IT
 	}
 
 	@Override
-	public List<T> getAllElements() {
+	public List<T> getValues() {
 		List<T> elements = this.elements;
 		if (elements == null) {
 			this.elements = elements = new ArrayList<>(this.registry.getValues());

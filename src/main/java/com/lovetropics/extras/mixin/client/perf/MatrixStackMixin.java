@@ -14,7 +14,7 @@ import java.util.Deque;
 public class MatrixStackMixin {
 	@Shadow
 	@Final
-	private Deque<MatrixStack.Entry> stack;
+	private Deque<MatrixStack.Entry> poseStack;
 
 	/**
 	 * @reason Remove allocation and matrix multiplication for translate operation. We can do so much simpler!
@@ -23,8 +23,8 @@ public class MatrixStackMixin {
 	 */
 	@Overwrite
 	public void translate(double x, double y, double z) {
-		MatrixStack.Entry entry = this.stack.getLast();
-		Matrix4f matrix = entry.getMatrix();
+		MatrixStack.Entry entry = this.poseStack.getLast();
+		Matrix4f matrix = entry.pose();
 		((Matrix4fExt) (Object) matrix).translate((float) x, (float) y, (float) z);
 	}
 }

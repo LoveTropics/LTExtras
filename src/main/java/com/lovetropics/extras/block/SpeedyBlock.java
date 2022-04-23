@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public class SpeedyBlock extends CustomShapeBlock {
 	
 	public static SpeedyBlock opaque(Block.Properties properties) {
-		return new SpeedyBlock(VoxelShapes.fullCube(), properties, false);
+		return new SpeedyBlock(VoxelShapes.block(), properties, false);
 	}
 	
 	public static SpeedyBlock transparent(VoxelShape shape, Block.Properties properties) {
@@ -28,19 +28,19 @@ public class SpeedyBlock extends CustomShapeBlock {
 	}
 	
 	@Override
-	public boolean isTransparent(BlockState state) {
+	public boolean useShapeForLightOcclusion(BlockState state) {
 		return transparent;
 	}
 
 	@Override
-	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
-		double d0 = Math.abs(entityIn.getMotion().y);
+	public void stepOn(World worldIn, BlockPos pos, Entity entityIn) {
+		double d0 = Math.abs(entityIn.getDeltaMovement().y);
 		if (d0 < 0.1D && !entityIn.isSteppingCarefully()) {
 			double d1 = 1.35D - d0 * 0.2D; // TODO config
-			entityIn.setMotion(entityIn.getMotion().mul(d1, 1.0D, d1));
+			entityIn.setDeltaMovement(entityIn.getDeltaMovement().multiply(d1, 1.0D, d1));
 		}
 
-		super.onEntityWalk(worldIn, pos, entityIn);
+		super.stepOn(worldIn, pos, entityIn);
 	}
 
 }

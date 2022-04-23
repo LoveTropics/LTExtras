@@ -21,10 +21,10 @@ import java.util.function.Function;
 public class TagCollectionReaderMixin<T> {
 	@Shadow
 	@Final
-	private String tagType;
+	private String name;
 
 	@Inject(
-			method = "buildTagCollectionFromMap",
+			method = "load",
 			at = @At(value = "INVOKE", target = "Ljava/util/Map;forEach(Ljava/util/function/BiConsumer;)V"),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
@@ -32,9 +32,9 @@ public class TagCollectionReaderMixin<T> {
 			Map<ResourceLocation, ITag.Builder> idToBuilderMap, CallbackInfoReturnable<ITagCollection<T>> ci,
 			Map<ResourceLocation, ITag<T>> map, Function<ResourceLocation, ITag<T>> getTag, Function<ResourceLocation, T> getEntry
 	) {
-		if (this.tagType.equals("block")) {
+		if (this.name.equals("block")) {
 			EverythingTag.addTo(map, ForgeRegistries.BLOCKS);
-		} else if (this.tagType.equals("item")) {
+		} else if (this.name.equals("item")) {
 			EverythingTag.addTo(map, ForgeRegistries.ITEMS);
 		}
 	}

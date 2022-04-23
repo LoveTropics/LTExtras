@@ -7,6 +7,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public final class PassableBarrierBlock extends CustomBarrierBlock {
     public PassableBarrierBlock(Properties properties) {
         super(properties);
@@ -18,7 +20,7 @@ public final class PassableBarrierBlock extends CustomBarrierBlock {
     }
 
     @Override
-    public VoxelShape getRayTraceShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getVisualShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         return this.getShape(state, world, pos, context);
     }
 }

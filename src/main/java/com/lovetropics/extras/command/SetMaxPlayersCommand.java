@@ -16,7 +16,7 @@ public final class SetMaxPlayersCommand {
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
 		// @formatter:off
 		dispatcher.register(
-			literal("setmaxplayers").requires(source -> source.hasPermissionLevel(4))
+			literal("setmaxplayers").requires(source -> source.hasPermission(4))
 				.then(argument("max", IntegerArgumentType.integer(1))
 				.executes(SetMaxPlayersCommand::setMaxPlayers)
 			)
@@ -30,7 +30,7 @@ public final class SetMaxPlayersCommand {
 		MinecraftServer server = ctx.getSource().getServer();
 		((PlayerListAccess) server.getPlayerList()).setMaxPlayers(maxPlayers);
 
-		ctx.getSource().sendFeedback(new StringTextComponent("Set max player count to " + maxPlayers), true);
+		ctx.getSource().sendSuccess(new StringTextComponent("Set max player count to " + maxPlayers), true);
 
 		return Command.SINGLE_SUCCESS;
 	}

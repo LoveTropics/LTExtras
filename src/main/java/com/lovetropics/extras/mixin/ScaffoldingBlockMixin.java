@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ScaffoldingBlock.class)
 public class ScaffoldingBlockMixin {
-	@Redirect(method = "getDistance", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;matchesBlock(Lnet/minecraft/block/Block;)Z"))
+	@Redirect(method = "getDistance", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;is(Lnet/minecraft/block/Block;)Z"))
 	private static boolean matchesScaffolding(BlockState state, Block block) {
 		return state.getBlock() instanceof ScaffoldingBlock;
 	}

@@ -19,15 +19,15 @@ import net.minecraftforge.fml.common.Mod;
 public class CheckpointParticle extends SpriteTexturedParticle {
 	CheckpointParticle(ClientWorld world, double x, double y, double z, IItemProvider item) {
 		super(world, x, y, z);
-		this.setSprite(Minecraft.getInstance().getItemRenderer().getItemModelMesher().getParticleIcon(item));
-		this.particleGravity = 0.0F;
-		this.maxAge = 80;
-		this.canCollide = false;
+		this.setSprite(Minecraft.getInstance().getItemRenderer().getItemModelShaper().getParticleIcon(item));
+		this.gravity = 0.0F;
+		this.lifetime = 80;
+		this.hasPhysics = false;
 	}
 
 	@SubscribeEvent
 	public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-		Minecraft.getInstance().particles.registerFactory(ExtraParticles.CHECKPOINT.get(), new Factory());
+		Minecraft.getInstance().particleEngine.register(ExtraParticles.CHECKPOINT.get(), new Factory());
 	}
 
 	public IParticleRenderType getRenderType() {
@@ -35,13 +35,13 @@ public class CheckpointParticle extends SpriteTexturedParticle {
 	}
 
 	@Override
-	public float getScale(float scaleFactor) {
+	public float getQuadSize(float scaleFactor) {
 		return 0.5F;
 	}
 
 	public static class Factory implements IParticleFactory<BasicParticleType> {
 		@Override
-		public Particle makeParticle(BasicParticleType type, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+		public Particle createParticle(BasicParticleType type, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			return new CheckpointParticle(world, x, y, z, Blocks.STRUCTURE_VOID.asItem());
 		}
 	}

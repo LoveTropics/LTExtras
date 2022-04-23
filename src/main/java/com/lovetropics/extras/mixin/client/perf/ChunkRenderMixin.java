@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChunkRenderDispatcher.ChunkRender.class)
 public abstract class ChunkRenderMixin implements ChunkRendererExt {
-    @Shadow @Final private BlockPos.Mutable[] mapEnumFacing;
+    @Shadow @Final private BlockPos.Mutable[] relativeOrigins;
 
     @Shadow
-    protected abstract double getDistanceSq();
+    protected abstract double getDistToPlayerSqr();
 
     @Shadow
-    protected abstract boolean isChunkLoaded(BlockPos blockPosIn);
+    protected abstract boolean doesChunkExistAt(BlockPos blockPosIn);
 
     @Unique
     private boolean neighborChunksLoaded;
@@ -31,24 +31,24 @@ public abstract class ChunkRenderMixin implements ChunkRendererExt {
      * @author Gegy
      */
     @Overwrite
-    public boolean shouldStayLoaded() {
+    public boolean hasAllNeighbors() {
         if (this.neighborChunksLoaded) {
             return true;
         }
 
-        if (this.getDistanceSq() > 24.0 * 24.0) {
-            this.neighborChunksLoaded = this.isChunkLoaded(this.mapEnumFacing[Direction.WEST.ordinal()])
-                    && this.isChunkLoaded(this.mapEnumFacing[Direction.NORTH.ordinal()])
-                    && this.isChunkLoaded(this.mapEnumFacing[Direction.EAST.ordinal()])
-                    && this.isChunkLoaded(this.mapEnumFacing[Direction.SOUTH.ordinal()]);
+        if (this.getDistToPlayerSqr() > 24.0 * 24.0) {
+            this.neighborChunksLoaded = this.doesChunkExistAt(this.relativeOrigins[Direction.WEST.ordinal()])
+                    && this.doesChunkExistAt(this.relativeOrigins[Direction.NORTH.ordinal()])
+                    && this.doesChunkExistAt(this.relativeOrigins[Direction.EAST.ordinal()])
+                    && this.doesChunkExistAt(this.relativeOrigins[Direction.SOUTH.ordinal()]);
             return this.neighborChunksLoaded;
         } else {
             return true;
         }
     }
 
-    @Inject(method = "setPosition", at = @At("HEAD"))
-    private void setPosition(int x, int y, int z, CallbackInfo ci) {
+    @Inject(method = "setOrigin", at = @At("HEAD"))
+    private void setOrigin(int x, int y, int z, CallbackInfo ci) {
         this.neighborChunksLoaded = false;
     }
 

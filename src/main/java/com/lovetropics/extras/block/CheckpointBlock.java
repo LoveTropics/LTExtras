@@ -29,6 +29,8 @@ import net.minecraftforge.common.util.Constants;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class CheckpointBlock extends Block {
 
 	public static final IntegerProperty STAGE = IntegerProperty.create("stage", 1, 40);
@@ -38,8 +40,8 @@ public class CheckpointBlock extends Block {
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		builder.add(STAGE);
 	}
 
@@ -51,7 +53,7 @@ public class CheckpointBlock extends Block {
 	@Override
 	@Deprecated
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		if (worldIn instanceof World && ((World) worldIn).isRemote) {
+		if (worldIn instanceof World && ((World) worldIn).isClientSide) {
 			if (context.getEntity() instanceof PlayerEntity && !((PlayerEntity)context.getEntity()).isCreative()) {
 				return VoxelShapes.empty();
 			}
@@ -66,17 +68,17 @@ public class CheckpointBlock extends Block {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
+	public void appendHoverText(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
 			ITooltipFlag flagIn) {
-		super.addInformation(stack, worldIn, tooltip, flagIn);
+		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 		tooltip.add(new StringTextComponent("Stage: ")
-				.appendSibling(new StringTextComponent(Integer.toString(getStage(stack)))
-						.mergeStyle(TextFormatting.AQUA)));
+				.append(new StringTextComponent(Integer.toString(getStage(stack)))
+						.withStyle(TextFormatting.AQUA)));
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return super.getStateForPlacement(context).with(STAGE, getStage(context.getItem()));
+		return super.getStateForPlacement(context).setValue(STAGE, getStage(context.getItemInHand()));
 	}
 
 	private int getStage(ItemStack stack) {
@@ -102,7 +104,7 @@ public class CheckpointBlock extends Block {
 
     private boolean isHoldingBarrier(PlayerEntity player) {
         Item item = this.asItem();
-        return player.getHeldItemMainhand().getItem() == item
-                || player.getHeldItemOffhand().getItem() == item;
+        return player.getMainHandItem().getItem() == item
+                || player.getOffhandItem().getItem() == item;
     }
 }

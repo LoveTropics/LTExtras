@@ -9,5 +9,5 @@ import net.minecraft.block.AbstractBlock;
 public interface BlockPropertiesMixin {
 
 	@Accessor
-	void setTicksRandomly(boolean ticksRandomly);
+	void setIsRandomlyTicking(boolean ticksRandomly);
 }

@@ -29,10 +29,10 @@ import java.util.function.Predicate;
 // TODO: PR into Forge!
 @Mixin(RenderTypeLookup.class)
 public class RenderTypeLookupMixin {
-    @Shadow private static boolean fancyGraphics;
+    @Shadow private static boolean renderCutout;
 
-    @Shadow @Final @Deprecated private static Map<Block, RenderType> TYPES_BY_BLOCK;
-    @Shadow @Final @Deprecated private static Map<Fluid, RenderType> TYPES_BY_FLUID;
+    @Shadow @Final @Deprecated private static Map<Block, RenderType> TYPE_BY_BLOCK;
+    @Shadow @Final @Deprecated private static Map<Fluid, RenderType> TYPE_BY_FLUID;
     @Shadow(remap = false)
     @Mutable @Final private static Map<IRegistryDelegate<Block>, Predicate<RenderType>> blockRenderChecks;
     @Shadow(remap = false)
@@ -42,7 +42,7 @@ public class RenderTypeLookupMixin {
     private static final StampedLock RENDER_CHECK_LOCK = new StampedLock();
 
     @Unique
-    private static final Predicate<RenderType> SOLID_PREDICATE = type -> type == RenderType.getSolid();
+    private static final Predicate<RenderType> SOLID_PREDICATE = type -> type == RenderType.solid();
 
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void init(CallbackInfo ci) {
@@ -54,8 +54,8 @@ public class RenderTypeLookupMixin {
         RenderTypeLookupMixin.blockRenderChecks = blockMap;
         RenderTypeLookupMixin.fluidRenderChecks = fluidMap;
 
-        TYPES_BY_BLOCK.forEach(RenderTypeLookup::setRenderLayer);
-        TYPES_BY_FLUID.forEach(RenderTypeLookup::setRenderLayer);
+        TYPE_BY_BLOCK.forEach(RenderTypeLookup::setRenderLayer);
+        TYPE_BY_FLUID.forEach(RenderTypeLookup::setRenderLayer);
     }
 
     @Redirect(method = "<clinit>", at = @At(value = "INVOKE", target = "Ljava/util/Map;forEach(Ljava/util/function/BiConsumer;)V"))
@@ -71,7 +71,7 @@ public class RenderTypeLookupMixin {
     public static boolean canRenderInLayer(BlockState state, RenderType type) {
         Block block = state.getBlock();
         if (block instanceof LeavesBlock) {
-            return fancyGraphics ? type == RenderType.getCutoutMipped() : type == RenderType.getSolid();
+            return renderCutout ? type == RenderType.cutoutMipped() : type == RenderType.solid();
         }
 
         return canRenderInLayer(type, blockRenderChecks, block.delegate);
@@ -83,7 +83,7 @@ public class RenderTypeLookupMixin {
      */
     @Overwrite(remap = false)
     public static boolean canRenderInLayer(FluidState fluid, RenderType type) {
-        return canRenderInLayer(type, fluidRenderChecks, fluid.getFluid().delegate);
+        return canRenderInLayer(type, fluidRenderChecks, fluid.getType().delegate);
     }
 
     @Unique

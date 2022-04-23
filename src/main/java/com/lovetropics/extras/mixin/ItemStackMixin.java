@@ -18,10 +18,10 @@ public class ItemStackMixin {
 	private static final ImmutableList<Block> TAG_FALLBACK = ImmutableList.of(Blocks.AIR);
 
 	@Redirect(
-			method = "getPlacementTooltip",
+			method = "expandBlockState",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/tags/ITag;getAllElements()Ljava/util/List;"
+					target = "Lnet/minecraft/tags/ITag;getValues()Ljava/util/List;"
 			)
 	)
 	private static List<Block> getPlacementTooltipForTag(ITag<Block> tag) {
@@ -31,6 +31,6 @@ public class ItemStackMixin {
 				return TAG_FALLBACK;
 			}
 		}
-		return tag.getAllElements();
+		return tag.getValues();
 	}
 }

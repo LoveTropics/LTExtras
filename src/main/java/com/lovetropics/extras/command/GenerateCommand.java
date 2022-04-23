@@ -39,7 +39,7 @@ public class GenerateCommand {
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
 		// @formatter:off
 		dispatcher.register(
-			literal("generate").requires(source -> source.hasPermissionLevel(4))
+			literal("generate").requires(source -> source.hasPermission(4))
 				.then(literal("tag")
 					.then(literal("item")
 						.then(argument("name", StringArgumentType.word())
@@ -54,13 +54,13 @@ public class GenerateCommand {
 		Tag.Builder tagBuilder = new Tag.Builder();
 
 		for (Entry<RegistryKey<Item>, Item> e : ForgeRegistries.ITEMS.getEntries()) {
-			ResourceLocation id = e.getKey().getLocation();
+			ResourceLocation id = e.getKey().location();
 			if (pattern.matcher(id.toString()).matches()) {
-				tagBuilder.addItemEntry(id, LTExtras.MODID);
+				tagBuilder.addElement(id, LTExtras.MODID);
 			}
 		}
 
-		JsonObject json = tagBuilder.serialize();
+		JsonObject json = tagBuilder.serializeToJson();
 
 		Path output = Paths.get("export", "generated", "tags", "item", StringArgumentType.getString(ctx, "name") + ".json");
 		try {

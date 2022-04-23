@@ -24,24 +24,24 @@ import java.util.function.Function;
 public abstract class ServerChunkProviderMixin {
 	@Shadow
 	@Final
-	public ChunkManager chunkManager;
+	public ChunkManager chunkMap;
 	@Shadow
 	@Final
 	private Thread mainThread;
 	@Shadow
 	@Final
-	private ServerChunkProvider.ChunkExecutor executor;
+	private ServerChunkProvider.ChunkExecutor mainThreadProcessor;
 	@Shadow
 	@Final
-	private TicketManager ticketManager;
+	private TicketManager distanceManager;
 	@Shadow
 	@Final
-	public ServerWorld world;
+	public ServerWorld level;
 
 	@Unique
 	private final LossyChunkCache fastCache = new LossyChunkCache(32);
 
-	@Inject(method = "invalidateCaches", at = @At("HEAD"))
+	@Inject(method = "clearCache", at = @At("HEAD"))
 	private void invalidateCaches(CallbackInfo ci) {
 		this.fastCache.clear();
 	}
@@ -72,7 +72,7 @@ public abstract class ServerChunkProviderMixin {
 		}
 
 		// if it does not exist, try load it from the chunk entry
-		ChunkHolder holder = this.func_217213_a(ChunkPos.asLong(x, z));
+		ChunkHolder holder = this.getVisibleChunkIfPresent(ChunkPos.asLong(x, z));
 		IChunk chunk = this.getExistingChunkFor(holder, status);
 
 		// the chunk is not ready, we must spawn and join the chunk future
@@ -93,7 +93,7 @@ public abstract class ServerChunkProviderMixin {
 	private <T> T joinFuture(CompletableFuture<T> future) {
 		// avoid the lambda allocation if the future is already complete anyway
 		if (!future.isDone()) {
-			this.executor.driveUntil(future::isDone);
+			this.mainThreadProcessor.managedBlock(future::isDone);
 		}
 		return future.join();
 	}
@@ -101,7 +101,7 @@ public abstract class ServerChunkProviderMixin {
 	private IChunk getOrLoadChunkOffThread(int x, int z, ChunkStatus status) {
 		Either<IChunk, ChunkHolder.IChunkLoadingError> result = CompletableFuture.supplyAsync(
 				() -> this.loadChunk(x, z, status),
-				this.executor
+				this.mainThreadProcessor
 		).join().join();
 
 		IChunk chunk = result.left().orElse(null);
@@ -114,23 +114,23 @@ public abstract class ServerChunkProviderMixin {
 
 	private CompletableFuture<Either<IChunk, ChunkHolder.IChunkLoadingError>> loadChunk(int x, int z, ChunkStatus status) {
 		long chunkKey = ChunkPos.asLong(x, z);
-		ChunkHolder holder = this.func_217213_a(chunkKey);
+		ChunkHolder holder = this.getVisibleChunkIfPresent(chunkKey);
 
 		int level = getLevelForStatus(status);
 		ChunkPos chunkPos = new ChunkPos(x, z);
-		this.ticketManager.registerWithLevel(TicketType.UNKNOWN, chunkPos, level, chunkPos);
+		this.distanceManager.addTicket(TicketType.UNKNOWN, chunkPos, level, chunkPos);
 
 		if (!isValidForLevel(holder, level)) {
 			// tick the ticket manager to flush the new chunks from adding the ticket
-			this.func_217235_l();
-			holder = this.func_217213_a(chunkKey);
+			this.runDistanceManagerUpdates();
+			holder = this.getVisibleChunkIfPresent(chunkKey);
 
 			if (!isValidForLevel(holder, level)) {
 				throw new IllegalStateException("No chunk holder after ticket has been added");
 			}
 		}
 
-		return holder.func_219276_a(status, this.chunkManager);
+		return holder.getOrScheduleFuture(status, this.chunkMap);
 	}
 
 	/**
@@ -161,15 +161,15 @@ public abstract class ServerChunkProviderMixin {
 
 	@Nullable
 	private IChunk loadExistingChunk(int x, int z, ChunkStatus status) {
-		ChunkHolder holder = this.func_217213_a(ChunkPos.asLong(x, z));
+		ChunkHolder holder = this.getVisibleChunkIfPresent(ChunkPos.asLong(x, z));
 		return this.getExistingChunkFor(holder, status);
 	}
 
 	@Nullable
 	private IChunk getExistingChunkFor(@Nullable ChunkHolder holder, ChunkStatus status) {
 		if (isValidForStatus(holder, status)) {
-			CompletableFuture<Either<IChunk, ChunkHolder.IChunkLoadingError>> future = holder.func_219301_a(status);
-			return future.getNow(ChunkHolder.MISSING_CHUNK).left().orElse(null);
+			CompletableFuture<Either<IChunk, ChunkHolder.IChunkLoadingError>> future = holder.getFutureIfPresentUnchecked(status);
+			return future.getNow(ChunkHolder.UNLOADED_CHUNK).left().orElse(null);
 		}
 		return null;
 	}
@@ -179,7 +179,7 @@ public abstract class ServerChunkProviderMixin {
 	 * @author Gegy
 	 */
 	@Overwrite
-	public boolean chunkExists(int x, int z) {
+	public boolean hasChunk(int x, int z) {
 		return this.getExistingChunk(x, z, ChunkStatus.FULL) != null;
 	}
 
@@ -188,13 +188,13 @@ public abstract class ServerChunkProviderMixin {
 	 * @author Gegy
 	 */
 	@Overwrite
-	private boolean isChunkLoaded(long pos, Function<ChunkHolder, CompletableFuture<Either<Chunk, ChunkHolder.IChunkLoadingError>>> function) {
-		ChunkHolder holder = this.func_217213_a(pos);
-		return holder != null && !function.apply(holder).getNow(ChunkHolder.UNLOADED_CHUNK).right().isPresent();
+	private boolean checkChunkFuture(long pos, Function<ChunkHolder, CompletableFuture<Either<Chunk, ChunkHolder.IChunkLoadingError>>> function) {
+		ChunkHolder holder = this.getVisibleChunkIfPresent(pos);
+		return holder != null && !function.apply(holder).getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).right().isPresent();
 	}
 
 	private static boolean isValidForStatus(ChunkHolder holder, ChunkStatus status) {
-		return holder != null && holder.getChunkLevel() <= getLevelForStatus(status);
+		return holder != null && holder.getTicketLevel() <= getLevelForStatus(status);
 	}
 
 	private static int getLevelForStatus(ChunkStatus status) {
@@ -202,13 +202,13 @@ public abstract class ServerChunkProviderMixin {
 	}
 
 	private static boolean isValidForLevel(@Nullable ChunkHolder holder, int level) {
-		return holder != null && holder.getChunkLevel() <= level;
+		return holder != null && holder.getTicketLevel() <= level;
 	}
 
 	@Shadow
 	@Nullable
-	protected abstract ChunkHolder func_217213_a(long pos);
+	protected abstract ChunkHolder getVisibleChunkIfPresent(long pos);
 
 	@Shadow
-	protected abstract boolean func_217235_l();
+	protected abstract boolean runDistanceManagerUpdates();
 }

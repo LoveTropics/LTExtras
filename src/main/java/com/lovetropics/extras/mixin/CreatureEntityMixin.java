@@ -29,8 +29,8 @@ public abstract class CreatureEntityMixin extends MobEntity implements ExtendedC
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt) {
-        super.readAdditional(nbt);
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        super.readAdditionalSaveData(nbt);
 
         if (nbt.contains("TheresNoPlaceLikeHome")) {
             this.theresNoPlaceLikeHome = nbt.getBoolean("TheresNoPlaceLikeHome");
@@ -40,7 +40,7 @@ public abstract class CreatureEntityMixin extends MobEntity implements ExtendedC
                 this.homePos = new Vector3d(posTag.getDouble(0), posTag.getDouble(1), posTag.getDouble(2));
             } else {
                 // Spawn egg or no recorded home- just grab the current position to have something to work with
-                this.homePos = this.getPositionVec();
+                this.homePos = this.position();
             }
             // In blocks
             this.homeRange = nbt.contains("HomeRange") ? nbt.getInt("HomeRange") : 20;
@@ -52,8 +52,8 @@ public abstract class CreatureEntityMixin extends MobEntity implements ExtendedC
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
 
         // Don't pollute! Only write if it'll be used
         if (this.theresNoPlaceLikeHome) {
@@ -62,9 +62,9 @@ public abstract class CreatureEntityMixin extends MobEntity implements ExtendedC
 
             // vec3d -> nbt
             ListNBT pos = new ListNBT();
-            pos.add(0, DoubleNBT.valueOf(this.homePos.getX()));
-            pos.add(1, DoubleNBT.valueOf(this.homePos.getY()));
-            pos.add(2, DoubleNBT.valueOf(this.homePos.getZ()));
+            pos.add(0, DoubleNBT.valueOf(this.homePos.x()));
+            pos.add(1, DoubleNBT.valueOf(this.homePos.y()));
+            pos.add(2, DoubleNBT.valueOf(this.homePos.z()));
 
             nbt.put("HomePos", pos);
         }
@@ -72,7 +72,7 @@ public abstract class CreatureEntityMixin extends MobEntity implements ExtendedC
 
     @Override
     public void linkToBlockEntity(MobControllerBlockEntity controller) {
-        BlockPos pos = controller.getPos();
+        BlockPos pos = controller.getBlockPos();
         this.theresNoPlaceLikeHome = true;
         this.homePos = new Vector3d(pos.getX(), pos.getY(), pos.getZ());
         this.homeRange = 32; // static for now

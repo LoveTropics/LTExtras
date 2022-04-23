@@ -17,8 +17,8 @@ public class MoveBackToOriginGoal extends RandomWalkingGoal {
     }
 
     @Override
-    public boolean shouldExecute() {
-        if (this.creature.getPositionVec().squareDistanceTo(this.vec) > this.rangeSq) {
+    public boolean canUse() {
+        if (this.mob.position().distanceToSqr(this.vec) > this.rangeSq) {
             Vector3d vec = this.getPosition();
 
             if (vec == null) {
@@ -26,9 +26,9 @@ public class MoveBackToOriginGoal extends RandomWalkingGoal {
             }
 
             // Store position- we don't call super so we must do this ourselves
-            this.x = vec.getX();
-            this.y = vec.getY();
-            this.z = vec.getZ();
+            this.wantedX = vec.x();
+            this.wantedY = vec.y();
+            this.wantedZ = vec.z();
 
             return true;
         }

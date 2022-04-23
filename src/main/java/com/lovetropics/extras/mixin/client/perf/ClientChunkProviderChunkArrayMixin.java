@@ -18,16 +18,16 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 @Mixin(targets = "net/minecraft/client/multiplayer/ClientChunkProvider$ChunkArray")
 public class ClientChunkProviderChunkArrayMixin {
     @Shadow @Final @Mutable private AtomicReferenceArray<Chunk> chunks;
-    @Shadow @Final private int sideLength;
+    @Shadow @Final private int viewRange;
 
     @Unique
     private int tableMask;
     @Unique
     private int tableShift;
 
-    @Inject(method = "<init>", at = @At("RETURN"))
+    @Inject(method = "<init>(Lnet/minecraft/client/multiplayer/ClientChunkProvider;I)V", at = @At("RETURN"))
     private void init(ClientChunkProvider chunkProvider, int viewDistance, CallbackInfo ci) {
-        int tableSize = MathHelper.smallestEncompassingPowerOfTwo(this.sideLength);
+        int tableSize = MathHelper.smallestEncompassingPowerOfTwo(this.viewRange);
         this.tableMask = tableSize - 1;
         this.tableShift = MathHelper.log2(tableSize);
         this.chunks = new AtomicReferenceArray<>(tableSize * tableSize);

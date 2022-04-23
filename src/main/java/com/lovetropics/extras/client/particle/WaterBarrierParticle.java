@@ -26,15 +26,15 @@ import org.lwjgl.opengl.GL11;
 public class WaterBarrierParticle extends SpriteTexturedParticle {
 	WaterBarrierParticle(ClientWorld world, double x, double y, double z, IItemProvider item) {
 		super(world, x, y, z);
-		this.setSprite(Minecraft.getInstance().getItemRenderer().getItemModelMesher().getParticleIcon(item));
-		this.particleGravity = 0.0F;
-		this.maxAge = 80;
-		this.canCollide = false;
+		this.setSprite(Minecraft.getInstance().getItemRenderer().getItemModelShaper().getParticleIcon(item));
+		this.gravity = 0.0F;
+		this.lifetime = 80;
+		this.hasPhysics = false;
 	}
 
 	@SubscribeEvent
 	public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-		Minecraft.getInstance().particles.registerFactory(ExtraParticles.WATER_BARRIER.get(), new Factory());
+		Minecraft.getInstance().particleEngine.register(ExtraParticles.WATER_BARRIER.get(), new Factory());
 	}
 
 	@Override
@@ -43,13 +43,13 @@ public class WaterBarrierParticle extends SpriteTexturedParticle {
 	}
 
 	@Override
-	public float getScale(float scaleFactor) {
+	public float getQuadSize(float scaleFactor) {
 		return 0.5F;
 	}
 
 	public static class Factory implements IParticleFactory<BasicParticleType> {
 		@Override
-		public Particle makeParticle(BasicParticleType type, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+		public Particle createParticle(BasicParticleType type, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			return new WaterBarrierParticle(world, x, y, z, Blocks.BARRIER.asItem());
 		}
 	}
@@ -61,17 +61,17 @@ public class WaterBarrierParticle extends SpriteTexturedParticle {
 		}
 
 		@Override
-		public void beginRender(BufferBuilder builder, TextureManager textureManager) {
+		public void begin(BufferBuilder builder, TextureManager textureManager) {
 			RenderSystem.disableBlend();
 			RenderSystem.disableDepthTest();
 			RenderSystem.depthMask(true);
-			textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-			builder.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+			textureManager.bind(AtlasTexture.LOCATION_BLOCKS);
+			builder.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE);
 		}
 
 		@Override
-		public void finishRender(Tessellator tessellator) {
-			tessellator.draw();
+		public void end(Tessellator tessellator) {
+			tessellator.end();
 		}
 	}
 }

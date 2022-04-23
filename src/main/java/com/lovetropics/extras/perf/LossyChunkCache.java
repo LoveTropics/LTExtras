@@ -59,7 +59,7 @@ public final class LossyChunkCache {
     private static long key(int x, int z, ChunkStatus step) {
         return (long) (x & COORD_MASK) << 34
                 | (long) (z & COORD_MASK) << 4
-                | (step.ordinal() & STEP_MASK);
+                | (step.getIndex() & STEP_MASK);
     }
 
     private int index(long key) {

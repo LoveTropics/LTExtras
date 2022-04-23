@@ -27,9 +27,9 @@ public final class BiomeColorSampler {
     }
 
     public static BiomeColorSampler create(World world, ChunkPos chunkPos) {
-        int blendRadius = Minecraft.getInstance().gameSettings.biomeBlendRadius;
+        int blendRadius = Minecraft.getInstance().options.biomeBlendRadius;
         Shape sampleShape = new Shape(
-                chunkPos.getXStart() - blendRadius, chunkPos.getZStart() - blendRadius,
+                chunkPos.getMinBlockX() - blendRadius, chunkPos.getMinBlockZ() - blendRadius,
                 16 + blendRadius * 2, 16 + blendRadius * 2
         );
 
@@ -53,7 +53,7 @@ public final class BiomeColorSampler {
 
         for (int z = 0; z < sizeZ; z++) {
             for (int x = 0; x < sizeX; x++) {
-                mutablePos.setPos(minX + x, 0, minZ + z);
+                mutablePos.set(minX + x, 0, minZ + z);
 
                 Biome biome = world.getBiome(mutablePos);
                 if (homogenous && biome != lastBiome && lastBiome != null) {
@@ -77,7 +77,7 @@ public final class BiomeColorSampler {
     }
 
     private static boolean isPositionDependent(ColorResolver resolver) {
-        return resolver != BiomeColors.GRASS_COLOR;
+        return resolver != BiomeColors.GRASS_COLOR_RESOLVER;
     }
 
     private Buffer sampleHomogenous(Biome biome, ColorResolver resolver) {

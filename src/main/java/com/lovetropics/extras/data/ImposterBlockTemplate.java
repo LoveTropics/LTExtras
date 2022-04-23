@@ -48,7 +48,7 @@ public final class ImposterBlockTemplate {
                             .item()
                             .model((ctx, prov) -> prov.generated(ctx, texture))
                             .build()
-                            .addLayer(() -> RenderType::getCutout);
+                            .addLayer(() -> RenderType::cutout);
                 }
                 default: return block;
             }

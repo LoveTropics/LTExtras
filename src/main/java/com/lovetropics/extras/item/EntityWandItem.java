@@ -17,36 +17,38 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
+import net.minecraft.item.Item.Properties;
+
 public class EntityWandItem extends Item {
     public EntityWandItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
-        if (!playerIn.world.isRemote()) {
+    public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+        if (!playerIn.level.isClientSide()) {
             if (target instanceof ExtendedCreatureEntity) {
-                int id = target.getEntityId();
-                ItemStack stack1 = playerIn.getHeldItem(hand);
+                int id = target.getId();
+                ItemStack stack1 = playerIn.getItemInHand(hand);
                 stack1.getOrCreateTag().putInt("EntityId", id);
-                playerIn.sendStatusMessage(new StringTextComponent("Targeted entity!"), true);
+                playerIn.displayClientMessage(new StringTextComponent("Targeted entity!"), true);
                 return ActionResultType.SUCCESS;
             } else {
-                playerIn.sendStatusMessage(new StringTextComponent("This entity cannot be targeted!"), true);
+                playerIn.displayClientMessage(new StringTextComponent("This entity cannot be targeted!"), true);
             }
         }
 
-        return super.itemInteractionForEntity(stack, playerIn, target, hand);
+        return super.interactLivingEntity(stack, playerIn, target, hand);
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        BlockPos pos = context.getPos();
-        World world = context.getWorld();
-        ItemStack stack = context.getItem();
+    public ActionResultType useOn(ItemUseContext context) {
+        BlockPos pos = context.getClickedPos();
+        World world = context.getLevel();
+        ItemStack stack = context.getItemInHand();
 
-        if (!world.isRemote()) {
-            TileEntity te = world.getTileEntity(pos);
+        if (!world.isClientSide()) {
+            TileEntity te = world.getBlockEntity(pos);
 
             if (te instanceof MobControllerBlockEntity) {
                 MobControllerBlockEntity mobController = (MobControllerBlockEntity) te;
@@ -55,15 +57,15 @@ public class EntityWandItem extends Item {
                 if (nbt != null && nbt.contains("EntityId")) {
                     int id = nbt.getInt("EntityId");
 
-                    Entity entity = world.getEntityByID(id);
+                    Entity entity = world.getEntity(id);
                     if (entity != null) {
                         mobController.addEntity(entity);
-                        context.getPlayer().sendStatusMessage(new StringTextComponent("Added entity!"), true);
+                        context.getPlayer().displayClientMessage(new StringTextComponent("Added entity!"), true);
                     }
                 }
             }
         }
 
-        return super.onItemUse(context);
+        return super.useOn(context);
     }
 }

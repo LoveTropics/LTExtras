@@ -49,13 +49,13 @@ public class LTExtras {
 	public static final ItemGroup ITEM_GROUP = new ItemGroup(MODID) {
 
 		@Override
-		public ItemStack createIcon() {
+		public ItemStack makeIcon() {
 			return ExtraBlocks.BUOY.asStack();
 		}
 
 		@Override
-		public void fill(NonNullList<ItemStack> stacks) {
-			super.fill(stacks);
+		public void fillItemList(NonNullList<ItemStack> stacks) {
+			super.fillItemList(stacks);
 			// TODO this is a bit inefficient but does it matter?
 			// Fixes random item order when things are added to existing worlds
 			final List<Item> order = registrate()

@@ -8,20 +8,20 @@ import net.minecraft.world.IBlockReader;
 
 public class ScaffoldingHooks {
 
-	public static int func_220117_a(IBlockReader world, BlockPos pos) {
-		BlockPos.Mutable mutablePos = pos.toMutable().move(Direction.DOWN);
+	public static int getDistance(IBlockReader world, BlockPos pos) {
+		BlockPos.Mutable mutablePos = pos.mutable().move(Direction.DOWN);
 		BlockState state = world.getBlockState(mutablePos);
 		int distance = 7;
 		if (state.getBlock() instanceof ScaffoldingBlock) {
-			distance = state.get(ScaffoldingBlock.DISTANCE);
-		} else if (state.isSolidSide(world, mutablePos, Direction.UP)) {
+			distance = state.getValue(ScaffoldingBlock.DISTANCE);
+		} else if (state.isFaceSturdy(world, mutablePos, Direction.UP)) {
 			return 0;
 		}
 
 		for (Direction direction : Direction.Plane.HORIZONTAL) {
-			BlockState blockstate1 = world.getBlockState(mutablePos.setPos(pos).move(direction));
+			BlockState blockstate1 = world.getBlockState(mutablePos.set(pos).move(direction));
 			if (blockstate1.getBlock() instanceof ScaffoldingBlock) {
-				distance = Math.min(distance, blockstate1.get(ScaffoldingBlock.DISTANCE) + 1);
+				distance = Math.min(distance, blockstate1.getValue(ScaffoldingBlock.DISTANCE) + 1);
 				if (distance == 1) {
 					break;
 				}

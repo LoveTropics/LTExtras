@@ -14,6 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class CustomBarrierBlock extends BarrierBlock {
     public CustomBarrierBlock(Properties properties) {
         super(properties);
@@ -34,7 +36,7 @@ public abstract class CustomBarrierBlock extends BarrierBlock {
 
     private boolean isHoldingBarrier(PlayerEntity player) {
         Item item = this.asItem();
-        return player.getHeldItemMainhand().getItem() == item
-                || player.getHeldItemOffhand().getItem() == item;
+        return player.getMainHandItem().getItem() == item
+                || player.getOffhandItem().getItem() == item;
     }
 }

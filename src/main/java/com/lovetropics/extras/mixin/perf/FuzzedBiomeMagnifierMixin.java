@@ -11,7 +11,7 @@ public class FuzzedBiomeMagnifierMixin {
      * @author Gegy
      */
     @Overwrite
-    private static double randomDouble(long seed) {
+    private static double getFiddle(long seed) {
         double value = (double) (int) (seed >> 24 & 1023) / 1024.0;
         return (value - 0.5) * 0.9;
     }

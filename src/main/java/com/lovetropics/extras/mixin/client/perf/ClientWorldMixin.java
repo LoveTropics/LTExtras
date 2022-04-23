@@ -19,20 +19,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ClientWorldMixin {
     private static final Direction[] HORIZONTALS = new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
 
-    @Shadow @Final private WorldRenderer worldRenderer;
+    @Shadow @Final private WorldRenderer levelRenderer;
 
-    @Inject(method = "onChunkUnloaded", at = @At("HEAD"))
+    @Inject(method = "unload", at = @At("HEAD"))
     private void onChunkUnloaded(Chunk chunk, CallbackInfo ci) {
         ChunkPos chunkPos = chunk.getPos();
-        BlockPos pos = new BlockPos(chunkPos.getXStart(), 0, chunkPos.getZStart());
+        BlockPos pos = new BlockPos(chunkPos.getMinBlockX(), 0, chunkPos.getMinBlockZ());
 
-        WorldRendererAccess worldRenderer = (WorldRendererAccess) this.worldRenderer;
+        WorldRendererAccess worldRenderer = (WorldRendererAccess) this.levelRenderer;
         ViewFrustumAccess frustum = (ViewFrustumAccess) worldRenderer.getViewFrustum();
 
         ChunkRenderDispatcher.ChunkRender renderChunk = frustum.ltextras$getRenderChunk(pos);
         if (renderChunk != null) {
             for (Direction horizontal : HORIZONTALS) {
-                BlockPos neighborPos = renderChunk.getBlockPosOffset16(horizontal);
+                BlockPos neighborPos = renderChunk.getRelativeOrigin(horizontal);
                 ChunkRenderDispatcher.ChunkRender neighborChunk = frustum.ltextras$getRenderChunk(neighborPos);
                 if (neighborChunk != null) {
                     ((ChunkRendererExt) neighborChunk).extras$markNeighborChunksUnloaded();

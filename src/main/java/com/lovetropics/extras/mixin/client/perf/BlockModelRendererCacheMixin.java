@@ -33,12 +33,12 @@ public class BlockModelRendererCacheMixin {
      * @author Gegy
      */
     @Overwrite
-    public int getPackedLight(BlockState state, IBlockDisplayReader world, BlockPos pos) {
+    public int getLightColor(BlockState state, IBlockDisplayReader world, BlockPos pos) {
         if (!this.enabled) {
-            return WorldRenderer.getPackedLightmapCoords(world, state, pos);
+            return WorldRenderer.getLightColor(world, state, pos);
         }
 
-        long posKey = pos.toLong();
+        long posKey = pos.asLong();
         LossyLightCache.Packed cache = this.fastPackedLightCache;
 
         int light = cache.get(posKey);
@@ -46,7 +46,7 @@ public class BlockModelRendererCacheMixin {
             return light;
         }
 
-        light = WorldRenderer.getPackedLightmapCoords(world, state, pos);
+        light = WorldRenderer.getLightColor(world, state, pos);
         cache.put(posKey, light);
 
         return light;
@@ -57,12 +57,12 @@ public class BlockModelRendererCacheMixin {
      * @author Gegy
      */
     @Overwrite
-    public float getBrightness(BlockState state, IBlockDisplayReader world, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, IBlockDisplayReader world, BlockPos pos) {
         if (!this.enabled) {
-            return state.getAmbientOcclusionLightValue(world, pos);
+            return state.getShadeBrightness(world, pos);
         }
 
-        long posKey = pos.toLong();
+        long posKey = pos.asLong();
         LossyLightCache.Brightness cache = this.fastBrightnessCache;
 
         float brightness = cache.get(posKey);
@@ -70,7 +70,7 @@ public class BlockModelRendererCacheMixin {
             return brightness;
         }
 
-        brightness = state.getAmbientOcclusionLightValue(world, pos);
+        brightness = state.getShadeBrightness(world, pos);
         cache.put(posKey, brightness);
 
         return brightness;

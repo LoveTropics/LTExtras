@@ -29,24 +29,26 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class GirderBlock extends Block implements IWaterLoggable {
 
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	public static final Map<Axis, BooleanProperty> PROPS = Arrays.stream(Axis.values())
-			.collect(Maps.toImmutableEnumMap(Function.identity(), a -> BooleanProperty.create(a.getName2())));
+			.collect(Maps.toImmutableEnumMap(Function.identity(), a -> BooleanProperty.create(a.getName())));
 
 	public static final Map<Axis, VoxelShape> BASE_SHAPES = ImmutableMap.<Axis, VoxelShape>builder()
-			.put(Axis.X, Block.makeCuboidShape(0, 3, 5, 16, 13, 11))
-			.put(Axis.Y, Block.makeCuboidShape(5, 0, 3, 11, 16, 13))
-			.put(Axis.Z, Block.makeCuboidShape(5, 3, 0, 11, 13, 16))
+			.put(Axis.X, Block.box(0, 3, 5, 16, 13, 11))
+			.put(Axis.Y, Block.box(5, 0, 3, 11, 16, 13))
+			.put(Axis.Z, Block.box(5, 3, 0, 11, 13, 16))
 			.build();
 
-	private final LazyValue<Map<BlockState, VoxelShape>> ALL_SHAPES = new LazyValue<>(() -> getStateContainer().getValidStates().stream()
+	private final LazyValue<Map<BlockState, VoxelShape>> ALL_SHAPES = new LazyValue<>(() -> getStateDefinition().getPossibleStates().stream()
 			.collect(Collectors.toMap(Function.identity(), s -> {
 				VoxelShape ret = VoxelShapes.empty();
 				for (Axis a : Axis.values()) {
-					if (s.get(PROPS.get(a))) {
+					if (s.getValue(PROPS.get(a))) {
 						ret = VoxelShapes.or(ret, BASE_SHAPES.get(a));
 					}
 				}
@@ -58,69 +60,69 @@ public class GirderBlock extends Block implements IWaterLoggable {
 	public GirderBlock(ITag<Block> connectionTag, Properties properties) {
 		super(properties);
 		this.connectionTag = connectionTag;
-		setDefaultState(PROPS.keySet().stream()
-				.reduce(getStateContainer().getBaseState(), (s, a) -> s.with(PROPS.get(a), false), (s1, s2) -> s1)
-				.with(WATERLOGGED, false));
+		registerDefaultState(PROPS.keySet().stream()
+				.reduce(getStateDefinition().any(), (s, a) -> s.setValue(PROPS.get(a), false), (s1, s2) -> s1)
+				.setValue(WATERLOGGED, false));
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(PROPS.values().toArray(new BooleanProperty[0])).add(WATERLOGGED);
 	}
 
 	@Override
 	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-		return !state.get(WATERLOGGED);
+		return !state.getValue(WATERLOGGED);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return ALL_SHAPES.getValue().get(state);
+		return ALL_SHAPES.get().get(state);
 	}
 
 	@Override
 	@Deprecated
 	public FluidState getFluidState(BlockState state) {
-		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
 		return false;
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = super.getStateForPlacement(context);
-		FluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
+		FluidState ifluidstate = context.getLevel().getFluidState(context.getClickedPos());
 		boolean connected = false;
 		for (Direction dir : Direction.values()) {
-			if (context.getWorld().getBlockState(context.getPos().offset(dir)).isIn(connectionTag)) {
-				state = state.with(PROPS.get(dir.getAxis()), true);
+			if (context.getLevel().getBlockState(context.getClickedPos().relative(dir)).is(connectionTag)) {
+				state = state.setValue(PROPS.get(dir.getAxis()), true);
 				connected = true;
 			}
 		}
 		if (!connected) {
-			state = state.with(PROPS.get(context.getFace().getAxis()), true);
+			state = state.setValue(PROPS.get(context.getClickedFace().getAxis()), true);
 		}
-		return state.with(WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
+		return state.setValue(WATERLOGGED, ifluidstate.getType() == Fluids.WATER);
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
-		if (stateIn.get(WATERLOGGED)) {
-			worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+		if (stateIn.getValue(WATERLOGGED)) {
+			worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
 		}
 		BlockState ret = stateIn;
 		boolean connected = false;
 		for (Axis a : Axis.values()) {
-			if (worldIn.getBlockState(currentPos.offset(Direction.getFacingFromAxis(AxisDirection.NEGATIVE, a))).isIn(connectionTag)
-			 || worldIn.getBlockState(currentPos.offset(Direction.getFacingFromAxis(AxisDirection.POSITIVE, a))).isIn(connectionTag)) {
+			if (worldIn.getBlockState(currentPos.relative(Direction.get(AxisDirection.NEGATIVE, a))).is(connectionTag)
+			 || worldIn.getBlockState(currentPos.relative(Direction.get(AxisDirection.POSITIVE, a))).is(connectionTag)) {
 				connected = true;
-				ret = ret.with(PROPS.get(a), true);
+				ret = ret.setValue(PROPS.get(a), true);
 			} else {
-				ret = ret.with(PROPS.get(a), false);
+				ret = ret.setValue(PROPS.get(a), false);
 			}
 		}
 		if (!connected) {

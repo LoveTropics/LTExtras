@@ -29,13 +29,13 @@ import java.util.Collections;
 
 @Mixin(ChunkRenderCache.class)
 public abstract class ChunkRenderCacheMixin {
-    @Shadow @Final protected World world;
+    @Shadow @Final protected World level;
 
     @Shadow @Final protected BlockState[] blockStates;
     @Shadow @Final protected FluidState[] fluidStates;
 
     @Shadow
-    protected abstract int getIndex(int x, int y, int z);
+    protected abstract int index(int x, int y, int z);
 
     @Unique
     private ChunkPos chunkPos;
@@ -64,14 +64,14 @@ public abstract class ChunkRenderCacheMixin {
     private void fillBlockData(World world, int minChunkX, int minChunkZ, Chunk[][] chunks, BlockPos startPos, BlockPos endPos) {
         int minChunkY = 0;
         int maxChunkX = minChunkX + chunks.length;
-        int maxChunkY = world.getHeight() >> 4;
+        int maxChunkY = world.getMaxBuildHeight() >> 4;
         int maxChunkZ = minChunkZ + chunks[0].length;
 
         // we can fill chunk data a lot faster than vanilla by operating on the lower level data structures directly
         BlockState[] blockStates = this.blockStates;
         FluidState[] fluidStates = this.fluidStates;
-        Arrays.fill(blockStates, Blocks.AIR.getDefaultState());
-        Arrays.fill(fluidStates, Fluids.EMPTY.getDefaultState());
+        Arrays.fill(blockStates, Blocks.AIR.defaultBlockState());
+        Arrays.fill(fluidStates, Fluids.EMPTY.defaultFluidState());
 
         for (int chunkZ = minChunkZ; chunkZ < maxChunkZ; chunkZ++) {
             int minBlockZ = Math.max(chunkZ << 4, startPos.getZ());
@@ -89,7 +89,7 @@ public abstract class ChunkRenderCacheMixin {
                         continue;
                     }
 
-                    PalettedContainer<BlockState> blocks = section.getData();
+                    PalettedContainer<BlockState> blocks = section.getStates();
 
                     int minBlockY = Math.max(chunkY << 4, startPos.getY());
                     int maxBlockY = Math.min((chunkY << 4) + 15, endPos.getY());
@@ -100,7 +100,7 @@ public abstract class ChunkRenderCacheMixin {
                                 BlockState block = blocks.get(x & 15, y & 15, z & 15);
                                 FluidState fluid = block.getFluidState();
 
-                                int index = this.getIndex(x, y, z);
+                                int index = this.index(x, y, z);
                                 blockStates[index] = block;
                                 fluidStates[index] = fluid;
                             }
@@ -111,7 +111,7 @@ public abstract class ChunkRenderCacheMixin {
         }
     }
 
-    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/BlockPos;getAllInBoxMutable(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;)Ljava/lang/Iterable;"))
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/BlockPos;betweenClosed(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;)Ljava/lang/Iterable;"))
     private Iterable<BlockPos> initBlockAndFluidCaches(BlockPos firstPos, BlockPos secondPos) {
         return Collections.emptyList();
     }
@@ -122,35 +122,35 @@ public abstract class ChunkRenderCacheMixin {
      */
     // note: this will not port to 1.18 given vertical biomes! sampling the whole chunk biome volume is too expensive.
     @Overwrite
-    public int getBlockColor(BlockPos pos, ColorResolver resolver) {
-        if (resolver == BiomeColors.GRASS_COLOR) {
+    public int getBlockTint(BlockPos pos, ColorResolver resolver) {
+        if (resolver == BiomeColors.GRASS_COLOR_RESOLVER) {
             BiomeColorSampler.Buffer grassColors = this.grassColors;
             if (grassColors == null) {
-                this.grassColors = grassColors = this.getBiomeColorSampler().sample(BiomeColors.GRASS_COLOR);
+                this.grassColors = grassColors = this.getBiomeColorSampler().sample(BiomeColors.GRASS_COLOR_RESOLVER);
             }
             return grassColors.get(pos);
-        } else if (resolver == BiomeColors.WATER_COLOR) {
+        } else if (resolver == BiomeColors.WATER_COLOR_RESOLVER) {
             BiomeColorSampler.Buffer waterColors = this.waterColors;
             if (waterColors == null) {
-                this.waterColors = waterColors = this.getBiomeColorSampler().sample(BiomeColors.WATER_COLOR);
+                this.waterColors = waterColors = this.getBiomeColorSampler().sample(BiomeColors.WATER_COLOR_RESOLVER);
             }
             return waterColors.get(pos);
-        } else if (resolver == BiomeColors.FOLIAGE_COLOR) {
+        } else if (resolver == BiomeColors.FOLIAGE_COLOR_RESOLVER) {
             BiomeColorSampler.Buffer foliageColors = this.foliageColors;
             if (foliageColors == null) {
-                this.foliageColors = foliageColors = this.getBiomeColorSampler().sample(BiomeColors.FOLIAGE_COLOR);
+                this.foliageColors = foliageColors = this.getBiomeColorSampler().sample(BiomeColors.FOLIAGE_COLOR_RESOLVER);
             }
             return foliageColors.get(pos);
         }
 
-        return this.world.getBlockColor(pos, resolver);
+        return this.level.getBlockTint(pos, resolver);
     }
 
     @Unique
     private BiomeColorSampler getBiomeColorSampler() {
         BiomeColorSampler sampler = this.biomeColorSampler;
         if (sampler == null) {
-            this.biomeColorSampler = sampler = BiomeColorSampler.create(this.world, this.chunkPos);
+            this.biomeColorSampler = sampler = BiomeColorSampler.create(this.level, this.chunkPos);
         }
         return sampler;
     }

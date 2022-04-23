@@ -27,6 +27,6 @@ public class TeamCommandMixin {
 	 */
 	@ModifyVariable(at = @At("HEAD"), method = { "setPrefix", "setSuffix" }, argsOnly = true)
 	private static ITextComponent updateComponent(ITextComponent component, CommandSource source) throws CommandSyntaxException {
-		return TextComponentUtils.func_240645_a_(source, component, null, 0);
+		return TextComponentUtils.updateForEntity(source, component, null, 0);
 	}
 }

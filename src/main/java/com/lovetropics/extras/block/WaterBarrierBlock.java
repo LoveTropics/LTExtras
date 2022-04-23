@@ -17,45 +17,47 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class WaterBarrierBlock extends CustomBarrierBlock implements IWaterLoggable {
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    private static final FluidState WATERLOGGED_FLUID = createNoDripState(Fluids.WATER.getStillFluidState(false));
+    private static final FluidState WATERLOGGED_FLUID = createNoDripState(Fluids.WATER.getSource(false));
 
     private static FluidState createNoDripState(FluidState parent) {
-        FluidState state = new FluidState(parent.getFluid(), parent.getValues(), parent.mapCodec);
+        FluidState state = new FluidState(parent.getType(), parent.getValues(), parent.propertiesCodec);
         ((ExtendedFluidState) (Object) state).setNoDripParticles();
         return state;
     }
 
     public WaterBarrierBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(WATERLOGGED, true));
+        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, true));
     }
 
     @Override
     @Deprecated
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? WATERLOGGED_FLUID : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? WATERLOGGED_FLUID : super.getFluidState(state);
     }
 
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(WATERLOGGED, true);
+        return this.defaultBlockState().setValue(WATERLOGGED, true);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> container) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> container) {
         container.add(WATERLOGGED);
     }
 
     @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
         // Copied from super
-        this.getBlock().onBlockHarvested(world, pos, state, player);
+        this.getBlock().playerWillDestroy(world, pos, state, player);
         // Changed to set air instead of the fluid state
-        return world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
+        return world.setBlock(pos, Blocks.AIR.defaultBlockState(), world.isClientSide ? 11 : 3);
     }
 }

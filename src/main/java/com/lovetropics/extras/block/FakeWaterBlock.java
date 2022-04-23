@@ -9,6 +9,8 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class FakeWaterBlock extends WaterBarrierBlock {
 
 	public FakeWaterBlock(Properties properties) {
@@ -18,7 +20,7 @@ public class FakeWaterBlock extends WaterBarrierBlock {
 	@Override
 	@Deprecated
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		if (worldIn instanceof World && ((World) worldIn).isRemote) {
+		if (worldIn instanceof World && ((World) worldIn).isClientSide) {
 			if (context.getEntity() instanceof PlayerEntity && !((PlayerEntity)context.getEntity()).isCreative()) {
 				return VoxelShapes.empty();
 			}
