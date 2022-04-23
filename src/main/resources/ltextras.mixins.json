@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "com.lovetropics.extras.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_17",
   "plugin": "com.lovetropics.extras.mixin.LTExtrasMixinPlugin",
   "refmap": "ltextras.refmap.json",
   "mixins": [
@@ -9,25 +9,20 @@
     "CreatureEntityMixin",
     "FluidStateMixin",
     "ItemStackMixin",
-    "NetworkSystemMixin",
     "PlayerListMixin",
+    "tag.ReferenceHolderMixin",
     "ScaffoldingBlockMixin",
-    "TagCollectionReaderMixin",
     "TeamCommandMixin",
-    "client.perf.BlockMixin",
+    "perf.BiomeManagerMixin",
     "perf.ChunkManagerMixin",
-    "perf.FuzzedBiomeMagnifierMixin",
-    "perf.ServerChunkProviderMixin",
-    "perf.MapDataMixin"
+    "perf.MapDataMixin",
+    "perf.ServerChunkProviderMixin"
   ],
   "client": [
     "client.perf.BlockModelRendererCacheMixin",
-    "client.perf.ChunkRenderCacheMixin",
     "client.perf.ChunkRenderMixin",
-    "client.perf.ClientChunkProviderChunkArrayMixin",
+    "client.perf.ClientChunkCacheStorageMixin",
     "client.perf.ClientWorldMixin",
-    "client.perf.Matrix4fMixin",
-    "client.perf.MatrixStackMixin",
     "client.perf.RenderTypeLookupMixin",
     "client.perf.ViewFrustumAccess",
     "client.perf.WorldRendererAccess"

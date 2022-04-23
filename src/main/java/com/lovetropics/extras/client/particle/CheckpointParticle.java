@@ -1,15 +1,16 @@
 package com.lovetropics.extras.client.particle;
 
 import com.lovetropics.extras.LTExtras;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,7 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 public class CheckpointParticle extends TextureSheetParticle {
 	CheckpointParticle(ClientLevel world, double x, double y, double z, ItemLike item) {
 		super(world, x, y, z);
-		this.setSprite(Minecraft.getInstance().getItemRenderer().getItemModelShaper().getParticleIcon(item));
+		this.setSprite(ExtraParticles.getItemSprite(world, new ItemStack(item)));
 		this.gravity = 0.0F;
 		this.lifetime = 80;
 		this.hasPhysics = false;
@@ -30,6 +31,7 @@ public class CheckpointParticle extends TextureSheetParticle {
 		Minecraft.getInstance().particleEngine.register(ExtraParticles.CHECKPOINT.get(), new Factory());
 	}
 
+	@Override
 	public ParticleRenderType getRenderType() {
 		return ParticleRenderType.TERRAIN_SHEET;
 	}

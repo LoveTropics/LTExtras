@@ -2,11 +2,11 @@ package com.lovetropics.extras.mixin.perf;
 
 import com.lovetropics.extras.perf.LossyChunkCache;
 import com.mojang.datafixers.util.Either;
+import net.minecraft.server.level.*;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.server.*;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,14 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-
-import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.server.level.ChunkMap;
-import net.minecraft.server.level.DistanceManager;
-import net.minecraft.server.level.ServerChunkCache;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.TicketType;
 
 /**
  * Reduce allocations, use a larger and quicker cache, avoid doing unnecessary work when we're just querying chunk
@@ -188,16 +180,6 @@ public abstract class ServerChunkProviderMixin {
 	@Overwrite
 	public boolean hasChunk(int x, int z) {
 		return this.getExistingChunk(x, z, ChunkStatus.FULL) != null;
-	}
-
-	/**
-	 * @reason avoid optional allocation
-	 * @author Gegy
-	 */
-	@Overwrite
-	private boolean checkChunkFuture(long pos, Function<ChunkHolder, CompletableFuture<Either<LevelChunk, ChunkHolder.ChunkLoadingFailure>>> function) {
-		ChunkHolder holder = this.getVisibleChunkIfPresent(pos);
-		return holder != null && !function.apply(holder).getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).right().isPresent();
 	}
 
 	private static boolean isValidForStatus(ChunkHolder holder, ChunkStatus status) {

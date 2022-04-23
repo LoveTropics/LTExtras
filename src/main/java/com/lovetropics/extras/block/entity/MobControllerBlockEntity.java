@@ -1,48 +1,40 @@
 package com.lovetropics.extras.block.entity;
 
 import com.lovetropics.extras.entity.ExtendedCreatureEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.entity.*;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.Registry;
-import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-
-public class MobControllerBlockEntity extends BlockEntity implements TickableBlockEntity {
+public class MobControllerBlockEntity extends BlockEntity {
     public boolean loadState = true; // true -> mobs are loaded, false -> mobs are not loaded
 
     public final List<UUID> uuids = new ArrayList<>();
     public final Map<UUID, EntityType<?>> types = new HashMap<>();
     public final Map<UUID, Vec3> positions = new HashMap<>();
 
-    public MobControllerBlockEntity(BlockEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public MobControllerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     @Override
-    public void load(BlockState state, CompoundTag nbt) {
-        super.load(state, nbt);
+    public void load(final CompoundTag tag) {
+        super.load(tag);
 
-        ListTag mobUuids = nbt.getList("Mobs", Constants.NBT.TAG_COMPOUND);
+        ListTag mobUuids = tag.getList("Mobs", Tag.TAG_COMPOUND);
 
         this.uuids.clear();
         for (Tag mobNbt : mobUuids) {
@@ -50,7 +42,7 @@ public class MobControllerBlockEntity extends BlockEntity implements TickableBlo
             UUID uuid = compoundNBT.getUUID("UUID");
             String type = compoundNBT.getString("Type");
 
-            ListTag pos = compoundNBT.getList("Pos", Constants.NBT.TAG_DOUBLE);
+            ListTag pos = compoundNBT.getList("Pos", Tag.TAG_DOUBLE);
             EntityType<?> entityType = Registry.ENTITY_TYPE.getOptional(new ResourceLocation(type)).get();
 
             this.uuids.add(uuid);
@@ -58,12 +50,12 @@ public class MobControllerBlockEntity extends BlockEntity implements TickableBlo
             this.positions.put(uuid, new Vec3(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)));
         }
 
-        this.loadState = nbt.getBoolean("LoadState");
+        this.loadState = tag.getBoolean("LoadState");
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    protected void saveAdditional(final CompoundTag compound) {
+        super.saveAdditional(compound);
 
         ListTag mobs = new ListTag();
         for (UUID uuid : this.uuids) {
@@ -79,8 +71,6 @@ public class MobControllerBlockEntity extends BlockEntity implements TickableBlo
 
         compound.put("Mobs", mobs);
         compound.putBoolean("LoadState", this.loadState);
-
-        return compound;
     }
 
     protected ListTag newDoubleNBTList(double... numbers) {
@@ -106,68 +96,58 @@ public class MobControllerBlockEntity extends BlockEntity implements TickableBlo
         }
     }
 
-    @Override
-    public void tick() {
-        Level world = this.getLevel();
-
-        if (world == null) {
-            return;
-        }
-
-        if (!world.isClientSide()) {
-            ServerLevel serverWorld = (ServerLevel) world;
-
-            long ticks = world.getGameTime();
+    public static void tick(final Level level, final BlockPos pos, final BlockState state, final MobControllerBlockEntity controller) {
+        if (level instanceof ServerLevel serverLevel) {
+            long ticks = level.getGameTime();
 
             // Update positions semi frequently
-            if (this.loadState && ticks % 5 == 0) {
-                for (UUID uuid : this.uuids) {
-                    Entity entity = serverWorld.getEntity(uuid);
+            if (controller.loadState && ticks % 5 == 0) {
+                for (UUID uuid : controller.uuids) {
+                    Entity entity = serverLevel.getEntity(uuid);
 
                     if (entity != null) {
-                        this.positions.put(uuid, entity.position());
+                        controller.positions.put(uuid, entity.position());
                     }
                 }
             }
 
             // Every second
             if (ticks % 20 == 0) {
-                BlockPos pos = this.getBlockPos();
-                Player player = world.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 32, EntitySelector.NO_SPECTATORS);
+                Player player = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 32, EntitySelector.NO_SPECTATORS);
 
-                if (this.loadState) {
+                if (controller.loadState) {
                     if (player == null) {
-                        this.loadState = false;
+                        controller.loadState = false;
 
                         // Unload!
-                        for (UUID uuid : this.uuids) {
-                            Entity entity = serverWorld.getEntity(uuid);
+                        for (UUID uuid : controller.uuids) {
+                            Entity entity = serverLevel.getEntity(uuid);
 
                             if (entity != null) {
-                                entity.remove();
+                                entity.discard();
                             }
                         }
                     }
                 } else {
                     if (player != null) {
-                        this.loadState = true;
+                        controller.loadState = true;
 
-                        for (UUID uuid : this.uuids) {
-                            Entity entity = this.types.get(uuid).create(serverWorld);
-                            Vec3 mobPos = this.positions.get(uuid);
+                        for (UUID uuid : controller.uuids) {
+                            Entity entity = controller.types.get(uuid).create(serverLevel);
+                            Vec3 mobPos = controller.positions.get(uuid);
 
                             if (entity != null) {
                                 entity.moveTo(mobPos.x(), mobPos.y(), mobPos.z(), 0, 0);
 
                                 entity.setUUID(uuid);
-                                world.addFreshEntity(entity);
+                                level.addFreshEntity(entity);
 
                                 if (entity instanceof Mob) {
-                                    ((Mob)entity).finalizeSpawn(serverWorld, world.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED, null, null);
+                                    ((Mob)entity).finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED, null, null);
                                 }
 
                                 if (entity instanceof ExtendedCreatureEntity) {
-                                    ((ExtendedCreatureEntity)entity).linkToBlockEntity(this);
+                                    ((ExtendedCreatureEntity)entity).linkToBlockEntity(controller);
                                 }
                             }
                         }

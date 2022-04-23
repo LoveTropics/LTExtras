@@ -33,14 +33,13 @@ public class SpeedyBlock extends CustomShapeBlock {
 	}
 
 	@Override
-	public void stepOn(Level worldIn, BlockPos pos, Entity entityIn) {
-		double d0 = Math.abs(entityIn.getDeltaMovement().y);
-		if (d0 < 0.1D && !entityIn.isSteppingCarefully()) {
+	public void stepOn(final Level level, final BlockPos pos, final BlockState state, final Entity entity) {
+		double d0 = Math.abs(entity.getDeltaMovement().y);
+		if (d0 < 0.1D && !entity.isSteppingCarefully()) {
 			double d1 = 1.35D - d0 * 0.2D; // TODO config
-			entityIn.setDeltaMovement(entityIn.getDeltaMovement().multiply(d1, 1.0D, d1));
+			entity.setDeltaMovement(entity.getDeltaMovement().multiply(d1, 1.0D, d1));
 		}
 
-		super.stepOn(worldIn, pos, entityIn);
+		super.stepOn(level, pos, state, entity);
 	}
-
 }

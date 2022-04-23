@@ -2,35 +2,31 @@ package com.lovetropics.extras.mixin;
 
 import com.google.common.collect.ImmutableList;
 import com.lovetropics.extras.EverythingTag;
+import net.minecraft.core.DefaultedRegistry;
+import net.minecraft.core.Holder;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.tags.Tag;
-import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.List;
-
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
-	private static final ImmutableList<Block> TAG_FALLBACK = ImmutableList.of(Blocks.AIR);
+	private static final ImmutableList<Holder<Block>> EMPTY_TAG = ImmutableList.of(Blocks.AIR.builtInRegistryHolder());
 
 	@Redirect(
 			method = "expandBlockState",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/tags/ITag;getValues()Ljava/util/List;"
+					target = "Lnet/minecraft/core/DefaultedRegistry;getTagOrEmpty(Lnet/minecraft/tags/TagKey;)Ljava/lang/Iterable;"
 			)
 	)
-	private static List<Block> getPlacementTooltipForTag(Tag<Block> tag) {
-		if (tag instanceof Tag.Named) {
-			ResourceLocation name = ((Tag.Named<Block>) tag).getName();
-			if (name.equals(EverythingTag.ID)) {
-				return TAG_FALLBACK;
-			}
+	private static Iterable<Holder<Block>> getPlacementTooltipForTag(DefaultedRegistry<Block> registry, TagKey<Block> tag) {
+		if (tag.location().equals(EverythingTag.ID)) {
+			return EMPTY_TAG;
 		}
-		return tag.getValues();
+		return registry.getTagOrEmpty(tag);
 	}
 }

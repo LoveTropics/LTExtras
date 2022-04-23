@@ -11,11 +11,11 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.world.item.Item;
-import net.minecraft.tags.SetTag;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.IOException;
@@ -27,8 +27,8 @@ import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import static net.minecraft.command.Commands.argument;
-import staticnet.minecraft.commands.Commandss.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public class GenerateCommand {
 
@@ -51,7 +51,7 @@ public class GenerateCommand {
 	private static int generateItemTag(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
 		Pattern pattern = Pattern.compile(StringArgumentType.getString(ctx, "pattern"));
 
-		SetTag.Builder tagBuilder = new SetTag.Builder();
+		Tag.Builder tagBuilder = new Tag.Builder();
 
 		for (Entry<ResourceKey<Item>, Item> e : ForgeRegistries.ITEMS.getEntries()) {
 			ResourceLocation id = e.getKey().location();

@@ -2,41 +2,39 @@ package com.lovetropics.extras.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.StateDefinition.Builder;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.tags.Tag;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.LazyLoadedValue;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
 public class GirderBlock extends Block implements SimpleWaterloggedBlock {
 
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	public static final Map<Axis, BooleanProperty> PROPS = Arrays.stream(Axis.values())
-			.collect(Maps.toImmutableEnumMap(Function.identity(), a -> BooleanProperty.create(a.getName())));
+			.collect(Maps.<Axis, Axis, BooleanProperty>toImmutableEnumMap(Function.identity(), a -> BooleanProperty.create(a.getName())));
 
 	public static final Map<Axis, VoxelShape> BASE_SHAPES = ImmutableMap.<Axis, VoxelShape>builder()
 			.put(Axis.X, Block.box(0, 3, 5, 16, 13, 11))
@@ -55,9 +53,9 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock {
 				return ret;
 			})));
 
-	private final Tag<Block> connectionTag;
+	private final TagKey<Block> connectionTag;
 
-	public GirderBlock(Tag<Block> connectionTag, Properties properties) {
+	public GirderBlock(TagKey<Block> connectionTag, Properties properties) {
 		super(properties);
 		this.connectionTag = connectionTag;
 		registerDefaultState(PROPS.keySet().stream()
@@ -112,7 +110,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock {
 	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
 		if (stateIn.getValue(WATERLOGGED)) {
-			worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+			worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
 		}
 		BlockState ret = stateIn;
 		boolean connected = false;

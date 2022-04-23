@@ -1,13 +1,5 @@
 package com.lovetropics.extras;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.command.GenerateCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
@@ -15,31 +7,33 @@ import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
-import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
-
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.NonNullLazy;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ExtensionPoint;
-import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.FMLNetworkConstants;
+import net.minecraftforge.network.NetworkConstants;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Mod("ltextras")
 public class LTExtras {
@@ -67,9 +61,9 @@ public class LTExtras {
 		}
 	};
 
-    private static NonNullLazyValue<Registrate> registrate = new NonNullLazyValue<>(() -> 
+    private static NonNullLazy<Registrate> registrate = NonNullLazy.of(() ->
     	Registrate.create(MODID)
-			.itemGroup(() -> ITEM_GROUP));
+			.creativeModeTab(() -> ITEM_GROUP));
 
     public static Registrate registrate() {
     	return registrate.get();
@@ -77,7 +71,7 @@ public class LTExtras {
 
 	public LTExtras() {
     	// Compatible with all versions that match the semver (excluding the qualifier e.g. "-beta+42")
-    	ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(LTExtras::getCompatVersion, (s, v) -> LTExtras.isCompatibleVersion(s)));
+    	ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(LTExtras::getCompatVersion, (s, v) -> LTExtras.isCompatibleVersion(s)));
 
 		ExtraBlocks.init();
 
@@ -97,12 +91,11 @@ public class LTExtras {
 
         // Mark WorldEdit as only required on the server
 		ModList.get().getModContainerById("worldedit").ifPresent(worldedit -> {
-			Supplier<?> extension = ObfuscationReflectionHelper.getPrivateValue(ModContainer.class, worldedit, "contextExtension");
-			ModLoadingContext.get().setActiveContainer(worldedit, extension.get());
+			ModLoadingContext.get().setActiveContainer(worldedit);
 	        ModLoadingContext.get().registerExtensionPoint(
-	            ExtensionPoint.DISPLAYTEST,
-	            () -> Pair.of(
-	                () -> FMLNetworkConstants.IGNORESERVERONLY,
+	            IExtensionPoint.DisplayTest.class,
+	            () -> new IExtensionPoint.DisplayTest(
+	                () -> NetworkConstants.IGNORESERVERONLY,
 	                (a, b) -> true
 	            )
 	        );

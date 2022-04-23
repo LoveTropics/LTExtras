@@ -114,7 +114,7 @@ public final class PianguasBlock extends Block implements SimpleWaterloggedBlock
         }
 
         if (state.getValue(WATERLOGGED)) {
-            world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+            world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
 
         return newState;

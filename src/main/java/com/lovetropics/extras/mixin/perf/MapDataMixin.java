@@ -16,7 +16,7 @@ public class MapDataMixin {
 	// NUKE
 	@Redirect(
 			method = "tickCarriedBy",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;contains(Lnet/minecraft/item/ItemStack;)Z")
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;contains(Lnet/minecraft/world/item/ItemStack;)Z")
 	)
 	public boolean searchForMap(Inventory playerInventory, ItemStack stack) {
 		return false;
@@ -24,7 +24,7 @@ public class MapDataMixin {
 
 	@Redirect(
 			method = "tickCarriedBy",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/storage/MapData;addDecoration(Lnet/minecraft/world/storage/MapDecoration$Type;Lnet/minecraft/world/IWorld;Ljava/lang/String;DDDLnet/minecraft/util/text/ITextComponent;)V")
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;addDecoration(Lnet/minecraft/world/level/saveddata/maps/MapDecoration$Type;Lnet/minecraft/world/level/LevelAccessor;Ljava/lang/String;DDDLnet/minecraft/network/chat/Component;)V")
 	)
 	public void updateDecoration(MapItemSavedData mapData, MapDecoration.Type type, LevelAccessor worldIn, String decorationName, double worldX, double worldZ, double rotationIn, Component p_191095_10_) {
 	}

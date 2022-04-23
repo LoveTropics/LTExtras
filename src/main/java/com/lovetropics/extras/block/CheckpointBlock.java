@@ -1,6 +1,7 @@
 package com.lovetropics.extras.block;
 
 import com.lovetropics.extras.client.particle.ExtraParticles;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.network.chat.Component;
@@ -24,12 +26,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Constants;
 
 import java.util.List;
 import java.util.Random;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class CheckpointBlock extends Block {
 
@@ -53,9 +52,11 @@ public class CheckpointBlock extends Block {
 	@Override
 	@Deprecated
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (worldIn instanceof Level && ((Level) worldIn).isClientSide) {
-			if (context.getEntity() instanceof Player && !((Player)context.getEntity()).isCreative()) {
-				return Shapes.empty();
+		if (worldIn instanceof Level level && level.isClientSide()) {
+			if (context instanceof EntityCollisionContext entityContext) {
+				if (entityContext.getEntity() instanceof Player player && !player.isCreative()) {
+					return Shapes.empty();
+				}
 			}
 		}
 
@@ -83,7 +84,7 @@ public class CheckpointBlock extends Block {
 
 	private int getStage(ItemStack stack) {
 		CompoundTag tag = stack.getTag();
-		if (tag != null && tag.contains("stage", Constants.NBT.TAG_INT)) {
+		if (tag != null && tag.contains("stage", Tag.TAG_INT)) {
 			return tag.getInt("stage");
 		}
 		return 1;

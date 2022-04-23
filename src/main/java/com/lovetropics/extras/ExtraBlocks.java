@@ -11,53 +11,37 @@ import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
+import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
-import com.tterrag.registrate.util.entry.TileEntityEntry;
-import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.BaseCoralPlantTypeBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FenceBlock;
-import net.minecraft.world.level.block.LadderBlock;
-import net.minecraft.world.level.block.IronBarsBlock;
-import net.minecraft.world.level.block.ScaffoldingBlock;
-import net.minecraft.world.level.block.PipeBlock;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.StainedGlassBlock;
-import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.VineBlock;
-import net.minecraft.world.level.block.WallBlock;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ScaffoldingBlockItem;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
-import net.minecraftforge.fml.DatagenModLoader;
+import net.minecraftforge.data.loading.DatagenModLoader;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -70,8 +54,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.lovetropics.extras.data.ModelGenUtil.*;
-
-import com.lovetropics.extras.data.ModelGenUtil.TextureType;
 
 public class ExtraBlocks {
 
@@ -152,7 +134,7 @@ public class ExtraBlocks {
     			.build()
     		.register();
 
-    public static final Tag.Named<Block> TAG_STEEL_GIRDERS = BlockTags.bind(LTExtras.MODID +":steel_girders");
+    public static final TagKey<Block> TAG_STEEL_GIRDERS = BlockTags.create(new ResourceLocation(LTExtras.MODID, "steel_girders"));
 
     public static final BlockEntry<GirderBlock> STEEL_GIRDER = steelGirder("");
     public static final BlockEntry<GirderBlock> RUSTING_STEEL_GIRDER = steelGirder("rusting");
@@ -225,11 +207,11 @@ public class ExtraBlocks {
 	public static final BlockEntry<MobControllerBlock> MOB_CONTROLLER = REGISTRATE.block("mob_controller", MobControllerBlock::new)
 			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.simpleItem()
-			.tileEntity(MobControllerBlockEntity::new)
+			.blockEntity(MobControllerBlockEntity::new)
 				.build()
 			.register();
 
-	public static final TileEntityEntry<MobControllerBlockEntity> MOB_CONTROLLER_BE = TileEntityEntry.cast(MOB_CONTROLLER.getSibling(ForgeRegistries.TILE_ENTITIES));
+	public static final BlockEntityEntry<MobControllerBlockEntity> MOB_CONTROLLER_BE = BlockEntityEntry.cast(MOB_CONTROLLER.getSibling(ForgeRegistries.BLOCK_ENTITIES));
 
 	public static final BlockEntry<Block> BLACK_CONCRETE_POWDER_FAKE = REGISTRATE.block("black_concrete_powder_fake", Block::new)
 			.initialProperties(() -> Blocks.DIRT)
@@ -431,7 +413,7 @@ public class ExtraBlocks {
 			.add(Blocks.CRACKED_STONE_BRICKS, SpeedyBlock::opaque)
 			.add(Blocks.SMOOTH_STONE, SpeedyBlock::opaque)
 			.add(Blocks.GRAVEL, SpeedyBlock::opaque)
-			.add(Blocks.GRASS_PATH, p -> SpeedyBlock.transparent(PATH_SHAPE, p))
+			.add(Blocks.DIRT_PATH, p -> SpeedyBlock.transparent(PATH_SHAPE, p))
 			.add(WEATHERED_LIMESTONE_ID, SpeedyBlock::opaque)
 			.add(POLISHED_WEATHERED_LIMESTONE_ID, SpeedyBlock::opaque);
 

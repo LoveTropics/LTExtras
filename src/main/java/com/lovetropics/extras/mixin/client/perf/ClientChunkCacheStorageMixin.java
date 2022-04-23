@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
-@Mixin(targets = "net/minecraft/client/multiplayer/ClientChunkProvider$ChunkArray")
-public class ClientChunkProviderChunkArrayMixin {
+@Mixin(targets = "net/minecraft/client/multiplayer/ClientChunkCache$Storage")
+public class ClientChunkCacheStorageMixin {
     @Shadow @Final @Mutable private AtomicReferenceArray<LevelChunk> chunks;
     @Shadow @Final private int viewRange;
 
@@ -25,7 +25,7 @@ public class ClientChunkProviderChunkArrayMixin {
     @Unique
     private int tableShift;
 
-    @Inject(method = "<init>(Lnet/minecraft/client/multiplayer/ClientChunkProvider;I)V", at = @At("RETURN"))
+    @Inject(method = "<init>", at = @At("RETURN"))
     private void init(ClientChunkCache chunkProvider, int viewDistance, CallbackInfo ci) {
         int tableSize = Mth.smallestEncompassingPowerOfTwo(this.viewRange);
         this.tableMask = tableSize - 1;
@@ -38,7 +38,7 @@ public class ClientChunkProviderChunkArrayMixin {
      * @author Gegy
      */
     @Overwrite
-    private int getIndex(int x, int z) {
+    int getIndex(int x, int z) {
         int mask = this.tableMask;
         int shift = this.tableShift;
         return (x & mask) << shift | (z & mask);

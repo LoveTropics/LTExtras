@@ -3,16 +3,16 @@ package com.lovetropics.extras.mixin;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.entity.ExtendedCreatureEntity;
 import com.lovetropics.extras.entity.ai.MoveBackToOriginGoal;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(PathfinderMob.class)
@@ -36,7 +36,7 @@ public abstract class CreatureEntityMixin extends Mob implements ExtendedCreatur
             this.theresNoPlaceLikeHome = nbt.getBoolean("TheresNoPlaceLikeHome");
 
             if (nbt.contains("HomePos")) {
-                ListTag posTag = nbt.getList("HomePos", Constants.NBT.TAG_DOUBLE);
+                ListTag posTag = nbt.getList("HomePos", Tag.TAG_DOUBLE);
                 this.homePos = new Vec3(posTag.getDouble(0), posTag.getDouble(1), posTag.getDouble(2));
             } else {
                 // Spawn egg or no recorded home- just grab the current position to have something to work with

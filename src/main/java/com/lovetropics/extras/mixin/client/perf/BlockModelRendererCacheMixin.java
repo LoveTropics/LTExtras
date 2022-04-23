@@ -1,10 +1,10 @@
 package com.lovetropics.extras.mixin.client.perf;
 
 import com.lovetropics.extras.perf.LossyLightCache;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(targets = "net/minecraft/client/renderer/BlockModelRenderer$Cache")
+@Mixin(targets = "net/minecraft/client/renderer/block/ModelBlockRenderer$Cache")
 public class BlockModelRendererCacheMixin {
     @Shadow private boolean enabled;
 
