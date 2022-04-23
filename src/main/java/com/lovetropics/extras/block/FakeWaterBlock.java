@@ -1,15 +1,15 @@
 package com.lovetropics.extras.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
-import net.minecraft.block.AbstractBlock.Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class FakeWaterBlock extends WaterBarrierBlock {
 
@@ -19,10 +19,10 @@ public class FakeWaterBlock extends WaterBarrierBlock {
 
 	@Override
 	@Deprecated
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		if (worldIn instanceof World && ((World) worldIn).isClientSide) {
-			if (context.getEntity() instanceof PlayerEntity && !((PlayerEntity)context.getEntity()).isCreative()) {
-				return VoxelShapes.empty();
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		if (worldIn instanceof Level && ((Level) worldIn).isClientSide) {
+			if (context.getEntity() instanceof Player && !((Player)context.getEntity()).isCreative()) {
+				return Shapes.empty();
 			}
 		}
 
@@ -30,7 +30,7 @@ public class FakeWaterBlock extends WaterBarrierBlock {
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return VoxelShapes.empty();
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		return Shapes.empty();
 	}
 }

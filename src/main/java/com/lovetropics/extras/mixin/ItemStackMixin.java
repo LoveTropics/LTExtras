@@ -2,11 +2,11 @@ package com.lovetropics.extras.mixin;
 
 import com.google.common.collect.ImmutableList;
 import com.lovetropics.extras.EverythingTag;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -24,9 +24,9 @@ public class ItemStackMixin {
 					target = "Lnet/minecraft/tags/ITag;getValues()Ljava/util/List;"
 			)
 	)
-	private static List<Block> getPlacementTooltipForTag(ITag<Block> tag) {
-		if (tag instanceof ITag.INamedTag) {
-			ResourceLocation name = ((ITag.INamedTag<Block>) tag).getName();
+	private static List<Block> getPlacementTooltipForTag(Tag<Block> tag) {
+		if (tag instanceof Tag.Named) {
+			ResourceLocation name = ((Tag.Named<Block>) tag).getName();
 			if (name.equals(EverythingTag.ID)) {
 				return TAG_FALLBACK;
 			}

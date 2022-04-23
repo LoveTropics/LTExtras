@@ -18,12 +18,12 @@ import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -46,7 +46,7 @@ public class LTExtras {
 
 	public static final String MODID = "ltextras";
 
-	public static final ItemGroup ITEM_GROUP = new ItemGroup(MODID) {
+	public static final CreativeModeTab ITEM_GROUP = new CreativeModeTab(MODID) {
 
 		@Override
 		public ItemStack makeIcon() {
@@ -123,7 +123,7 @@ public class LTExtras {
     }
 
 	private void onRegisterCommands(RegisterCommandsEvent event) {
-		CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
+		CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
 		SetMaxPlayersCommand.register(dispatcher);
 		GenerateCommand.register(dispatcher);
 	}

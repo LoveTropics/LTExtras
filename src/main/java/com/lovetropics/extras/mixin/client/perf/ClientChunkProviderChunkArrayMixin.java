@@ -1,8 +1,8 @@
 package com.lovetropics.extras.mixin.client.perf;
 
-import net.minecraft.client.multiplayer.ClientChunkProvider;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.client.multiplayer.ClientChunkCache;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 
 @Mixin(targets = "net/minecraft/client/multiplayer/ClientChunkProvider$ChunkArray")
 public class ClientChunkProviderChunkArrayMixin {
-    @Shadow @Final @Mutable private AtomicReferenceArray<Chunk> chunks;
+    @Shadow @Final @Mutable private AtomicReferenceArray<LevelChunk> chunks;
     @Shadow @Final private int viewRange;
 
     @Unique
@@ -26,10 +26,10 @@ public class ClientChunkProviderChunkArrayMixin {
     private int tableShift;
 
     @Inject(method = "<init>(Lnet/minecraft/client/multiplayer/ClientChunkProvider;I)V", at = @At("RETURN"))
-    private void init(ClientChunkProvider chunkProvider, int viewDistance, CallbackInfo ci) {
-        int tableSize = MathHelper.smallestEncompassingPowerOfTwo(this.viewRange);
+    private void init(ClientChunkCache chunkProvider, int viewDistance, CallbackInfo ci) {
+        int tableSize = Mth.smallestEncompassingPowerOfTwo(this.viewRange);
         this.tableMask = tableSize - 1;
-        this.tableShift = MathHelper.log2(tableSize);
+        this.tableShift = Mth.log2(tableSize);
         this.chunks = new AtomicReferenceArray<>(tableSize * tableSize);
     }
 

@@ -1,13 +1,13 @@
 package com.lovetropics.extras.mixin.client.perf;
 
-import net.minecraft.client.renderer.ViewFrustum;
+import net.minecraft.client.renderer.ViewArea;
 import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(ViewFrustum.class)
+@Mixin(ViewArea.class)
 public interface ViewFrustumAccess {
     @Invoker("getRenderChunkAt")
-    ChunkRenderDispatcher.ChunkRender ltextras$getRenderChunk(BlockPos pos);
+    ChunkRenderDispatcher.RenderChunk ltextras$getRenderChunk(BlockPos pos);
 }

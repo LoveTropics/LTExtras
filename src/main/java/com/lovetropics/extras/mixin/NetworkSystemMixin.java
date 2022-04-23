@@ -1,12 +1,12 @@
 package com.lovetropics.extras.mixin;
 
-import net.minecraft.network.NetworkSystem;
+import net.minecraft.server.network.ServerConnectionListener;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(NetworkSystem.class)
+@Mixin(ServerConnectionListener.class)
 public class NetworkSystemMixin {
 	@Redirect(
 			method = "tick",

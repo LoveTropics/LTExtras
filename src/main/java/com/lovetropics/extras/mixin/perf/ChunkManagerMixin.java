@@ -1,8 +1,8 @@
 package com.lovetropics.extras.mixin.perf;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.server.ChunkManager;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.SectionPos;
+import net.minecraft.server.level.ChunkMap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 // what!! would you look at the time! it's TACS optimisation time!
-@Mixin(ChunkManager.class)
+@Mixin(ChunkMap.class)
 public class ChunkManagerMixin {
 	@Inject(
 			method = "move",
@@ -19,7 +19,7 @@ public class ChunkManagerMixin {
 			cancellable = true
 	)
 	private void onUpdatePlayerPosition(
-			ServerPlayerEntity player, CallbackInfo ci,
+			ServerPlayer player, CallbackInfo ci,
 			int newChunkX, int newChunkZ,
 			SectionPos lastSection, SectionPos newSection,
 			long lastChunk, long newChunk,

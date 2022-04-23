@@ -1,15 +1,15 @@
 package com.lovetropics.extras.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ScaffoldingBlock;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.ScaffoldingBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 
 public class ScaffoldingHooks {
 
-	public static int getDistance(IBlockReader world, BlockPos pos) {
-		BlockPos.Mutable mutablePos = pos.mutable().move(Direction.DOWN);
+	public static int getDistance(BlockGetter world, BlockPos pos) {
+		BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.DOWN);
 		BlockState state = world.getBlockState(mutablePos);
 		int distance = 7;
 		if (state.getBlock() instanceof ScaffoldingBlock) {

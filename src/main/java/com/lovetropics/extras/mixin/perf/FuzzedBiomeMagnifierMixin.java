@@ -1,10 +1,10 @@
 package com.lovetropics.extras.mixin.perf;
 
-import net.minecraft.world.biome.FuzzedBiomeMagnifier;
+import net.minecraft.world.level.biome.FuzzyOffsetBiomeZoomer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-@Mixin(FuzzedBiomeMagnifier.class)
+@Mixin(FuzzyOffsetBiomeZoomer.class)
 public class FuzzedBiomeMagnifierMixin {
     /**
      * @reason remove usage of floorMod

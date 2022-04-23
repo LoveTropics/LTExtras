@@ -2,8 +2,8 @@ package com.lovetropics.extras.mixin.client.perf;
 
 import com.lovetropics.extras.perf.ChunkRendererExt;
 import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ChunkRenderDispatcher.ChunkRender.class)
+@Mixin(ChunkRenderDispatcher.RenderChunk.class)
 public abstract class ChunkRenderMixin implements ChunkRendererExt {
-    @Shadow @Final private BlockPos.Mutable[] relativeOrigins;
+    @Shadow @Final private BlockPos.MutableBlockPos[] relativeOrigins;
 
     @Shadow
     protected abstract double getDistToPlayerSqr();

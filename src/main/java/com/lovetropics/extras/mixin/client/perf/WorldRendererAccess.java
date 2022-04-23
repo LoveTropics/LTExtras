@@ -1,12 +1,12 @@
 package com.lovetropics.extras.mixin.client.perf;
 
-import net.minecraft.client.renderer.ViewFrustum;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.ViewArea;
+import net.minecraft.client.renderer.LevelRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(WorldRenderer.class)
+@Mixin(LevelRenderer.class)
 public interface WorldRendererAccess {
     @Accessor("viewArea")
-    ViewFrustum getViewFrustum();
+    ViewArea getViewFrustum();
 }

@@ -1,30 +1,30 @@
 package com.lovetropics.extras.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.AbstractBlock.Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public final class RopeBlock extends Block implements IWaterLoggable {
+public final class RopeBlock extends Block implements SimpleWaterloggedBlock {
     private static final VoxelShape SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
 
     public static final BooleanProperty KNOT = BooleanProperty.create("knot");
@@ -36,12 +36,12 @@ public final class RopeBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
         if (facing == Direction.UP && !this.canHangFrom(world, facingPos, facingState)) {
             return Blocks.AIR.defaultBlockState();
         }
@@ -59,8 +59,8 @@ public final class RopeBlock extends Block implements IWaterLoggable {
 
     @Override
     @Nullable
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        World world = context.getLevel();
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Level world = context.getLevel();
         BlockPos pos = context.getClickedPos();
 
         if (this.canHangAt(world, pos)) {
@@ -73,23 +73,23 @@ public final class RopeBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         return this.canHangAt(world, pos);
     }
 
-    private boolean canHangAt(IWorldReader world, BlockPos pos) {
+    private boolean canHangAt(LevelReader world, BlockPos pos) {
         BlockPos attachPos = pos.above();
         BlockState attachState = world.getBlockState(attachPos);
         return this.canHangFrom(world, attachPos, attachState);
     }
 
-    private boolean canHangFrom(IWorldReader world, BlockPos attachPos, BlockState attachState) {
+    private boolean canHangFrom(LevelReader world, BlockPos attachPos, BlockState attachState) {
         return attachState.is(this) ||
                 Block.canSupportCenter(world, attachPos, Direction.DOWN) ||
                 attachState.is(BlockTags.LEAVES);
     }
 
-    private boolean isKnottedAt(IWorldReader world, BlockPos pos) {
+    private boolean isKnottedAt(LevelReader world, BlockPos pos) {
         return !world.getBlockState(pos.below()).is(this);
     }
 
@@ -99,7 +99,7 @@ public final class RopeBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(KNOT, WATERLOGGED);
     }
 }

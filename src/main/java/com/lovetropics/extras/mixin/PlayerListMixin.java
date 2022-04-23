@@ -1,7 +1,7 @@
 package com.lovetropics.extras.mixin;
 
 import com.lovetropics.extras.PlayerListAccess;
-import net.minecraft.server.management.PlayerList;
+import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

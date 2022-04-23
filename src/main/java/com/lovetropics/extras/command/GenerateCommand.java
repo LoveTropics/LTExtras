@@ -10,12 +10,12 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import net.minecraft.command.CommandSource;
-import net.minecraft.item.Item;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.tags.SetTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.IOException;
@@ -28,15 +28,15 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import static net.minecraft.command.Commands.argument;
-import static net.minecraft.command.Commands.literal;
+import staticnet.minecraft.commands.Commandss.literal;
 
 public class GenerateCommand {
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-	private static final DynamicCommandExceptionType FAILED_TO_WRITE = new DynamicCommandExceptionType(o -> new StringTextComponent("Failed to write to file: " + o));
+	private static final DynamicCommandExceptionType FAILED_TO_WRITE = new DynamicCommandExceptionType(o -> new TextComponent("Failed to write to file: " + o));
 
-	public static void register(CommandDispatcher<CommandSource> dispatcher) {
+	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		// @formatter:off
 		dispatcher.register(
 			literal("generate").requires(source -> source.hasPermission(4))
@@ -48,12 +48,12 @@ public class GenerateCommand {
 		// @formatter:on
 	}
 
-	private static int generateItemTag(CommandContext<CommandSource> ctx) throws CommandSyntaxException {
+	private static int generateItemTag(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
 		Pattern pattern = Pattern.compile(StringArgumentType.getString(ctx, "pattern"));
 
-		Tag.Builder tagBuilder = new Tag.Builder();
+		SetTag.Builder tagBuilder = new SetTag.Builder();
 
-		for (Entry<RegistryKey<Item>, Item> e : ForgeRegistries.ITEMS.getEntries()) {
+		for (Entry<ResourceKey<Item>, Item> e : ForgeRegistries.ITEMS.getEntries()) {
 			ResourceLocation id = e.getKey().location();
 			if (pattern.matcher(id.toString()).matches()) {
 				tagBuilder.addElement(id, LTExtras.MODID);

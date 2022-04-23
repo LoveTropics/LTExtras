@@ -1,7 +1,7 @@
 package com.lovetropics.extras;
 
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public final class EverythingTag<T extends IForgeRegistryEntry<T>> implements ITag.INamedTag<T> {
+public final class EverythingTag<T extends IForgeRegistryEntry<T>> implements Tag.Named<T> {
 	public static final ResourceLocation ID = new ResourceLocation(LTExtras.MODID, "everything");
 
 	private final IForgeRegistry<T> registry;
@@ -20,7 +20,7 @@ public final class EverythingTag<T extends IForgeRegistryEntry<T>> implements IT
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> void addTo(Map<ResourceLocation, ITag<T>> map, IForgeRegistry<?> registry) {
+	public static <T> void addTo(Map<ResourceLocation, Tag<T>> map, IForgeRegistry<?> registry) {
 		map.put(ID, new EverythingTag(registry));
 	}
 

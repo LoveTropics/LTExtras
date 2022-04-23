@@ -1,27 +1,27 @@
 package com.lovetropics.extras.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.SixWayBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 
-import net.minecraft.block.AbstractBlock.Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public final class ThornStemBlock extends SixWayBlock implements IWaterLoggable {
+public final class ThornStemBlock extends PipeBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public ThornStemBlock(Properties properties) {
@@ -38,13 +38,13 @@ public final class ThornStemBlock extends SixWayBlock implements IWaterLoggable 
     }
 
     @Override
-    public void entityInside(BlockState state, World world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         entity.hurt(DamageSource.SWEET_BERRY_BUSH, 1.0F);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        World world = context.getLevel();
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Level world = context.getLevel();
         BlockPos pos = context.getClickedPos();
         return this.defaultBlockState()
                 .setValue(NORTH, this.canConnectAlong(world, pos, Direction.NORTH))
@@ -57,7 +57,7 @@ public final class ThornStemBlock extends SixWayBlock implements IWaterLoggable 
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
         if (state.getValue(WATERLOGGED)) {
             world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
@@ -72,28 +72,28 @@ public final class ThornStemBlock extends SixWayBlock implements IWaterLoggable 
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
-    private boolean canConnectAlong(IBlockReader world, BlockPos pos, Direction direction) {
+    private boolean canConnectAlong(BlockGetter world, BlockPos pos, Direction direction) {
         BlockPos adjacentPos = pos.relative(direction);
         BlockState adjacentState = world.getBlockState(adjacentPos);
         return this.canConnectTo(adjacentState, world, adjacentPos, direction);
     }
 
-    private boolean canConnectTo(IBlockReader world, BlockPos pos, Direction direction) {
+    private boolean canConnectTo(BlockGetter world, BlockPos pos, Direction direction) {
         return this.canConnectTo(world.getBlockState(pos), world, pos, direction);
     }
 
-    private boolean canConnectTo(BlockState state, IBlockReader world, BlockPos pos, Direction direction) {
+    private boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {
         return state.is(this)
                 || state.isFaceSturdy(world, pos, direction);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN, WATERLOGGED);
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
 }

@@ -1,10 +1,10 @@
 package com.lovetropics.extras.mixin.client.perf;
 
 import com.lovetropics.extras.perf.LossyLightCache;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,9 +33,9 @@ public class BlockModelRendererCacheMixin {
      * @author Gegy
      */
     @Overwrite
-    public int getLightColor(BlockState state, IBlockDisplayReader world, BlockPos pos) {
+    public int getLightColor(BlockState state, BlockAndTintGetter world, BlockPos pos) {
         if (!this.enabled) {
-            return WorldRenderer.getLightColor(world, state, pos);
+            return LevelRenderer.getLightColor(world, state, pos);
         }
 
         long posKey = pos.asLong();
@@ -46,7 +46,7 @@ public class BlockModelRendererCacheMixin {
             return light;
         }
 
-        light = WorldRenderer.getLightColor(world, state, pos);
+        light = LevelRenderer.getLightColor(world, state, pos);
         cache.put(posKey, light);
 
         return light;
@@ -57,7 +57,7 @@ public class BlockModelRendererCacheMixin {
      * @author Gegy
      */
     @Overwrite
-    public float getShadeBrightness(BlockState state, IBlockDisplayReader world, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockAndTintGetter world, BlockPos pos) {
         if (!this.enabled) {
             return state.getShadeBrightness(world, pos);
         }

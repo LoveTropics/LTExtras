@@ -1,27 +1,27 @@
 package com.lovetropics.extras.block;
 
 import com.lovetropics.extras.client.particle.ExtraParticles;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
@@ -29,7 +29,7 @@ import net.minecraftforge.common.util.Constants;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock.Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class CheckpointBlock extends Block {
 
@@ -46,16 +46,16 @@ public class CheckpointBlock extends Block {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
 		return true;
 	}
 
 	@Override
 	@Deprecated
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		if (worldIn instanceof World && ((World) worldIn).isClientSide) {
-			if (context.getEntity() instanceof PlayerEntity && !((PlayerEntity)context.getEntity()).isCreative()) {
-				return VoxelShapes.empty();
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		if (worldIn instanceof Level && ((Level) worldIn).isClientSide) {
+			if (context.getEntity() instanceof Player && !((Player)context.getEntity()).isCreative()) {
+				return Shapes.empty();
 			}
 		}
 
@@ -63,26 +63,26 @@ public class CheckpointBlock extends Block {
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return VoxelShapes.empty();
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		return Shapes.empty();
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
-			ITooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip,
+			TooltipFlag flagIn) {
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-		tooltip.add(new StringTextComponent("Stage: ")
-				.append(new StringTextComponent(Integer.toString(getStage(stack)))
-						.withStyle(TextFormatting.AQUA)));
+		tooltip.add(new TextComponent("Stage: ")
+				.append(new TextComponent(Integer.toString(getStage(stack)))
+						.withStyle(ChatFormatting.AQUA)));
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return super.getStateForPlacement(context).setValue(STAGE, getStage(context.getItemInHand()));
 	}
 
 	private int getStage(ItemStack stack) {
-		CompoundNBT tag = stack.getTag();
+		CompoundTag tag = stack.getTag();
 		if (tag != null && tag.contains("stage", Constants.NBT.TAG_INT)) {
 			return tag.getInt("stage");
 		}
@@ -91,8 +91,8 @@ public class CheckpointBlock extends Block {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
-        ClientPlayerEntity player = Minecraft.getInstance().player;
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+        LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             return;
         }
@@ -102,7 +102,7 @@ public class CheckpointBlock extends Block {
         }
     }
 
-    private boolean isHoldingBarrier(PlayerEntity player) {
+    private boolean isHoldingBarrier(Player player) {
         Item item = this.asItem();
         return player.getMainHandItem().getItem() == item
                 || player.getOffhandItem().getItem() == item;

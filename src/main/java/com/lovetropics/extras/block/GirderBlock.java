@@ -2,36 +2,36 @@ package com.lovetropics.extras.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.LazyValue;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.tags.Tag;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import net.minecraft.block.AbstractBlock.Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class GirderBlock extends Block implements IWaterLoggable {
+public class GirderBlock extends Block implements SimpleWaterloggedBlock {
 
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -44,20 +44,20 @@ public class GirderBlock extends Block implements IWaterLoggable {
 			.put(Axis.Z, Block.box(5, 3, 0, 11, 13, 16))
 			.build();
 
-	private final LazyValue<Map<BlockState, VoxelShape>> ALL_SHAPES = new LazyValue<>(() -> getStateDefinition().getPossibleStates().stream()
+	private final LazyLoadedValue<Map<BlockState, VoxelShape>> ALL_SHAPES = new LazyLoadedValue<>(() -> getStateDefinition().getPossibleStates().stream()
 			.collect(Collectors.toMap(Function.identity(), s -> {
-				VoxelShape ret = VoxelShapes.empty();
+				VoxelShape ret = Shapes.empty();
 				for (Axis a : Axis.values()) {
 					if (s.getValue(PROPS.get(a))) {
-						ret = VoxelShapes.or(ret, BASE_SHAPES.get(a));
+						ret = Shapes.or(ret, BASE_SHAPES.get(a));
 					}
 				}
 				return ret;
 			})));
 
-	private final ITag<Block> connectionTag;
+	private final Tag<Block> connectionTag;
 
-	public GirderBlock(ITag<Block> connectionTag, Properties properties) {
+	public GirderBlock(Tag<Block> connectionTag, Properties properties) {
 		super(properties);
 		this.connectionTag = connectionTag;
 		registerDefaultState(PROPS.keySet().stream()
@@ -71,12 +71,12 @@ public class GirderBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
 		return !state.getValue(WATERLOGGED);
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return ALL_SHAPES.get().get(state);
 	}
 
@@ -87,12 +87,12 @@ public class GirderBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = super.getStateForPlacement(context);
 		FluidState ifluidstate = context.getLevel().getFluidState(context.getClickedPos());
 		boolean connected = false;
@@ -109,7 +109,7 @@ public class GirderBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
 		if (stateIn.getValue(WATERLOGGED)) {
 			worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));

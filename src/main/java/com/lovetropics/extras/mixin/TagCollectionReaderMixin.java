@@ -1,10 +1,10 @@
 package com.lovetropics.extras.mixin;
 
 import com.lovetropics.extras.EverythingTag;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.ITagCollection;
-import net.minecraft.tags.TagCollectionReader;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagCollection;
+import net.minecraft.tags.TagLoader;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Map;
 import java.util.function.Function;
 
-@Mixin(TagCollectionReader.class)
+@Mixin(TagLoader.class)
 public class TagCollectionReaderMixin<T> {
 	@Shadow
 	@Final
@@ -29,8 +29,8 @@ public class TagCollectionReaderMixin<T> {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private void buildTagCollection(
-			Map<ResourceLocation, ITag.Builder> idToBuilderMap, CallbackInfoReturnable<ITagCollection<T>> ci,
-			Map<ResourceLocation, ITag<T>> map, Function<ResourceLocation, ITag<T>> getTag, Function<ResourceLocation, T> getEntry
+			Map<ResourceLocation, Tag.Builder> idToBuilderMap, CallbackInfoReturnable<TagCollection<T>> ci,
+			Map<ResourceLocation, Tag<T>> map, Function<ResourceLocation, Tag<T>> getTag, Function<ResourceLocation, T> getEntry
 	) {
 		if (this.name.equals("block")) {
 			EverythingTag.addTo(map, ForgeRegistries.BLOCKS);

@@ -2,7 +2,7 @@ package com.lovetropics.extras.network;
 
 import com.lovetropics.extras.LTExtras;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 

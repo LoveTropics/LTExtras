@@ -1,7 +1,7 @@
 package com.lovetropics.extras.perf;
 
 import it.unimi.dsi.fastutil.HashCommon;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 import java.util.Arrays;
 
@@ -13,7 +13,7 @@ public final class LossyLightCache {
         private final int[] values;
 
         public Packed(int capacity) {
-            capacity = MathHelper.smallestEncompassingPowerOfTwo(capacity);
+            capacity = Mth.smallestEncompassingPowerOfTwo(capacity);
             this.mask = capacity - 1;
 
             this.keys = new long[capacity];
@@ -52,7 +52,7 @@ public final class LossyLightCache {
         private final float[] values;
 
         public Brightness(int capacity) {
-            capacity = MathHelper.smallestEncompassingPowerOfTwo(capacity);
+            capacity = Mth.smallestEncompassingPowerOfTwo(capacity);
             this.mask = capacity - 1;
 
             this.keys = new long[capacity];

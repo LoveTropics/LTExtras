@@ -5,15 +5,15 @@ import com.lovetropics.extras.block.GirderBlock;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
-import net.minecraft.block.Block;
-import net.minecraft.block.FenceBlock;
-import net.minecraft.block.PaneBlock;
-import net.minecraft.block.ScaffoldingBlock;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.block.WallBlock;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.ScaffoldingBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
@@ -63,7 +63,7 @@ public class ModelGenUtil {
 				.texture("particle", prov.modLoc("block/metal_scaffolding_top")));
     }
 
-    public static void barsBlock(DataGenContext<Block, PaneBlock> ctx, RegistrateBlockstateProvider prov) {
+    public static void barsBlock(DataGenContext<Block, IronBarsBlock> ctx, RegistrateBlockstateProvider prov) {
     	MultiPartBlockStateBuilder builder = prov.getMultipartBuilder(ctx.getEntry());
 
     	ModelFile cap = barsModel(prov, ctx, "cap");
@@ -77,39 +77,39 @@ public class ModelGenUtil {
 	    		.end()
 	    	.part()
 	    		.modelFile(barsModel(prov, ctx, "post")).addModel()
-	    		.condition(PaneBlock.NORTH, false).condition(PaneBlock.EAST, false).condition(PaneBlock.SOUTH, false).condition(PaneBlock.WEST, false)
+	    		.condition(IronBarsBlock.NORTH, false).condition(IronBarsBlock.EAST, false).condition(IronBarsBlock.SOUTH, false).condition(IronBarsBlock.WEST, false)
 	    		.end()
 	    	.part()
 	    		.modelFile(cap).addModel()
-	    		.condition(PaneBlock.NORTH, true).condition(PaneBlock.EAST, false).condition(PaneBlock.SOUTH, false).condition(PaneBlock.WEST, false)
+	    		.condition(IronBarsBlock.NORTH, true).condition(IronBarsBlock.EAST, false).condition(IronBarsBlock.SOUTH, false).condition(IronBarsBlock.WEST, false)
 	    		.end()
 	    	.part()
 				.modelFile(cap).rotationY(90).addModel()
-				.condition(PaneBlock.NORTH, false).condition(PaneBlock.EAST, true).condition(PaneBlock.SOUTH, false).condition(PaneBlock.WEST, false)
+				.condition(IronBarsBlock.NORTH, false).condition(IronBarsBlock.EAST, true).condition(IronBarsBlock.SOUTH, false).condition(IronBarsBlock.WEST, false)
 				.end()
 	    	.part()
 				.modelFile(capAlt).addModel()
-				.condition(PaneBlock.NORTH, false).condition(PaneBlock.EAST, false).condition(PaneBlock.SOUTH, true).condition(PaneBlock.WEST, false)
+				.condition(IronBarsBlock.NORTH, false).condition(IronBarsBlock.EAST, false).condition(IronBarsBlock.SOUTH, true).condition(IronBarsBlock.WEST, false)
 				.end()
 	    	.part()
 				.modelFile(capAlt).rotationY(90).addModel()
-				.condition(PaneBlock.NORTH, false).condition(PaneBlock.EAST, false).condition(PaneBlock.SOUTH, false).condition(PaneBlock.WEST, true)
+				.condition(IronBarsBlock.NORTH, false).condition(IronBarsBlock.EAST, false).condition(IronBarsBlock.SOUTH, false).condition(IronBarsBlock.WEST, true)
 				.end()
 			.part()
 				.modelFile(side).addModel()
-				.condition(PaneBlock.NORTH, true)
+				.condition(IronBarsBlock.NORTH, true)
 				.end()
 			.part()
 				.modelFile(side).rotationY(90).addModel()
-				.condition(PaneBlock.EAST, true)
+				.condition(IronBarsBlock.EAST, true)
 				.end()
 			.part()
 				.modelFile(sideAlt).addModel()
-				.condition(PaneBlock.SOUTH, true)
+				.condition(IronBarsBlock.SOUTH, true)
 				.end()
 			.part()
 				.modelFile(sideAlt).rotationY(90).addModel()
-				.condition(PaneBlock.WEST, true)
+				.condition(IronBarsBlock.WEST, true)
 				.end();
     }
 
@@ -134,7 +134,7 @@ public class ModelGenUtil {
     	return texture.getSideTexture(block);
     }
 
-    public static <T extends StairsBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> stairsBlock(NamedSupplier<Block> object, TextureType textureType) {
+    public static <T extends StairBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> stairsBlock(NamedSupplier<Block> object, TextureType textureType) {
 		return (ctx, prov) -> {
 			ResourceLocation side = textureType.getSideTexture(object);
 			ResourceLocation top = textureType.getTopTexture(object);

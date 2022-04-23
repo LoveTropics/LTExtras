@@ -2,10 +2,10 @@ package com.lovetropics.extras.mixin.perf;
 
 import com.lovetropics.extras.perf.LossyChunkCache;
 import com.mojang.datafixers.util.Either;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkStatus;
-import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.server.*;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,27 +16,34 @@ import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ChunkMap;
+import net.minecraft.server.level.DistanceManager;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.TicketType;
+
 /**
  * Reduce allocations, use a larger and quicker cache, avoid doing unnecessary work when we're just querying chunk
  * and not fully loading it
  */
-@Mixin(ServerChunkProvider.class)
+@Mixin(ServerChunkCache.class)
 public abstract class ServerChunkProviderMixin {
 	@Shadow
 	@Final
-	public ChunkManager chunkMap;
+	public ChunkMap chunkMap;
 	@Shadow
 	@Final
 	private Thread mainThread;
 	@Shadow
 	@Final
-	private ServerChunkProvider.ChunkExecutor mainThreadProcessor;
+	private ServerChunkCache.MainThreadExecutor mainThreadProcessor;
 	@Shadow
 	@Final
-	private TicketManager distanceManager;
+	private DistanceManager distanceManager;
 	@Shadow
 	@Final
-	public ServerWorld level;
+	public ServerLevel level;
 
 	@Unique
 	private final LossyChunkCache fastCache = new LossyChunkCache(32);
@@ -52,7 +59,7 @@ public abstract class ServerChunkProviderMixin {
 	 */
 	@Nullable
 	@Overwrite
-	public IChunk getChunk(int x, int z, ChunkStatus status, boolean load) {
+	public ChunkAccess getChunk(int x, int z, ChunkStatus status, boolean load) {
 		if (load) {
 			if (Thread.currentThread() != this.mainThread) {
 				return this.getOrLoadChunkOffThread(x, z, status);
@@ -64,20 +71,20 @@ public abstract class ServerChunkProviderMixin {
 		}
 	}
 
-	private IChunk getOrLoadChunkOnThread(int x, int z, ChunkStatus status) {
+	private ChunkAccess getOrLoadChunkOnThread(int x, int z, ChunkStatus status) {
 		// first we test if the chunk already exists in our small cache
-		IChunk cached = this.fastCache.get(x, z, status);
+		ChunkAccess cached = this.fastCache.get(x, z, status);
 		if (cached != null) {
 			return cached;
 		}
 
 		// if it does not exist, try load it from the chunk entry
 		ChunkHolder holder = this.getVisibleChunkIfPresent(ChunkPos.asLong(x, z));
-		IChunk chunk = this.getExistingChunkFor(holder, status);
+		ChunkAccess chunk = this.getExistingChunkFor(holder, status);
 
 		// the chunk is not ready, we must spawn and join the chunk future
 		if (chunk == null) {
-			Either<IChunk, ChunkHolder.IChunkLoadingError> result = this.joinFuture(this.loadChunk(x, z, status));
+			Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure> result = this.joinFuture(this.loadChunk(x, z, status));
 
 			chunk = result.left().orElse(null);
 			if (chunk == null) {
@@ -98,13 +105,13 @@ public abstract class ServerChunkProviderMixin {
 		return future.join();
 	}
 
-	private IChunk getOrLoadChunkOffThread(int x, int z, ChunkStatus status) {
-		Either<IChunk, ChunkHolder.IChunkLoadingError> result = CompletableFuture.supplyAsync(
+	private ChunkAccess getOrLoadChunkOffThread(int x, int z, ChunkStatus status) {
+		Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure> result = CompletableFuture.supplyAsync(
 				() -> this.loadChunk(x, z, status),
 				this.mainThreadProcessor
 		).join().join();
 
-		IChunk chunk = result.left().orElse(null);
+		ChunkAccess chunk = result.left().orElse(null);
 		if (chunk != null) {
 			return chunk;
 		} else {
@@ -112,7 +119,7 @@ public abstract class ServerChunkProviderMixin {
 		}
 	}
 
-	private CompletableFuture<Either<IChunk, ChunkHolder.IChunkLoadingError>> loadChunk(int x, int z, ChunkStatus status) {
+	private CompletableFuture<Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure>> loadChunk(int x, int z, ChunkStatus status) {
 		long chunkKey = ChunkPos.asLong(x, z);
 		ChunkHolder holder = this.getVisibleChunkIfPresent(chunkKey);
 
@@ -139,36 +146,36 @@ public abstract class ServerChunkProviderMixin {
 	 */
 	@Overwrite
 	@Nullable
-	public Chunk getChunkNow(int x, int z) {
-		return (Chunk) this.getExistingChunk(x, z, ChunkStatus.FULL);
+	public LevelChunk getChunkNow(int x, int z) {
+		return (LevelChunk) this.getExistingChunk(x, z, ChunkStatus.FULL);
 	}
 
-	private IChunk getExistingChunk(int x, int z, ChunkStatus status) {
+	private ChunkAccess getExistingChunk(int x, int z, ChunkStatus status) {
 		if (Thread.currentThread() != this.mainThread) {
 			return this.loadExistingChunk(x, z, status);
 		}
 
-		IChunk cached = this.fastCache.get(x, z, status);
+		ChunkAccess cached = this.fastCache.get(x, z, status);
 		if (cached != null) {
 			return cached;
 		}
 
-		IChunk chunk = this.loadExistingChunk(x, z, status);
+		ChunkAccess chunk = this.loadExistingChunk(x, z, status);
 		this.fastCache.put(x, z, status, chunk);
 
 		return chunk;
 	}
 
 	@Nullable
-	private IChunk loadExistingChunk(int x, int z, ChunkStatus status) {
+	private ChunkAccess loadExistingChunk(int x, int z, ChunkStatus status) {
 		ChunkHolder holder = this.getVisibleChunkIfPresent(ChunkPos.asLong(x, z));
 		return this.getExistingChunkFor(holder, status);
 	}
 
 	@Nullable
-	private IChunk getExistingChunkFor(@Nullable ChunkHolder holder, ChunkStatus status) {
+	private ChunkAccess getExistingChunkFor(@Nullable ChunkHolder holder, ChunkStatus status) {
 		if (isValidForStatus(holder, status)) {
-			CompletableFuture<Either<IChunk, ChunkHolder.IChunkLoadingError>> future = holder.getFutureIfPresentUnchecked(status);
+			CompletableFuture<Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure>> future = holder.getFutureIfPresentUnchecked(status);
 			return future.getNow(ChunkHolder.UNLOADED_CHUNK).left().orElse(null);
 		}
 		return null;
@@ -188,7 +195,7 @@ public abstract class ServerChunkProviderMixin {
 	 * @author Gegy
 	 */
 	@Overwrite
-	private boolean checkChunkFuture(long pos, Function<ChunkHolder, CompletableFuture<Either<Chunk, ChunkHolder.IChunkLoadingError>>> function) {
+	private boolean checkChunkFuture(long pos, Function<ChunkHolder, CompletableFuture<Either<LevelChunk, ChunkHolder.ChunkLoadingFailure>>> function) {
 		ChunkHolder holder = this.getVisibleChunkIfPresent(pos);
 		return holder != null && !function.apply(holder).getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).right().isPresent();
 	}

@@ -1,14 +1,14 @@
 package com.lovetropics.extras.mixin.client.perf;
 
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -18,14 +18,14 @@ import org.spongepowered.asm.mixin.Shadow;
 public class BlockMixin {
     @Shadow
     @Final
-    private static ThreadLocal<Object2ByteLinkedOpenHashMap<Block.RenderSideCacheKey>> OCCLUSION_CACHE;
+    private static ThreadLocal<Object2ByteLinkedOpenHashMap<Block.BlockStatePairKey>> OCCLUSION_CACHE;
 
     /**
      * @reason add fast path for simple full cubes
      * @author Gegy
      */
     @Overwrite
-    public static boolean shouldRenderFace(BlockState state, IBlockReader world, BlockPos pos, Direction direction) {
+    public static boolean shouldRenderFace(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {
         BlockPos adjacentPos = pos.relative(direction);
         BlockState adjacentState = world.getBlockState(adjacentPos);
         if (state.skipRendering(adjacentState, direction)) {
@@ -37,28 +37,28 @@ public class BlockMixin {
         VoxelShape shape = state.getOcclusionShape(world, pos);
 
         // an empty shape will never intersect with another face
-        if (shape == VoxelShapes.empty()) return true;
+        if (shape == Shapes.empty()) return true;
 
         VoxelShape adjacentShape = adjacentState.getOcclusionShape(world, adjacentPos);
 
         // an empty shape will never intersect with another face
-        if (adjacentShape == VoxelShapes.empty()) return true;
+        if (adjacentShape == Shapes.empty()) return true;
 
         // two full cubes will always occlude each other
-        if (shape == VoxelShapes.block() && adjacentShape == VoxelShapes.block()) {
+        if (shape == Shapes.block() && adjacentShape == Shapes.block()) {
             return false;
         }
 
-        Block.RenderSideCacheKey cacheKey = new Block.RenderSideCacheKey(state, adjacentState, direction);
-        Object2ByteLinkedOpenHashMap<Block.RenderSideCacheKey> cache = OCCLUSION_CACHE.get();
+        Block.BlockStatePairKey cacheKey = new Block.BlockStatePairKey(state, adjacentState, direction);
+        Object2ByteLinkedOpenHashMap<Block.BlockStatePairKey> cache = OCCLUSION_CACHE.get();
         byte cacheResult = cache.getAndMoveToFirst(cacheKey);
         if (cacheResult != 127) {
             return cacheResult != 0;
         }
 
-        VoxelShape faceShape = VoxelShapes.getFaceShape(shape, direction);
-        VoxelShape adjacentFaceShape = VoxelShapes.getFaceShape(adjacentShape, direction.getOpposite());
-        boolean visible = VoxelShapes.joinIsNotEmpty(faceShape, adjacentFaceShape, IBooleanFunction.ONLY_FIRST);
+        VoxelShape faceShape = Shapes.getFaceShape(shape, direction);
+        VoxelShape adjacentFaceShape = Shapes.getFaceShape(adjacentShape, direction.getOpposite());
+        boolean visible = Shapes.joinIsNotEmpty(faceShape, adjacentFaceShape, BooleanOp.ONLY_FIRST);
 
         if (cache.size() == 2048) {
             cache.removeLastByte();

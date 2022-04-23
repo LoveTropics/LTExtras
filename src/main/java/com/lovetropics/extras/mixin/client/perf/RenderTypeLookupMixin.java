@@ -2,13 +2,13 @@ package com.lovetropics.extras.mixin.client.perf;
 
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.registries.IRegistryDelegate;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +27,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 // TODO: PR into Forge!
-@Mixin(RenderTypeLookup.class)
+@Mixin(ItemBlockRenderTypes.class)
 public class RenderTypeLookupMixin {
     @Shadow private static boolean renderCutout;
 
@@ -54,8 +54,8 @@ public class RenderTypeLookupMixin {
         RenderTypeLookupMixin.blockRenderChecks = blockMap;
         RenderTypeLookupMixin.fluidRenderChecks = fluidMap;
 
-        TYPE_BY_BLOCK.forEach(RenderTypeLookup::setRenderLayer);
-        TYPE_BY_FLUID.forEach(RenderTypeLookup::setRenderLayer);
+        TYPE_BY_BLOCK.forEach(ItemBlockRenderTypes::setRenderLayer);
+        TYPE_BY_FLUID.forEach(ItemBlockRenderTypes::setRenderLayer);
     }
 
     @Redirect(method = "<clinit>", at = @At(value = "INVOKE", target = "Ljava/util/Map;forEach(Ljava/util/function/BiConsumer;)V"))

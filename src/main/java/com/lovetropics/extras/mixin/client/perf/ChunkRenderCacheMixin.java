@@ -1,18 +1,18 @@
 package com.lovetropics.extras.mixin.client.perf;
 
 import com.lovetropics.extras.perf.BiomeColorSampler;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.renderer.chunk.ChunkRenderCache;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.palette.PalettedContainer;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeColors;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.client.renderer.chunk.RenderChunkRegion;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.PalettedContainer;
+import net.minecraft.world.level.Level;
+import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.ColorResolver;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,9 +27,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Arrays;
 import java.util.Collections;
 
-@Mixin(ChunkRenderCache.class)
+@Mixin(RenderChunkRegion.class)
 public abstract class ChunkRenderCacheMixin {
-    @Shadow @Final protected World level;
+    @Shadow @Final protected Level level;
 
     @Shadow @Final protected BlockState[] blockStates;
     @Shadow @Final protected FluidState[] fluidStates;
@@ -50,7 +50,7 @@ public abstract class ChunkRenderCacheMixin {
     private BiomeColorSampler.Buffer foliageColors;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void init(World world, int chunkStartX, int chunkStartZ, Chunk[][] chunks, BlockPos startPos, BlockPos endPos, CallbackInfo ci) {
+    private void init(Level world, int chunkStartX, int chunkStartZ, LevelChunk[][] chunks, BlockPos startPos, BlockPos endPos, CallbackInfo ci) {
         BlockPos centerPos = new BlockPos(
                 (startPos.getX() + endPos.getX()) / 2,
                 (startPos.getY() + endPos.getY()) / 2,
@@ -61,7 +61,7 @@ public abstract class ChunkRenderCacheMixin {
         this.fillBlockData(world, chunkStartX, chunkStartZ, chunks, startPos, endPos);
     }
 
-    private void fillBlockData(World world, int minChunkX, int minChunkZ, Chunk[][] chunks, BlockPos startPos, BlockPos endPos) {
+    private void fillBlockData(Level world, int minChunkX, int minChunkZ, LevelChunk[][] chunks, BlockPos startPos, BlockPos endPos) {
         int minChunkY = 0;
         int maxChunkX = minChunkX + chunks.length;
         int maxChunkY = world.getMaxBuildHeight() >> 4;
@@ -81,10 +81,10 @@ public abstract class ChunkRenderCacheMixin {
                 int minBlockX = Math.max(chunkX << 4, startPos.getX());
                 int maxBlockX = Math.min((chunkX << 4) + 15, endPos.getX());
 
-                Chunk chunk = chunks[chunkX - minChunkX][chunkZ - minChunkZ];
-                ChunkSection[] sections = chunk.getSections();
+                LevelChunk chunk = chunks[chunkX - minChunkX][chunkZ - minChunkZ];
+                LevelChunkSection[] sections = chunk.getSections();
                 for (int chunkY = minChunkY; chunkY < maxChunkY; chunkY++) {
-                    ChunkSection section = sections[chunkY];
+                    LevelChunkSection section = sections[chunkY];
                     if (section == null || section.isEmpty()) {
                         continue;
                     }

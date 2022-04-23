@@ -17,42 +17,42 @@ import com.tterrag.registrate.util.entry.TileEntityEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.AbstractCoralPlantBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FenceBlock;
-import net.minecraft.block.LadderBlock;
-import net.minecraft.block.PaneBlock;
-import net.minecraft.block.ScaffoldingBlock;
-import net.minecraft.block.SixWayBlock;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.StainedGlassBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.block.VineBlock;
-import net.minecraft.block.WallBlock;
-import net.minecraft.block.material.Material;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.BaseCoralPlantTypeBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.ScaffoldingBlock;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.StainedGlassBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.VineBlock;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.data.loot.BlockLootTables;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ScaffoldingItem;
+import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ScaffoldingBlockItem;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.FoliageColors;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.biome.BiomeColors;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -116,7 +116,7 @@ public class ExtraBlocks {
             .register();
 
     public static final BlockEntry<CustomShapeBlock> BUOY = REGISTRATE.block("buoy", p -> new CustomShapeBlock(
-                    VoxelShapes.or(
+                    Shapes.or(
                             Block.box(2, 0, 2, 14, 3, 14),
                             Block.box(3, 3, 3, 13, 14, 13)),
                     p))
@@ -145,14 +145,14 @@ public class ExtraBlocks {
     		.initialProperties(() -> Blocks.GLASS)
     		.blockstate((ctx, prov) -> prov.directionalBlock(ctx.get(), prov.models()
     				.trapdoorTop(ctx.getName(), prov.blockTexture(Blocks.GLASS))))
-    		.loot(BlockLootTables::dropWhenSilkTouch)
+    		.loot(BlockLoot::dropWhenSilkTouch)
     		.addLayer(() -> RenderType::cutout)
     		.item()
     			.model((ctx, prov) -> prov.trapdoorBottom(ctx.getName(), prov.mcLoc("block/glass")))
     			.build()
     		.register();
 
-    public static final ITag.INamedTag<Block> TAG_STEEL_GIRDERS = BlockTags.bind(LTExtras.MODID +":steel_girders");
+    public static final Tag.Named<Block> TAG_STEEL_GIRDERS = BlockTags.bind(LTExtras.MODID +":steel_girders");
 
     public static final BlockEntry<GirderBlock> STEEL_GIRDER = steelGirder("");
     public static final BlockEntry<GirderBlock> RUSTING_STEEL_GIRDER = steelGirder("rusting");
@@ -178,7 +178,7 @@ public class ExtraBlocks {
 
     public static final BlockEntry<ScaffoldingBlock> METAL_SCAFFOLDING = REGISTRATE.block("metal_scaffolding", p -> (ScaffoldingBlock) new ScaffoldingBlock(p) {
 		@Override
-		public boolean isScaffolding(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity) {
+		public boolean isScaffolding(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
 			return true;
 		}
 	})
@@ -190,12 +190,12 @@ public class ExtraBlocks {
     					.addModels(scaffoldingModel(ctx, prov, "stable")))
     		.addLayer(() -> RenderType::cutout)
 			.tag(BlockTags.CLIMBABLE)
-    		.item(ScaffoldingItem::new)
+    		.item(ScaffoldingBlockItem::new)
     			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/metal_scaffolding_stable")))
     			.build()
     		.register();
 
-    public static final BlockEntry<PaneBlock> RUSTY_IRON_BARS = REGISTRATE.block("rusty_iron_bars", p -> (PaneBlock) new PaneBlock(p) {})
+    public static final BlockEntry<IronBarsBlock> RUSTY_IRON_BARS = REGISTRATE.block("rusty_iron_bars", p -> (IronBarsBlock) new IronBarsBlock(p) {})
     		.initialProperties(() -> Blocks.IRON_BARS)
     		.blockstate((ctx, prov) -> barsBlock(ctx, prov))
     		.addLayer(() -> RenderType::cutout)
@@ -278,7 +278,7 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<PianguasBlock> PIANGUAS = REGISTRATE.block("pianguas", PianguasBlock::new)
-			.properties(p -> AbstractBlock.Properties.of(Material.STONE).noCollission().instabreak())
+			.properties(p -> BlockBehaviour.Properties.of(Material.STONE).noCollission().instabreak())
 			.blockstate((ctx, prov) -> {
 				BlockModelBuilder model = prov.models().getBuilder("pianguas")
 						.ao(false)
@@ -364,10 +364,10 @@ public class ExtraBlocks {
 			.addLayer(() -> RenderType::cutout)
 			.color(() -> () -> (state, reader, pos, color) -> reader != null && pos != null
 					? BiomeColors.getAverageFoliageColor(reader, pos)
-					: FoliageColors.getDefaultColor())
+					: FoliageColor.getDefaultColor())
 			.item()
 				.model((ctx, prov) -> prov.generated(ctx, new ResourceLocation("block/vine"), new ResourceLocation("item/barrier")))
-				.color(() -> () -> ($, layer) -> layer == 0 ? FoliageColors.getDefaultColor() : -1)
+				.color(() -> () -> ($, layer) -> layer == 0 ? FoliageColor.getDefaultColor() : -1)
 				.build()
 			.register();
 
@@ -393,7 +393,7 @@ public class ExtraBlocks {
 				ModelFile.ExistingModelFile connection = prov.models().getExistingFile(prov.modLoc("block/thorn_stem_connection"));
 				MultiPartBlockStateBuilder multipart = prov.getMultipartBuilder(ctx.get())
 						.part().modelFile(core).addModel().end();
-				SixWayBlock.PROPERTY_BY_DIRECTION.forEach((direction, value) -> {
+				PipeBlock.PROPERTY_BY_DIRECTION.forEach((direction, value) -> {
 					ConfiguredModel.Builder<MultiPartBlockStateBuilder.PartBuilder> part = multipart.part()
 							.modelFile(connection).uvLock(true);
 
@@ -451,10 +451,10 @@ public class ExtraBlocks {
 			.add(Blocks.BUBBLE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.HORN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.TUBE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
-			.add(Blocks.BRAIN_CORAL, ImposterBlockTemplate.cross(AbstractCoralPlantBlock::new))
-			.add(Blocks.BUBBLE_CORAL, ImposterBlockTemplate.cross(AbstractCoralPlantBlock::new))
-			.add(Blocks.HORN_CORAL, ImposterBlockTemplate.cross(AbstractCoralPlantBlock::new))
-			.add(Blocks.TUBE_CORAL, ImposterBlockTemplate.cross(AbstractCoralPlantBlock::new));
+			.add(Blocks.BRAIN_CORAL, ImposterBlockTemplate.cross(BaseCoralPlantTypeBlock::new))
+			.add(Blocks.BUBBLE_CORAL, ImposterBlockTemplate.cross(BaseCoralPlantTypeBlock::new))
+			.add(Blocks.HORN_CORAL, ImposterBlockTemplate.cross(BaseCoralPlantTypeBlock::new))
+			.add(Blocks.TUBE_CORAL, ImposterBlockTemplate.cross(BaseCoralPlantTypeBlock::new));
 
 	public static final Map<NamedSupplier<Block>, BlockEntry<? extends Block>> IMPOSTER_BLOCKS = IMPOSTER_BLOCK_TEMPLATES
 			.build((object, template) -> {
@@ -467,7 +467,7 @@ public class ExtraBlocks {
 
     // Custom stairs/fences/walls/etc
 
-	private static final TemplateBuilder<StairsBlock, TextureType> STAIR_TEMPLATES = new TemplateBuilder<StairsBlock, TextureType>()
+	private static final TemplateBuilder<StairBlock, TextureType> STAIR_TEMPLATES = new TemplateBuilder<StairBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
 			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.normal())
@@ -505,9 +505,9 @@ public class ExtraBlocks {
 			.add(WEATHERED_LIMESTONE_ID, TextureType.allTexture(WEATHERED_LIMESTONE_TEXTURE))
 			.add(POLISHED_WEATHERED_LIMESTONE_ID, TextureType.allTexture(POLISHED_WEATHERED_LIMESTONE_TEXTURE));
 
-	public static final Map<NamedSupplier<Block>, BlockEntry<? extends StairsBlock>> STAIRS = STAIR_TEMPLATES
+	public static final Map<NamedSupplier<Block>, BlockEntry<? extends StairBlock>> STAIRS = STAIR_TEMPLATES
 			.build((object, textureType) -> REGISTRATE
-					.block(object.getId().getPath() + "_stairs", p -> new StairsBlock(() -> object.get().defaultBlockState(), p))
+					.block(object.getId().getPath() + "_stairs", p -> new StairBlock(() -> object.get().defaultBlockState(), p))
 					.initialProperties(NonNullSupplier.of(object))
 					.tag(BlockTags.STAIRS)
 					.blockstate(stairsBlock(object, textureType))

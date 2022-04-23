@@ -1,12 +1,12 @@
 package com.lovetropics.extras.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 
-import net.minecraft.block.AbstractBlock.Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class LightweightBarrierBlock extends CustomBarrierBlock {
     public LightweightBarrierBlock(Properties properties) {
@@ -14,7 +14,7 @@ public class LightweightBarrierBlock extends CustomBarrierBlock {
     }
 
     @Override
-    public float getDestroyProgress(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
+    public float getDestroyProgress(BlockState state, Player player, BlockGetter worldIn, BlockPos pos) {
         return 0.0F;
     }
 

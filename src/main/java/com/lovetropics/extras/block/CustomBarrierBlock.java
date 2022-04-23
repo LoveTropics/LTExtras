@@ -1,20 +1,20 @@
 package com.lovetropics.extras.block;
 
-import net.minecraft.block.BarrierBlock;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.BarrierBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock.Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public abstract class CustomBarrierBlock extends BarrierBlock {
     public CustomBarrierBlock(Properties properties) {
@@ -23,8 +23,8 @@ public abstract class CustomBarrierBlock extends BarrierBlock {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
-        ClientPlayerEntity player = Minecraft.getInstance().player;
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+        LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             return;
         }
@@ -34,7 +34,7 @@ public abstract class CustomBarrierBlock extends BarrierBlock {
         }
     }
 
-    private boolean isHoldingBarrier(PlayerEntity player) {
+    private boolean isHoldingBarrier(Player player) {
         Item item = this.asItem();
         return player.getMainHandItem().getItem() == item
                 || player.getOffhandItem().getItem() == item;

@@ -3,9 +3,9 @@ package com.lovetropics.extras.data;
 import com.lovetropics.extras.BlockFactory;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public final class ImposterBlockTemplate {
     public final BlockFactory<? extends Block> factory;

@@ -1,9 +1,9 @@
 package com.lovetropics.extras.perf;
 
 import it.unimi.dsi.fastutil.HashCommon;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.ChunkStatus;
-import net.minecraft.world.chunk.IChunk;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -17,14 +17,14 @@ public final class LossyChunkCache {
     private final int mask;
 
     private final long[] keys;
-    private final IChunk[] values;
+    private final ChunkAccess[] values;
 
     public LossyChunkCache(int capacity) {
-        capacity = MathHelper.smallestEncompassingPowerOfTwo(capacity);
+        capacity = Mth.smallestEncompassingPowerOfTwo(capacity);
         this.mask = capacity - 1;
 
         this.keys = new long[capacity];
-        this.values = new IChunk[capacity];
+        this.values = new ChunkAccess[capacity];
     }
 
     public void clear() {
@@ -32,7 +32,7 @@ public final class LossyChunkCache {
         Arrays.fill(this.values, null);
     }
 
-    public void put(int x, int z, ChunkStatus status, IChunk chunk) {
+    public void put(int x, int z, ChunkStatus status, ChunkAccess chunk) {
         if (chunk == null) {
             return;
         }
@@ -45,7 +45,7 @@ public final class LossyChunkCache {
     }
 
     @Nullable
-    public IChunk get(int x, int z, ChunkStatus step) {
+    public ChunkAccess get(int x, int z, ChunkStatus step) {
         long key = key(x, z, step);
         int index = this.index(key);
 

@@ -1,12 +1,12 @@
 package com.lovetropics.extras.perf;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeColors;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.world.level.ColorResolver;
 
 import javax.annotation.Nullable;
@@ -26,7 +26,7 @@ public final class BiomeColorSampler {
         this.homogenous = homogenous;
     }
 
-    public static BiomeColorSampler create(World world, ChunkPos chunkPos) {
+    public static BiomeColorSampler create(Level world, ChunkPos chunkPos) {
         int blendRadius = Minecraft.getInstance().options.biomeBlendRadius;
         Shape sampleShape = new Shape(
                 chunkPos.getMinBlockX() - blendRadius, chunkPos.getMinBlockZ() - blendRadius,
@@ -40,7 +40,7 @@ public final class BiomeColorSampler {
     }
 
     @Nullable
-    private static Biome sampleBiomes(World world, Shape shape, Biome[] biomes) {
+    private static Biome sampleBiomes(Level world, Shape shape, Biome[] biomes) {
         boolean homogenous = true;
         Biome lastBiome = null;
 
@@ -49,7 +49,7 @@ public final class BiomeColorSampler {
         int sizeX = shape.sizeX;
         int sizeZ = shape.sizeZ;
 
-        BlockPos.Mutable mutablePos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
         for (int z = 0; z < sizeZ; z++) {
             for (int x = 0; x < sizeX; x++) {

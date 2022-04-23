@@ -1,16 +1,16 @@
 package com.lovetropics.extras.entity.ai;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
-public class MoveBackToOriginGoal extends RandomWalkingGoal {
-    private final Vector3d vec;
+public class MoveBackToOriginGoal extends RandomStrollGoal {
+    private final Vec3 vec;
     private final int rangeSq;
 
-    public MoveBackToOriginGoal(CreatureEntity creatureIn, double speedIn, Vector3d vec, int range) {
+    public MoveBackToOriginGoal(PathfinderMob creatureIn, double speedIn, Vec3 vec, int range) {
         super(creatureIn, speedIn);
         this.vec = vec;
         this.rangeSq = range * range;
@@ -19,7 +19,7 @@ public class MoveBackToOriginGoal extends RandomWalkingGoal {
     @Override
     public boolean canUse() {
         if (this.mob.position().distanceToSqr(this.vec) > this.rangeSq) {
-            Vector3d vec = this.getPosition();
+            Vec3 vec = this.getPosition();
 
             if (vec == null) {
                 return false;
@@ -38,7 +38,7 @@ public class MoveBackToOriginGoal extends RandomWalkingGoal {
 
     @Nullable
     @Override
-    protected Vector3d getPosition() {
+    protected Vec3 getPosition() {
         return this.vec;
     }
 }

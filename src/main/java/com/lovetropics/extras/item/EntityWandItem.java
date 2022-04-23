@@ -2,22 +2,22 @@ package com.lovetropics.extras.item;
 
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.entity.ExtendedCreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 
-import net.minecraft.item.Item.Properties;
+import net.minecraft.world.item.Item.Properties;
 
 public class EntityWandItem extends Item {
     public EntityWandItem(Properties properties) {
@@ -25,16 +25,16 @@ public class EntityWandItem extends Item {
     }
 
     @Override
-    public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+    public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
         if (!playerIn.level.isClientSide()) {
             if (target instanceof ExtendedCreatureEntity) {
                 int id = target.getId();
                 ItemStack stack1 = playerIn.getItemInHand(hand);
                 stack1.getOrCreateTag().putInt("EntityId", id);
-                playerIn.displayClientMessage(new StringTextComponent("Targeted entity!"), true);
-                return ActionResultType.SUCCESS;
+                playerIn.displayClientMessage(new TextComponent("Targeted entity!"), true);
+                return InteractionResult.SUCCESS;
             } else {
-                playerIn.displayClientMessage(new StringTextComponent("This entity cannot be targeted!"), true);
+                playerIn.displayClientMessage(new TextComponent("This entity cannot be targeted!"), true);
             }
         }
 
@@ -42,17 +42,17 @@ public class EntityWandItem extends Item {
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         BlockPos pos = context.getClickedPos();
-        World world = context.getLevel();
+        Level world = context.getLevel();
         ItemStack stack = context.getItemInHand();
 
         if (!world.isClientSide()) {
-            TileEntity te = world.getBlockEntity(pos);
+            BlockEntity te = world.getBlockEntity(pos);
 
             if (te instanceof MobControllerBlockEntity) {
                 MobControllerBlockEntity mobController = (MobControllerBlockEntity) te;
-                CompoundNBT nbt = stack.getTag();
+                CompoundTag nbt = stack.getTag();
 
                 if (nbt != null && nbt.contains("EntityId")) {
                     int id = nbt.getInt("EntityId");
@@ -60,7 +60,7 @@ public class EntityWandItem extends Item {
                     Entity entity = world.getEntity(id);
                     if (entity != null) {
                         mobController.addEntity(entity);
-                        context.getPlayer().displayClientMessage(new StringTextComponent("Added entity!"), true);
+                        context.getPlayer().displayClientMessage(new TextComponent("Added entity!"), true);
                     }
                 }
             }

@@ -6,10 +6,10 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.impl.TeamCommand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentUtils;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.commands.TeamCommand;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 
 @Mixin(TeamCommand.class)
 public class TeamCommandMixin {
@@ -26,7 +26,7 @@ public class TeamCommandMixin {
 	 * modify command must be used again.
 	 */
 	@ModifyVariable(at = @At("HEAD"), method = { "setPrefix", "setSuffix" }, argsOnly = true)
-	private static ITextComponent updateComponent(ITextComponent component, CommandSource source) throws CommandSyntaxException {
-		return TextComponentUtils.updateForEntity(source, component, null, 0);
+	private static Component updateComponent(Component component, CommandSourceStack source) throws CommandSyntaxException {
+		return ComponentUtils.updateForEntity(source, component, null, 0);
 	}
 }
