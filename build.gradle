@@ -2,10 +2,12 @@ buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
         maven { url = 'https://repo.spongepowered.org/maven' }
+        maven { url = 'https://maven.parchmentmc.org' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath "org.parchmentmc:librarian:1.+"
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
@@ -13,6 +15,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 
@@ -26,8 +29,8 @@ version = "${mod_version}-${release_type}+${buildnumber}"
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official', version: minecraft_version
-    
+    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -105,7 +108,7 @@ dependencies {
     def registrate = "com.tterrag.registrate:Registrate:MC${minecraft_version}-${registrate_version}"
     implementation fg.deobf(registrate)
     shade registrate
-    
+
     def ltlib = "com.lovetropics.lib:LTLib:${ltlib_version}"
     implementation fg.deobf(ltlib)
     shade ltlib
