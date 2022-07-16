@@ -23,7 +23,6 @@
     "client.perf.ChunkRenderMixin",
     "client.perf.ClientChunkCacheStorageMixin",
     "client.perf.ClientWorldMixin",
-    "client.perf.RenderTypeLookupMixin",
     "client.perf.ViewFrustumAccess",
     "client.perf.WorldRendererAccess"
   ],
