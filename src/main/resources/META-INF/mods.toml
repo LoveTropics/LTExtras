@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[36,)"
+loaderVersion="[40,)"
 issueTrackerURL="https://github.com/LoveTropics/LTExtras/issues"
 license="All Rights Reserved"
 
@@ -7,7 +7,7 @@ license="All Rights Reserved"
 modId="ltextras"
 version="${file.jarVersion}"
 displayName="LTExtras"
-displayURL="https://lovetropics.com"
+displayURL="https://lovetropics.org"
 credits=""
 authors="tterrag"
 description='''
@@ -17,14 +17,14 @@ Extra content for the LoveTropics map build.
 [[dependencies.ltextras]] 
     modId="forge"
     mandatory=true 
-    versionRange="[31.2.44,)"
+    versionRange="[40.1.0,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.ltextras]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16,)"
+    versionRange="[1.18,)"
     ordering="NONE"
     side="BOTH"
 
