@@ -144,6 +144,8 @@ public class ExtraBlocks {
     	return REGISTRATE.block((name.isEmpty() ? name : (name + "_")) + "steel_girder", p -> new GirderBlock(TAG_STEEL_GIRDERS, p))
 			.initialProperties(() -> Blocks.IRON_BARS)
 			.tag(TAG_STEEL_GIRDERS)
+			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
+			.tag(BlockTags.NEEDS_IRON_TOOL)
 			.blockstate(ModelGenUtil::steelGirderBlockstate)
 			.simpleItem()
 			.register();
@@ -172,6 +174,8 @@ public class ExtraBlocks {
     					.addModels(scaffoldingModel(ctx, prov, "stable")))
     		.addLayer(() -> RenderType::cutout)
 			.tag(BlockTags.CLIMBABLE)
+			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
+			.tag(BlockTags.NEEDS_IRON_TOOL)
     		.item(ScaffoldingBlockItem::new)
     			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/metal_scaffolding_stable")))
     			.build()
@@ -181,6 +185,8 @@ public class ExtraBlocks {
     		.initialProperties(() -> Blocks.IRON_BARS)
     		.blockstate((ctx, prov) -> barsBlock(ctx, prov))
     		.addLayer(() -> RenderType::cutout)
+			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
+			.tag(BlockTags.NEEDS_IRON_TOOL)
     		.item()
     			.model((ctx, prov) -> prov.blockSprite(ctx))
     			.build()
@@ -189,6 +195,8 @@ public class ExtraBlocks {
     public static final BlockEntry<LadderBlock> METAL_LADDER = REGISTRATE.block("metal_ladder", p -> (LadderBlock) new LadderBlock(p) {})
     		.initialProperties(() -> Blocks.IRON_BARS)
 			.tag(BlockTags.CLIMBABLE)
+			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
+			.tag(BlockTags.NEEDS_IRON_TOOL)
 			.blockstate((ctx, prov) -> prov.horizontalBlock(ctx.getEntry(), prov.models()
     				.withExistingParent(ctx.getName(), "block/ladder")
     				.texture("texture", prov.blockTexture(ctx.getEntry()))
@@ -201,6 +209,8 @@ public class ExtraBlocks {
 
     public static final BlockEntry<Block> RUSTY_PAINTED_METAL = REGISTRATE.block("rusty_painted_metal", Block::new)
     		.initialProperties(() -> Blocks.IRON_BLOCK)
+			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
+			.tag(BlockTags.NEEDS_IRON_TOOL)
     		.simpleItem()
     		.register();
 
@@ -357,6 +367,7 @@ public class ExtraBlocks {
 			.initialProperties(() -> Blocks.SPRUCE_DOOR)
 			.blockstate((ctx, prov) -> {})
 			.addLayer(() -> RenderType::cutout)
+			.tag(BlockTags.MINEABLE_WITH_AXE)
 			.item()
 			.model((ctx, prov) -> prov.generated(ctx, new ResourceLocation("item/spruce_door")))
 			.build()
