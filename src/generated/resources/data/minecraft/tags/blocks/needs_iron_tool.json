@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "ltextras:steel_girder",
+    "ltextras:rusting_steel_girder",
+    "ltextras:rusted_steel_girder",
+    "ltextras:metal_scaffolding",
+    "ltextras:rusty_iron_bars",
+    "ltextras:metal_ladder",
+    "ltextras:rusty_painted_metal"
+  ]
+}
