@@ -20,6 +20,7 @@
     "tag.ReferenceHolderMixin"
   ],
   "client": [
+    "client.LocalPlayerMixin",
     "client.perf.BlockModelRendererCacheMixin",
     "client.perf.ChunkRenderMixin",
     "client.perf.ClientChunkCacheStorageMixin",

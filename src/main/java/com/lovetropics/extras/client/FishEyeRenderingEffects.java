@@ -17,7 +17,6 @@ public class FishEyeRenderingEffects {
     public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
         LocalPlayer player = CLIENT.player;
         if (player != null && player.hasEffect(ExtraEffects.FISH_EYE.get())) {
-            event.scaleNearPlaneDistance(1.25f);
             event.scaleFarPlaneDistance(1.25f);
             event.setCanceled(true);
         }
