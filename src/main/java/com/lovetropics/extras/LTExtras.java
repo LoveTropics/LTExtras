@@ -3,6 +3,7 @@ package com.lovetropics.extras;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.command.GenerateCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
+import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
@@ -81,6 +82,7 @@ public class LTExtras {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		ExtraParticles.REGISTER.register(modBus);
+		ExtraEffects.REGISTER.register(modBus);
 
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			modBus.addListener(this::clientSetup);
@@ -90,7 +92,10 @@ public class LTExtras {
 		MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
 
 		registrate()
-			.addDataGenerator(ProviderType.LANG, p -> p.add(ITEM_GROUP, "LTExtras"));
+			.addDataGenerator(ProviderType.LANG, p -> {
+				p.add(ITEM_GROUP, "LTExtras");
+				p.add(ExtraEffects.FISH_EYE.get(), "Fish Eye");
+			});
 
         // Mark WorldEdit as only required on the server
 		ModList.get().getModContainerById("worldedit").ifPresent(worldedit -> {

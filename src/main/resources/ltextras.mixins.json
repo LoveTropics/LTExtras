@@ -10,13 +10,14 @@
     "FluidStateMixin",
     "ItemStackMixin",
     "PlayerListMixin",
-    "tag.ReferenceHolderMixin",
+    "PlayerMixin",
     "ScaffoldingBlockMixin",
     "TeamCommandMixin",
     "perf.BiomeManagerMixin",
     "perf.ChunkManagerMixin",
     "perf.MapDataMixin",
-    "perf.ServerChunkProviderMixin"
+    "perf.ServerChunkProviderMixin",
+    "tag.ReferenceHolderMixin"
   ],
   "client": [
     "client.perf.BlockModelRendererCacheMixin",

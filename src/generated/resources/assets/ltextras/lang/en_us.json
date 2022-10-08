@@ -72,6 +72,7 @@
   "block.ltextras.water_barrier": "Water Barrier",
   "block.ltextras.white_glow_sticks": "White Glow Sticks",
   "block.ltextras.yellow_glow_sticks": "Yellow Glow Sticks",
+  "effect.ltextras.fish_eye": "Fish Eye",
   "item.ltextras.entity_wand": "Entity Wand",
   "itemGroup.ltextras": "LTExtras"
 }
