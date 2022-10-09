@@ -9,6 +9,7 @@
     "CreatureEntityMixin",
     "FluidStateMixin",
     "ItemStackMixin",
+    "LivingEntityMixin",
     "PlayerListMixin",
     "PlayerMixin",
     "ScaffoldingBlockMixin",
