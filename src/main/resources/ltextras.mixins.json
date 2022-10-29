@@ -17,6 +17,8 @@
     "perf.BiomeManagerMixin",
     "perf.ChunkManagerMixin",
     "perf.ServerChunkProviderMixin",
+    "tag.MappedRegistryMixin",
+    "tag.NamespacedHolderHelperMixin",
     "tag.ReferenceHolderMixin"
   ],
   "client": [
