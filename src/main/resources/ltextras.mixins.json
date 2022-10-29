@@ -16,7 +16,6 @@
     "TeamCommandMixin",
     "perf.BiomeManagerMixin",
     "perf.ChunkManagerMixin",
-    "perf.MapDataMixin",
     "perf.ServerChunkProviderMixin",
     "tag.ReferenceHolderMixin"
   ],
