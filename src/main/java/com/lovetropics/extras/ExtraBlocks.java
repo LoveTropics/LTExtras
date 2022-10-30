@@ -532,6 +532,25 @@ public class ExtraBlocks {
 					.register()
 			);
 
+	// Seagrasses
+
+	private static BlockEntry<CustomSeagrassBlock> seagrass(final String blockName, final String latinName) {
+		return REGISTRATE.block(blockName, p -> (CustomSeagrassBlock) new CustomSeagrassBlock(p, latinName) {}).lang("Seagrass")
+				.initialProperties(() -> Blocks.SEAGRASS)
+				.addLayer(() -> RenderType::cutout)
+				.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
+						.withExistingParent(ctx.getName(), "block/template_seagrass")
+						.texture("texture", prov.blockTexture(ctx.getEntry()))
+						.texture("particle", prov.blockTexture(ctx.getEntry()))))
+				.addLayer(() -> RenderType::cutout)
+				.item()
+				.model((ctx, prov) -> prov.blockSprite(ctx))
+				.build()
+				.register();
+	}
+
+	public static final BlockEntry<CustomSeagrassBlock> SYRINGODIUM_ISOETIFOLIUM = seagrass("syringodium_isoetifolium", "Syringodium Isoetifolium");
+
 	public static void init() {
 	}
 

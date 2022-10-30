@@ -1,15 +1,9 @@
 {
   "variants": {
-    "knot=false,waterlogged=false": {
+    "knot=false": {
       "model": "ltextras:block/paracord"
     },
-    "knot=true,waterlogged=false": {
-      "model": "ltextras:block/paracord_knot"
-    },
-    "knot=false,waterlogged=true": {
-      "model": "ltextras:block/paracord"
-    },
-    "knot=true,waterlogged=true": {
+    "knot=true": {
       "model": "ltextras:block/paracord_knot"
     }
   }
