@@ -106,14 +106,14 @@ public class ExtraBlocks {
 
 	// One-off custom blocks
 
-    public static final BlockEntry<WaterBarrierBlock> WATER_BARRIER = REGISTRATE.block("water_barrier", WaterBarrierBlock::new)
-            .properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
-            .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
-                    prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
-            .item()
-                .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/water_still"), new ResourceLocation("item/barrier")))
-                .build()
-            .register();
+	public static final BlockEntry<WaterBarrierBlock> WATER_BARRIER = REGISTRATE.block("water_barrier", WaterBarrierBlock::new)
+			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
+					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
+			.item()
+				.model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/water_still"), new ResourceLocation("item/barrier")))
+				.build()
+			.register();
 
 	public static final BlockEntry<LightweightBarrierBlock> LIGHTWEIGHT_BARRIER = REGISTRATE.block("lightweight_barrier", LightweightBarrierBlock::new)
 			.properties(p -> Block.Properties.copy(Blocks.BARRIER).strength(0.0F, 3.6e6f).noDrops())
@@ -133,60 +133,60 @@ public class ExtraBlocks {
 			.build()
 			.register();
 
-    public static final BlockEntry<FakeWaterBlock> FAKE_WATER = REGISTRATE.block("fake_water", FakeWaterBlock::new)
-            .properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
-            .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
-                    prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("block/water_still"))))
-            .item()
-                .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/water_still")))
-                .build()
-            .register();
+	public static final BlockEntry<FakeWaterBlock> FAKE_WATER = REGISTRATE.block("fake_water", FakeWaterBlock::new)
+			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
+					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("block/water_still"))))
+			.item()
+				.model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/water_still")))
+				.build()
+			.register();
 
-    public static final BlockEntry<CustomShapeBlock> BUOY = REGISTRATE.block("buoy", p -> new CustomShapeBlock(
-                    Shapes.or(
-                            Block.box(2, 0, 2, 14, 3, 14),
-                            Block.box(3, 3, 3, 13, 14, 13)),
-                    p))
-            .properties(p -> Block.Properties.copy(Blocks.BEACON))
-            .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
-                    .withExistingParent(ctx.getName(), new ResourceLocation("block/block"))
-                        .ao(false)
-                        .texture("beacon", new ResourceLocation("block/beacon"))
-                        .texture("base", new ResourceLocation("block/dark_prismarine"))
-                        .texture("particle", new ResourceLocation("block/dark_prismarine"))
-                        .element()
-                            .from(2, 0, 2)
-                            .to(14, 3, 14)
-                            .textureAll("#base")
-                            .face(Direction.DOWN).cullface(Direction.DOWN).end()
-                            .end()
-                        .element()
-                            .from(3, 3, 3)
-                            .to(13, 14, 13)
-                            .textureAll("#beacon")
-                            .end()))
-            .item(BouyBlockItem::new).build()
-            .register();
+	public static final BlockEntry<CustomShapeBlock> BUOY = REGISTRATE.block("buoy", p -> new CustomShapeBlock(
+					Shapes.or(
+							Block.box(2, 0, 2, 14, 3, 14),
+							Block.box(3, 3, 3, 13, 14, 13)),
+					p))
+			.properties(p -> Block.Properties.copy(Blocks.BEACON))
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
+					.withExistingParent(ctx.getName(), new ResourceLocation("block/block"))
+						.ao(false)
+						.texture("beacon", new ResourceLocation("block/beacon"))
+						.texture("base", new ResourceLocation("block/dark_prismarine"))
+						.texture("particle", new ResourceLocation("block/dark_prismarine"))
+						.element()
+							.from(2, 0, 2)
+							.to(14, 3, 14)
+							.textureAll("#base")
+							.face(Direction.DOWN).cullface(Direction.DOWN).end()
+							.end()
+						.element()
+							.from(3, 3, 3)
+							.to(13, 14, 13)
+							.textureAll("#beacon")
+							.end()))
+			.item(BouyBlockItem::new).build()
+			.register();
 
-    public static final BlockEntry<PanelBlock> GLASS_PANEL = REGISTRATE.block("glass_panel", PanelBlock::new)
-    		.initialProperties(() -> Blocks.GLASS)
-    		.blockstate((ctx, prov) -> prov.directionalBlock(ctx.get(), prov.models()
-    				.trapdoorTop(ctx.getName(), prov.blockTexture(Blocks.GLASS))))
-    		.loot(BlockLoot::dropWhenSilkTouch)
-    		.addLayer(() -> RenderType::cutout)
-    		.item()
-    			.model((ctx, prov) -> prov.trapdoorBottom(ctx.getName(), prov.mcLoc("block/glass")))
-    			.build()
-    		.register();
+	public static final BlockEntry<PanelBlock> GLASS_PANEL = REGISTRATE.block("glass_panel", PanelBlock::new)
+			.initialProperties(() -> Blocks.GLASS)
+			.blockstate((ctx, prov) -> prov.directionalBlock(ctx.get(), prov.models()
+					.trapdoorTop(ctx.getName(), prov.blockTexture(Blocks.GLASS))))
+			.loot(BlockLoot::dropWhenSilkTouch)
+			.addLayer(() -> RenderType::cutout)
+			.item()
+				.model((ctx, prov) -> prov.trapdoorBottom(ctx.getName(), prov.mcLoc("block/glass")))
+				.build()
+			.register();
 
-    public static final TagKey<Block> TAG_STEEL_GIRDERS = BlockTags.create(new ResourceLocation(LTExtras.MODID, "steel_girders"));
+	public static final TagKey<Block> TAG_STEEL_GIRDERS = BlockTags.create(new ResourceLocation(LTExtras.MODID, "steel_girders"));
 
-    public static final BlockEntry<GirderBlock> STEEL_GIRDER = steelGirder("");
-    public static final BlockEntry<GirderBlock> RUSTING_STEEL_GIRDER = steelGirder("rusting");
-    public static final BlockEntry<GirderBlock> RUSTED_STEEL_GIRDER = steelGirder("rusted");
+	public static final BlockEntry<GirderBlock> STEEL_GIRDER = steelGirder("");
+	public static final BlockEntry<GirderBlock> RUSTING_STEEL_GIRDER = steelGirder("rusting");
+	public static final BlockEntry<GirderBlock> RUSTED_STEEL_GIRDER = steelGirder("rusted");
 
-    private static BlockEntry<GirderBlock> steelGirder(String name) {
-    	return REGISTRATE.block((name.isEmpty() ? name : (name + "_")) + "steel_girder", p -> new GirderBlock(TAG_STEEL_GIRDERS, p))
+	private static BlockEntry<GirderBlock> steelGirder(String name) {
+		return REGISTRATE.block((name.isEmpty() ? name : (name + "_")) + "steel_girder", p -> new GirderBlock(TAG_STEEL_GIRDERS, p))
 			.initialProperties(() -> Blocks.IRON_BARS)
 			.tag(TAG_STEEL_GIRDERS)
 			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
@@ -194,70 +194,70 @@ public class ExtraBlocks {
 			.blockstate(ModelGenUtil::steelGirderBlockstate)
 			.simpleItem()
 			.register();
-    }
+	}
 
-    public static final BlockEntry<CheckpointBlock> CHECKPOINT = REGISTRATE.block("checkpoint", CheckpointBlock::new)
-            .properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
-    		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
+	public static final BlockEntry<CheckpointBlock> CHECKPOINT = REGISTRATE.block("checkpoint", CheckpointBlock::new)
+			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
 				.getBuilder(ctx.getName()).texture("particle", prov.mcLoc("item/structure_void"))))
-            .item()
-	            .model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("item/structure_void")))
-	            .build()
-    		.register();
+			.item()
+				.model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("item/structure_void")))
+				.build()
+			.register();
 
-    public static final BlockEntry<ScaffoldingBlock> METAL_SCAFFOLDING = REGISTRATE.block("metal_scaffolding", p -> (ScaffoldingBlock) new ScaffoldingBlock(p) {
+	public static final BlockEntry<ScaffoldingBlock> METAL_SCAFFOLDING = REGISTRATE.block("metal_scaffolding", p -> (ScaffoldingBlock) new ScaffoldingBlock(p) {
 		@Override
 		public boolean isScaffolding(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
 			return true;
 		}
 	})
-    		.initialProperties(() -> Blocks.SCAFFOLDING)
-    		.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
-    				.partialState().with(ScaffoldingBlock.BOTTOM, true)
-    					.addModels(scaffoldingModel(ctx, prov, "unstable"))
-    				.partialState().with(ScaffoldingBlock.BOTTOM, false)
-    					.addModels(scaffoldingModel(ctx, prov, "stable")))
-    		.addLayer(() -> RenderType::cutout)
+			.initialProperties(() -> Blocks.SCAFFOLDING)
+			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
+					.partialState().with(ScaffoldingBlock.BOTTOM, true)
+						.addModels(scaffoldingModel(ctx, prov, "unstable"))
+					.partialState().with(ScaffoldingBlock.BOTTOM, false)
+						.addModels(scaffoldingModel(ctx, prov, "stable")))
+			.addLayer(() -> RenderType::cutout)
 			.tag(BlockTags.CLIMBABLE)
 			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
 			.tag(BlockTags.NEEDS_IRON_TOOL)
-    		.item(ScaffoldingBlockItem::new)
-    			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/metal_scaffolding_stable")))
-    			.build()
-    		.register();
+			.item(ScaffoldingBlockItem::new)
+				.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/metal_scaffolding_stable")))
+				.build()
+			.register();
 
-    public static final BlockEntry<IronBarsBlock> RUSTY_IRON_BARS = REGISTRATE.block("rusty_iron_bars", p -> (IronBarsBlock) new IronBarsBlock(p) {})
-    		.initialProperties(() -> Blocks.IRON_BARS)
-    		.blockstate((ctx, prov) -> barsBlock(ctx, prov))
-    		.addLayer(() -> RenderType::cutout)
+	public static final BlockEntry<IronBarsBlock> RUSTY_IRON_BARS = REGISTRATE.block("rusty_iron_bars", p -> (IronBarsBlock) new IronBarsBlock(p) {})
+			.initialProperties(() -> Blocks.IRON_BARS)
+			.blockstate((ctx, prov) -> barsBlock(ctx, prov))
+			.addLayer(() -> RenderType::cutout)
 			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
 			.tag(BlockTags.NEEDS_IRON_TOOL)
-    		.item()
-    			.model((ctx, prov) -> prov.blockSprite(ctx))
-    			.build()
-    		.register();
+			.item()
+				.model((ctx, prov) -> prov.blockSprite(ctx))
+				.build()
+			.register();
 
-    public static final BlockEntry<LadderBlock> METAL_LADDER = REGISTRATE.block("metal_ladder", p -> (LadderBlock) new LadderBlock(p) {})
-    		.initialProperties(() -> Blocks.IRON_BARS)
+	public static final BlockEntry<LadderBlock> METAL_LADDER = REGISTRATE.block("metal_ladder", p -> (LadderBlock) new LadderBlock(p) {})
+			.initialProperties(() -> Blocks.IRON_BARS)
 			.tag(BlockTags.CLIMBABLE)
 			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
 			.tag(BlockTags.NEEDS_IRON_TOOL)
 			.blockstate((ctx, prov) -> prov.horizontalBlock(ctx.getEntry(), prov.models()
-    				.withExistingParent(ctx.getName(), "block/ladder")
-    				.texture("texture", prov.blockTexture(ctx.getEntry()))
-    				.texture("particle", prov.blockTexture(ctx.getEntry()))))
-    		.addLayer(() -> RenderType::cutout)
-    		.item()
-    			.model((ctx, prov) -> prov.blockSprite(ctx))
-    			.build()
-    		.register();
+					.withExistingParent(ctx.getName(), "block/ladder")
+					.texture("texture", prov.blockTexture(ctx.getEntry()))
+					.texture("particle", prov.blockTexture(ctx.getEntry()))))
+			.addLayer(() -> RenderType::cutout)
+			.item()
+				.model((ctx, prov) -> prov.blockSprite(ctx))
+				.build()
+			.register();
 
-    public static final BlockEntry<Block> RUSTY_PAINTED_METAL = REGISTRATE.block("rusty_painted_metal", Block::new)
-    		.initialProperties(() -> Blocks.IRON_BLOCK)
+	public static final BlockEntry<Block> RUSTY_PAINTED_METAL = REGISTRATE.block("rusty_painted_metal", Block::new)
+			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
 			.tag(BlockTags.NEEDS_IRON_TOOL)
-    		.simpleItem()
-    		.register();
+			.simpleItem()
+			.register();
 
 	public static final BlockEntry<MobControllerBlock> MOB_CONTROLLER = REGISTRATE.block("mob_controller", MobControllerBlock::new)
 			.initialProperties(() -> Blocks.IRON_BLOCK)
@@ -276,12 +276,12 @@ public class ExtraBlocks {
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), ConfiguredModel.allYRotations(prov.models().getExistingFile(new ResourceLocation("block/black_concrete_powder")), 0, false)))
 			.register();
 
-    public static final BlockEntry<StainedGlassBlock> SMOOTH_LIGHT_GRAY_STAINED_GLASS = REGISTRATE.block("smooth_light_gray_stained_glass", p -> new StainedGlassBlock(DyeColor.LIGHT_GRAY, p))
-    		.initialProperties(() -> Blocks.LIGHT_GRAY_STAINED_GLASS)
-    		.loot(RegistrateBlockLootTables::dropWhenSilkTouch)
-    		.addLayer(() -> RenderType::translucent)
-    		.simpleItem()
-    		.register();
+	public static final BlockEntry<StainedGlassBlock> SMOOTH_LIGHT_GRAY_STAINED_GLASS = REGISTRATE.block("smooth_light_gray_stained_glass", p -> new StainedGlassBlock(DyeColor.LIGHT_GRAY, p))
+			.initialProperties(() -> Blocks.LIGHT_GRAY_STAINED_GLASS)
+			.loot(RegistrateBlockLootTables::dropWhenSilkTouch)
+			.addLayer(() -> RenderType::translucent)
+			.simpleItem()
+			.register();
 
 	public static final BlockEntry<ReedsBlock> REEDS = REGISTRATE.block("reeds", ReedsBlock::new)
 			.properties(p -> Block.Properties.copy(Blocks.SUGAR_CANE).noDrops())
@@ -495,7 +495,7 @@ public class ExtraBlocks {
 					}
 			);
 
-    // Custom stairs/fences/walls/etc
+	// Custom stairs/fences/walls/etc
 
 	private static final TemplateBuilder<StairBlock, TextureType> STAIR_TEMPLATES = new TemplateBuilder<StairBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())

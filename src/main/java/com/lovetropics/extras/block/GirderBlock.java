@@ -108,7 +108,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock {
 
 	@Override
 	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
+								  BlockPos currentPos, BlockPos facingPos) {
 		if (stateIn.getValue(WATERLOGGED)) {
 			worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
 		}
@@ -116,7 +116,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock {
 		boolean connected = false;
 		for (Axis a : Axis.values()) {
 			if (worldIn.getBlockState(currentPos.relative(Direction.get(AxisDirection.NEGATIVE, a))).is(connectionTag)
-			 || worldIn.getBlockState(currentPos.relative(Direction.get(AxisDirection.POSITIVE, a))).is(connectionTag)) {
+					|| worldIn.getBlockState(currentPos.relative(Direction.get(AxisDirection.POSITIVE, a))).is(connectionTag)) {
 				connected = true;
 				ret = ret.setValue(PROPS.get(a), true);
 			} else {

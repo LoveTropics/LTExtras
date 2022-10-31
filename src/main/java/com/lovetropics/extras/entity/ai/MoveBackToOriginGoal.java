@@ -7,38 +7,38 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 
 public class MoveBackToOriginGoal extends RandomStrollGoal {
-    private final Vec3 vec;
-    private final int rangeSq;
+	private final Vec3 vec;
+	private final int rangeSq;
 
-    public MoveBackToOriginGoal(PathfinderMob creatureIn, double speedIn, Vec3 vec, int range) {
-        super(creatureIn, speedIn);
-        this.vec = vec;
-        this.rangeSq = range * range;
-    }
+	public MoveBackToOriginGoal(PathfinderMob creatureIn, double speedIn, Vec3 vec, int range) {
+		super(creatureIn, speedIn);
+		this.vec = vec;
+		this.rangeSq = range * range;
+	}
 
-    @Override
-    public boolean canUse() {
-        if (this.mob.position().distanceToSqr(this.vec) > this.rangeSq) {
-            Vec3 vec = this.getPosition();
+	@Override
+	public boolean canUse() {
+		if (this.mob.position().distanceToSqr(this.vec) > this.rangeSq) {
+			Vec3 vec = this.getPosition();
 
-            if (vec == null) {
-                return false;
-            }
+			if (vec == null) {
+				return false;
+			}
 
-            // Store position- we don't call super so we must do this ourselves
-            this.wantedX = vec.x();
-            this.wantedY = vec.y();
-            this.wantedZ = vec.z();
+			// Store position- we don't call super so we must do this ourselves
+			this.wantedX = vec.x();
+			this.wantedY = vec.y();
+			this.wantedZ = vec.z();
 
-            return true;
-        }
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    @Nullable
-    @Override
-    protected Vec3 getPosition() {
-        return this.vec;
-    }
+	@Nullable
+	@Override
+	protected Vec3 getPosition() {
+		return this.vec;
+	}
 }

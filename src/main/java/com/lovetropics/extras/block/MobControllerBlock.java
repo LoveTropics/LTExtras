@@ -14,24 +14,24 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class MobControllerBlock extends BaseEntityBlock {
-    public MobControllerBlock(Properties properties) {
-        super(properties);
-    }
+	public MobControllerBlock(Properties properties) {
+		super(properties);
+	}
 
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
-    }
+	@Override
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.MODEL;
+	}
 
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-        return new MobControllerBlockEntity(ExtraBlocks.MOB_CONTROLLER_BE.get(), pos, state);
-    }
+	@Nullable
+	@Override
+	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
+		return new MobControllerBlockEntity(ExtraBlocks.MOB_CONTROLLER_BE.get(), pos, state);
+	}
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(final Level level, final BlockState state, final BlockEntityType<T> type) {
-        return createTickerHelper(type, ExtraBlocks.MOB_CONTROLLER_BE.get(), MobControllerBlockEntity::tick);
-    }
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(final Level level, final BlockState state, final BlockEntityType<T> type) {
+		return createTickerHelper(type, ExtraBlocks.MOB_CONTROLLER_BE.get(), MobControllerBlockEntity::tick);
+	}
 }

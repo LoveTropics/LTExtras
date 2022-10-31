@@ -65,21 +65,21 @@ public class LTExtras {
 		}
 	};
 
-    private static NonNullLazy<Registrate> registrate = NonNullLazy.of(() ->
-    	Registrate.create(MODID)
+	private static NonNullLazy<Registrate> registrate = NonNullLazy.of(() ->
+		Registrate.create(MODID)
 			.creativeModeTab(() -> ITEM_GROUP));
 
-    public static Registrate registrate() {
-    	return registrate.get();
-    }
+	public static Registrate registrate() {
+		return registrate.get();
+	}
 
 	public LTExtras() {
-    	// Compatible with all versions that match the semver (excluding the qualifier e.g. "-beta+42")
-    	ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(LTExtras::getCompatVersion, (s, v) -> LTExtras.isCompatibleVersion(s)));
+		// Compatible with all versions that match the semver (excluding the qualifier e.g. "-beta+42")
+		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(LTExtras::getCompatVersion, (s, v) -> LTExtras.isCompatibleVersion(s)));
 
 		ExtraBlocks.init();
 
-        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		ExtraParticles.REGISTER.register(modBus);
 		ExtraEffects.REGISTER.register(modBus);
@@ -97,31 +97,31 @@ public class LTExtras {
 				p.add(ExtraEffects.FISH_EYE.get(), "Fish Eye");
 			});
 
-        // Mark WorldEdit as only required on the server
+		// Mark WorldEdit as only required on the server
 		ModList.get().getModContainerById("worldedit").ifPresent(worldedit -> {
 			ModLoadingContext.get().setActiveContainer(worldedit);
-	        ModLoadingContext.get().registerExtensionPoint(
-	            IExtensionPoint.DisplayTest.class,
-	            () -> new IExtensionPoint.DisplayTest(
-	                () -> NetworkConstants.IGNORESERVERONLY,
-	                (a, b) -> true
-	            )
-	        );
+			ModLoadingContext.get().registerExtensionPoint(
+				IExtensionPoint.DisplayTest.class,
+				() -> new IExtensionPoint.DisplayTest(
+					() -> NetworkConstants.IGNORESERVERONLY,
+					(a, b) -> true
+				)
+			);
 		});
 
 		LTExtrasNetwork.register();
 	}
 
-    private static final Pattern QUALIFIER = Pattern.compile("-\\w+\\+\\d+");
-    public static String getCompatVersion() {
-    	return getCompatVersion(ModList.get().getModContainerById(MODID).orElseThrow(IllegalStateException::new).getModInfo().getVersion().toString());
-    }
-    private static String getCompatVersion(String fullVersion) {
-    	return QUALIFIER.matcher(fullVersion).replaceAll("");
-    }
-    public static boolean isCompatibleVersion(String version) {
-    	return getCompatVersion().equals(getCompatVersion(version));
-    }
+	private static final Pattern QUALIFIER = Pattern.compile("-\\w+\\+\\d+");
+	public static String getCompatVersion() {
+		return getCompatVersion(ModList.get().getModContainerById(MODID).orElseThrow(IllegalStateException::new).getModInfo().getVersion().toString());
+	}
+	private static String getCompatVersion(String fullVersion) {
+		return QUALIFIER.matcher(fullVersion).replaceAll("");
+	}
+	public static boolean isCompatibleVersion(String version) {
+		return getCompatVersion().equals(getCompatVersion(version));
+	}
 
 	private void onRegisterCommands(RegisterCommandsEvent event) {
 		CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
@@ -131,14 +131,14 @@ public class LTExtras {
 
 	@OnlyIn(Dist.CLIENT)
 	private void clientSetup(FMLClientSetupEvent event) {
-	    ForgeConfig.CLIENT.alwaysSetupTerrainOffThread.set(true);
-            ((ForgeConfigSpec) ObfuscationReflectionHelper.getPrivateValue(ForgeConfig.class, null, "clientSpec")).save();
+		ForgeConfig.CLIENT.alwaysSetupTerrainOffThread.set(true);
+			((ForgeConfigSpec) ObfuscationReflectionHelper.getPrivateValue(ForgeConfig.class, null, "clientSpec")).save();
 	}
 
-    @OnlyIn(Dist.CLIENT)
-    private void registerItemColors(ColorHandlerEvent.Item evt) {
-        evt.getItemColors().register((stack, index) -> index == 0 ? Fluids.WATER.getAttributes().getColor() : -1,
-        		ExtraBlocks.WATER_BARRIER.get(),
-        		ExtraBlocks.FAKE_WATER.get());
-    }
+	@OnlyIn(Dist.CLIENT)
+	private void registerItemColors(ColorHandlerEvent.Item evt) {
+		evt.getItemColors().register((stack, index) -> index == 0 ? Fluids.WATER.getAttributes().getColor() : -1,
+				ExtraBlocks.WATER_BARRIER.get(),
+				ExtraBlocks.FAKE_WATER.get());
+	}
 }

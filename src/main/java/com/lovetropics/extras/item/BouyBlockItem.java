@@ -33,7 +33,7 @@ public class BouyBlockItem extends BlockItem {
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		HitResult raytraceresult = getPlayerPOVHitResult(context.getLevel(), context.getPlayer(), ClipContext.Fluid.SOURCE_ONLY);
-		if (raytraceresult.getType() == Type.BLOCK && context.getLevel().getFluidState(((BlockHitResult)raytraceresult).getBlockPos()).getType() == Fluids.WATER) {
+		if (raytraceresult.getType() == Type.BLOCK && context.getLevel().getFluidState(((BlockHitResult) raytraceresult).getBlockPos()).getType() == Fluids.WATER) {
 			return InteractionResult.PASS;
 		}
 		return super.useOn(context);

@@ -23,58 +23,58 @@ import javax.annotation.Nullable;
 
 public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWaterloggedBlock {
 
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    private static final FluidState WATERLOGGED_FLUID = createNoDripState(Fluids.WATER.getSource(false));
+	private static final FluidState WATERLOGGED_FLUID = createNoDripState(Fluids.WATER.getSource(false));
 
-    private static FluidState createNoDripState(FluidState parent) {
-        FluidState state = new FluidState(parent.getType(), parent.getValues(), parent.propertiesCodec);
-        ((ExtendedFluidState) (Object) state).setNoDripParticles();
-        return state;
-    }
+	private static FluidState createNoDripState(FluidState parent) {
+		FluidState state = new FluidState(parent.getType(), parent.getValues(), parent.propertiesCodec);
+		((ExtendedFluidState) (Object) state).setNoDripParticles();
+		return state;
+	}
 
-    public WaterBarrierBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, true));
-    }
+	public WaterBarrierBlock(Properties properties) {
+		super(properties);
+		this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, true));
+	}
 
-    @Override
-    @Deprecated
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? WATERLOGGED_FLUID : super.getFluidState(state);
-    }
+	@Override
+	@Deprecated
+	public FluidState getFluidState(BlockState state) {
+		return state.getValue(WATERLOGGED) ? WATERLOGGED_FLUID : super.getFluidState(state);
+	}
 
-    @Override
-    @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(WATERLOGGED, true);
-    }
+	@Override
+	@Nullable
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return this.defaultBlockState().setValue(WATERLOGGED, true);
+	}
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> container) {
-        container.add(WATERLOGGED);
-    }
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> container) {
+		container.add(WATERLOGGED);
+	}
 
-    @Override
-    public boolean canPlaceLiquid(BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
-        return false;
-    }
+	@Override
+	public boolean canPlaceLiquid(BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
+		return false;
+	}
 
-    @Override
-    public boolean placeLiquid(LevelAccessor pLevel, BlockPos pPos, BlockState pState, FluidState pFluidState) {
-        return false;
-    }
+	@Override
+	public boolean placeLiquid(LevelAccessor pLevel, BlockPos pPos, BlockState pState, FluidState pFluidState) {
+		return false;
+	}
 
-    @Override
-    public ItemStack pickupBlock(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
-        return ItemStack.EMPTY;
-    }
+	@Override
+	public ItemStack pickupBlock(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+		return ItemStack.EMPTY;
+	}
 
-    @Override
-    public boolean onDestroyedByPlayer(final BlockState state, final Level level, final BlockPos pos, final Player player, final boolean willHarvest, final FluidState fluid) {
-        // Copied from super
-        this.asBlock().playerWillDestroy(level, pos, state, player);
-        // Changed to set air instead of the fluid state
-        return level.setBlock(pos, Blocks.AIR.defaultBlockState(), level.isClientSide ? 11 : 3);
-    }
+	@Override
+	public boolean onDestroyedByPlayer(final BlockState state, final Level level, final BlockPos pos, final Player player, final boolean willHarvest, final FluidState fluid) {
+		// Copied from super
+		this.asBlock().playerWillDestroy(level, pos, state, player);
+		// Changed to set air instead of the fluid state
+		return level.setBlock(pos, Blocks.AIR.defaultBlockState(), level.isClientSide ? 11 : 3);
+	}
 }

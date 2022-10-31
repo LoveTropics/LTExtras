@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = LTExtras.MODID)
 public class FishEyeEffect extends MobEffect {
-    public FishEyeEffect(MobEffectCategory category, int color) {
-        super(category, color);
-    }
+	public FishEyeEffect(MobEffectCategory category, int color) {
+		super(category, color);
+	}
 }

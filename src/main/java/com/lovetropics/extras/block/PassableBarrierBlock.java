@@ -10,17 +10,17 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public final class PassableBarrierBlock extends CustomBarrierBlock {
-    public PassableBarrierBlock(Properties properties) {
-        super(properties);
-    }
+	public PassableBarrierBlock(Properties properties) {
+		super(properties);
+	}
 
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return Shapes.empty();
-    }
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return Shapes.empty();
+	}
 
-    @Override
-    public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return this.getShape(state, world, pos, context);
-    }
+	@Override
+	public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return this.getShape(state, world, pos, context);
+	}
 }

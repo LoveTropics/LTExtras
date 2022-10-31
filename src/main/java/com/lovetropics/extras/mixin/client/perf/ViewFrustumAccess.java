@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(ViewArea.class)
 public interface ViewFrustumAccess {
-    @Invoker("getRenderChunkAt")
-    ChunkRenderDispatcher.RenderChunk ltextras$getRenderChunk(BlockPos pos);
+	@Invoker("getRenderChunkAt")
+	ChunkRenderDispatcher.RenderChunk ltextras$getRenderChunk(BlockPos pos);
 }

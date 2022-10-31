@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(LevelRenderer.class)
 public interface WorldRendererAccess {
-    @Accessor("viewArea")
-    ViewArea getViewFrustum();
+	@Accessor("viewArea")
+	ViewArea getViewFrustum();
 }

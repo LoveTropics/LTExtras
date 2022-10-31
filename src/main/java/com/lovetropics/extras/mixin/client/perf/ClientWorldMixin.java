@@ -17,27 +17,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientLevel.class)
 public class ClientWorldMixin {
-    private static final Direction[] HORIZONTALS = new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
+	private static final Direction[] HORIZONTALS = new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
 
-    @Shadow @Final private LevelRenderer levelRenderer;
+	@Shadow @Final private LevelRenderer levelRenderer;
 
-    @Inject(method = "unload", at = @At("HEAD"))
-    private void onChunkUnloaded(LevelChunk chunk, CallbackInfo ci) {
-        ChunkPos chunkPos = chunk.getPos();
-        BlockPos pos = new BlockPos(chunkPos.getMinBlockX(), 0, chunkPos.getMinBlockZ());
+	@Inject(method = "unload", at = @At("HEAD"))
+	private void onChunkUnloaded(LevelChunk chunk, CallbackInfo ci) {
+		ChunkPos chunkPos = chunk.getPos();
+		BlockPos pos = new BlockPos(chunkPos.getMinBlockX(), 0, chunkPos.getMinBlockZ());
 
-        WorldRendererAccess worldRenderer = (WorldRendererAccess) this.levelRenderer;
-        ViewFrustumAccess frustum = (ViewFrustumAccess) worldRenderer.getViewFrustum();
+		WorldRendererAccess worldRenderer = (WorldRendererAccess) this.levelRenderer;
+		ViewFrustumAccess frustum = (ViewFrustumAccess) worldRenderer.getViewFrustum();
 
-        ChunkRenderDispatcher.RenderChunk renderChunk = frustum.ltextras$getRenderChunk(pos);
-        if (renderChunk != null) {
-            for (Direction horizontal : HORIZONTALS) {
-                BlockPos neighborPos = renderChunk.getRelativeOrigin(horizontal);
-                ChunkRenderDispatcher.RenderChunk neighborChunk = frustum.ltextras$getRenderChunk(neighborPos);
-                if (neighborChunk != null) {
-                    ((ChunkRendererExt) neighborChunk).extras$markNeighborChunksUnloaded();
-                }
-            }
-        }
-    }
+		ChunkRenderDispatcher.RenderChunk renderChunk = frustum.ltextras$getRenderChunk(pos);
+		if (renderChunk != null) {
+			for (Direction horizontal : HORIZONTALS) {
+				BlockPos neighborPos = renderChunk.getRelativeOrigin(horizontal);
+				ChunkRenderDispatcher.RenderChunk neighborChunk = frustum.ltextras$getRenderChunk(neighborPos);
+				if (neighborChunk != null) {
+					((ChunkRendererExt) neighborChunk).extras$markNeighborChunksUnloaded();
+				}
+			}
+		}
+	}
 }

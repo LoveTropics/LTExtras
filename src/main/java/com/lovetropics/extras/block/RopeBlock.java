@@ -23,81 +23,81 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 public final class RopeBlock extends Block implements SimpleWaterloggedBlock {
-    private static final VoxelShape SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
+	private static final VoxelShape SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
 
-    public static final BooleanProperty KNOT = BooleanProperty.create("knot");
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	public static final BooleanProperty KNOT = BooleanProperty.create("knot");
+	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public RopeBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(KNOT, false).setValue(WATERLOGGED, false));
-    }
+	public RopeBlock(Properties properties) {
+		super(properties);
+		this.registerDefaultState(this.stateDefinition.any().setValue(KNOT, false).setValue(WATERLOGGED, false));
+	}
 
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return SHAPE;
-    }
+	@Override
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return SHAPE;
+	}
 
-    @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
-        if (facing == Direction.UP && !this.canHangFrom(world, facingPos, facingState)) {
-            return Blocks.AIR.defaultBlockState();
-        }
+	@Override
+	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+		if (facing == Direction.UP && !this.canHangFrom(world, facingPos, facingState)) {
+			return Blocks.AIR.defaultBlockState();
+		}
 
-        if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-        }
+		if (state.getValue(WATERLOGGED)) {
+			world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+		}
 
-        if (facing == Direction.DOWN) {
-            return state.setValue(KNOT, !facingState.is(this));
-        }
+		if (facing == Direction.DOWN) {
+			return state.setValue(KNOT, !facingState.is(this));
+		}
 
-        return state;
-    }
+		return state;
+	}
 
-    @Override
-    @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Level world = context.getLevel();
-        BlockPos pos = context.getClickedPos();
+	@Override
+	@Nullable
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		Level world = context.getLevel();
+		BlockPos pos = context.getClickedPos();
 
-        if (this.canHangAt(world, pos)) {
-            return this.defaultBlockState()
-                    .setValue(KNOT, this.isKnottedAt(world, pos))
-                    .setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
-        } else {
-            return null;
-        }
-    }
+		if (this.canHangAt(world, pos)) {
+			return this.defaultBlockState()
+					.setValue(KNOT, this.isKnottedAt(world, pos))
+					.setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
+		} else {
+			return null;
+		}
+	}
 
-    @Override
-    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-        return this.canHangAt(world, pos);
-    }
+	@Override
+	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+		return this.canHangAt(world, pos);
+	}
 
-    private boolean canHangAt(LevelReader world, BlockPos pos) {
-        BlockPos attachPos = pos.above();
-        BlockState attachState = world.getBlockState(attachPos);
-        return this.canHangFrom(world, attachPos, attachState);
-    }
+	private boolean canHangAt(LevelReader world, BlockPos pos) {
+		BlockPos attachPos = pos.above();
+		BlockState attachState = world.getBlockState(attachPos);
+		return this.canHangFrom(world, attachPos, attachState);
+	}
 
-    private boolean canHangFrom(LevelReader world, BlockPos attachPos, BlockState attachState) {
-        return attachState.is(this) ||
-                Block.canSupportCenter(world, attachPos, Direction.DOWN) ||
-                attachState.is(BlockTags.LEAVES);
-    }
+	private boolean canHangFrom(LevelReader world, BlockPos attachPos, BlockState attachState) {
+		return attachState.is(this) ||
+				Block.canSupportCenter(world, attachPos, Direction.DOWN) ||
+				attachState.is(BlockTags.LEAVES);
+	}
 
-    private boolean isKnottedAt(LevelReader world, BlockPos pos) {
-        return !world.getBlockState(pos.below()).is(this);
-    }
+	private boolean isKnottedAt(LevelReader world, BlockPos pos) {
+		return !world.getBlockState(pos.below()).is(this);
+	}
 
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+	}
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(KNOT, WATERLOGGED);
-    }
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		builder.add(KNOT, WATERLOGGED);
+	}
 }

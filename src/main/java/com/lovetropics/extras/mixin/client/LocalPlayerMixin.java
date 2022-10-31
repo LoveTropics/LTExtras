@@ -13,14 +13,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin extends Player  {
-    private LocalPlayerMixin(Level level, BlockPos pos, float yaw, GameProfile profile) {
-        super(level, pos, yaw, profile);
-    }
+	private LocalPlayerMixin(Level level, BlockPos pos, float yaw, GameProfile profile) {
+		super(level, pos, yaw, profile);
+	}
 
-    @Inject(method = "getWaterVision", at = @At("HEAD"), cancellable = true)
-    private void getWaterVision(CallbackInfoReturnable<Float> ci) {
-        if (hasEffect(ExtraEffects.FISH_EYE.get())) {
-            ci.setReturnValue(1.0f);
-        }
-    }
+	@Inject(method = "getWaterVision", at = @At("HEAD"), cancellable = true)
+	private void getWaterVision(CallbackInfoReturnable<Float> ci) {
+		if (hasEffect(ExtraEffects.FISH_EYE.get())) {
+			ci.setReturnValue(1.0f);
+		}
+	}
 }

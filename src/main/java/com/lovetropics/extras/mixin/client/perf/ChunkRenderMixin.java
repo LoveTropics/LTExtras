@@ -15,45 +15,45 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChunkRenderDispatcher.RenderChunk.class)
 public abstract class ChunkRenderMixin implements ChunkRendererExt {
-    @Shadow @Final private BlockPos.MutableBlockPos[] relativeOrigins;
+	@Shadow @Final private BlockPos.MutableBlockPos[] relativeOrigins;
 
-    @Shadow
-    protected abstract double getDistToPlayerSqr();
+	@Shadow
+	protected abstract double getDistToPlayerSqr();
 
-    @Shadow
-    protected abstract boolean doesChunkExistAt(BlockPos blockPosIn);
+	@Shadow
+	protected abstract boolean doesChunkExistAt(BlockPos blockPosIn);
 
-    @Unique
-    private boolean neighborChunksLoaded;
+	@Unique
+	private boolean neighborChunksLoaded;
 
-    /**
-     * @reason avoid checking neighbor chunk loaded state until a neighbor is unloaded again
-     * @author Gegy
-     */
-    @Overwrite
-    public boolean hasAllNeighbors() {
-        if (this.neighborChunksLoaded) {
-            return true;
-        }
+	/**
+	 * @reason avoid checking neighbor chunk loaded state until a neighbor is unloaded again
+	 * @author Gegy
+	 */
+	@Overwrite
+	public boolean hasAllNeighbors() {
+		if (this.neighborChunksLoaded) {
+			return true;
+		}
 
-        if (this.getDistToPlayerSqr() > 24.0 * 24.0) {
-            this.neighborChunksLoaded = this.doesChunkExistAt(this.relativeOrigins[Direction.WEST.ordinal()])
-                    && this.doesChunkExistAt(this.relativeOrigins[Direction.NORTH.ordinal()])
-                    && this.doesChunkExistAt(this.relativeOrigins[Direction.EAST.ordinal()])
-                    && this.doesChunkExistAt(this.relativeOrigins[Direction.SOUTH.ordinal()]);
-            return this.neighborChunksLoaded;
-        } else {
-            return true;
-        }
-    }
+		if (this.getDistToPlayerSqr() > 24.0 * 24.0) {
+			this.neighborChunksLoaded = this.doesChunkExistAt(this.relativeOrigins[Direction.WEST.ordinal()])
+					&& this.doesChunkExistAt(this.relativeOrigins[Direction.NORTH.ordinal()])
+					&& this.doesChunkExistAt(this.relativeOrigins[Direction.EAST.ordinal()])
+					&& this.doesChunkExistAt(this.relativeOrigins[Direction.SOUTH.ordinal()]);
+			return this.neighborChunksLoaded;
+		} else {
+			return true;
+		}
+	}
 
-    @Inject(method = "setOrigin", at = @At("HEAD"))
-    private void setOrigin(int x, int y, int z, CallbackInfo ci) {
-        this.neighborChunksLoaded = false;
-    }
+	@Inject(method = "setOrigin", at = @At("HEAD"))
+	private void setOrigin(int x, int y, int z, CallbackInfo ci) {
+		this.neighborChunksLoaded = false;
+	}
 
-    @Override
-    public void extras$markNeighborChunksUnloaded() {
-        this.neighborChunksLoaded = false;
-    }
+	@Override
+	public void extras$markNeighborChunksUnloaded() {
+		this.neighborChunksLoaded = false;
+	}
 }

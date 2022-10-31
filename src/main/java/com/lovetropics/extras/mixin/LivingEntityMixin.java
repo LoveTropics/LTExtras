@@ -11,15 +11,15 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
-    private LivingEntityMixin(EntityType<?> type, Level level) {
-        super(type, level);
-    }
+	private LivingEntityMixin(EntityType<?> type, Level level) {
+		super(type, level);
+	}
 
-    @ModifyConstant(method = "handleRelativeFrictionAndCalculateMovement", constant = @Constant(doubleValue = 0.2))
-    private double modifyClimbSpeed(double speed) {
-        if (getFeetBlockState().is(ExtraBlocks.PARACORD.get())) {
-            return speed * 2.0;
-        }
-        return speed;
-    }
+	@ModifyConstant(method = "handleRelativeFrictionAndCalculateMovement", constant = @Constant(doubleValue = 0.2))
+	private double modifyClimbSpeed(double speed) {
+		if (getFeetBlockState().is(ExtraBlocks.PARACORD.get())) {
+			return speed * 2.0;
+		}
+		return speed;
+	}
 }

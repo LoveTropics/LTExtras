@@ -11,22 +11,22 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.Level;
 
 public class SpeedyBlock extends CustomShapeBlock {
-	
+
 	public static SpeedyBlock opaque(Block.Properties properties) {
 		return new SpeedyBlock(Shapes.block(), properties, false);
 	}
-	
+
 	public static SpeedyBlock transparent(VoxelShape shape, Block.Properties properties) {
 		return new SpeedyBlock(shape, properties, true);
 	}
-	
+
 	private final boolean transparent;
-	
+
 	public SpeedyBlock(VoxelShape shape, Block.Properties properties, boolean transparent) {
 		super(shape, properties);
 		this.transparent = transparent;
 	}
-	
+
 	@Override
 	public boolean useShapeForLightOcclusion(BlockState state) {
 		return transparent;

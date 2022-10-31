@@ -90,22 +90,22 @@ public class CheckpointBlock extends Block {
 		return 1;
 	}
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) {
-            return;
-        }
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+		LocalPlayer player = Minecraft.getInstance().player;
+		if (player == null) {
+			return;
+		}
 
-        if (this.isHoldingBarrier(player)) {
-            world.addParticle(ExtraParticles.CHECKPOINT.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
-        }
-    }
+		if (this.isHoldingBarrier(player)) {
+			world.addParticle(ExtraParticles.CHECKPOINT.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
+		}
+	}
 
-    private boolean isHoldingBarrier(Player player) {
-        Item item = this.asItem();
-        return player.getMainHandItem().getItem() == item
-                || player.getOffhandItem().getItem() == item;
-    }
+	private boolean isHoldingBarrier(Player player) {
+		Item item = this.asItem();
+		return player.getMainHandItem().getItem() == item
+				|| player.getOffhandItem().getItem() == item;
+	}
 }

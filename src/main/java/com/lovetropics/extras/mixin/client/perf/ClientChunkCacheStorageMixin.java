@@ -17,30 +17,30 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 
 @Mixin(targets = "net/minecraft/client/multiplayer/ClientChunkCache$Storage")
 public class ClientChunkCacheStorageMixin {
-    @Shadow @Final @Mutable private AtomicReferenceArray<LevelChunk> chunks;
-    @Shadow @Final private int viewRange;
+	@Shadow @Final @Mutable private AtomicReferenceArray<LevelChunk> chunks;
+	@Shadow @Final private int viewRange;
 
-    @Unique
-    private int tableMask;
-    @Unique
-    private int tableShift;
+	@Unique
+	private int tableMask;
+	@Unique
+	private int tableShift;
 
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void init(ClientChunkCache chunkProvider, int viewDistance, CallbackInfo ci) {
-        int tableSize = Mth.smallestEncompassingPowerOfTwo(this.viewRange);
-        this.tableMask = tableSize - 1;
-        this.tableShift = Mth.log2(tableSize);
-        this.chunks = new AtomicReferenceArray<>(tableSize * tableSize);
-    }
+	@Inject(method = "<init>", at = @At("RETURN"))
+	private void init(ClientChunkCache chunkProvider, int viewDistance, CallbackInfo ci) {
+		int tableSize = Mth.smallestEncompassingPowerOfTwo(this.viewRange);
+		this.tableMask = tableSize - 1;
+		this.tableShift = Mth.log2(tableSize);
+		this.chunks = new AtomicReferenceArray<>(tableSize * tableSize);
+	}
 
-    /**
-     * @reason replace chunk array with power-of-two-sized table for fast indexing
-     * @author Gegy
-     */
-    @Overwrite
-    int getIndex(int x, int z) {
-        int mask = this.tableMask;
-        int shift = this.tableShift;
-        return (x & mask) << shift | (z & mask);
-    }
+	/**
+	 * @reason replace chunk array with power-of-two-sized table for fast indexing
+	 * @author Gegy
+	 */
+	@Overwrite
+	int getIndex(int x, int z) {
+		int mask = this.tableMask;
+		int shift = this.tableShift;
+		return (x & mask) << shift | (z & mask);
+	}
 }

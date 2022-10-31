@@ -12,23 +12,23 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity {
-    private PlayerMixin(EntityType<? extends LivingEntity> type, Level level) {
-        super(type, level);
-    }
+	private PlayerMixin(EntityType<? extends LivingEntity> type, Level level) {
+		super(type, level);
+	}
 
-    @Override
-    public boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> fluid, double scale) {
-        if (fluid == FluidTags.WATER && hasEffect(ExtraEffects.FISH_EYE.get())) {
-            return false;
-        }
-        return super.updateFluidHeightAndDoFluidPushing(fluid, scale);
-    }
+	@Override
+	public boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> fluid, double scale) {
+		if (fluid == FluidTags.WATER && hasEffect(ExtraEffects.FISH_EYE.get())) {
+			return false;
+		}
+		return super.updateFluidHeightAndDoFluidPushing(fluid, scale);
+	}
 
-    @Override
-    public boolean isEyeInFluid(TagKey<Fluid> fluid) {
-        if (fluid == FluidTags.WATER && hasEffect(ExtraEffects.FISH_EYE.get())) {
-            return false;
-        }
-        return super.isEyeInFluid(fluid);
-    }
+	@Override
+	public boolean isEyeInFluid(TagKey<Fluid> fluid) {
+		if (fluid == FluidTags.WATER && hasEffect(ExtraEffects.FISH_EYE.get())) {
+			return false;
+		}
+		return super.isEyeInFluid(fluid);
+	}
 }

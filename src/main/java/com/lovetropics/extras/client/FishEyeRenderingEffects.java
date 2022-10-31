@@ -11,14 +11,14 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class FishEyeRenderingEffects {
-    private static final Minecraft CLIENT = Minecraft.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 
-    @SubscribeEvent
-    public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
-        LocalPlayer player = CLIENT.player;
-        if (player != null && player.hasEffect(ExtraEffects.FISH_EYE.get())) {
-            event.scaleFarPlaneDistance(1.25f);
-            event.setCanceled(true);
-        }
-    }
+	@SubscribeEvent
+	public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
+		LocalPlayer player = CLIENT.player;
+		if (player != null && player.hasEffect(ExtraEffects.FISH_EYE.get())) {
+			event.scaleFarPlaneDistance(1.25f);
+			event.setCanceled(true);
+		}
+	}
 }

@@ -23,32 +23,32 @@ import java.util.function.Supplier;
 
 public class CustomSeagrassBlock extends SeagrassBlock {
 
-    private final String scientificName;
+	private final String scientificName;
 	@Nullable
 	private final Supplier<Supplier<? extends TallSeagrassBlock>> tall;
 
-    public CustomSeagrassBlock(final Properties properties, final String scientificName, @Nullable final Supplier<Supplier<? extends TallSeagrassBlock>> tall) {
-        super(properties);
-        this.scientificName = scientificName;
+	public CustomSeagrassBlock(final Properties properties, final String scientificName, @Nullable final Supplier<Supplier<? extends TallSeagrassBlock>> tall) {
+		super(properties);
+		this.scientificName = scientificName;
 		this.tall = tall;
-    }
+	}
 
-    @Override
-    public void appendHoverText(final ItemStack itemStack, final @Nullable BlockGetter level, final List<Component> tooltip, final TooltipFlag flag) {
-        tooltip.add(new TextComponent(scientificName).withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
-    }
-    
-    @Override
-    public void performBonemeal(ServerLevel level, Random random, BlockPos pos, BlockState state) {
+	@Override
+	public void appendHoverText(final ItemStack itemStack, final @Nullable BlockGetter level, final List<Component> tooltip, final TooltipFlag flag) {
+		tooltip.add(new TextComponent(scientificName).withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
+	}
+	
+	@Override
+	public void performBonemeal(ServerLevel level, Random random, BlockPos pos, BlockState state) {
 		if (tall == null) return;
 
-        BlockState bottomState = tall.get().get().defaultBlockState();
+		BlockState bottomState = tall.get().get().defaultBlockState();
 		BlockState topState = bottomState.setValue(TallSeagrassBlock.HALF, DoubleBlockHalf.UPPER);
 
-        BlockPos topPos = pos.above();
-        if (level.getBlockState(topPos).is(Blocks.WATER)) {
-            level.setBlock(pos, bottomState, Block.UPDATE_CLIENTS);
-            level.setBlock(topPos, topState, Block.UPDATE_CLIENTS);
-        }
-    }
+		BlockPos topPos = pos.above();
+		if (level.getBlockState(topPos).is(Blocks.WATER)) {
+			level.setBlock(pos, bottomState, Block.UPDATE_CLIENTS);
+			level.setBlock(topPos, topState, Block.UPDATE_CLIENTS);
+		}
+	}
 }

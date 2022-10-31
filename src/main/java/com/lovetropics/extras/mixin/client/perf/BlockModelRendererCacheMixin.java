@@ -15,64 +15,64 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(targets = "net/minecraft/client/renderer/block/ModelBlockRenderer$Cache")
 public class BlockModelRendererCacheMixin {
-    @Shadow private boolean enabled;
+	@Shadow private boolean enabled;
 
-    @Unique
-    private final LossyLightCache.Packed fastPackedLightCache = new LossyLightCache.Packed(128);
-    @Unique
-    private final LossyLightCache.Brightness fastBrightnessCache = new LossyLightCache.Brightness(128);
+	@Unique
+	private final LossyLightCache.Packed fastPackedLightCache = new LossyLightCache.Packed(128);
+	@Unique
+	private final LossyLightCache.Brightness fastBrightnessCache = new LossyLightCache.Brightness(128);
 
-    @Inject(method = "disable()V", at = @At("RETURN"))
-    private void disable(CallbackInfo ci) {
-        this.fastPackedLightCache.clear();
-        this.fastBrightnessCache.clear();
-    }
+	@Inject(method = "disable()V", at = @At("RETURN"))
+	private void disable(CallbackInfo ci) {
+		this.fastPackedLightCache.clear();
+		this.fastBrightnessCache.clear();
+	}
 
-    /**
-     * @reason use optimised cache implementation
-     * @author Gegy
-     */
-    @Overwrite
-    public int getLightColor(BlockState state, BlockAndTintGetter world, BlockPos pos) {
-        if (!this.enabled) {
-            return LevelRenderer.getLightColor(world, state, pos);
-        }
+	/**
+	 * @reason use optimised cache implementation
+	 * @author Gegy
+	 */
+	@Overwrite
+	public int getLightColor(BlockState state, BlockAndTintGetter world, BlockPos pos) {
+		if (!this.enabled) {
+			return LevelRenderer.getLightColor(world, state, pos);
+		}
 
-        long posKey = pos.asLong();
-        LossyLightCache.Packed cache = this.fastPackedLightCache;
+		long posKey = pos.asLong();
+		LossyLightCache.Packed cache = this.fastPackedLightCache;
 
-        int light = cache.get(posKey);
-        if (light != Integer.MAX_VALUE) {
-            return light;
-        }
+		int light = cache.get(posKey);
+		if (light != Integer.MAX_VALUE) {
+			return light;
+		}
 
-        light = LevelRenderer.getLightColor(world, state, pos);
-        cache.put(posKey, light);
+		light = LevelRenderer.getLightColor(world, state, pos);
+		cache.put(posKey, light);
 
-        return light;
-    }
+		return light;
+	}
 
-    /**
-     * @reason use optimised cache implementation
-     * @author Gegy
-     */
-    @Overwrite
-    public float getShadeBrightness(BlockState state, BlockAndTintGetter world, BlockPos pos) {
-        if (!this.enabled) {
-            return state.getShadeBrightness(world, pos);
-        }
+	/**
+	 * @reason use optimised cache implementation
+	 * @author Gegy
+	 */
+	@Overwrite
+	public float getShadeBrightness(BlockState state, BlockAndTintGetter world, BlockPos pos) {
+		if (!this.enabled) {
+			return state.getShadeBrightness(world, pos);
+		}
 
-        long posKey = pos.asLong();
-        LossyLightCache.Brightness cache = this.fastBrightnessCache;
+		long posKey = pos.asLong();
+		LossyLightCache.Brightness cache = this.fastBrightnessCache;
 
-        float brightness = cache.get(posKey);
-        if (!Float.isNaN(brightness)) {
-            return brightness;
-        }
+		float brightness = cache.get(posKey);
+		if (!Float.isNaN(brightness)) {
+			return brightness;
+		}
 
-        brightness = state.getShadeBrightness(world, pos);
-        cache.put(posKey, brightness);
+		brightness = state.getShadeBrightness(world, pos);
+		cache.put(posKey, brightness);
 
-        return brightness;
-    }
+		return brightness;
+	}
 }
