@@ -1,4 +1,5 @@
 {
+  "block.ltextras.anemone_tentacles": "Anemone Tentacles",
   "block.ltextras.black_concrete_powder_fake": "Black Concrete Powder Fake",
   "block.ltextras.black_concrete_powder_slab": "Black Concrete Powder Slab",
   "block.ltextras.black_concrete_powder_stairs": "Black Concrete Powder Stairs",
@@ -20,6 +21,7 @@
   "block.ltextras.gold_block_slab": "Gold Block Slab",
   "block.ltextras.gold_block_stairs": "Gold Block Stairs",
   "block.ltextras.gold_block_wall": "Gold Block Wall",
+  "block.ltextras.green_anemone": "Green Anemone",
   "block.ltextras.green_glow_sticks": "Green Glow Sticks",
   "block.ltextras.halodule_pinifolia": "Seagrass",
   "block.ltextras.halodule_uninervis": "Seagrass",
@@ -56,6 +58,7 @@
   "block.ltextras.polished_andesite_wall": "Polished Andesite Wall",
   "block.ltextras.polished_diorite_wall": "Polished Diorite Wall",
   "block.ltextras.polished_granite_wall": "Polished Granite Wall",
+  "block.ltextras.purple_anemone": "Purple Anemone",
   "block.ltextras.purple_glow_sticks": "Purple Glow Sticks",
   "block.ltextras.quartz_block_fence": "Quartz Block Fence",
   "block.ltextras.quartz_block_wall": "Quartz Block Wall",

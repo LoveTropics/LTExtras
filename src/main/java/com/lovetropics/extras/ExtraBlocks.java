@@ -68,6 +68,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ScaffoldingBlockItem;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BaseCoralFanBlock;
 import net.minecraft.world.level.block.BaseCoralPlantTypeBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -575,6 +576,31 @@ public class ExtraBlocks {
 						.build()
 					.register()
 			);
+
+	public static final BlockEntry<Block> GREEN_ANEMONE = anemoneBlock("green_anemone");
+	public static final BlockEntry<Block> PURPLE_ANEMONE = anemoneBlock("purple_anemone");
+
+	private static BlockEntry<Block> anemoneBlock(final String name) {
+		return REGISTRATE.block(name, Block::new)
+				.initialProperties(() -> Blocks.MELON)
+				.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
+						.cubeColumn(ctx.getName(),
+								prov.modLoc("block/" + ctx.getName() + "_side"),
+								prov.modLoc("block/" + ctx.getName() + "_top"))))
+				.simpleItem()
+				.register();
+	}
+
+	public static final BlockEntry<BaseCoralFanBlock> ANEMONE_TENTACLES = REGISTRATE.block("anemone_tentacles", BaseCoralFanBlock::new)
+			.initialProperties(() -> Blocks.BRAIN_CORAL_FAN)
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
+					.withExistingParent(ctx.getName(), "block/coral_fan")
+					.texture("fan", prov.modLoc("block/" + ctx.getName()))))
+			.addLayer(() -> RenderType::cutout)
+			.item()
+				.model((ctx, prov) -> prov.blockSprite(ctx))
+			.build()
+			.register();
 
 	// Seagrasses
 

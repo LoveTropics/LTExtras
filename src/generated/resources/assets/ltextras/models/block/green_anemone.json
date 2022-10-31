@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "ltextras:block/green_anemone_side",
+    "end": "ltextras:block/green_anemone_top"
+  }
+}
