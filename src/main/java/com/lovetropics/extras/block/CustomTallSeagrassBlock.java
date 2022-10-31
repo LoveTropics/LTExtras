@@ -26,9 +26,9 @@ public class CustomTallSeagrassBlock extends TallSeagrassBlock {
 				.addLayer(() -> RenderType::cutout)
 				.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.get())
 						.partialState().with(TallSeagrassBlock.HALF, DoubleBlockHalf.UPPER).addModels(new ConfiguredModel(prov.models()
-								.singleTexture(ctx.getName(), prov.mcLoc("block/template_seagrass"), prov.modLoc("block/" + ctx.getName() + "_top"))))
+								.singleTexture(ctx.getName() + "_top", prov.mcLoc("block/template_seagrass"), prov.modLoc("block/" + ctx.getName() + "_top"))))
 						.partialState().with(TallSeagrassBlock.HALF, DoubleBlockHalf.LOWER).addModels(new ConfiguredModel(prov.models()
-								.singleTexture(ctx.getName(), prov.mcLoc("block/template_seagrass"), prov.modLoc("block/" + ctx.getName() + "_bottom")))));
+								.singleTexture(ctx.getName() + "_bottom", prov.mcLoc("block/template_seagrass"), prov.modLoc("block/" + ctx.getName() + "_bottom")))));
 	}
 
 	private final NonNullSupplier<? extends SeagrassBlock> drop;
