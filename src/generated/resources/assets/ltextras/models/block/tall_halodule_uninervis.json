@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_seagrass",
+  "textures": {
+    "texture": "ltextras:block/tall_halodule_uninervis_bottom"
+  }
+}

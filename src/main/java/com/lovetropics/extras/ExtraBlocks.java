@@ -1,20 +1,55 @@
 package com.lovetropics.extras;
 
-import com.lovetropics.extras.block.*;
+import static com.lovetropics.extras.data.ModelGenUtil.barsBlock;
+import static com.lovetropics.extras.data.ModelGenUtil.fenceBlock;
+import static com.lovetropics.extras.data.ModelGenUtil.getMainTexture;
+import static com.lovetropics.extras.data.ModelGenUtil.scaffoldingModel;
+import static com.lovetropics.extras.data.ModelGenUtil.slabBlock;
+import static com.lovetropics.extras.data.ModelGenUtil.stairsBlock;
+import static com.lovetropics.extras.data.ModelGenUtil.wallBlock;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import com.lovetropics.extras.block.CheckpointBlock;
+import com.lovetropics.extras.block.CustomSeagrassBlock;
+import com.lovetropics.extras.block.CustomTallSeagrassBlock;
+import com.lovetropics.extras.block.FakeWaterBlock;
+import com.lovetropics.extras.block.GirderBlock;
+import com.lovetropics.extras.block.GlowSticksBlock;
+import com.lovetropics.extras.block.HeavyDoorBlock;
+import com.lovetropics.extras.block.LightweightBarrierBlock;
+import com.lovetropics.extras.block.MobControllerBlock;
+import com.lovetropics.extras.block.PanelBlock;
+import com.lovetropics.extras.block.PassableBarrierBlock;
+import com.lovetropics.extras.block.PianguasBlock;
+import com.lovetropics.extras.block.ReedsBlock;
+import com.lovetropics.extras.block.RopeBlock;
+import com.lovetropics.extras.block.SpeedyBlock;
+import com.lovetropics.extras.block.ThornStemBlock;
+import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
 import com.lovetropics.extras.data.ModelGenUtil;
+import com.lovetropics.extras.data.ModelGenUtil.TextureType;
 import com.lovetropics.extras.item.BouyBlockItem;
 import com.lovetropics.extras.item.EntityWandItem;
 import com.lovetropics.extras.mixin.BlockPropertiesMixin;
 import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.providers.RegistrateLangProvider;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
+
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
@@ -31,7 +66,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ScaffoldingBlockItem;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.BaseCoralPlantTypeBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.ScaffoldingBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.StainedGlassBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.VineBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -44,16 +93,6 @@ import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.data.loading.DatagenModLoader;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static com.lovetropics.extras.data.ModelGenUtil.*;
 
 public class ExtraBlocks {
 
@@ -534,8 +573,9 @@ public class ExtraBlocks {
 
 	// Seagrasses
 
-	private static BlockEntry<CustomSeagrassBlock> seagrass(final String blockName, final String latinName) {
-		return REGISTRATE.block(blockName, p -> (CustomSeagrassBlock) new CustomSeagrassBlock(p, latinName) {}).lang("Seagrass")
+	private static BlockEntry<CustomSeagrassBlock> seagrass(final String blockName) {
+		return REGISTRATE.block(blockName, Material.REPLACEABLE_WATER_PLANT, p -> new CustomSeagrassBlock(p, RegistrateLangProvider.toEnglishName(blockName)))
+				.lang("Seagrass")
 				.initialProperties(() -> Blocks.SEAGRASS)
 				.addLayer(() -> RenderType::cutout)
 				.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
@@ -544,12 +584,37 @@ public class ExtraBlocks {
 						.texture("particle", prov.blockTexture(ctx.getEntry()))))
 				.addLayer(() -> RenderType::cutout)
 				.item()
-				.model((ctx, prov) -> prov.blockSprite(ctx))
+					.model((ctx, prov) -> prov.blockSprite(ctx))
 				.build()
 				.register();
 	}
 
-	public static final BlockEntry<CustomSeagrassBlock> SYRINGODIUM_ISOETIFOLIUM = seagrass("syringodium_isoetifolium", "Syringodium Isoetifolium");
+	public static final BlockEntry<CustomSeagrassBlock> SYRINGODIUM_ISOETIFOLIUM = seagrass("syringodium_isoetifolium");
+	// TODO this pattern should be a util method
+	public static final BlockEntry<Block> MATTED_SYRINGODIUM_ISOETIFOLIUM = REGISTRATE.block("matted_syringodium_isoetifolium", Block::new)
+			.initialProperties(() -> Blocks.SAND)
+			.lang("Matted Seagrass Block")
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
+					.cubeBottomTop(ctx.getName(),
+							prov.modLoc("block/" + ctx.getName() + "_side"),
+							prov.modLoc("block/purified_sand"),
+							prov.modLoc("block/" + ctx.getName() + "_top"))))
+			.simpleItem()
+			.register();
+
+	public static final BlockEntry<CustomSeagrassBlock> HALODULE_UNINERVIS = seagrass("halodule_uninervis");
+	// TODO this should probably just be a util in this class
+	public static final BlockEntry<CustomTallSeagrassBlock> TALL_HALODULE_UNINERVIS = CustomTallSeagrassBlock.dropping(HALODULE_UNINERVIS).register();
+	public static final BlockEntry<Block> MATTED_HALODULE_UNINERVIS = REGISTRATE.block("matted_halodule_uninervis", Block::new)
+			.initialProperties(() -> Blocks.SAND)
+			.lang("Matted Seagrass Block")
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
+					.cubeBottomTop(ctx.getName(),
+							prov.modLoc("block/" + ctx.getName() + "_side"),
+							prov.modLoc("block/purified_sand"),
+							prov.modLoc("block/" + ctx.getName() + "_top"))))
+			.simpleItem()
+			.register();
 
 	public static void init() {
 	}

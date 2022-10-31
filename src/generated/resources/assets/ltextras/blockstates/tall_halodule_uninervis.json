@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "ltextras:block/tall_halodule_uninervis"
+    },
+    "half=lower": {
+      "model": "ltextras:block/tall_halodule_uninervis"
+    }
+  }
+}
