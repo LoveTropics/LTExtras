@@ -18,6 +18,7 @@ import net.minecraftforge.client.model.generators.ConfiguredModel;
 
 public class CustomTallSeagrassBlock extends TallSeagrassBlock {
 
+	// TODO: Should probably be a util in ExtraBlocks
 	public static BlockBuilder<CustomTallSeagrassBlock, Registrate> dropping(RegistryEntry<? extends SeagrassBlock> drop) {
 		return ExtraBlocks.REGISTRATE.block("tall_" + drop.getId().getPath(), p -> new CustomTallSeagrassBlock(p, drop))
 				.initialProperties(drop)

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "ltextras:block/matted_enhalus_acoroides_side",
+    "bottom": "ltextras:block/purified_sand",
+    "top": "ltextras:block/matted_enhalus_acoroides_top"
+  }
+}

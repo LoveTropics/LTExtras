@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "ltextras:block/tall_thalassodendron_ciliatum_top"
+    },
+    "half=lower": {
+      "model": "ltextras:block/tall_thalassodendron_ciliatum_bottom"
+    }
+  }
+}

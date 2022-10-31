@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "ltextras:block/tall_halophila_spinulosa_top"
+    },
+    "half=lower": {
+      "model": "ltextras:block/tall_halophila_spinulosa_bottom"
+    }
+  }
+}

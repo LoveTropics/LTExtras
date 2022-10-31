@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_seagrass",
+  "textures": {
+    "texture": "ltextras:block/tall_thalassodendron_ciliatum_bottom"
+  }
+}

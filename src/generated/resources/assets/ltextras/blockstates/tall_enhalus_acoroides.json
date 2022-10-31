@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "ltextras:block/tall_enhalus_acoroides_top"
+    },
+    "half=lower": {
+      "model": "ltextras:block/tall_enhalus_acoroides_bottom"
+    }
+  }
+}
