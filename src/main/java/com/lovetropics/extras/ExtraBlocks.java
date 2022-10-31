@@ -630,27 +630,42 @@ public class ExtraBlocks {
 	public static final BlockEntry<CustomSeagrassBlock> ENHALUS_ACOROIDES = seagrass("enhalus_acoroides", () -> ExtraBlocks.TALL_ENHALUS_ACOROIDES);
 	public static final BlockEntry<CustomTallSeagrassBlock> TALL_ENHALUS_ACOROIDES = CustomTallSeagrassBlock.dropping(ENHALUS_ACOROIDES).register();
 	public static final BlockEntry<Block> MATTED_ENHALUS_ACOROIDES = mattedSeagrassBlock("matted_enhalus_acoroides");
+	public static final BlockEntry<Block> ENHALUS_ACOROIDES_BLOCK = seagrassBlock("enhalus_acoroides");
 
 	public static final BlockEntry<CustomSeagrassBlock> HALODULE_PINIFOLIA = seagrass("halodule_pinifolia");
 
 	public static final BlockEntry<CustomSeagrassBlock> HALODULE_UNINERVIS = seagrass("halodule_uninervis", () -> ExtraBlocks.TALL_HALODULE_UNINERVIS);
 	public static final BlockEntry<CustomTallSeagrassBlock> TALL_HALODULE_UNINERVIS = CustomTallSeagrassBlock.dropping(HALODULE_UNINERVIS).register();
 	public static final BlockEntry<Block> MATTED_HALODULE_UNINERVIS = mattedSeagrassBlock("matted_halodule_uninervis");
+	public static final BlockEntry<Block> HALODULE_UNINERVIS_BLOCK = seagrassBlock("halodule_uninervis");
 
 	public static final BlockEntry<CustomSeagrassBlock> HALOPHILA_OVALIS = seagrass("halophila_ovalis");
 
 	public static final BlockEntry<CustomSeagrassBlock> HALOPHILA_SPINULOSA = seagrass("halophila_spinulosa", () -> ExtraBlocks.TALL_HALOPHILA_SPINULOSA);
 	public static final BlockEntry<CustomTallSeagrassBlock> TALL_HALOPHILA_SPINULOSA = CustomTallSeagrassBlock.dropping(HALOPHILA_SPINULOSA).register();
 	public static final BlockEntry<Block> MATTED_HALOPHILA_SPINULOSA = mattedSeagrassBlock("matted_halophila_spinulosa");
+	public static final BlockEntry<Block> HALOPHILA_SPINULOSA_BLOCK = seagrassBlock("halophila_spinulosa");
 
 	public static final BlockEntry<CustomSeagrassBlock> SYRINGODIUM_ISOETIFOLIUM = seagrass("syringodium_isoetifolium");
 	public static final BlockEntry<Block> MATTED_SYRINGODIUM_ISOETIFOLIUM = mattedSeagrassBlock("matted_syringodium_isoetifolium");
+	public static final BlockEntry<Block> SYRINGODIUM_ISOETIFOLIUM_BLOCK = seagrassBlock("syringodium_isoetifolium");
 
 	public static final BlockEntry<CustomSeagrassBlock> THALASSIA_HEMPRICHII = seagrass("thalassia_hemprichii");
 
 	public static final BlockEntry<CustomSeagrassBlock> THALASSODENDRON_CILIATUM = seagrass("thalassodendron_ciliatum", () -> ExtraBlocks.TALL_THALASSODENDRON_CILIATUM);
 	public static final BlockEntry<CustomTallSeagrassBlock> TALL_THALASSODENDRON_CILIATUM = CustomTallSeagrassBlock.dropping(THALASSODENDRON_CILIATUM).register();
 	public static final BlockEntry<Block> MATTED_THALASSODENDRON_CILIATUM = mattedSeagrassBlock("matted_thalassodendron_ciliatum");
+	public static final BlockEntry<Block> THALASSODENDRON_CILIATUM_BLOCk = seagrassBlock("thalassodendron_ciliatum");
+
+	private static BlockEntry<Block> seagrassBlock(String name) {
+		return REGISTRATE.block(name + "_block", Block::new)
+				.initialProperties(() -> Blocks.SAND)
+				.lang("Seagrass Block")
+				.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
+						.cubeAll(ctx.getName(), prov.modLoc("block/matted_" + name + "_top"))))
+				.simpleItem()
+				.register();
+	}
 
 	private static BlockEntry<Block> mattedSeagrassBlock(String name) {
 		return REGISTRATE.block(name, Block::new)
