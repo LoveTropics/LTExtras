@@ -590,31 +590,24 @@ public class ExtraBlocks {
 	}
 
 	public static final BlockEntry<CustomSeagrassBlock> SYRINGODIUM_ISOETIFOLIUM = seagrass("syringodium_isoetifolium");
-	// TODO this pattern should be a util method
-	public static final BlockEntry<Block> MATTED_SYRINGODIUM_ISOETIFOLIUM = REGISTRATE.block("matted_syringodium_isoetifolium", Block::new)
-			.initialProperties(() -> Blocks.SAND)
-			.lang("Matted Seagrass Block")
-			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
-					.cubeBottomTop(ctx.getName(),
-							prov.modLoc("block/" + ctx.getName() + "_side"),
-							prov.modLoc("block/purified_sand"),
-							prov.modLoc("block/" + ctx.getName() + "_top"))))
-			.simpleItem()
-			.register();
+	public static final BlockEntry<Block> MATTED_SYRINGODIUM_ISOETIFOLIUM = mattedSeagrassBlock("matted_syringodium_isoetifolium").register();
 
 	public static final BlockEntry<CustomSeagrassBlock> HALODULE_UNINERVIS = seagrass("halodule_uninervis");
 	// TODO this should probably just be a util in this class
 	public static final BlockEntry<CustomTallSeagrassBlock> TALL_HALODULE_UNINERVIS = CustomTallSeagrassBlock.dropping(HALODULE_UNINERVIS).register();
-	public static final BlockEntry<Block> MATTED_HALODULE_UNINERVIS = REGISTRATE.block("matted_halodule_uninervis", Block::new)
-			.initialProperties(() -> Blocks.SAND)
-			.lang("Matted Seagrass Block")
-			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
-					.cubeBottomTop(ctx.getName(),
-							prov.modLoc("block/" + ctx.getName() + "_side"),
-							prov.modLoc("block/purified_sand"),
-							prov.modLoc("block/" + ctx.getName() + "_top"))))
-			.simpleItem()
-			.register();
+	public static final BlockEntry<Block> MATTED_HALODULE_UNINERVIS = mattedSeagrassBlock("matted_halodule_uninervis").register();
+
+	private static BlockBuilder<Block, Registrate> mattedSeagrassBlock(String name) {
+		return REGISTRATE.block(name, Block::new)
+				.initialProperties(() -> Blocks.SAND)
+				.lang("Matted Seagrass Block")
+				.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
+						.cubeBottomTop(ctx.getName(),
+								prov.modLoc("block/" + ctx.getName() + "_side"),
+								prov.modLoc("block/purified_sand"),
+								prov.modLoc("block/" + ctx.getName() + "_top"))))
+				.simpleItem();
+	}
 
 	public static void init() {
 	}
