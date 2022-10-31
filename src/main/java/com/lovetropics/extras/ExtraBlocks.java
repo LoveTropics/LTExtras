@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.lovetropics.extras.block.CheckpointBlock;
@@ -48,6 +49,7 @@ import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -79,6 +81,7 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StainedGlassBlock;
 import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.TallSeagrassBlock;
 import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -93,6 +96,8 @@ import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.data.loading.DatagenModLoader;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import javax.annotation.Nullable;
 
 public class ExtraBlocks {
 
@@ -574,7 +579,11 @@ public class ExtraBlocks {
 	// Seagrasses
 
 	private static BlockEntry<CustomSeagrassBlock> seagrass(final String blockName) {
-		return REGISTRATE.block(blockName, Material.REPLACEABLE_WATER_PLANT, p -> new CustomSeagrassBlock(p, RegistrateLangProvider.toEnglishName(blockName)))
+		return seagrass(blockName, null);
+	}
+
+	private static BlockEntry<CustomSeagrassBlock> seagrass(final String blockName, @Nullable final Supplier<Supplier<? extends TallSeagrassBlock>> tall) {
+		return REGISTRATE.block(blockName, Material.REPLACEABLE_WATER_PLANT, p -> new CustomSeagrassBlock(p, RegistrateLangProvider.toEnglishName(blockName), tall))
 				.lang("Seagrass")
 				.initialProperties(() -> Blocks.SEAGRASS)
 				.addLayer(() -> RenderType::cutout)
@@ -592,7 +601,7 @@ public class ExtraBlocks {
 	public static final BlockEntry<CustomSeagrassBlock> SYRINGODIUM_ISOETIFOLIUM = seagrass("syringodium_isoetifolium");
 	public static final BlockEntry<Block> MATTED_SYRINGODIUM_ISOETIFOLIUM = mattedSeagrassBlock("matted_syringodium_isoetifolium").register();
 
-	public static final BlockEntry<CustomSeagrassBlock> HALODULE_UNINERVIS = seagrass("halodule_uninervis");
+	public static final BlockEntry<CustomSeagrassBlock> HALODULE_UNINERVIS = seagrass("halodule_uninervis", () -> ExtraBlocks.TALL_HALODULE_UNINERVIS);
 	// TODO this should probably just be a util in this class
 	public static final BlockEntry<CustomTallSeagrassBlock> TALL_HALODULE_UNINERVIS = CustomTallSeagrassBlock.dropping(HALODULE_UNINERVIS).register();
 	public static final BlockEntry<Block> MATTED_HALODULE_UNINERVIS = mattedSeagrassBlock("matted_halodule_uninervis").register();

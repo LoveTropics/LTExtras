@@ -14,23 +14,23 @@ import net.minecraft.world.level.block.SeagrassBlock;
 import net.minecraft.world.level.block.TallSeagrassBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.lovetropics.extras.ExtraBlocks;
-
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class CustomSeagrassBlock extends SeagrassBlock {
 
     private final String scientificName;
+	@Nullable
+	private final Supplier<Supplier<? extends TallSeagrassBlock>> tall;
 
-    public CustomSeagrassBlock(final Properties properties, final String scientificName) {
+    public CustomSeagrassBlock(final Properties properties, final String scientificName, @Nullable final Supplier<Supplier<? extends TallSeagrassBlock>> tall) {
         super(properties);
         this.scientificName = scientificName;
+		this.tall = tall;
     }
 
     @Override
@@ -38,21 +38,17 @@ public class CustomSeagrassBlock extends SeagrassBlock {
         tooltip.add(new TextComponent(scientificName).withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
     }
     
-    private final Lazy<BlockState> tall = Lazy.of(() -> ExtraBlocks.REGISTRATE
-    		.getOptional("tall_" + ForgeRegistries.BLOCKS.getKey(this).getPath(), Block.class)
-    		.map(Block::defaultBlockState)
-    		.orElse(null));
-
     @Override
-    public void performBonemeal(ServerLevel p_154498_, Random p_154499_, BlockPos p_154500_, BlockState p_154501_) {
-        BlockState blockstate = tall.get();
-        if (blockstate == null) return;
-        BlockState blockstate1 = blockstate.setValue(TallSeagrassBlock.HALF, DoubleBlockHalf.UPPER);
-        BlockPos blockpos = p_154500_.above();
-        if (p_154498_.getBlockState(blockpos).is(Blocks.WATER)) {
-           p_154498_.setBlock(p_154500_, blockstate, 2);
-           p_154498_.setBlock(blockpos, blockstate1, 2);
-        }
+    public void performBonemeal(ServerLevel level, Random random, BlockPos pos, BlockState state) {
+		if (tall == null) return;
 
-     }
+        BlockState bottomState = tall.get().get().defaultBlockState();
+		BlockState topState = bottomState.setValue(TallSeagrassBlock.HALF, DoubleBlockHalf.UPPER);
+
+        BlockPos topPos = pos.above();
+        if (level.getBlockState(topPos).is(Blocks.WATER)) {
+            level.setBlock(pos, bottomState, Block.UPDATE_CLIENTS);
+            level.setBlock(topPos, topState, Block.UPDATE_CLIENTS);
+        }
+    }
 }
