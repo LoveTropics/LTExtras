@@ -464,7 +464,8 @@ public class ExtraBlocks {
 			.add(Blocks.CRACKED_STONE_BRICKS, SpeedyBlock::opaque)
 			.add(Blocks.SMOOTH_STONE, SpeedyBlock::opaque)
 			.add(Blocks.GRAVEL, SpeedyBlock::opaque)
-			.add(Blocks.DIRT_PATH, p -> SpeedyBlock.transparent(PATH_SHAPE, p));
+			.add(Blocks.DIRT_PATH, p -> SpeedyBlock.transparent(PATH_SHAPE, p))
+			.add(Blocks.BLACK_CONCRETE_POWDER, SpeedyBlock::opaque);
 
 	public static final Map<NamedSupplier<Block>, BlockEntry<? extends SpeedyBlock>> SPEEDY_BLOCKS = SPEEDY_BLOCK_TEMPLATES
 			.build((object, factory) -> REGISTRATE
