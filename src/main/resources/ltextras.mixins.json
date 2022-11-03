@@ -27,8 +27,6 @@
     "client.perf.ChunkRenderMixin",
     "client.perf.ClientChunkCacheStorageMixin",
     "client.perf.ClientWorldMixin",
-    "client.perf.LevelRendererMixin",
-    "client.perf.VertexBufferMixin",
     "client.perf.ViewFrustumAccess",
     "client.perf.WorldRendererAccess"
   ],
