@@ -103,6 +103,7 @@
   "block.ltextras.yellow_glow_sticks": "Yellow Glow Sticks",
   "effect.ltextras.fish_eye": "Fish Eye",
   "entity.ltextras.party_beam": "Party Beam",
+  "entity.ltextras.text": "Text",
   "item.ltextras.entity_wand": "Entity Wand",
   "itemGroup.ltextras": "LTExtras"
 }

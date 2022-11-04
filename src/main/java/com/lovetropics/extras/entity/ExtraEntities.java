@@ -2,6 +2,7 @@ package com.lovetropics.extras.entity;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.entity.PartyBeamRenderer;
+import com.lovetropics.extras.client.entity.TextEntityRenderer;
 import com.lovetropics.extras.entity.vfx.PartyBeamEntity;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.EntityEntry;
@@ -18,6 +19,15 @@ public class ExtraEntities {
 					.updateInterval(4))
 			.renderer(() -> PartyBeamRenderer::new)
 			.register();
+
+    public static final EntityEntry<TextEntity> TEXT = REGISTRATE.entity("text", TextEntity::new, MobCategory.MISC)
+            .defaultLang()
+            .properties(builder -> builder
+                    .sized(1.0F, 1.0F)
+                    .clientTrackingRange(16)
+                    .updateInterval(4))
+            .renderer(() -> TextEntityRenderer::new)
+            .register();
 
 	public static void init() {
 	}
