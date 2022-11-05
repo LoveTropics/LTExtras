@@ -41,7 +41,7 @@ public class ParticleEmitterBlockEntity extends BlockEntity {
 
             int tickMod = time % 80;
             if (tickMod >= 0 && tickMod < 20) {
-                slevel.sendParticles(particle, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, particleCount, 0.05, 0, 0.05, 1);
+                slevel.sendParticles(particle, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, particleCount, 0.05, 0, 0.05, 1);
             }
         }
     }
