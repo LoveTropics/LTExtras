@@ -4,6 +4,7 @@ import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.command.GenerateCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
+import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
@@ -83,6 +84,7 @@ public class LTExtras {
 
 		ExtraParticles.REGISTER.register(modBus);
 		ExtraEffects.REGISTER.register(modBus);
+		ExtraEntities.ENTITIES.register(modBus);
 
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			modBus.addListener(this::clientSetup);

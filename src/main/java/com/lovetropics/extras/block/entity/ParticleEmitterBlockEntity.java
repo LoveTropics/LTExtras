@@ -21,7 +21,7 @@ public class ParticleEmitterBlockEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, ParticleEmitterBlockEntity be) {
         if (level instanceof ServerLevel slevel) {
-            if (slevel.hasNeighborSignal(pos)) {
+            if (!slevel.hasNeighborSignal(pos)) {
                 return;
             }
 
