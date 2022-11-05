@@ -79,12 +79,12 @@ public class LTExtras {
 		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(LTExtras::getCompatVersion, (s, v) -> LTExtras.isCompatibleVersion(s)));
 
 		ExtraBlocks.init();
+		ExtraEntities.init();
 
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		ExtraParticles.REGISTER.register(modBus);
 		ExtraEffects.REGISTER.register(modBus);
-		ExtraEntities.ENTITIES.register(modBus);
 
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			modBus.addListener(this::clientSetup);
