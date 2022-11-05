@@ -24,6 +24,11 @@ public class TextEntityRenderer extends EntityRenderer<TextEntity> {
 
 	@Override
 	public void render(TextEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+		float alpha = entity.alpha(partialTicks);
+		if (alpha < 0.1f) {
+			return;
+		}
+
 		poseStack.pushPose();
 
 		Matrix4f pointAlong = entity.pointAlongMatrix();
@@ -36,7 +41,6 @@ public class TextEntityRenderer extends EntityRenderer<TextEntity> {
 		float scale = entity.scale();
 		poseStack.scale(-scale, -scale, scale);
 
-		float alpha = entity.alpha(partialTicks);
 		int color = alphaToColor(alpha) | 0xffffff;
 		int backgroundColor = alphaToColor(alpha * CLIENT.options.getBackgroundOpacity(0.25F));
 
