@@ -17,25 +17,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.lovetropics.extras.block.CheckpointBlock;
-import com.lovetropics.extras.block.CustomSeagrassBlock;
-import com.lovetropics.extras.block.CustomTallSeagrassBlock;
-import com.lovetropics.extras.block.FakeWaterBlock;
-import com.lovetropics.extras.block.GirderBlock;
-import com.lovetropics.extras.block.GlowSticksBlock;
-import com.lovetropics.extras.block.HeavyDoorBlock;
-import com.lovetropics.extras.block.LightweightBarrierBlock;
-import com.lovetropics.extras.block.MobControllerBlock;
-import com.lovetropics.extras.block.PanelBlock;
-import com.lovetropics.extras.block.PassableBarrierBlock;
-import com.lovetropics.extras.block.PianguasBlock;
-import com.lovetropics.extras.block.ReedsBlock;
-import com.lovetropics.extras.block.RopeBlock;
-import com.lovetropics.extras.block.ScientificNameBlock;
-import com.lovetropics.extras.block.SpeedyBlock;
-import com.lovetropics.extras.block.ThornStemBlock;
-import com.lovetropics.extras.block.WaterBarrierBlock;
+import com.lovetropics.extras.block.*;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
+import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
 import com.lovetropics.extras.data.ModelGenUtil;
 import com.lovetropics.extras.data.ModelGenUtil.TextureType;
@@ -268,6 +252,15 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntityEntry<MobControllerBlockEntity> MOB_CONTROLLER_BE = BlockEntityEntry.cast(MOB_CONTROLLER.getSibling(ForgeRegistries.BLOCK_ENTITIES));
+
+	public static final BlockEntry<ParticleEmitterBlock> PARTICLE_EMITTER = REGISTRATE.block("particle_emitter", ParticleEmitterBlock::new)
+			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.simpleItem()
+			.blockEntity(ParticleEmitterBlockEntity::new)
+			.build()
+			.register();
+
+	public static final BlockEntityEntry<ParticleEmitterBlockEntity> PARTICLE_EMITTER_BE = BlockEntityEntry.cast(PARTICLE_EMITTER.getSibling(ForgeRegistries.BLOCK_ENTITIES));
 
 	public static final BlockEntry<Block> BLACK_CONCRETE_POWDER_FAKE = REGISTRATE.block("black_concrete_powder_fake", Block::new)
 			.initialProperties(() -> Blocks.DIRT)
