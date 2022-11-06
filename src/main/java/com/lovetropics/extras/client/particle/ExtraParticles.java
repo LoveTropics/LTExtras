@@ -22,6 +22,7 @@ public final class ExtraParticles {
 	public static final RegistryObject<SimpleParticleType> CHECKPOINT = REGISTER.register("checkpoint", () -> new SimpleParticleType(false));
 	public static final RegistryObject<SimpleParticleType> EMITTED_PARTICLE = REGISTER.register("emitted_particle", () -> new SimpleParticleType(false));
 	public static final RegistryObject<SimpleParticleType> EMITTED_FIRE_PARTICLE = REGISTER.register("emitted_fire_particle", () -> new SimpleParticleType(false));
+	public static final RegistryObject<SimpleParticleType> EMITTED_HEARTS_PARTICLE = REGISTER.register("emitted_hearts_particle", () -> new SimpleParticleType(false));
 
 	@OnlyIn(Dist.CLIENT)
 	public static TextureAtlasSprite getItemSprite(final ClientLevel level, final ItemStack stack) {

@@ -1,6 +1,5 @@
 package com.lovetropics.extras.entity.vfx;
 
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -14,7 +13,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -80,8 +78,8 @@ public class PartyBeamEntity extends EndCrystal {
         }
     }
 
-    public void setColor(@Nullable BlockPos pBeamTarget) {
-        this.getEntityData().set(DATA_COLOR, Optional.ofNullable(pBeamTarget));
+    public void setColor(@Nullable BlockPos rgbColorVector) {
+        this.getEntityData().set(DATA_COLOR, Optional.ofNullable(rgbColorVector));
     }
 
     @Nullable

@@ -25,22 +25,26 @@ public class ParticleEmitterBlockEntity extends BlockEntity {
                 return;
             }
 
+            boolean alwaysPlace = false;
             // Choose between types
-            int time;
+            int time = (int) (level.getGameTime());
             SimpleParticleType particle;
             int particleCount;
-            if (be.mode == 1) {
-                time = (int) (level.getGameTime() + 40);
+            if (be.mode == 2) {
+                alwaysPlace = true;
+                particle = ExtraParticles.EMITTED_HEARTS_PARTICLE.get();
+                particleCount = 3;
+            } else if (be.mode == 1) {
+                time += 40;
                 particle = ExtraParticles.EMITTED_FIRE_PARTICLE.get();
                 particleCount = 8;
             } else {
-                time = (int) (level.getGameTime());
                 particle = ExtraParticles.EMITTED_PARTICLE.get();
                 particleCount = 5;
             }
 
             int tickMod = time % 80;
-            if (tickMod >= 0 && tickMod < 20) {
+            if (alwaysPlace || (tickMod >= 0 && tickMod < 20)) {
                 slevel.sendParticles(particle, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, particleCount, 0.05, 0, 0.05, 1);
             }
         }
