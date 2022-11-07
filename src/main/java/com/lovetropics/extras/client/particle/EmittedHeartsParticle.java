@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 public class EmittedHeartsParticle extends EmittedRaisingParticle {
 	EmittedHeartsParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
 		super(world, x, y, z, sprites);
+		this.setSize(0.75f, 0.75f);
 	}
 
 	@SubscribeEvent
