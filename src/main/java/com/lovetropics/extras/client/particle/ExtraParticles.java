@@ -10,7 +10,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -27,6 +27,6 @@ public final class ExtraParticles {
 	@OnlyIn(Dist.CLIENT)
 	public static TextureAtlasSprite getItemSprite(final ClientLevel level, final ItemStack stack) {
 		final BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
-		return model.getOverrides().resolve(model, stack, level, null, 0).getParticleIcon(EmptyModelData.INSTANCE);
+		return model.getOverrides().resolve(model, stack, level, null, 0).getParticleIcon(ModelData.EMPTY);
 	}
 }

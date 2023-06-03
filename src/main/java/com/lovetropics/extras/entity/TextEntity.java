@@ -5,7 +5,6 @@ import com.mojang.math.Vector3f;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -44,7 +43,7 @@ public class TextEntity extends Entity {
 
 	@Override
 	protected void defineSynchedData() {
-		entityData.define(DATA_TEXT, TextComponent.EMPTY);
+		entityData.define(DATA_TEXT, Component.empty());
 		entityData.define(DATA_SCALE, 0.0625f);
 		entityData.define(DATA_FORWARD_X, 0.0f);
 		entityData.define(DATA_FORWARD_Y, 0.0f);

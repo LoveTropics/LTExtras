@@ -16,33 +16,33 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Deprecated
 @Mixin(VertexBuffer.class)
 public abstract class VertexBufferMixin {
-	@Shadow
-	private int indexCount;
-	@Shadow
-	private VertexFormat.Mode mode;
-	@Shadow
-	private VertexFormat.IndexType indexType;
-	@Shadow
-	private VertexFormat format;
-
-	@Shadow
-	protected abstract void bindVertexArray();
-
-	@Redirect(method = "upload_", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;unbind()V"))
-	private void dontUnbindAfterUpload() {
-	}
-
-	@Inject(method = "upload_", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;bind()V", shift = At.Shift.AFTER))
-	private void setupFormatStateAfterUpload(BufferBuilder builder, CallbackInfo ci) {
-		format.setupBufferState();
-	}
-
-	@Overwrite
-	public void drawChunkLayer() {
-		// We don't need to rebind
-		if (indexCount != 0) {
-			bindVertexArray();
-			RenderSystem.drawElements(mode.asGLMode, indexCount, indexType.asGLType);
-		}
-	}
+//	@Shadow
+//	private int indexCount;
+//	@Shadow
+//	private VertexFormat.Mode mode;
+//	@Shadow
+//	private VertexFormat.IndexType indexType;
+//	@Shadow
+//	private VertexFormat format;
+//
+//	@Shadow
+//	protected abstract void bindVertexArray();
+//
+//	@Redirect(method = "upload_", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;unbind()V"))
+//	private void dontUnbindAfterUpload() {
+//	}
+//
+//	@Inject(method = "upload_", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;bind()V", shift = At.Shift.AFTER))
+//	private void setupFormatStateAfterUpload(BufferBuilder builder, CallbackInfo ci) {
+//		format.setupBufferState();
+//	}
+//
+//	@Overwrite
+//	public void drawChunkLayer() {
+//		// We don't need to rebind
+//		if (indexCount != 0) {
+//			bindVertexArray();
+//			RenderSystem.drawElements(mode.asGLMode, indexCount, indexType.asGLType);
+//		}
+//	}
 }

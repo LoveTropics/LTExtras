@@ -2,6 +2,7 @@ package com.lovetropics.extras.command;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.lovetropics.extras.LTExtras;
 import com.mojang.brigadier.Command;
@@ -10,11 +11,13 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagBuilder;
+import net.minecraft.tags.TagFile;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -34,33 +37,33 @@ public class GenerateCommand {
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-	private static final DynamicCommandExceptionType FAILED_TO_WRITE = new DynamicCommandExceptionType(o -> new TextComponent("Failed to write to file: " + o));
+	private static final DynamicCommandExceptionType FAILED_TO_WRITE = new DynamicCommandExceptionType(o -> Component.literal("Failed to write to file: " + o));
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		// @formatter:off
-		dispatcher.register(
-			literal("generate").requires(source -> source.hasPermission(4))
-				.then(literal("tag")
-					.then(literal("item")
-						.then(argument("name", StringArgumentType.word())
-							.then(argument("pattern", StringArgumentType.greedyString())
-								.executes(GenerateCommand::generateItemTag))))));
-		// @formatter:on
+        dispatcher.register(
+            literal("generate").requires(source -> source.hasPermission(4))
+                .then(literal("tag")
+                    .then(literal("item")
+                        .then(argument("name", StringArgumentType.word())
+                            .then(argument("pattern", StringArgumentType.greedyString())
+                                .executes(GenerateCommand::generateItemTag))))));
+        // @formatter:on
 	}
 
 	private static int generateItemTag(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
 		Pattern pattern = Pattern.compile(StringArgumentType.getString(ctx, "pattern"));
 
-		Tag.Builder tagBuilder = new Tag.Builder();
+		TagBuilder tagBuilder = TagBuilder.create();
 
 		for (Entry<ResourceKey<Item>, Item> e : ForgeRegistries.ITEMS.getEntries()) {
 			ResourceLocation id = e.getKey().location();
 			if (pattern.matcher(id.toString()).matches()) {
-				tagBuilder.addElement(id, LTExtras.MODID);
+				tagBuilder.addElement(id);
 			}
 		}
 
-		JsonObject json = tagBuilder.serializeToJson();
+		JsonElement json = TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(tagBuilder.build(), false)).getOrThrow(false, System.err::println);
 
 		Path output = Paths.get("export", "generated", "tags", "item", StringArgumentType.getString(ctx, "name") + ".json");
 		try {

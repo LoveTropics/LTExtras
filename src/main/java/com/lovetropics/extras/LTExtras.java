@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
@@ -52,18 +52,18 @@ public class LTExtras {
 			return ExtraBlocks.BUOY.asStack();
 		}
 
-		@Override
-		public void fillItemList(NonNullList<ItemStack> stacks) {
-			super.fillItemList(stacks);
-			// TODO this is a bit inefficient but does it matter?
-			// Fixes random item order when things are added to existing worlds
-			final List<Item> order = registrate()
-					.getAll(Item.class)
-					.stream()
-					.map(RegistryEntry::get)
-					.collect(Collectors.toList());
-			stacks.sort(Comparator.comparingInt(i -> order.indexOf(i.getItem())));
-		}
+//		@Override
+//		public void fillItemList(NonNullList<ItemStack> stacks) {
+//			super.fillItemList(stacks);
+//			// TODO this is a bit inefficient but does it matter?
+//			// Fixes random item order when things are added to existing worlds
+//			final List<Item> order = registrate()
+//					.getAll(Item.class)
+//					.stream()
+//					.map(RegistryEntry::get)
+//					.collect(Collectors.toList());
+//			stacks.sort(Comparator.comparingInt(i -> order.indexOf(i.getItem())));
+//		}
 	};
 
 	private static NonNullLazy<Registrate> registrate = NonNullLazy.of(() ->
@@ -138,8 +138,8 @@ public class LTExtras {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private void registerItemColors(ColorHandlerEvent.Item evt) {
-		evt.getItemColors().register((stack, index) -> index == 0 ? Fluids.WATER.getAttributes().getColor() : -1,
+	private void registerItemColors(RegisterColorHandlersEvent.Item evt) {
+		evt.getItemColors().register((stack, index) -> index == 0 ? 0x3f76e4 : -1,
 				ExtraBlocks.WATER_BARRIER.get(),
 				ExtraBlocks.FAKE_WATER.get());
 	}

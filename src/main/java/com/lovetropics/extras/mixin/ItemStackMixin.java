@@ -16,17 +16,17 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class ItemStackMixin {
 	private static final ImmutableList<Holder<Block>> EMPTY_TAG = ImmutableList.of(Blocks.AIR.builtInRegistryHolder());
 
-	@Redirect(
-			method = "expandBlockState",
-			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/core/DefaultedRegistry;getTagOrEmpty(Lnet/minecraft/tags/TagKey;)Ljava/lang/Iterable;"
-			)
-	)
-	private static Iterable<Holder<Block>> getPlacementTooltipForTag(DefaultedRegistry<Block> registry, TagKey<Block> tag) {
-		if (tag.location().equals(EverythingTag.ID)) {
-			return EMPTY_TAG;
-		}
-		return registry.getTagOrEmpty(tag);
-	}
+//	@Redirect(
+//			method = "expandBlockState",
+//			at = @At(
+//					value = "INVOKE",
+//					target = "Lnet/minecraft/core/DefaultedRegistry;getTagOrEmpty(Lnet/minecraft/tags/TagKey;)Ljava/lang/Iterable;"
+//			)
+//	)
+//	private static Iterable<Holder<Block>> getPlacementTooltipForTag(DefaultedRegistry<Block> registry, TagKey<Block> tag) {
+//		if (tag.location().equals(EverythingTag.ID)) {
+//			return EMPTY_TAG;
+//		}
+//		return registry.getTagOrEmpty(tag);
+//	}
 }

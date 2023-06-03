@@ -6,7 +6,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 
 import static net.minecraft.commands.Commands.argument;
@@ -30,7 +30,7 @@ public final class SetMaxPlayersCommand {
 		MinecraftServer server = ctx.getSource().getServer();
 		((PlayerListAccess) server.getPlayerList()).setMaxPlayers(maxPlayers);
 
-		ctx.getSource().sendSuccess(new TextComponent("Set max player count to " + maxPlayers), true);
+		ctx.getSource().sendSuccess(Component.literal("Set max player count to " + maxPlayers), true);
 
 		return Command.SINGLE_SUCCESS;
 	}

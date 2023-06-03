@@ -92,7 +92,7 @@ public class ExtraBlocks {
 	// One-off custom blocks
 
 	public static final BlockEntry<WaterBarrierBlock> WATER_BARRIER = REGISTRATE.block("water_barrier", WaterBarrierBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
+			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
 			.item()
@@ -101,7 +101,7 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<LightweightBarrierBlock> LIGHTWEIGHT_BARRIER = REGISTRATE.block("lightweight_barrier", LightweightBarrierBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.BARRIER).strength(0.0F, 3.6e6f).noDrops())
+			.properties(p -> Block.Properties.copy(Blocks.BARRIER).strength(0.0F, 3.6e6f).noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
 			.item()
@@ -110,7 +110,7 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<PassableBarrierBlock> PASSABLE_BARRIER = REGISTRATE.block("passable_barrier", PassableBarrierBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
+			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
 			.item()
@@ -119,7 +119,7 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<FakeWaterBlock> FAKE_WATER = REGISTRATE.block("fake_water", FakeWaterBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
+			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("block/water_still"))))
 			.item()
@@ -182,7 +182,7 @@ public class ExtraBlocks {
 	}
 
 	public static final BlockEntry<CheckpointBlock> CHECKPOINT = REGISTRATE.block("checkpoint", CheckpointBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noDrops())
+			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
 				.getBuilder(ctx.getName()).texture("particle", prov.mcLoc("item/structure_void"))))
 			.item()
@@ -251,7 +251,7 @@ public class ExtraBlocks {
 				.build()
 			.register();
 
-	public static final BlockEntityEntry<MobControllerBlockEntity> MOB_CONTROLLER_BE = BlockEntityEntry.cast(MOB_CONTROLLER.getSibling(ForgeRegistries.BLOCK_ENTITIES));
+	public static final BlockEntityEntry<MobControllerBlockEntity> MOB_CONTROLLER_BE = BlockEntityEntry.cast(MOB_CONTROLLER.getSibling(ForgeRegistries.BLOCK_ENTITY_TYPES));
 
 	public static final BlockEntry<ParticleEmitterBlock> PARTICLE_EMITTER = REGISTRATE.block("particle_emitter", ParticleEmitterBlock::new)
 			.initialProperties(() -> Blocks.IRON_BLOCK)
@@ -260,7 +260,7 @@ public class ExtraBlocks {
 			.build()
 			.register();
 
-	public static final BlockEntityEntry<ParticleEmitterBlockEntity> PARTICLE_EMITTER_BE = BlockEntityEntry.cast(PARTICLE_EMITTER.getSibling(ForgeRegistries.BLOCK_ENTITIES));
+	public static final BlockEntityEntry<ParticleEmitterBlockEntity> PARTICLE_EMITTER_BE = BlockEntityEntry.cast(PARTICLE_EMITTER.getSibling(ForgeRegistries.BLOCK_ENTITY_TYPES));
 
 	public static final BlockEntry<Block> BLACK_CONCRETE_POWDER_FAKE = REGISTRATE.block("black_concrete_powder_fake", Block::new)
 			.initialProperties(() -> Blocks.DIRT)
@@ -278,7 +278,7 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<ReedsBlock> REEDS = REGISTRATE.block("reeds", ReedsBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.SUGAR_CANE).noDrops())
+			.properties(p -> Block.Properties.copy(Blocks.SUGAR_CANE).noLootTable())
 			.blockstate((ctx, prov) -> {
 				prov.getVariantBuilder(ctx.getEntry())
 						.forAllStates(state -> {
@@ -684,7 +684,7 @@ public class ExtraBlocks {
 		private final Map<NamedSupplier<Block>, P> templates = new Object2ObjectOpenHashMap<>();
 
 		public TemplateBuilder<T, P> add(Block block, P parameter) {
-			return this.add(NamedSupplier.of(block), parameter);
+			return this.add(NamedSupplier.of(ForgeRegistries.BLOCKS, ForgeRegistries.BLOCKS.getKey(block)), parameter);
 		}
 
 		public TemplateBuilder<T, P> add(ResourceLocation id, P parameter) {

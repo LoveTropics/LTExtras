@@ -10,7 +10,7 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -22,7 +22,7 @@ public class EmittedHeartsParticle extends EmittedRaisingParticle {
 	}
 
 	@SubscribeEvent
-	public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
+	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
 		Minecraft.getInstance().particleEngine.register(ExtraParticles.EMITTED_HEARTS_PARTICLE.get(), EmittedHeartsParticle.Factory::new);
 	}
 

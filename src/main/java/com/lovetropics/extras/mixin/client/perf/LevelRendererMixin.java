@@ -17,6 +17,6 @@ public class LevelRendererMixin {
 	@Inject(method = "renderChunkLayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ShaderInstance;clear()V"))
 	private void clearVertexBuffer(RenderType renderType, PoseStack poseStack, double cameraX, double cameraY, double cameraZ, Matrix4f projectionMatrix, CallbackInfo ci) {
 		// We need to unbind the chunk vertex array so future render code doesn't reset and break our state
-		VertexBuffer.unbindVertexArray();
+		VertexBuffer.unbind();
 	}
 }

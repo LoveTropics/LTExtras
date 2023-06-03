@@ -8,6 +8,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -34,7 +35,7 @@ public class PartyBeamEntity extends EndCrystal {
 
         if (this.level instanceof ServerLevel) {
             if (targetPos != null && this.level.getGameTime() % 100 == 0) {
-                Random random = this.random;
+                RandomSource random = this.random;
                 random.setSeed(this.level.getGameTime());
 
                 int ax = targetPos.getX() + (random.nextInt(5) - random.nextInt(5));

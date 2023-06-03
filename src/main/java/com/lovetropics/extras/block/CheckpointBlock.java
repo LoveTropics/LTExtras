@@ -2,6 +2,7 @@ package com.lovetropics.extras.block;
 
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import net.minecraft.nbt.Tag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
@@ -20,7 +21,6 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -72,8 +72,8 @@ public class CheckpointBlock extends Block {
 	public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip,
 			TooltipFlag flagIn) {
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-		tooltip.add(new TextComponent("Stage: ")
-				.append(new TextComponent(Integer.toString(getStage(stack)))
+		tooltip.add(Component.literal("Stage: ")
+				.append(Component.literal(Integer.toString(getStage(stack)))
 						.withStyle(ChatFormatting.AQUA)));
 	}
 
@@ -92,7 +92,7 @@ public class CheckpointBlock extends Block {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+	public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
 		LocalPlayer player = Minecraft.getInstance().player;
 		if (player == null) {
 			return;

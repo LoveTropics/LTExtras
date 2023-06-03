@@ -4,7 +4,7 @@ import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.entity.ExtendedCreatureEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -28,10 +28,10 @@ public class EntityWandItem extends Item {
 				int id = target.getId();
 				ItemStack stack1 = playerIn.getItemInHand(hand);
 				stack1.getOrCreateTag().putInt("EntityId", id);
-				playerIn.displayClientMessage(new TextComponent("Targeted entity!"), true);
+				playerIn.displayClientMessage(Component.literal("Targeted entity!"), true);
 				return InteractionResult.SUCCESS;
 			} else {
-				playerIn.displayClientMessage(new TextComponent("This entity cannot be targeted!"), true);
+				playerIn.displayClientMessage(Component.literal("This entity cannot be targeted!"), true);
 			}
 		}
 
@@ -57,7 +57,7 @@ public class EntityWandItem extends Item {
 					Entity entity = world.getEntity(id);
 					if (entity != null) {
 						mobController.addEntity(entity);
-						context.getPlayer().displayClientMessage(new TextComponent("Added entity!"), true);
+						context.getPlayer().displayClientMessage(Component.literal("Added entity!"), true);
 					}
 				}
 			}
