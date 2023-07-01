@@ -103,8 +103,8 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    jarJar(implementation(fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}"))) {
-        jarJar.ranged(it, "${registrate_version},MC1.21)")
+    jarJar(implementation(fg.deobf("com.tterrag.registrate:Registrate:$registrate_version"))) {
+        jarJar.ranged(it, "[$registrate_version,MC1.21)")
     }
 
     jarJar(implementation(fg.deobf("com.lovetropics.lib:LTLib:${ltlib_version}"))) {
