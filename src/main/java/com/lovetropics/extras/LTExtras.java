@@ -78,7 +78,6 @@ public class LTExtras {
                     p.add(ExtraEffects.FISH_EYE.get(), "Fish Eye");
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
-                        .icon(() -> registrate().getAll(Registries.ITEM).stream().findFirst().map(ItemEntry::cast).map(ItemEntry::asStack).orElse(new ItemStack(Items.AIR)))
                         .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))
                         .icon(() -> ExtraBlocks.BUOY.asStack())
                         .build()
