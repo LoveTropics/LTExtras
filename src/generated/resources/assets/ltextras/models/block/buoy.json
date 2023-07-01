@@ -1,13 +1,29 @@
 {
   "parent": "minecraft:block/block",
   "ambientocclusion": false,
-  "textures": {
-    "beacon": "minecraft:block/beacon",
-    "base": "minecraft:block/dark_prismarine",
-    "particle": "minecraft:block/dark_prismarine"
-  },
   "elements": [
     {
+      "faces": {
+        "down": {
+          "cullface": "down",
+          "texture": "#base"
+        },
+        "east": {
+          "texture": "#base"
+        },
+        "north": {
+          "texture": "#base"
+        },
+        "south": {
+          "texture": "#base"
+        },
+        "up": {
+          "texture": "#base"
+        },
+        "west": {
+          "texture": "#base"
+        }
+      },
       "from": [
         2,
         0,
@@ -17,30 +33,29 @@
         14,
         3,
         14
-      ],
-      "faces": {
-        "down": {
-          "texture": "#base",
-          "cullface": "down"
-        },
-        "up": {
-          "texture": "#base"
-        },
-        "north": {
-          "texture": "#base"
-        },
-        "south": {
-          "texture": "#base"
-        },
-        "west": {
-          "texture": "#base"
-        },
-        "east": {
-          "texture": "#base"
-        }
-      }
+      ]
     },
     {
+      "faces": {
+        "down": {
+          "texture": "#beacon"
+        },
+        "east": {
+          "texture": "#beacon"
+        },
+        "north": {
+          "texture": "#beacon"
+        },
+        "south": {
+          "texture": "#beacon"
+        },
+        "up": {
+          "texture": "#beacon"
+        },
+        "west": {
+          "texture": "#beacon"
+        }
+      },
       "from": [
         3,
         3,
@@ -50,27 +65,12 @@
         13,
         14,
         13
-      ],
-      "faces": {
-        "down": {
-          "texture": "#beacon"
-        },
-        "up": {
-          "texture": "#beacon"
-        },
-        "north": {
-          "texture": "#beacon"
-        },
-        "south": {
-          "texture": "#beacon"
-        },
-        "west": {
-          "texture": "#beacon"
-        },
-        "east": {
-          "texture": "#beacon"
-        }
-      }
+      ]
     }
-  ]
+  ],
+  "textures": {
+    "base": "minecraft:block/dark_prismarine",
+    "beacon": "minecraft:block/beacon",
+    "particle": "minecraft:block/dark_prismarine"
+  }
 }

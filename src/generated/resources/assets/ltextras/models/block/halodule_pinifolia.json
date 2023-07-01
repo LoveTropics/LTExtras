@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/template_seagrass",
   "textures": {
-    "texture": "ltextras:block/halodule_pinifolia",
-    "particle": "ltextras:block/halodule_pinifolia"
+    "particle": "ltextras:block/halodule_pinifolia",
+    "texture": "ltextras:block/halodule_pinifolia"
   }
 }

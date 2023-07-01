@@ -1,8 +1,9 @@
 package com.lovetropics.extras.block.entity;
 
 import com.lovetropics.extras.entity.ExtendedCreatureEntity;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
@@ -40,14 +41,14 @@ public class MobControllerBlockEntity extends BlockEntity {
 		for (Tag mobNbt : mobUuids) {
 			CompoundTag compoundNBT = (CompoundTag) mobNbt;
 			UUID uuid = compoundNBT.getUUID("UUID");
-			String type = compoundNBT.getString("Type");
+			ResourceLocation type = new ResourceLocation(compoundNBT.getString("Type"));
 
 			ListTag pos = compoundNBT.getList("Pos", Tag.TAG_DOUBLE);
-			EntityType<?> entityType = Registry.ENTITY_TYPE.getOptional(new ResourceLocation(type)).get();
-
-			this.uuids.add(uuid);
-			this.types.put(uuid, entityType);
-			this.positions.put(uuid, new Vec3(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)));
+			level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getOptional(type).ifPresent(entityType -> {
+				this.uuids.add(uuid);
+				this.types.put(uuid, entityType);
+				this.positions.put(uuid, new Vec3(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)));
+			});
 		}
 
 		this.loadState = tag.getBoolean("LoadState");
@@ -101,7 +102,7 @@ public class MobControllerBlockEntity extends BlockEntity {
 			long ticks = level.getGameTime();
 
 			// Update positions semi frequently
-			if (controller.loadState && ticks % 5 == 0) {
+			if (controller.loadState && ticks % (SharedConstants.TICKS_PER_SECOND / 4) == 0) {
 				for (UUID uuid : controller.uuids) {
 					Entity entity = serverLevel.getEntity(uuid);
 
@@ -112,7 +113,7 @@ public class MobControllerBlockEntity extends BlockEntity {
 			}
 
 			// Every second
-			if (ticks % 20 == 0) {
+			if (ticks % SharedConstants.TICKS_PER_SECOND == 0) {
 				Player player = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 32, EntitySelector.NO_SPECTATORS);
 
 				if (controller.loadState) {

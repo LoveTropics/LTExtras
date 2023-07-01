@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "side": "ltextras:block/matted_syringodium_isoetifolium_side",
     "bottom": "ltextras:block/purified_sand",
+    "side": "ltextras:block/matted_syringodium_isoetifolium_side",
     "top": "ltextras:block/matted_syringodium_isoetifolium_top"
   }
 }

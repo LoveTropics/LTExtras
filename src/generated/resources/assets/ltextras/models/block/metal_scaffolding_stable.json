@@ -2,8 +2,8 @@
   "parent": "minecraft:block/scaffolding_stable",
   "textures": {
     "bottom": "ltextras:block/metal_scaffolding_bottom",
-    "top": "ltextras:block/metal_scaffolding_top",
+    "particle": "ltextras:block/metal_scaffolding_top",
     "side": "ltextras:block/metal_scaffolding_side",
-    "particle": "ltextras:block/metal_scaffolding_top"
+    "top": "ltextras:block/metal_scaffolding_top"
   }
 }

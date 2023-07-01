@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/template_seagrass",
   "textures": {
-    "texture": "ltextras:block/cymodocea_rotundata",
-    "particle": "ltextras:block/cymodocea_rotundata"
+    "particle": "ltextras:block/cymodocea_rotundata",
+    "texture": "ltextras:block/cymodocea_rotundata"
   }
 }

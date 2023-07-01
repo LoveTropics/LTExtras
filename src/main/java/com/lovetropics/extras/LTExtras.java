@@ -7,15 +7,18 @@ import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.mojang.brigadier.CommandDispatcher;
+import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
-import com.tterrag.registrate.util.entry.RegistryEntry;
+import com.tterrag.registrate.providers.RegistrateLangProvider;
+import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -35,43 +38,20 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.network.NetworkConstants;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Mod("ltextras")
 public class LTExtras {
 
 	public static final String MODID = "ltextras";
 
-	public static final CreativeModeTab ITEM_GROUP = new CreativeModeTab(MODID) {
+    private static final ResourceLocation TAB_ID = new ResourceLocation(MODID, "ltextras");
 
-		@Override
-		public ItemStack makeIcon() {
-			return ExtraBlocks.BUOY.asStack();
-		}
-
-//		@Override
-//		public void fillItemList(NonNullList<ItemStack> stacks) {
-//			super.fillItemList(stacks);
-//			// TODO this is a bit inefficient but does it matter?
-//			// Fixes random item order when things are added to existing worlds
-//			final List<Item> order = registrate()
-//					.getAll(Item.class)
-//					.stream()
-//					.map(RegistryEntry::get)
-//					.collect(Collectors.toList());
-//			stacks.sort(Comparator.comparingInt(i -> order.indexOf(i.getItem())));
-//		}
-	};
-
-	private static NonNullLazy<Registrate> registrate = NonNullLazy.of(() ->
-		Registrate.create(MODID)
-			.creativeModeTab(() -> ITEM_GROUP));
+    private static final NonNullLazy<Registrate> REGISTRATE = NonNullLazy.of(() -> Registrate.create(MODID).defaultCreativeTab(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TAB_ID)));
 
 	public static Registrate registrate() {
-		return registrate.get();
+		return REGISTRATE.get();
 	}
 
 	public LTExtras() {
@@ -93,11 +73,18 @@ public class LTExtras {
 
 		MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
 
-		registrate()
-			.addDataGenerator(ProviderType.LANG, p -> {
-				p.add(ITEM_GROUP, "LTExtras");
-				p.add(ExtraEffects.FISH_EYE.get(), "Fish Eye");
-			});
+        registrate()
+                .addDataGenerator(ProviderType.LANG, p -> {
+                    p.add(ExtraEffects.FISH_EYE.get(), "Fish Eye");
+                })
+                .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
+                        .icon(() -> registrate().getAll(Registries.ITEM).stream().findFirst().map(ItemEntry::cast).map(ItemEntry::asStack).orElse(new ItemStack(Items.AIR)))
+                        .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))
+                        .icon(() -> ExtraBlocks.BUOY.asStack())
+                        .build()
+                ).build();
+
+		LTExtrasNetwork.register();
 
 		// Mark WorldEdit as only required on the server
 		ModList.get().getModContainerById("worldedit").ifPresent(worldedit -> {
@@ -110,8 +97,6 @@ public class LTExtras {
 				)
 			);
 		});
-
-		LTExtrasNetwork.register();
 	}
 
 	private static final Pattern QUALIFIER = Pattern.compile("-\\w+\\+\\d+");

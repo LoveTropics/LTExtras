@@ -5,6 +5,7 @@
   "plugin": "com.lovetropics.extras.mixin.LTExtrasMixinPlugin",
   "refmap": "ltextras.refmap.json",
   "mixins": [
+    "BlockMixin",
     "BlockPropertiesMixin",
     "CreatureEntityMixin",
     "FluidStateMixin",
@@ -15,10 +16,9 @@
     "TeamCommandMixin",
     "perf.BiomeManagerMixin",
     "perf.ChunkManagerMixin",
-    "perf.ServerChunkProviderMixin",
     "tag.MappedRegistryMixin",
-    "tag.NamespacedHolderHelperMixin",
-    "tag.ReferenceHolderMixin"
+    "tag.NamespacedWrapperMixin",
+    "tag.TagNetworkSerializationMixin"
   ],
   "client": [
     "client.LocalPlayerMixin",

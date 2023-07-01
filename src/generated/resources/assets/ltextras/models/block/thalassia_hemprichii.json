@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/template_seagrass",
   "textures": {
-    "texture": "ltextras:block/thalassia_hemprichii",
-    "particle": "ltextras:block/thalassia_hemprichii"
+    "particle": "ltextras:block/thalassia_hemprichii",
+    "texture": "ltextras:block/thalassia_hemprichii"
   }
 }

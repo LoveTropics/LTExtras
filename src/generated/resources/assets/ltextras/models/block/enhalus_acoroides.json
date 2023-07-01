@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/template_seagrass",
   "textures": {
-    "texture": "ltextras:block/enhalus_acoroides",
-    "particle": "ltextras:block/enhalus_acoroides"
+    "particle": "ltextras:block/enhalus_acoroides",
+    "texture": "ltextras:block/enhalus_acoroides"
   }
 }

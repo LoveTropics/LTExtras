@@ -1,45 +1,45 @@
 {
   "multipart": [
     {
+      "apply": {
+        "model": "ltextras:block/rusting_steel_girder",
+        "uvlock": true,
+        "x": 90,
+        "y": 90
+      },
       "when": {
         "x": "true"
-      },
-      "apply": {
-        "model": "ltextras:block/rusting_steel_girder",
-        "x": 90,
-        "y": 90,
-        "uvlock": true
       }
     },
     {
+      "apply": {
+        "model": "ltextras:block/rusting_steel_girder",
+        "uvlock": true
+      },
       "when": {
         "y": "true"
-      },
-      "apply": {
-        "model": "ltextras:block/rusting_steel_girder",
-        "uvlock": true
       }
     },
     {
+      "apply": {
+        "model": "ltextras:block/rusting_steel_girder",
+        "uvlock": true,
+        "x": 90
+      },
       "when": {
         "z": "true"
-      },
-      "apply": {
-        "model": "ltextras:block/rusting_steel_girder",
-        "x": 90,
-        "uvlock": true
       }
     },
     {
+      "apply": {
+        "model": "ltextras:block/rusting_steel_girder",
+        "uvlock": true,
+        "x": 90
+      },
       "when": {
         "x": "false",
         "y": "false",
         "z": "false"
-      },
-      "apply": {
-        "model": "ltextras:block/rusting_steel_girder",
-        "x": 90,
-        "uvlock": true
       }
     }
   ]

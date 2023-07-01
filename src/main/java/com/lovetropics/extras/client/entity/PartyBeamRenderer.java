@@ -3,10 +3,7 @@ package com.lovetropics.extras.client.entity;
 import com.lovetropics.extras.entity.vfx.PartyBeamEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -17,7 +14,6 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.entity.EndCrystalRenderer;
 import net.minecraft.client.renderer.entity.EnderDragonRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -25,136 +21,133 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class PartyBeamRenderer extends EntityRenderer<PartyBeamEntity> {
     private static final ResourceLocation END_CRYSTAL_LOCATION = new ResourceLocation("textures/entity/end_crystal/end_crystal.png");
     private static final RenderType BEAM = RenderType.entitySmoothCutout(EnderDragonRenderer.CRYSTAL_BEAM_LOCATION);
     private static final RenderType RENDER_TYPE = RenderType.entityCutoutNoCull(END_CRYSTAL_LOCATION);
-    private static final float SIN_45 = (float)Math.sin((Math.PI / 4D));
-    private static final String GLASS = "glass";
-    private static final String BASE = "base";
+    private static final float SIN_45 = Mth.sin(Mth.PI / 4.0f);
     private final ModelPart cube;
     private final ModelPart glass;
     private final ModelPart base;
 
-    public PartyBeamRenderer(EntityRendererProvider.Context p_173970_) {
-        super(p_173970_);
-        this.shadowRadius = 0.5F;
-        ModelPart modelpart = p_173970_.bakeLayer(ModelLayers.END_CRYSTAL);
-        this.glass = modelpart.getChild("glass");
-        this.cube = modelpart.getChild("cube");
-        this.base = modelpart.getChild("base");
+    public PartyBeamRenderer(final EntityRendererProvider.Context context) {
+        super(context);
+        shadowRadius = 0.5F;
+        final ModelPart root = context.bakeLayer(ModelLayers.END_CRYSTAL);
+        glass = root.getChild("glass");
+        cube = root.getChild("cube");
+        base = root.getChild("base");
     }
 
     public static LayerDefinition createBodyLayer() {
-        MeshDefinition meshdefinition = new MeshDefinition();
-        PartDefinition partdefinition = meshdefinition.getRoot();
-        partdefinition.addOrReplaceChild("glass", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
-        partdefinition.addOrReplaceChild("cube", CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
-        partdefinition.addOrReplaceChild("base", CubeListBuilder.create().texOffs(0, 16).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 4.0F, 12.0F), PartPose.ZERO);
-        return LayerDefinition.create(meshdefinition, 64, 32);
+        final MeshDefinition mesh = new MeshDefinition();
+        final PartDefinition root = mesh.getRoot();
+        root.addOrReplaceChild("glass", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
+        root.addOrReplaceChild("cube", CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
+        root.addOrReplaceChild("base", CubeListBuilder.create().texOffs(0, 16).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 4.0F, 12.0F), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 64, 32);
     }
 
-    public void render(PartyBeamEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
-        pMatrixStack.pushPose();
-        float f = getY(pEntity, pPartialTicks);
-        float f1 = ((float)pEntity.time + pPartialTicks) * 3.0F;
-        VertexConsumer vertexconsumer = pBuffer.getBuffer(RENDER_TYPE);
-        pMatrixStack.pushPose();
-        pMatrixStack.scale(2.0F, 2.0F, 2.0F);
-        pMatrixStack.translate(0.0D, -0.5D, 0.0D);
-        int i = OverlayTexture.NO_OVERLAY;
-        if (pEntity.showsBottom()) {
-            this.base.render(pMatrixStack, vertexconsumer, pPackedLight, i);
+    @Override
+    public void render(final PartyBeamEntity entity, final float yaw, final float partialTicks, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
+        poseStack.pushPose();
+        final float offsetY = getY(entity, partialTicks);
+        final float time = (entity.time + partialTicks) * 3.0F;
+        final VertexConsumer consumer = bufferSource.getBuffer(RENDER_TYPE);
+        poseStack.pushPose();
+        poseStack.scale(2.0F, 2.0F, 2.0F);
+        poseStack.translate(0.0F, -0.5F, 0.0F);
+        if (entity.showsBottom()) {
+            base.render(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
         }
 
-        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(f1));
-        pMatrixStack.translate(0.0D, (double)(1.5F + f / 2.0F), 0.0D);
-        pMatrixStack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
-        this.glass.render(pMatrixStack, vertexconsumer, pPackedLight, i);
-        float f2 = 0.875F;
-        pMatrixStack.scale(0.875F, 0.875F, 0.875F);
-        pMatrixStack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
-        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(f1));
-        this.glass.render(pMatrixStack, vertexconsumer, pPackedLight, i);
-        pMatrixStack.scale(0.875F, 0.875F, 0.875F);
-        pMatrixStack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
-        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(f1));
-        this.cube.render(pMatrixStack, vertexconsumer, pPackedLight, i);
-        pMatrixStack.popPose();
-        pMatrixStack.popPose();
-        BlockPos blockpos = pEntity.getBeamTarget();
-        if (blockpos != null) {
-            float f3 = (float)blockpos.getX() + 0.5F;
-            float f4 = (float)blockpos.getY() + 0.5F;
-            float f5 = (float)blockpos.getZ() + 0.5F;
-            float f6 = (float)((double)f3 - pEntity.getX());
-            float f7 = (float)((double)f4 - pEntity.getY());
-            float f8 = (float)((double)f5 - pEntity.getZ());
-            pMatrixStack.translate((double)f6, (double)f7, (double)f8);
-            renderCrystalBeams(pEntity, -f6, -f7 + f, -f8, pPartialTicks, pEntity.time, pMatrixStack, pBuffer, pPackedLight);
+        poseStack.mulPose(Axis.YP.rotationDegrees(time));
+        poseStack.translate(0.0F, 1.5F + offsetY / 2.0F, 0.0F);
+        poseStack.mulPose(new Quaternionf().rotateAxis(60.0F * Mth.DEG_TO_RAD, new Vector3f(SIN_45, 0.0F, SIN_45)));
+        glass.render(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
+        poseStack.scale(0.875F, 0.875F, 0.875F);
+        poseStack.mulPose(new Quaternionf().rotateAxis(60.0F * Mth.DEG_TO_RAD, new Vector3f(SIN_45, 0.0F, SIN_45)));
+        poseStack.mulPose(Axis.YP.rotationDegrees(time));
+        glass.render(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
+        poseStack.scale(0.875F, 0.875F, 0.875F);
+        poseStack.mulPose(new Quaternionf().rotateAxis(60.0F * Mth.DEG_TO_RAD, new Vector3f(SIN_45, 0.0F, SIN_45)));
+        poseStack.mulPose(Axis.YP.rotationDegrees(time));
+        cube.render(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
+        poseStack.popPose();
+        poseStack.popPose();
+
+        final BlockPos target = entity.getBeamTarget();
+        if (target != null) {
+            final float targetX = target.getX() + 0.5F;
+            final float targetY = target.getY() + 0.5F;
+            final float targetZ = target.getZ() + 0.5F;
+            final float deltaX = (float) (targetX - entity.getX());
+            final float deltaY = (float) (targetY - entity.getY());
+            final float deltaZ = (float) (targetZ - entity.getZ());
+            poseStack.translate(deltaX, deltaY, deltaZ);
+            renderCrystalBeams(entity, -deltaX, -deltaY + offsetY, -deltaZ, partialTicks, entity.time, poseStack, bufferSource, packedLight);
         }
 
-        super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
+        super.render(entity, yaw, partialTicks, poseStack, bufferSource, packedLight);
     }
 
     // Needed to set the color
-    public void renderCrystalBeams(PartyBeamEntity beam, float p_114188_, float p_114189_, float p_114190_, float p_114191_, int p_114192_, PoseStack p_114193_, MultiBufferSource p_114194_, int p_114195_) {
-        float f = Mth.sqrt(p_114188_ * p_114188_ + p_114190_ * p_114190_);
-        float f1 = Mth.sqrt(p_114188_ * p_114188_ + p_114189_ * p_114189_ + p_114190_ * p_114190_);
-        p_114193_.pushPose();
-        p_114193_.translate(0.0D, 2.0D, 0.0D);
-        p_114193_.mulPose(Vector3f.YP.rotation((float)(-Math.atan2((double)p_114190_, (double)p_114188_)) - ((float)Math.PI / 2F)));
-        p_114193_.mulPose(Vector3f.XP.rotation((float)(-Math.atan2((double)f, (double)p_114189_)) - ((float)Math.PI / 2F)));
-        VertexConsumer vertexconsumer = p_114194_.getBuffer(BEAM);
-        float f2 = 0.0F - ((float)p_114192_ + p_114191_) * 0.01F;
-        float f3 = Mth.sqrt(p_114188_ * p_114188_ + p_114189_ * p_114189_ + p_114190_ * p_114190_) / 32.0F - ((float)p_114192_ + p_114191_) * 0.01F;
-        int i = 8;
-        float f4 = 0.0F;
-        float f5 = 0.75F;
-        float f6 = 0.0F;
-        PoseStack.Pose posestack$pose = p_114193_.last();
-        Matrix4f matrix4f = posestack$pose.pose();
-        Matrix3f matrix3f = posestack$pose.normal();
+    public void renderCrystalBeams(final PartyBeamEntity entity, final float deltaX, final float deltaY, final float deltaZ, final float partialTicks, final int time, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
+        final float lengthXz = Mth.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+        final float length = Mth.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+        poseStack.pushPose();
+        poseStack.translate(0.0F, 2.0F, 0.0F);
+        poseStack.mulPose(Axis.YP.rotation((float) (-Math.atan2(deltaZ, deltaX)) - (Mth.PI / 2F)));
+        poseStack.mulPose(Axis.XP.rotation((float) (-Math.atan2(lengthXz, deltaY)) - (Mth.PI / 2F)));
+        final VertexConsumer consumer = bufferSource.getBuffer(BEAM);
+        final float startTextureOffset = -(time + partialTicks) * 0.01F;
+        final float endTextureOffset = length / 32.0F - (time + partialTicks) * 0.01F;
+        float lastX = 0.0F;
+        float lastY = 0.75F;
+        float lastProgress = 0.0F;
+        final PoseStack.Pose pose = poseStack.last();
+        final Matrix4f matrix = pose.pose();
+        final Matrix3f normal = pose.normal();
 
-        for(int j = 1; j <= 8; ++j) {
-            float f7 = Mth.sin((float)j * ((float)Math.PI * 2F) / 8.0F) * 0.75F;
-            float f8 = Mth.cos((float)j * ((float)Math.PI * 2F) / 8.0F) * 0.75F;
-            float f9 = (float)j / 8.0F;
-            int r = 0;
-            int g = 0;
-            int b = 0;
-            BlockPos color = beam.getColor();
-            if (color != null) {
-                r = color.getX();
-                g = color.getY();
-                b = color.getZ();
-            }
-            vertexconsumer.vertex(matrix4f, f4 * 0.2F, f5 * 0.2F, 0.0F).color(0, 0, 0, 255).uv(f6, f2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(p_114195_).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-            vertexconsumer.vertex(matrix4f, f4, f5, f1).color(r, g, b, 255).uv(f6, f3).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(p_114195_).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-            vertexconsumer.vertex(matrix4f, f7, f8, f1).color(r, g, b, 255).uv(f9, f3).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(p_114195_).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-            vertexconsumer.vertex(matrix4f, f7 * 0.2F, f8 * 0.2F, 0.0F).color(0, 0, 0, 255).uv(f9, f2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(p_114195_).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-            f4 = f7;
-            f5 = f8;
-            f6 = f9;
+        for (int i = 1; i <= 8; i++) {
+            final float x = Mth.sin(i * Mth.TWO_PI / 8.0F) * 0.75F;
+            final float y = Mth.cos(i * Mth.TWO_PI / 8.0F) * 0.75F;
+            final float progress = i / 8.0F;
+            final Vector3f color = entity.getColor();
+            final int r = Mth.floor(color.x() * 255.0f);
+            final int g = Mth.floor(color.y() * 255.0f);
+            final int b = Mth.floor(color.z() * 255.0f);
+            consumer.vertex(matrix, lastX * 0.2F, lastY * 0.2F, 0.0F).color(0, 0, 0, 255).uv(lastProgress, startTextureOffset).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(normal, 0.0F, -1.0F, 0.0F).endVertex();
+            consumer.vertex(matrix, lastX, lastY, length).color(r, g, b, 255).uv(lastProgress, endTextureOffset).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(normal, 0.0F, -1.0F, 0.0F).endVertex();
+            consumer.vertex(matrix, x, y, length).color(r, g, b, 255).uv(progress, endTextureOffset).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(normal, 0.0F, -1.0F, 0.0F).endVertex();
+            consumer.vertex(matrix, x * 0.2F, y * 0.2F, 0.0F).color(0, 0, 0, 255).uv(progress, startTextureOffset).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(normal, 0.0F, -1.0F, 0.0F).endVertex();
+            lastX = x;
+            lastY = y;
+            lastProgress = progress;
         }
 
-        p_114193_.popPose();
+        poseStack.popPose();
     }
 
-    public static float getY(PartyBeamEntity p_114159_, float p_114160_) {
-        float f = (float)p_114159_.time + p_114160_;
-        float f1 = Mth.sin(f * 0.2F) / 2.0F + 0.5F;
-        f1 = (f1 * f1 + f1) * 0.4F;
-        return f1 - 1.4F;
+    private static float getY(final PartyBeamEntity entity, final float partialTicks) {
+        final float time = entity.time + partialTicks;
+        float y = Mth.sin(time * 0.2F) / 2.0F + 0.5F;
+        y = (y * y + y) * 0.4F;
+        return y - 1.4F;
     }
 
-    public ResourceLocation getTextureLocation(PartyBeamEntity pEntity) {
+    @Override
+    public ResourceLocation getTextureLocation(final PartyBeamEntity entity) {
         return END_CRYSTAL_LOCATION;
     }
 
-    public boolean shouldRender(PartyBeamEntity pLivingEntity, Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
-        return super.shouldRender(pLivingEntity, pCamera, pCamX, pCamY, pCamZ) || pLivingEntity.getBeamTarget() != null;
+    @Override
+    public boolean shouldRender(final PartyBeamEntity entity, final Frustum frustum, final double cameraX, final double cameraY, final double cameraZ) {
+        return super.shouldRender(entity, frustum, cameraX, cameraY, cameraZ) || entity.getBeamTarget() != null;
     }
 }

@@ -23,7 +23,7 @@ public class EntityWandItem extends Item {
 
 	@Override
 	public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
-		if (!playerIn.level.isClientSide()) {
+		if (!playerIn.level().isClientSide()) {
 			if (target instanceof ExtendedCreatureEntity) {
 				int id = target.getId();
 				ItemStack stack1 = playerIn.getItemInHand(hand);

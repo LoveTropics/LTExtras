@@ -1,21 +1,7 @@
 {
   "ambientocclusion": false,
-  "textures": {
-    "base": "ltextras:block/pianguas",
-    "particle": "ltextras:block/pianguas"
-  },
   "elements": [
     {
-      "from": [
-        0,
-        0,
-        0.1
-      ],
-      "to": [
-        16,
-        16,
-        0.1
-      ],
       "faces": {
         "south": {
           "texture": "#base",
@@ -26,7 +12,21 @@
             16.0
           ]
         }
-      }
+      },
+      "from": [
+        0,
+        0,
+        0.1
+      ],
+      "to": [
+        16,
+        16,
+        0.1
+      ]
     }
-  ]
+  ],
+  "textures": {
+    "base": "ltextras:block/pianguas",
+    "particle": "ltextras:block/pianguas"
+  }
 }

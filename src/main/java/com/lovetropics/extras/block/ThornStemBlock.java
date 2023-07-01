@@ -2,7 +2,6 @@ package com.lovetropics.extras.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -37,7 +36,7 @@ public final class ThornStemBlock extends PipeBlock implements SimpleWaterlogged
 
 	@Override
 	public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
-		entity.hurt(DamageSource.SWEET_BERRY_BUSH, 1.0F);
+		entity.hurt(entity.damageSources().sweetBerryBush(), 1.0F);
 	}
 
 	@Override

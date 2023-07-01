@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/template_seagrass",
   "textures": {
-    "texture": "ltextras:block/thalassodendron_ciliatum",
-    "particle": "ltextras:block/thalassodendron_ciliatum"
+    "particle": "ltextras:block/thalassodendron_ciliatum",
+    "texture": "ltextras:block/thalassodendron_ciliatum"
   }
 }

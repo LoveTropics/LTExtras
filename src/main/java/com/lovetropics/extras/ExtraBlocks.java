@@ -1,29 +1,10 @@
 package com.lovetropics.extras;
 
-import static com.lovetropics.extras.data.ModelGenUtil.barsBlock;
-import static com.lovetropics.extras.data.ModelGenUtil.fenceBlock;
-import static com.lovetropics.extras.data.ModelGenUtil.getMainTexture;
-import static com.lovetropics.extras.data.ModelGenUtil.scaffoldingModel;
-import static com.lovetropics.extras.data.ModelGenUtil.slabBlock;
-import static com.lovetropics.extras.data.ModelGenUtil.stairsBlock;
-import static com.lovetropics.extras.data.ModelGenUtil.wallBlock;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import com.lovetropics.extras.block.*;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
 import com.lovetropics.extras.data.ModelGenUtil;
-import com.lovetropics.extras.data.ModelGenUtil.TextureType;
-import com.lovetropics.extras.item.BouyBlockItem;
 import com.lovetropics.extras.item.EntityWandItem;
 import com.lovetropics.extras.mixin.BlockPropertiesMixin;
 import com.lovetropics.lib.block.CustomShapeBlock;
@@ -34,15 +15,12 @@ import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
-import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -50,29 +28,15 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.item.ScaffoldingBlockItem;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.BaseCoralFanBlock;
-import net.minecraft.world.level.block.BaseCoralPlantTypeBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.FenceBlock;
-import net.minecraft.world.level.block.IronBarsBlock;
-import net.minecraft.world.level.block.LadderBlock;
-import net.minecraft.world.level.block.PipeBlock;
-import net.minecraft.world.level.block.ScaffoldingBlock;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.StainedGlassBlock;
-import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.TallSeagrassBlock;
-import net.minecraft.world.level.block.VineBlock;
-import net.minecraft.world.level.block.WallBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
@@ -84,6 +48,16 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import static com.lovetropics.extras.data.ModelGenUtil.*;
 
 public class ExtraBlocks {
 
@@ -92,7 +66,8 @@ public class ExtraBlocks {
 	// One-off custom blocks
 
 	public static final BlockEntry<WaterBarrierBlock> WATER_BARRIER = REGISTRATE.block("water_barrier", WaterBarrierBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noLootTable())
+			.initialProperties(() -> Blocks.BARRIER)
+			.properties(p -> p.noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
 			.item()
@@ -101,7 +76,8 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<LightweightBarrierBlock> LIGHTWEIGHT_BARRIER = REGISTRATE.block("lightweight_barrier", LightweightBarrierBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.BARRIER).strength(0.0F, 3.6e6f).noLootTable())
+			.initialProperties(() -> Blocks.BARRIER)
+			.properties(p -> p.strength(0.0F, 3.6e6f).noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
 			.item()
@@ -110,7 +86,8 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<PassableBarrierBlock> PASSABLE_BARRIER = REGISTRATE.block("passable_barrier", PassableBarrierBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noLootTable())
+			.initialProperties(() -> Blocks.BARRIER)
+			.properties(p -> p.noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
 			.item()
@@ -119,7 +96,8 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<FakeWaterBlock> FAKE_WATER = REGISTRATE.block("fake_water", FakeWaterBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noLootTable())
+			.initialProperties(() -> Blocks.BARRIER)
+			.properties(p -> p.noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("block/water_still"))))
 			.item()
@@ -132,7 +110,7 @@ public class ExtraBlocks {
 							Block.box(2, 0, 2, 14, 3, 14),
 							Block.box(3, 3, 3, 13, 14, 13)),
 					p))
-			.properties(p -> Block.Properties.copy(Blocks.BEACON))
+			.initialProperties(() -> Blocks.BEACON)
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
 					.withExistingParent(ctx.getName(), new ResourceLocation("block/block"))
 						.ao(false)
@@ -150,14 +128,14 @@ public class ExtraBlocks {
 							.to(13, 14, 13)
 							.textureAll("#beacon")
 							.end()))
-			.item(BouyBlockItem::new).build()
+			.item(PlaceOnWaterBlockItem::new).build()
 			.register();
 
 	public static final BlockEntry<PanelBlock> GLASS_PANEL = REGISTRATE.block("glass_panel", PanelBlock::new)
 			.initialProperties(() -> Blocks.GLASS)
 			.blockstate((ctx, prov) -> prov.directionalBlock(ctx.get(), prov.models()
 					.trapdoorTop(ctx.getName(), prov.blockTexture(Blocks.GLASS))))
-			.loot(BlockLoot::dropWhenSilkTouch)
+			.loot(RegistrateBlockLootTables::dropWhenSilkTouch)
 			.addLayer(() -> RenderType::cutout)
 			.item()
 				.model((ctx, prov) -> prov.trapdoorBottom(ctx.getName(), prov.mcLoc("block/glass")))
@@ -182,7 +160,8 @@ public class ExtraBlocks {
 	}
 
 	public static final BlockEntry<CheckpointBlock> CHECKPOINT = REGISTRATE.block("checkpoint", CheckpointBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.BARRIER).noLootTable())
+			.initialProperties(() -> Blocks.BARRIER)
+			.properties(p -> p.noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
 				.getBuilder(ctx.getName()).texture("particle", prov.mcLoc("item/structure_void"))))
 			.item()
@@ -278,30 +257,29 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<ReedsBlock> REEDS = REGISTRATE.block("reeds", ReedsBlock::new)
-			.properties(p -> Block.Properties.copy(Blocks.SUGAR_CANE).noLootTable())
-			.blockstate((ctx, prov) -> {
-				prov.getVariantBuilder(ctx.getEntry())
-						.forAllStates(state -> {
-							ReedsBlock.Type type = state.getValue(ReedsBlock.TYPE);
-							ConfiguredModel.Builder<?> builder = ConfiguredModel.builder();
+			.initialProperties(() -> Blocks.SUGAR_CANE)
+			.properties(p -> p.noLootTable())
+			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
+					.forAllStates(state -> {
+						ReedsBlock.Type type = state.getValue(ReedsBlock.TYPE);
+						ConfiguredModel.Builder<?> builder = ConfiguredModel.builder();
 
-							String[] textures = type.getTextures();
-							for (int i = 0; i < textures.length; i++) {
-								String texture = textures[i];
-								ResourceLocation textureLoc = prov.modLoc("block/" + texture);
-								builder.modelFile(prov.models()
-										.withExistingParent(texture, "block/crop")
-										.texture("crop", textureLoc)
-										.texture("particle", textureLoc)
-								);
-								if (i < textures.length - 1) {
-									builder = builder.nextModel();
-								}
+						String[] textures = type.getTextures();
+						for (int i = 0; i < textures.length; i++) {
+							String texture = textures[i];
+							ResourceLocation textureLoc = prov.modLoc("block/" + texture);
+							builder.modelFile(prov.models()
+									.withExistingParent(texture, "block/crop")
+									.texture("crop", textureLoc)
+									.texture("particle", textureLoc)
+							);
+							if (i < textures.length - 1) {
+								builder = builder.nextModel();
 							}
+						}
 
-							return builder.build();
-						});
-			})
+						return builder.build();
+					}))
 			.addLayer(() -> RenderType::cutout)
 			.item()
 				.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/reeds_top_tall")))
@@ -309,7 +287,7 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<PianguasBlock> PIANGUAS = REGISTRATE.block("pianguas", PianguasBlock::new)
-			.properties(p -> BlockBehaviour.Properties.of(Material.STONE).noCollission().instabreak())
+			.properties(p -> p.mapColor(MapColor.STONE).noCollission().instabreak().instrument(NoteBlockInstrument.BASEDRUM))
 			.blockstate((ctx, prov) -> {
 				BlockModelBuilder model = prov.models().getBuilder("pianguas")
 						.ao(false)
@@ -347,8 +325,8 @@ public class ExtraBlocks {
 	public static final BlockEntry<RopeBlock> PARACORD = rope("paracord");
 
 	private static BlockEntry<RopeBlock> rope(String name) {
-		return REGISTRATE.block(name, Material.WOOL, RopeBlock::new)
-				.properties(p -> p.instabreak().noCollission().sound(SoundType.WOOL))
+		return REGISTRATE.block(name, RopeBlock::new)
+				.properties(p -> p.mapColor(MapColor.WOOL).instabreak().noCollission().sound(SoundType.WOOL).ignitedByLava())
 				.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
 						.forAllStatesExcept(state -> {
 							String modelName = state.getValue(RopeBlock.KNOT) ? name + "_knot" : name;
@@ -372,8 +350,8 @@ public class ExtraBlocks {
 			.collect(Collectors.toMap(Function.identity(), dyeColor -> {
 				String dyeName = dyeColor.getSerializedName();
 				String name = dyeName + "_glow_sticks";
-				return REGISTRATE.block(name, Material.GLASS, GlowSticksBlock::new)
-						.properties(p -> p.instabreak().noCollission().sound(SoundType.GLASS).noOcclusion()
+				return REGISTRATE.block(name, GlowSticksBlock::new)
+						.properties(p -> p.instabreak().noCollission().sound(SoundType.GLASS).noOcclusion().instrument(NoteBlockInstrument.HAT)
 								.lightLevel(value -> 6)
 						)
 						.blockstate((ctx, prov) -> {
@@ -402,7 +380,7 @@ public class ExtraBlocks {
 				.build()
 			.register();
 
-	public static final BlockEntry<HeavyDoorBlock> HEAVY_SPRUCE_DOOR = REGISTRATE.block("heavy_spruce_door", HeavyDoorBlock::new)
+	public static final BlockEntry<DoorBlock> HEAVY_SPRUCE_DOOR = REGISTRATE.block("heavy_spruce_door", p -> new DoorBlock(p, BlockSetType.IRON))
 			.initialProperties(() -> Blocks.SPRUCE_DOOR)
 			.blockstate((ctx, prov) -> {})
 			.addLayer(() -> RenderType::cutout)
@@ -604,7 +582,7 @@ public class ExtraBlocks {
 	}
 
 	private static BlockEntry<CustomSeagrassBlock> seagrass(final String blockName, @Nullable final Supplier<Supplier<? extends TallSeagrassBlock>> tall) {
-		return REGISTRATE.block(blockName, Material.REPLACEABLE_WATER_PLANT, p -> new CustomSeagrassBlock(p, RegistrateLangProvider.toEnglishName(blockName), tall))
+		return REGISTRATE.block(blockName, p -> new CustomSeagrassBlock(p, RegistrateLangProvider.toEnglishName(blockName), tall))
 				.lang("Seagrass")
 				.initialProperties(() -> Blocks.SEAGRASS)
 				.addLayer(() -> RenderType::cutout)

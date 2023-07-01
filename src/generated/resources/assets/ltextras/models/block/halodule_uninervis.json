@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/template_seagrass",
   "textures": {
-    "texture": "ltextras:block/halodule_uninervis",
-    "particle": "ltextras:block/halodule_uninervis"
+    "particle": "ltextras:block/halodule_uninervis",
+    "texture": "ltextras:block/halodule_uninervis"
   }
 }

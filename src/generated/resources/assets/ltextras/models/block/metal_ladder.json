@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/ladder",
   "textures": {
-    "texture": "ltextras:block/metal_ladder",
-    "particle": "ltextras:block/metal_ladder"
+    "particle": "ltextras:block/metal_ladder",
+    "texture": "ltextras:block/metal_ladder"
   }
 }

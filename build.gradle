@@ -1,25 +1,18 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/maven' }
-        maven { url = 'https://maven.parchmentmc.org' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath "org.parchmentmc:librarian:1.+"
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7+'
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'eclipse'
-apply plugin: 'org.spongepowered.mixin'
 
 jarJar.enable()
 
 group = 'com.lovetropics.extras'
-archivesBaseName = 'LTExtras'
+base {
+    archivesName = 'LTExtras'
+}
 
 ext.buildnumber = 0
 project.buildnumber = System.getenv('BUILD_NUMBER') ?: 'custom'
@@ -37,14 +30,15 @@ if (System.getenv('GHA_RELEASE_WORKFLOW')) {
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+    mappings channel: 'parchment', version: parchment_version
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
             taskName 'ltextras_client'
-            
+            copyIdeResources = true
+
             workingDirectory project.file('run')
             arg "-mixin.config=ltextras.mixins.json"
 
@@ -59,7 +53,8 @@ minecraft {
 
         server {
             taskName 'ltextras_server'
-        
+            copyIdeResources = true
+
             workingDirectory project.file('run')
             arg "-mixin.config=ltextras.mixins.json"
 
@@ -74,7 +69,8 @@ minecraft {
         
         data {
             taskName 'ltextras_data'
-        
+            copyIdeResources = true
+
             workingDirectory project.file('run')
             args "-mixin.config=ltextras.mixins.json", "--existing-mod", "create"
 
@@ -100,21 +96,19 @@ sourceSets.main.resources {
 }
 
 repositories {
-    maven { // Registrate
-        url "https://maven.tterrag.com/"
-    }
+    maven { url "https://maven.tterrag.com/" }
     mavenLocal()
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    jarJar(implementation(fg.deobf("com.tterrag.registrate:Registrate:MC1.19-${registrate_version}"))) {
-        jarJar.ranged(it, "[MC${minecraft_version}-${registrate_version},MC1.20)")
+    jarJar(implementation(fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}"))) {
+        jarJar.ranged(it, "${registrate_version},MC1.21)")
     }
 
     jarJar(implementation(fg.deobf("com.lovetropics.lib:LTLib:${ltlib_version}"))) {
-        jarJar.ranged(it, "[1.2,1.3)")
+        jarJar.ranged(it, "[1.3,1.4)")
     }
 
 //    runtimeOnly fg.deobf('com.jozufozu.flywheel:Flywheel-Forge:1.18-0.7.0.70')
@@ -130,8 +124,8 @@ mixin {
 }
 
 tasks.jarJar.configure {
-    classifier ''
-    finalizedBy('reobfJarJar')
+    archiveClassifier = ''
+    finalizedBy 'reobfJarJar'
 }
 
 reobf {
@@ -139,15 +133,15 @@ reobf {
 }
 
 jar {
-    classifier = 'slim'
+    archiveClassifier = 'slim'
 
     manifest {
         attributes([
             "Specification-Title": "ltextras",
             "Specification-Vendor": "lovetropics",
-            "Specification-Version": "1", // We are version 1 of ourselves
+            "Specification-Version": "1",
             "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
+            "Implementation-Version": archiveVersion,
             "Implementation-Vendor" :"lovetropics",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
             "MixinConfigs": "ltextras.mixins.json"

@@ -30,7 +30,7 @@ public final class SetMaxPlayersCommand {
 		MinecraftServer server = ctx.getSource().getServer();
 		((PlayerListAccess) server.getPlayerList()).setMaxPlayers(maxPlayers);
 
-		ctx.getSource().sendSuccess(Component.literal("Set max player count to " + maxPlayers), true);
+		ctx.getSource().sendSuccess(() -> Component.literal("Set max player count to " + maxPlayers), true);
 
 		return Command.SINGLE_SUCCESS;
 	}
