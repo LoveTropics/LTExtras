@@ -390,11 +390,6 @@ public class ExtraBlocks {
 			.build()
 			.register();
 
-	public static final ItemEntry<EntityWandItem> ENTITY_WAND = REGISTRATE.item("entity_wand", EntityWandItem::new)
-			.initialProperties(() -> new Item.Properties().stacksTo(1))
-			.defaultModel()
-			.register();
-
 	public static final BlockEntry<ThornStemBlock> THORN_STEM = REGISTRATE.block("thorn_stem", ThornStemBlock::new)
 			.initialProperties(() -> Blocks.ACACIA_LEAVES)
 			.properties(p -> p.noOcclusion().isRedstoneConductor((state, world, pos) -> false))

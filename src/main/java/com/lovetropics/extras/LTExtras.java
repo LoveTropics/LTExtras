@@ -59,6 +59,7 @@ public class LTExtras {
 		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(LTExtras::getCompatVersion, (s, v) -> LTExtras.isCompatibleVersion(s)));
 
 		ExtraBlocks.init();
+		ExtraItems.init();
 		ExtraEntities.init();
 
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
