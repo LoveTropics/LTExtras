@@ -1,13 +1,17 @@
 package com.lovetropics.extras.data;
 
 import com.lovetropics.extras.NamedSupplier;
+import com.lovetropics.extras.block.BoringEndRodBlock;
 import com.lovetropics.extras.block.GirderBlock;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.RodBlock;
 import net.minecraft.world.level.block.ScaffoldingBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
@@ -132,6 +136,37 @@ public class ModelGenUtil {
 
 	public static ResourceLocation getMainTexture(NamedSupplier<Block> block, TextureType texture) {
 		return texture.getSideTexture(block);
+	}
+
+	public static void rodBlock(DataGenContext<Block, BoringEndRodBlock> ctx, RegistrateBlockstateProvider prov) {
+		ModelFile.ExistingModelFile model = prov.models().getExistingFile(prov.blockTexture(Blocks.END_ROD));
+		MultiPartBlockStateBuilder builder = prov.getMultipartBuilder(ctx.getEntry());
+
+		builder
+				.part()
+				.modelFile(model).rotationX(180).addModel()
+				.condition(RodBlock.FACING, Direction.DOWN)
+				.end()
+				.part()
+				.modelFile(model).rotationX(90).rotationY(90).addModel()
+				.condition(RodBlock.FACING, Direction.EAST)
+				.end()
+				.part()
+				.modelFile(model).rotationX(90).addModel()
+				.condition(RodBlock.FACING, Direction.NORTH)
+				.end()
+				.part()
+				.modelFile(model).rotationX(90).rotationY(180).addModel()
+				.condition(RodBlock.FACING, Direction.SOUTH)
+				.end()
+				.part()
+				.modelFile(model).addModel()
+				.condition(RodBlock.FACING, Direction.UP)
+				.end()
+				.part()
+				.modelFile(model).rotationX(90).rotationY(270).addModel()
+				.condition(RodBlock.FACING, Direction.WEST)
+				.end();
 	}
 
 	public static <T extends StairBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> stairsBlock(NamedSupplier<Block> object, TextureType textureType) {
