@@ -21,7 +21,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -31,7 +30,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.item.ScaffoldingBlockItem;
@@ -751,6 +749,18 @@ public class ExtraBlocks {
 					.end())
 			.build()
 			.register();
+
+    public static final BlockEntry<CurtainBlock> CURTAIN = REGISTRATE.block("curtain", p -> (CurtainBlock) new CurtainBlock(p) {
+            })
+            .initialProperties(() -> Blocks.GLASS_PANE)
+            .properties(p -> p.sound(SoundType.WOOL))
+            .blockstate((ctx, prov) -> {
+            }) // NO-OP, it's easier to just copy the file out of vanilla...
+            .addLayer(() -> RenderType::solid)
+            .item()
+            .model((ctx, prov) -> prov.blockSprite(ctx))
+            .build()
+            .register();
 
 	private static BlockEntry<Block> seagrassBlock(String name) {
 		String scientificName = RegistrateLangProvider.toEnglishName(name);
