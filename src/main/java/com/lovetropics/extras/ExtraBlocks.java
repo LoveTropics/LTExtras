@@ -419,6 +419,14 @@ public class ExtraBlocks {
 			.simpleItem()
 			.register();
 
+    public static final BlockEntry<BoringEndRodBlock> BORING_END_ROD = REGISTRATE.block("boring_end_rod", BoringEndRodBlock::new)
+            .defaultBlockstate()
+			.blockstate((ctx, prov) -> rodBlock(ctx, prov))
+			.item()
+			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("block/end_rod")))
+			.build()
+            .register();
+
 	// Speedy blocks
 
 	private static final VoxelShape PATH_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
