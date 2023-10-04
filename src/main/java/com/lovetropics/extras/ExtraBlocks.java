@@ -420,7 +420,8 @@ public class ExtraBlocks {
 			.register();
 
     public static final BlockEntry<BoringEndRodBlock> BORING_END_ROD = REGISTRATE.block("boring_end_rod", BoringEndRodBlock::new)
-            .defaultBlockstate()
+			.initialProperties(() -> Blocks.END_ROD)
+			.defaultBlockstate()
 			.blockstate((ctx, prov) -> rodBlock(ctx, prov))
 			.item()
 			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("block/end_rod")))
