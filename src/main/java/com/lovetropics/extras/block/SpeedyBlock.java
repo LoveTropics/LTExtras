@@ -11,9 +11,14 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.Level;
 
 public class SpeedyBlock extends CustomShapeBlock {
+    private static final VoxelShape SLAB_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
 
 	public static SpeedyBlock opaque(Block.Properties properties) {
 		return new SpeedyBlock(Shapes.block(), properties, false);
+	}
+
+	public static SpeedyBlock slab(Block.Properties properties) {
+		return new SpeedyBlock(SLAB_SHAPE, properties, true);
 	}
 
 	public static SpeedyBlock transparent(VoxelShape shape, Block.Properties properties) {
