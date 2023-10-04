@@ -16,9 +16,4 @@ public class BoringEndRodBlock extends EndRodBlock {
     public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
         //It's boring, so don't animate!
     }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        return 14; //This is the same as a normal end rod
-    }
 }
