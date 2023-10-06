@@ -13,6 +13,11 @@ public class ExtraItems {
             .defaultModel()
             .register();
 
+    public static final ItemEntry<EntityWandItem> COSMETIC_POINT = REGISTRATE.item("cosmetic_point", EntityWandItem::new)
+            .initialProperties(() -> new Item.Properties().stacksTo(1))
+            .defaultModel()
+            .register();
+
     public static void init() {
     }
 }
