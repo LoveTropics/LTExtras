@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "ltextras:block/grass_grass"
+      }
+    }
+  ]
+}

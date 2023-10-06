@@ -5,7 +5,6 @@ import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
 import com.lovetropics.extras.data.ModelGenUtil;
-import com.lovetropics.extras.item.EntityWandItem;
 import com.lovetropics.extras.mixin.BlockPropertiesMixin;
 import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
@@ -14,7 +13,6 @@ import com.tterrag.registrate.providers.RegistrateLangProvider;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.renderer.BiomeColors;
@@ -698,6 +696,44 @@ public class ExtraBlocks {
 				}
 			})
 			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("minecraft:item/generated")).texture("layer0", "minecraft:block/lily_pad"))
+
+	public static final BlockEntry<Block> GRASS_GRASS = REGISTRATE.block("grass_grass", Block::new)
+			.initialProperties(() -> Blocks.GRASS_BLOCK)
+			.blockstate((ctx, prov) -> {
+				MultiPartBlockStateBuilder builder = prov.getMultipartBuilder(ctx.getEntry());
+				ModelFile grassModel = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/grass_block"))
+						.texture("down", prov.mcLoc("block/grass_block_top"))
+						.texture("up", prov.mcLoc("block/grass_block_top"))
+						.texture("north", prov.mcLoc("block/grass_block_top"))
+						.texture("south", prov.mcLoc("block/grass_block_top"))
+						.texture("west", prov.mcLoc("block/grass_block_top"))
+						.texture("east", prov.mcLoc("block/grass_block_top"))
+						.element()
+						.from(0, 0, 0)
+						.to(16, 16, 16)
+						.allFaces((direction, faceBuilder) -> faceBuilder.texture("#top").uvs(0, 0, 16, 16).cullface(direction).tintindex(0))
+						.end();
+
+				builder.part()
+						.modelFile(grassModel).addModel()
+						.end();
+			})
+			.color(() -> () -> (state, reader, pos, color) -> reader != null && pos != null
+					? BiomeColors.getAverageGrassColor(reader, pos)
+					: FoliageColor.getDefaultColor())
+			.item()
+			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("block/grass_block"))
+					.texture("down", prov.mcLoc("block/grass_block_top"))
+					.texture("up", prov.mcLoc("block/grass_block_top"))
+					.texture("north", prov.mcLoc("block/grass_block_top"))
+					.texture("south", prov.mcLoc("block/grass_block_top"))
+					.texture("west", prov.mcLoc("block/grass_block_top"))
+					.texture("east", prov.mcLoc("block/grass_block_top"))
+					.element()
+					.from(0, 0, 0)
+					.to(16, 16, 16)
+					.allFaces((direction, faceBuilder) -> faceBuilder.texture("#top").uvs(0, 0, 16, 16).tintindex(0).cullface(direction))
+					.end())
 			.build()
 			.register();
 
