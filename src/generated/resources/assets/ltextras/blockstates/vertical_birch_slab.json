@@ -1,0 +1,85 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "minecraft:block/birch_planks"
+      },
+      "when": {
+        "type": "double",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/birch_planks",
+        "y": -90
+      },
+      "when": {
+        "type": "double",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/birch_planks"
+      },
+      "when": {
+        "type": "double",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/birch_planks",
+        "y": -180
+      },
+      "when": {
+        "type": "double",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "ltextras:block/vertical_birch_slab",
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "type": "bottom|top",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "ltextras:block/vertical_birch_slab",
+        "x": 90,
+        "y": -90
+      },
+      "when": {
+        "type": "bottom|top",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "ltextras:block/vertical_birch_slab",
+        "x": 90
+      },
+      "when": {
+        "type": "bottom|top",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "ltextras:block/vertical_birch_slab",
+        "x": 90,
+        "y": -180
+      },
+      "when": {
+        "type": "bottom|top",
+        "facing": "north"
+      }
+    }
+  ]
+}

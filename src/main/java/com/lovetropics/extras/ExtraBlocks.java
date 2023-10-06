@@ -52,6 +52,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.minecraftforge.client.model.generators.ModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.data.loading.DatagenModLoader;
@@ -463,6 +465,39 @@ public class ExtraBlocks {
 					.block("speedy_" + object.getId().getPath(), factory)
 					.initialProperties(NonNullSupplier.of(object))
 					.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(object.getId())))
+					.simpleItem()
+					.register()
+			);
+
+	// Vertical slabs
+	private static final TemplateBuilder<VerticalSlabBlock, BlockFactory<VerticalSlabBlock>> VERTICAL_SLAB_TEMPLATES = new TemplateBuilder<VerticalSlabBlock, BlockFactory<VerticalSlabBlock>>()
+			.add(Blocks.OAK_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.SPRUCE_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.BIRCH_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.JUNGLE_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.ACACIA_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.CHERRY_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.DARK_OAK_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.MANGROVE_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.BAMBOO_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.BAMBOO_MOSAIC_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.STONE_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.SMOOTH_STONE_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.SANDSTONE_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.CUT_SANDSTONE_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.COBBLESTONE_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.BRICK_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.STONE_BRICK_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.MUD_BRICK_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.NETHER_BRICK_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.RED_SANDSTONE_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.CUT_RED_SANDSTONE_SLAB, VerticalSlabBlock::new)
+			.add(Blocks.PURPUR_SLAB, VerticalSlabBlock::new);
+	public static final Map<NamedSupplier<Block>, BlockEntry<? extends VerticalSlabBlock>> VERTICAL_SLABS = VERTICAL_SLAB_TEMPLATES
+			.build((object, factory) -> REGISTRATE
+					.block("vertical_" + object.getId().getPath(), factory)
+					.initialProperties(NonNullSupplier.of(object))
+					.blockstate(ModelGenUtil::vertSlab)
 					.simpleItem()
 					.register()
 			);

@@ -3,9 +3,11 @@ package com.lovetropics.extras.data;
 import com.lovetropics.extras.NamedSupplier;
 import com.lovetropics.extras.block.BoringEndRodBlock;
 import com.lovetropics.extras.block.GirderBlock;
+import com.lovetropics.extras.block.VerticalSlabBlock;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -18,14 +20,22 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder.PartBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 public class ModelGenUtil {
+
+	//Not everything maps slab to block. stone_slab -> stone is fine, but birch_slab -> birch does not work (gotta use birch_planks).
+	//Same story for brick. stone_brick_slab must use stone_brickS.
+	private static final Map<String, String> VERTICAL_SLAB_OVERRIDES = getVerticalSlabOverrides();
 
 	public static void steelGirderBlockstate(DataGenContext<Block, GirderBlock> ctx, RegistrateBlockstateProvider prov) {
 		ResourceLocation template = prov.modLoc("block/girder_straight");
@@ -65,6 +75,86 @@ public class ModelGenUtil {
 				.texture("top", prov.modLoc("block/metal_scaffolding_top"))
 				.texture("side", prov.modLoc("block/metal_scaffolding_side"))
 				.texture("particle", prov.modLoc("block/metal_scaffolding_top")));
+	}
+
+    public static void vertSlab(DataGenContext<Block, VerticalSlabBlock> ctx, RegistrateBlockstateProvider prov) {
+        MultiPartBlockStateBuilder builder = prov.getMultipartBuilder(ctx.getEntry());
+		ResourceLocation blockTexture = prov.mcLoc(getVertSlabParent(ctx.getName()));
+
+		String textureRef = "#side";
+        ModelFile slabModel = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
+                .texture("bottom", blockTexture)
+                .texture("side", blockTexture)
+                .texture("top", blockTexture)
+                .texture("particle", blockTexture)
+                .element()
+                .from(0, 0, 0).to(16, 8, 16)
+                .face(Direction.DOWN).texture(textureRef).end()
+                .face(Direction.UP).rotation(ModelBuilder.FaceRotation.UPSIDE_DOWN).texture(textureRef).end()
+                .face(Direction.NORTH).texture(textureRef).end()
+                .face(Direction.SOUTH).texture(textureRef).end()
+                .face(Direction.WEST).texture(textureRef).end()
+                .face(Direction.EAST).texture(textureRef).end()
+                .end();
+
+        ModelFile blockModel = prov.models().getExistingFile(blockTexture);
+
+        builder.part()
+                .modelFile(blockModel).addModel()
+                .condition(VerticalSlabBlock.FACING, Direction.WEST).condition(VerticalSlabBlock.TYPE, SlabType.DOUBLE)
+                .end()
+                .part()
+                .modelFile(blockModel).rotationY(-90).addModel()
+                .condition(VerticalSlabBlock.FACING, Direction.EAST).condition(VerticalSlabBlock.TYPE, SlabType.DOUBLE)
+                .end()
+                .part()
+                .modelFile(blockModel).rotationY(0).addModel()
+                .condition(VerticalSlabBlock.FACING, Direction.SOUTH).condition(VerticalSlabBlock.TYPE, SlabType.DOUBLE)
+                .end()
+                .part()
+                .modelFile(blockModel).rotationY(-180).addModel()
+                .condition(VerticalSlabBlock.FACING, Direction.NORTH).condition(VerticalSlabBlock.TYPE, SlabType.DOUBLE)
+                .end()
+                .part()
+                .modelFile(slabModel).rotationX(90).rotationY(90).addModel()
+                .condition(VerticalSlabBlock.FACING, Direction.WEST).condition(VerticalSlabBlock.TYPE, SlabType.BOTTOM, SlabType.TOP)
+                .end()
+                .part()
+                .modelFile(slabModel).rotationX(90).rotationY(-90).addModel()
+                .condition(VerticalSlabBlock.FACING, Direction.EAST).condition(VerticalSlabBlock.TYPE, SlabType.BOTTOM, SlabType.TOP)
+                .end()
+                .part()
+                .modelFile(slabModel).rotationX(90).rotationY(0).addModel()
+                .condition(VerticalSlabBlock.FACING, Direction.SOUTH).condition(VerticalSlabBlock.TYPE, SlabType.BOTTOM, SlabType.TOP)
+                .end()
+                .part()
+                .modelFile(slabModel).rotationX(90).rotationY(-180).addModel()
+                .condition(VerticalSlabBlock.FACING, Direction.NORTH).condition(VerticalSlabBlock.TYPE, SlabType.BOTTOM, SlabType.TOP)
+                .end();
+    }
+
+	public static String getVertSlabParent(String name) {
+		String trimmedName = name.replace("vertical_", "").replace("_slab", "");
+		return "block/" + VERTICAL_SLAB_OVERRIDES.getOrDefault(trimmedName, trimmedName);
+	}
+
+	private static Map<String, String> getVerticalSlabOverrides() {
+		Map<String, String> overrides =  new Object2ObjectOpenHashMap<>();;
+		overrides.put("birch", "birch_planks");
+		overrides.put("dark_oak", "dark_oak_planks");
+		overrides.put("spruce", "spruce_planks");
+		overrides.put("acacia", "acacia_planks");
+		overrides.put("cherry", "cherry_planks");
+		overrides.put("oak", "oak_planks");
+		overrides.put("mangrove", "mangrove_planks");
+		overrides.put("jungle", "jungle_planks");
+		overrides.put("bamboo", "bamboo_planks");
+		overrides.put("brick", "bricks");
+		overrides.put("stone_brick", "stone_bricks");
+		overrides.put("nether_brick", "nether_bricks");
+		overrides.put("mud_brick", "mud_bricks");
+		overrides.put("purpur", "purpur_block");
+		return overrides;
 	}
 
 	public static void barsBlock(DataGenContext<Block, IronBarsBlock> ctx, RegistrateBlockstateProvider prov) {
