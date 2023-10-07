@@ -1,6 +1,7 @@
 package com.lovetropics.extras.entity;
 
 import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.client.entity.CollectibleEntityRenderer;
 import com.lovetropics.extras.client.entity.PartyBeamRenderer;
 import com.lovetropics.extras.entity.vfx.PartyBeamEntity;
 import com.tterrag.registrate.Registrate;
@@ -17,6 +18,16 @@ public class ExtraEntities {
 					.clientTrackingRange(16)
 					.updateInterval(4))
 			.renderer(() -> PartyBeamRenderer::new)
+			.register();
+
+	public static final EntityEntry<CollectibleEntity> COLLECTIBLE = REGISTRATE.entity("collectible", CollectibleEntity::new, MobCategory.MISC)
+			.defaultLang()
+			.properties(builder -> builder
+					.sized(0.8f, 0.8f)
+					.clientTrackingRange(2)
+					.updateInterval(Integer.MAX_VALUE)
+			)
+			.renderer(() -> CollectibleEntityRenderer::new)
 			.register();
 
 	public static void init() {
