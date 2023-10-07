@@ -1,0 +1,37 @@
+{
+  "ambientocclusion": false,
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "texture": "#texture",
+          "tintindex": 0,
+          "uv": [
+            0.0,
+            16.0,
+            16.0,
+            0.0
+          ]
+        },
+        "up": {
+          "texture": "#texture",
+          "tintindex": 0
+        }
+      },
+      "from": [
+        0,
+        16,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ]
+    }
+  ],
+  "textures": {
+    "particle": "minecraft:block/lily_pad",
+    "texture": "minecraft:block/lily_pad"
+  }
+}

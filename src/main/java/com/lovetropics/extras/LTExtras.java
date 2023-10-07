@@ -13,12 +13,16 @@ import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -127,5 +131,9 @@ public class LTExtras {
 		evt.getItemColors().register((stack, index) -> index == 0 ? 0x3f76e4 : -1,
 				ExtraBlocks.WATER_BARRIER.get(),
 				ExtraBlocks.FAKE_WATER.get());
+		evt.getItemColors().register((stack, index) -> {
+			BlockState blockstate = ((BlockItem)stack.getItem()).getBlock().defaultBlockState();
+			return evt.getBlockColors().getColor(blockstate, null, null, index);
+		}, ExtraBlocks.SUBMERGED_LILY_PAD.asItem());
 	}
 }

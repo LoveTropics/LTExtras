@@ -23,20 +23,33 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.item.ScaffoldingBlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
@@ -624,6 +637,68 @@ public class ExtraBlocks {
 	public static final BlockEntry<CustomTallSeagrassBlock> TALL_THALASSODENDRON_CILIATUM = CustomTallSeagrassBlock.dropping(THALASSODENDRON_CILIATUM).register();
 	public static final BlockEntry<Block> MATTED_THALASSODENDRON_CILIATUM = mattedSeagrassBlock("thalassodendron_ciliatum");
 	public static final BlockEntry<Block> THALASSODENDRON_CILIATUM_BLOCk = seagrassBlock("thalassodendron_ciliatum");
+
+	public static final BlockEntry<SubmergedLilyBlock> SUBMERGED_LILY_PAD = REGISTRATE.block("submerged_lily_pad", SubmergedLilyBlock::new)
+			.lang("Submerged Lily Pad")
+			.initialProperties(() -> Blocks.LILY_PAD)
+			.color(() -> () -> (state, level, pos, index) -> level != null && pos != null ? 2129968 : 7455580)
+			.addLayer(() -> RenderType::cutout)
+			.blockstate((ctx, prov) -> {
+				final var model = prov.models().getBuilder("submerged_lily_pad")
+							.ao(false)
+							.texture("particle", "minecraft:block/lily_pad")
+							.texture("texture", "minecraft:block/lily_pad")
+						.element()
+							.from(0, 16f, 0)
+							.to(16f, 16f, 16f)
+							.face(Direction.DOWN)
+								.uvs(0, 16f, 16f, 0f)
+								.texture("#texture")
+								.tintindex(0)
+							.end()
+							.face(Direction.UP)
+								.uvs(0, 0f, 16f, 16f)
+								.texture("#texture")
+								.tintindex(0)
+							.end()
+						.end();
+				prov.getVariantBuilder(ctx.getEntry())
+						.partialState().setModels(
+							ConfiguredModel.builder()
+										.modelFile(model)
+									.nextModel()
+										.modelFile(model)
+										.rotationY(90)
+									.nextModel()
+										.modelFile(model)
+										.rotationY(180)
+									.nextModel()
+										.modelFile(model)
+										.rotationY(270)
+									.build()
+						);
+			})
+			.item((submergedLilyBlock, properties) -> new BlockItem(submergedLilyBlock, properties) {
+				@Override
+				public InteractionResult useOn(UseOnContext ctx) {
+					return InteractionResult.PASS;
+				}
+
+				@Override
+				public InteractionResult place(BlockPlaceContext pContext) {
+					return pContext.getLevel().getFluidState(pContext.getClickedPos()).is(Fluids.WATER) ? super.place(pContext) : InteractionResult.FAIL;
+				}
+
+				@Override
+				public InteractionResultHolder<ItemStack> use(Level leve, Player player, InteractionHand hand) {
+					BlockHitResult fluidHit = getPlayerPOVHitResult(leve, player, ClipContext.Fluid.SOURCE_ONLY);
+					InteractionResult result = super.useOn(new UseOnContext(player, hand, fluidHit));
+					return new InteractionResultHolder<>(result, player.getItemInHand(hand));
+				}
+			})
+			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("minecraft:item/generated")).texture("layer0", "minecraft:block/lily_pad"))
+			.build()
+			.register();
 
 	private static BlockEntry<Block> seagrassBlock(String name) {
 		String scientificName = RegistrateLangProvider.toEnglishName(name);
