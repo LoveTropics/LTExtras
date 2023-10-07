@@ -84,7 +84,7 @@ public class CollectibleEntity extends Entity {
     @Override
     public Component getDisplayName() {
         final ItemStack displayedItem = getDisplayedItem();
-        if (displayedItem != null) {
+        if (displayedItem != null && !hasCustomName()) {
             return displayedItem.getHoverName();
         }
         return super.getDisplayName();
