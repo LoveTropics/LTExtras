@@ -81,6 +81,8 @@ public class LTExtras {
         registrate()
                 .addDataGenerator(ProviderType.LANG, p -> {
                     p.add(ExtraEffects.FISH_EYE.get(), "Fish Eye");
+					p.add("toast.collectible.title", "New Collectible!");
+					p.add("toast.collectible.item", " + %s");
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
                         .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))

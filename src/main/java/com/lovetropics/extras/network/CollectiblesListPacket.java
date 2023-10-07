@@ -8,16 +8,17 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.List;
 import java.util.function.Supplier;
 
-public record CollectiblesListPacket(List<Collectible> collectibles) {
+public record CollectiblesListPacket(List<Collectible> collectibles, boolean silent) {
     public CollectiblesListPacket(final FriendlyByteBuf input) {
-        this(input.readList(Collectible::new));
+        this(input.readList(Collectible::new), input.readBoolean());
     }
 
     public void write(final FriendlyByteBuf output) {
         output.writeCollection(collectibles, (out, c) -> c.write(out));
+        output.writeBoolean(silent);
     }
 
     public void handle(final Supplier<NetworkEvent.Context> ctx) {
-        ClientCollectiblesList.get().update(collectibles);
+        ClientCollectiblesList.get().update(collectibles, silent);
     }
 }

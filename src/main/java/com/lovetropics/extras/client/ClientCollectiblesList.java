@@ -2,13 +2,15 @@ package com.lovetropics.extras.client;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.collectible.Collectible;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,9 +43,21 @@ public class ClientCollectiblesList {
         return itemStacks;
     }
 
-    public void update(final List<Collectible> collectibles) {
+    public void update(final List<Collectible> collectibles, final boolean silent) {
+        final List<Collectible> newCollectibles = collectibles.stream().filter(c -> !this.collectibles.contains(c)).toList();
         this.collectibles = List.copyOf(collectibles);
         itemStacks = collectibles.stream().map(Collectible::createItemStack).toList();
+        if (!silent && !newCollectibles.isEmpty()) {
+            notifyCollections(newCollectibles);
+        }
+    }
+
+    private static void notifyCollections(final List<Collectible> newCollectibles) {
+        final Minecraft minecraft = Minecraft.getInstance();
+        for (final Collectible newCollectible : newCollectibles) {
+            minecraft.getToasts().addToast(new CollectibleToast(newCollectible));
+        }
+        minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0f));
     }
 
     public boolean isEmpty() {

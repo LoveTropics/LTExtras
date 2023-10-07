@@ -55,7 +55,7 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event) {
-        get(event.getEntity()).sendToClient();
+        get(event.getEntity()).sendToClient(true);
     }
 
     @SubscribeEvent
@@ -64,7 +64,7 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
             final CollectibleStore oldCollectibles = get(event.getOriginal());
             final CollectibleStore newCollectibles = get(event.getEntity());
             newCollectibles.collectibles.addAll(oldCollectibles.collectibles);
-            newCollectibles.sendToClient();
+            newCollectibles.sendToClient(true);
         }
     }
 
@@ -93,7 +93,7 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
     public boolean give(final Collectible collectible) {
         if (!collectibles.contains(collectible)) {
             collectibles.add(collectible);
-            sendToClient();
+            sendToClient(false);
             return true;
         }
         return false;
@@ -101,7 +101,7 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
 
     public boolean clear(final Predicate<Collectible> predicate) {
         if (collectibles.removeIf(predicate)) {
-            sendToClient();
+            sendToClient(false);
             return true;
         }
         return false;
@@ -111,7 +111,7 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
         return collectibles.contains(collectible);
     }
 
-    private void sendToClient() {
-        LTExtrasNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new CollectiblesListPacket(collectibles));
+    private void sendToClient(final boolean silent) {
+        LTExtrasNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new CollectiblesListPacket(collectibles, silent));
     }
 }
