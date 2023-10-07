@@ -48,7 +48,7 @@ public class ExtraItems {
                     .requires(PASSION_FRUIT.get(), 1)
                     .unlockedBy("has_passion_fruit", has(PASSION_FRUIT.get()))
                     .save(prov))
-            .properties(p -> p.food(new FoodProperties.Builder().nutrition(2).saturationMod(0.2f).fast().build()))
+            .properties(p -> p.food(new FoodProperties.Builder().nutrition(2).alwaysEat().saturationMod(0.2f).fast().build()))
             .model((ctx, prov) -> prov.withExistingParent("open_passion_fruit", prov.mcLoc("item/generated"))
                     .texture("layer0", prov.modLoc("item/open_passion_fruit"))
                     .rootTransforms()

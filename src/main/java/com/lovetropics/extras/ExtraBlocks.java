@@ -701,6 +701,16 @@ public class ExtraBlocks {
 			.build()
 			.register();
 
+	public static final BlockEntry<VineBlock> PASSION_VINE = REGISTRATE.block("passion_vine", VineBlock::new)
+			.initialProperties(() -> Blocks.VINE)
+			.loot((lootTable, vineBlock) -> lootTable.dropOther(vineBlock, ExtraItems.PASSION_FRUIT))
+			.blockstate((ctx, prov) -> {})
+			.addLayer(() -> RenderType::translucent)
+			.item()
+			.model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/vine")))
+			.build()
+			.register();
+
 	private static BlockEntry<Block> seagrassBlock(String name) {
 		String scientificName = RegistrateLangProvider.toEnglishName(name);
 		return REGISTRATE.<Block>block(name + "_block", properties -> new ScientificNameBlock(properties, scientificName))
