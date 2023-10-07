@@ -1,27 +1,23 @@
 package com.lovetropics.extras;
 
 import com.lovetropics.extras.client.particle.ExtraParticles;
+import com.lovetropics.extras.collectible.CollectibleCommand;
+import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.command.GenerateCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.mojang.brigadier.CommandDispatcher;
-import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
-import com.tterrag.registrate.providers.RegistrateLangProvider;
-import com.tterrag.registrate.util.entry.ItemEntry;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,6 +25,9 @@ import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.NonNullLazy;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -42,7 +41,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.network.NetworkConstants;
 
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 @Mod("ltextras")
@@ -53,6 +51,8 @@ public class LTExtras {
     private static final ResourceLocation TAB_ID = new ResourceLocation(MODID, "ltextras");
 
     private static final NonNullLazy<Registrate> REGISTRATE = NonNullLazy.of(() -> Registrate.create(MODID).defaultCreativeTab(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TAB_ID)));
+
+	public static final Capability<CollectibleStore> COLLECTIBLE_STORE = CapabilityManager.get(new CapabilityToken<>() {});
 
 	public static Registrate registrate() {
 		return REGISTRATE.get();
@@ -116,8 +116,10 @@ public class LTExtras {
 
 	private void onRegisterCommands(RegisterCommandsEvent event) {
 		CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+		CommandBuildContext buildContext = event.getBuildContext();
 		SetMaxPlayersCommand.register(dispatcher);
 		GenerateCommand.register(dispatcher);
+		CollectibleCommand.register(dispatcher, buildContext);
 	}
 
 	@OnlyIn(Dist.CLIENT)

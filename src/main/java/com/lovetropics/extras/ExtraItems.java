@@ -1,5 +1,6 @@
 package com.lovetropics.extras;
 
+import com.lovetropics.extras.item.CollectibleBasketItem;
 import com.lovetropics.extras.item.EntityWandItem;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -14,6 +15,11 @@ public class ExtraItems {
             .register();
 
     public static final ItemEntry<EntityWandItem> COSMETIC_POINT = REGISTRATE.item("cosmetic_point", EntityWandItem::new)
+            .initialProperties(() -> new Item.Properties().stacksTo(1))
+            .defaultModel()
+            .register();
+
+    public static final ItemEntry<CollectibleBasketItem> COLLECTIBLE_BASKET = REGISTRATE.item("collectible_basket", CollectibleBasketItem::new)
             .initialProperties(() -> new Item.Properties().stacksTo(1))
             .defaultModel()
             .register();
