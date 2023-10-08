@@ -696,6 +696,8 @@ public class ExtraBlocks {
 				}
 			})
 			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("minecraft:item/generated")).texture("layer0", "minecraft:block/lily_pad"))
+			.build()
+			.register();
 
 	public static final BlockEntry<Block> GRASS_GRASS = REGISTRATE.block("grass_grass", Block::new)
 			.initialProperties(() -> Blocks.GRASS_BLOCK)
