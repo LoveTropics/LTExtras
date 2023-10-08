@@ -5,6 +5,8 @@ import com.lovetropics.extras.collectible.CollectibleCommand;
 import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.command.GenerateCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
+import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
+import com.lovetropics.extras.data.spawnitems.SpawnItemsStore;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.network.LTExtrasNetwork;
@@ -53,6 +55,7 @@ public class LTExtras {
     private static final NonNullLazy<Registrate> REGISTRATE = NonNullLazy.of(() -> Registrate.create(MODID).defaultCreativeTab(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TAB_ID)));
 
 	public static final Capability<CollectibleStore> COLLECTIBLE_STORE = CapabilityManager.get(new CapabilityToken<>() {});
+	public static final Capability<SpawnItemsStore> SPAWN_ITEMS_STORE = CapabilityManager.get(new CapabilityToken<>() {});
 
 	public static Registrate registrate() {
 		return REGISTRATE.get();
@@ -83,6 +86,10 @@ public class LTExtras {
                     p.add(ExtraEffects.FISH_EYE.get(), "Fish Eye");
 					p.add("toast.collectible.title", "New Collectible!");
 					p.add("toast.collectible.item", " + %s");
+
+					p.add("spawnitems.set_not_restorable", "The spawn item set %s cannot be restored!");
+					p.add("spawnitems.unknown_set", "Unknown spawn item set: %s");
+					p.add("spawnitems.restored_successfully", "Items restored!");
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
                         .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))
@@ -122,6 +129,7 @@ public class LTExtras {
 		SetMaxPlayersCommand.register(dispatcher);
 		GenerateCommand.register(dispatcher);
 		CollectibleCommand.register(dispatcher, buildContext);
+		SpawnItemsCommand.register(dispatcher);
 	}
 
 	@OnlyIn(Dist.CLIENT)

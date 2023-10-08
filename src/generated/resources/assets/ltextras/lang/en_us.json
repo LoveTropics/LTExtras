@@ -111,6 +111,9 @@
   "item.ltextras.cosmetic_point": "Cosmetic Point",
   "item.ltextras.entity_wand": "Entity Wand",
   "itemGroup.ltextras.ltextras": "LTExtras",
+  "spawnitems.restored_successfully": "Items restored!",
+  "spawnitems.set_not_restorable": "The spawn item set %s cannot be restored!",
+  "spawnitems.unknown_set": "Unknown spawn item set: %s",
   "toast.collectible.item": " + %s",
   "toast.collectible.title": "New Collectible!"
 }
