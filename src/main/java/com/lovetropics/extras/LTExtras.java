@@ -139,5 +139,7 @@ public class LTExtras {
 			BlockState blockstate = ((BlockItem)stack.getItem()).getBlock().defaultBlockState();
 			return evt.getBlockColors().getColor(blockstate, null, null, index);
 		}, ExtraBlocks.SUBMERGED_LILY_PAD.asItem());
+		evt.getItemColors().register((stack, index) -> 9551190,
+				ExtraBlocks.GRASS_GRASS.get());
 	}
 }
