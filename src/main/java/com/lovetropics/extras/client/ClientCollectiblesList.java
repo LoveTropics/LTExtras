@@ -1,10 +1,12 @@
 package com.lovetropics.extras.client;
 
 import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.client.screen.container.CollectibleBasketScreen;
 import com.lovetropics.extras.collectible.Collectible;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
@@ -58,6 +60,10 @@ public class ClientCollectiblesList {
             minecraft.getToasts().addToast(new CollectibleToast(newCollectible));
         }
         minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0f));
+    }
+
+    public static void openScreen(final Player player) {
+        Minecraft.getInstance().setScreen(new CollectibleBasketScreen(player.getInventory()));
     }
 
     public boolean isEmpty() {

@@ -1,7 +1,6 @@
 package com.lovetropics.extras.item;
 
-import com.lovetropics.extras.client.screen.container.CollectibleBasketScreen;
-import net.minecraft.client.Minecraft;
+import com.lovetropics.extras.client.ClientCollectiblesList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -17,12 +16,8 @@ public class CollectibleBasketItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(final Level level, final Player player, final InteractionHand hand) {
         if (level.isClientSide()) {
-            openScreen(player);
+            ClientCollectiblesList.openScreen(player);
         }
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide());
-    }
-
-    private static void openScreen(final Player player) {
-        Minecraft.getInstance().setScreen(new CollectibleBasketScreen(player.getInventory()));
     }
 }
