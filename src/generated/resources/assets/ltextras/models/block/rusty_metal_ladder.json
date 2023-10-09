@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/ladder",
+  "textures": {
+    "particle": "ltextras:block/rusty_metal_ladder",
+    "texture": "ltextras:block/rusty_metal_ladder"
+  }
+}

@@ -212,20 +212,24 @@ public class ExtraBlocks {
 				.build()
 			.register();
 
-	public static final BlockEntry<LadderBlock> METAL_LADDER = REGISTRATE.block("metal_ladder", p -> (LadderBlock) new LadderBlock(p) {})
-			.initialProperties(() -> Blocks.IRON_BARS)
-			.tag(BlockTags.CLIMBABLE)
-			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
-			.tag(BlockTags.NEEDS_IRON_TOOL)
-			.blockstate((ctx, prov) -> prov.horizontalBlock(ctx.getEntry(), prov.models()
-					.withExistingParent(ctx.getName(), "block/ladder")
-					.texture("texture", prov.blockTexture(ctx.getEntry()))
-					.texture("particle", prov.blockTexture(ctx.getEntry()))))
-			.addLayer(() -> RenderType::cutout)
-			.item()
+	public static final BlockEntry<LadderBlock> METAL_LADDER = ladder("metal_ladder");
+	public static final BlockEntry<LadderBlock> RUSTY_METAL_LADDER = ladder("rusty_metal_ladder");
+
+	private static final BlockEntry<LadderBlock> ladder(String name) {
+		return REGISTRATE.block(name, p -> (LadderBlock) new LadderBlock(p) {}).initialProperties(() -> Blocks.IRON_BARS)
+				.tag(BlockTags.CLIMBABLE)
+				.tag(BlockTags.MINEABLE_WITH_PICKAXE)
+				.tag(BlockTags.NEEDS_IRON_TOOL)
+				.blockstate((ctx, prov) -> prov.horizontalBlock(ctx.getEntry(), prov.models()
+						.withExistingParent(ctx.getName(), "block/ladder")
+						.texture("texture", prov.blockTexture(ctx.getEntry()))
+						.texture("particle", prov.blockTexture(ctx.getEntry()))))
+				.addLayer(() -> RenderType::cutout)
+				.item()
 				.model((ctx, prov) -> prov.blockSprite(ctx))
 				.build()
-			.register();
+				.register();
+	}
 
 	public static final BlockEntry<Block> RUSTY_PAINTED_METAL = REGISTRATE.block("rusty_painted_metal", Block::new)
 			.initialProperties(() -> Blocks.IRON_BLOCK)
