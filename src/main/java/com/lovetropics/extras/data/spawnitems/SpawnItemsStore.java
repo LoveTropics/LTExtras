@@ -111,12 +111,21 @@ public final class SpawnItemsStore implements ICapabilitySerializable<Tag> {
 
     @SubscribeEvent
     static void onPlayerClone(final PlayerEvent.Clone event) {
-        final SpawnItemsStore oldStore = get(event.getOriginal());
-        final SpawnItemsStore newStore = get(event.getEntity());
+        final SpawnItemsStore oldStore = getNullable(event.getOriginal());
+        final SpawnItemsStore newStore = getNullable(event.getEntity());
+        
+        if (oldStore == null || newStore == null) {
+            return;
+        }
+
         newStore.receivedItems.putAll(oldStore.receivedItems);
     }
 
     public static SpawnItemsStore get(final Player player) {
         return player.getCapability(LTExtras.SPAWN_ITEMS_STORE).orElseThrow(IllegalStateException::new);
+    }
+
+    @Nullable public static SpawnItemsStore getNullable(final Player player) {
+        return player.getCapability(LTExtras.SPAWN_ITEMS_STORE).orElse(null);
     }
 }
