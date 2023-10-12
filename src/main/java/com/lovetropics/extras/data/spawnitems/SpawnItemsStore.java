@@ -113,7 +113,7 @@ public final class SpawnItemsStore implements ICapabilitySerializable<Tag> {
     static void onPlayerClone(final PlayerEvent.Clone event) {
         final SpawnItemsStore oldStore = getNullable(event.getOriginal());
         final SpawnItemsStore newStore = getNullable(event.getEntity());
-        
+
         if (oldStore == null || newStore == null) {
             return;
         }
