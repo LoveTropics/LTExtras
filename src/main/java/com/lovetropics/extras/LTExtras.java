@@ -34,10 +34,7 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.NonNullLazy;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.IExtensionPoint;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -66,7 +63,8 @@ public class LTExtras {
 
 	public LTExtras() {
 		// Compatible with all versions that match the semver (excluding the qualifier e.g. "-beta+42")
-		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(LTExtras::getCompatVersion, (s, v) -> LTExtras.isCompatibleVersion(s)));
+		final ModLoadingContext modLoadingContext = ModLoadingContext.get();
+		modLoadingContext.registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(LTExtras::getCompatVersion, (s, v) -> LTExtras.isCompatibleVersion(s)));
 
 		ExtraBlocks.init();
 		ExtraItems.init();
@@ -102,19 +100,24 @@ public class LTExtras {
 
 		LTExtrasNetwork.register();
 
+		modLoadingContext.registerConfig(ModConfig.Type.COMMON, ExtrasConfig.COMMON_CONFIG);
+
 		// Mark WorldEdit as only required on the server
 		ModList.get().getModContainerById("worldedit").ifPresent(worldedit -> {
-			ModLoadingContext.get().setActiveContainer(worldedit);
-			ModLoadingContext.get().registerExtensionPoint(
-				IExtensionPoint.DisplayTest.class,
-				() -> new IExtensionPoint.DisplayTest(
-					() -> NetworkConstants.IGNORESERVERONLY,
-					(a, b) -> true
-				)
-			);
+			final ModContainer previousContainer = modLoadingContext.getActiveContainer();
+			try {
+				modLoadingContext.setActiveContainer(worldedit);
+				modLoadingContext.registerExtensionPoint(
+						IExtensionPoint.DisplayTest.class,
+						() -> new IExtensionPoint.DisplayTest(
+								() -> NetworkConstants.IGNORESERVERONLY,
+								(a, b) -> true
+						)
+				);
+			} finally {
+				modLoadingContext.setActiveContainer(previousContainer);
+			}
 		});
-
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ExtrasConfig.COMMON_CONFIG);
 	}
 
 	private static final Pattern QUALIFIER = Pattern.compile("-\\w+\\+\\d+");
