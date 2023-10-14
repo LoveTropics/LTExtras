@@ -49,12 +49,10 @@ public class SchedulePlaceholders {
             if (schedule == null) {
                 return UNKNOWN;
             }
-            final StreamSchedule.State state = schedule.stateAt(Instant.now());
-            if (state != null) {
-                final StreamSchedule.Entry entry = next ? state.nextEntry() : state.currentEntry();
-                if (entry != null) {
-                    return function.get(ctx, entry);
-                }
+            final Instant time = Instant.now();
+            final StreamSchedule.Entry entry = next ? schedule.nextAfter(time) : schedule.currentAt(time);
+            if (entry != null) {
+                return function.get(ctx, entry);
             }
             return UNKNOWN;
         });
@@ -63,7 +61,7 @@ public class SchedulePlaceholders {
     private static PlaceholderResult formatHosts(final StreamSchedule.Entry entry) {
         return PlaceholderResult.value(entry.hosts().stream()
                 .map(StreamSchedule.Host::name)
-                .collect(Collectors.joining(", "))
+                .collect(Collectors.joining(" + "))
         );
     }
 

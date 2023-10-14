@@ -57,12 +57,20 @@ public record StreamSchedule(List<Entry> entries) {
     }
 
     @Nullable
-    public State stateAt(final Instant time) {
-        for (int i = 0; i < entries.size(); i++) {
-            final Entry entry = entries.get(i);
-            if (!entry.startTime().isBefore(time)) {
-                final Entry nextEntry = i + 1 < entries.size() ? entries.get(i + 1) : null;
-                return new State(entry, nextEntry);
+    public Entry currentAt(final Instant time) {
+        for (final Entry entry : entries) {
+            if (!entry.startTime().isAfter(time) && !time.isAfter(entry.endTime())) {
+                return entry;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public Entry nextAfter(final Instant time) {
+        for (final Entry entry : entries) {
+            if (entry.startTime().isAfter(time)) {
+                return entry;
             }
         }
         return null;
@@ -87,8 +95,5 @@ public record StreamSchedule(List<Entry> entries) {
         public static final Codec<Host> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Codec.STRING.fieldOf("name").forGetter(Host::name)
         ).apply(i, Host::new));
-    }
-
-    public record State(Entry currentEntry, @Nullable Entry nextEntry) {
     }
 }
