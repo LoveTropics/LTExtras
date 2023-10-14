@@ -35,12 +35,12 @@ public class SchedulePlaceholders {
 
     private static void registerForEntry(final boolean next) {
         final String prefix = next ? "next" : "current";
-        registerPlaceholder(prefix + "/title", false, (ctx, entry) -> PlaceholderResult.value(entry.shortDescription()));
-        registerPlaceholder(prefix + "/description", false, (ctx, entry) -> PlaceholderResult.value(entry.longDescription()));
-        registerPlaceholder(prefix + "/hosts", false, (ctx, entry) -> formatHosts(entry));
-        registerPlaceholder(prefix + "/start", false, (ctx, entry) -> formatLocalTime(ctx, entry.startTime()));
-        registerPlaceholder(prefix + "/end", false, (ctx, entry) -> formatLocalTime(ctx, entry.endTime()));
-        registerPlaceholder(prefix + "/time_until", true, (ctx, entry) -> formatTimeUntil(entry));
+        registerPlaceholder(prefix + "/title", next, (ctx, entry) -> PlaceholderResult.value(entry.shortDescription()));
+        registerPlaceholder(prefix + "/description", next, (ctx, entry) -> PlaceholderResult.value(entry.longDescription()));
+        registerPlaceholder(prefix + "/hosts", next, (ctx, entry) -> formatHosts(entry));
+        registerPlaceholder(prefix + "/start", next, (ctx, entry) -> formatLocalTime(ctx, entry.startTime()));
+        registerPlaceholder(prefix + "/end", next, (ctx, entry) -> formatLocalTime(ctx, entry.endTime()));
+        registerPlaceholder(prefix + "/time_until", next, (ctx, entry) -> formatTimeUntil(entry));
     }
 
     private static void registerPlaceholder(final String id, final boolean next, final PlaceholderFunction function) {
