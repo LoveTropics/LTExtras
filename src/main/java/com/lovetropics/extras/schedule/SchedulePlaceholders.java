@@ -14,7 +14,6 @@ import javax.annotation.Nullable;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = LTExtras.MODID)
@@ -30,20 +29,21 @@ public class SchedulePlaceholders {
     private static Instant lastFetchTime = Instant.EPOCH;
 
     static {
-        registerPlaceholder("current/title", (ctx, current, next) -> PlaceholderResult.value(current.shortDescription()));
-        registerPlaceholder("current/description", (ctx, current, next) -> PlaceholderResult.value(current.longDescription()));
-        registerPlaceholder("current/hosts", (ctx, current, next) -> formatHosts(current));
-        registerPlaceholder("current/start", (ctx, current, next) -> formatLocalTime(ctx, current.time()));
-        registerPlaceholder("current/end", (ctx, current, next) -> next != null ? formatLocalTime(ctx, next.time()) : UNKNOWN);
-
-        registerPlaceholderNext("next/title", (ctx, next) -> PlaceholderResult.value(next.shortDescription()));
-        registerPlaceholderNext("next/description", (ctx, next) -> PlaceholderResult.value(next.longDescription()));
-        registerPlaceholderNext("next/hosts", (ctx, next) -> formatHosts(next));
-        registerPlaceholderNext("next/start", (ctx, next) -> formatLocalTime(ctx, next.time()));
-        registerPlaceholderNext("next/time_until", (ctx, next) -> formatTimeUntil(next));
+        registerForEntry(false);
+        registerForEntry(true);
     }
 
-    private static void registerPlaceholder(final String id, final PlaceholderFunction function) {
+    private static void registerForEntry(final boolean next) {
+        final String prefix = next ? "next" : "current";
+        registerPlaceholder(prefix + "/title", false, (ctx, entry) -> PlaceholderResult.value(entry.shortDescription()));
+        registerPlaceholder(prefix + "/description", false, (ctx, entry) -> PlaceholderResult.value(entry.longDescription()));
+        registerPlaceholder(prefix + "/hosts", false, (ctx, entry) -> formatHosts(entry));
+        registerPlaceholder(prefix + "/start", false, (ctx, entry) -> formatLocalTime(ctx, entry.startTime()));
+        registerPlaceholder(prefix + "/end", false, (ctx, entry) -> formatLocalTime(ctx, entry.endTime()));
+        registerPlaceholder(prefix + "/time_until", true, (ctx, entry) -> formatTimeUntil(entry));
+    }
+
+    private static void registerPlaceholder(final String id, final boolean next, final PlaceholderFunction function) {
         Placeholders.register(new ResourceLocation(LTExtras.MODID, "schedule/" + id), (ctx, arg) -> {
             final StreamSchedule schedule = SchedulePlaceholders.schedule;
             if (schedule == null) {
@@ -51,14 +51,13 @@ public class SchedulePlaceholders {
             }
             final StreamSchedule.State state = schedule.stateAt(Instant.now());
             if (state != null) {
-                return function.get(ctx, state.currentEntry(), state.nextEntry());
+                final StreamSchedule.Entry entry = next ? state.nextEntry() : state.currentEntry();
+                if (entry != null) {
+                    return function.get(ctx, entry);
+                }
             }
             return UNKNOWN;
         });
-    }
-
-    private static void registerPlaceholderNext(final String id, final BiFunction<PlaceholderContext, StreamSchedule.Entry, PlaceholderResult> function) {
-        registerPlaceholder(id, (ctx, current, next) -> next != null ? function.apply(ctx, next) : UNKNOWN);
     }
 
     private static PlaceholderResult formatHosts(final StreamSchedule.Entry entry) {
@@ -69,7 +68,7 @@ public class SchedulePlaceholders {
     }
 
     private static PlaceholderResult formatTimeUntil(final StreamSchedule.Entry entry) {
-        Duration duration = Duration.between(Instant.now(), entry.time());
+        Duration duration = Duration.between(Instant.now(), entry.startTime());
         if (duration.isNegative()) {
             duration = Duration.ZERO;
         }
@@ -104,6 +103,6 @@ public class SchedulePlaceholders {
     }
 
     private interface PlaceholderFunction {
-        PlaceholderResult get(PlaceholderContext ctx, StreamSchedule.Entry current, @Nullable StreamSchedule.Entry next);
+        PlaceholderResult get(PlaceholderContext ctx, StreamSchedule.Entry entry);
     }
 }

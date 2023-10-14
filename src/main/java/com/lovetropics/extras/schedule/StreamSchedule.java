@@ -60,7 +60,7 @@ public record StreamSchedule(List<Entry> entries) {
     public State stateAt(final Instant time) {
         for (int i = 0; i < entries.size(); i++) {
             final Entry entry = entries.get(i);
-            if (!entry.time().isBefore(time)) {
+            if (!entry.startTime().isBefore(time)) {
                 final Entry nextEntry = i + 1 < entries.size() ? entries.get(i + 1) : null;
                 return new State(entry, nextEntry);
             }
@@ -68,8 +68,8 @@ public record StreamSchedule(List<Entry> entries) {
         return null;
     }
 
-    public record Entry(String shortDescription, String longDescription, Instant time, List<Host> hosts) {
-        private static final Codec<Instant> TIME_CODEC = MoreCodecs.localDateTime(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")).xmap(
+    public record Entry(String shortDescription, String longDescription, Instant startTime, Instant endTime, List<Host> hosts) {
+        private static final Codec<Instant> TIME_CODEC = MoreCodecs.localDateTime(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).xmap(
                 localTime -> localTime.atOffset(ZoneOffset.UTC).toInstant(),
                 instant -> instant.atOffset(ZoneOffset.UTC).toLocalDateTime()
         );
@@ -77,7 +77,8 @@ public record StreamSchedule(List<Entry> entries) {
         public static final Codec<Entry> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Codec.STRING.fieldOf("short_desc").forGetter(Entry::shortDescription),
                 Codec.STRING.optionalFieldOf("long_desc", "").forGetter(Entry::longDescription),
-                TIME_CODEC.fieldOf("time").forGetter(Entry::time),
+                TIME_CODEC.fieldOf("time").forGetter(Entry::startTime),
+                TIME_CODEC.fieldOf("end_time").forGetter(Entry::endTime),
                 Host.CODEC.listOf().fieldOf("hosts").forGetter(Entry::hosts)
         ).apply(i, Entry::new));
     }
