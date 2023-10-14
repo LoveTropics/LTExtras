@@ -77,7 +77,8 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
         return player.getCapability(LTExtras.COLLECTIBLE_STORE).orElseThrow(IllegalStateException::new);
     }
 
-    @Nullable public static CollectibleStore getNullable(final Player player) {
+    @Nullable
+    public static CollectibleStore getNullable(final Player player) {
         return player.getCapability(LTExtras.COLLECTIBLE_STORE).orElse(null);
     }
 

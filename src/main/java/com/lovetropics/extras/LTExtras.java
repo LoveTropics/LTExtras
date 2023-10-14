@@ -10,6 +10,7 @@ import com.lovetropics.extras.data.spawnitems.SpawnItemsStore;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.network.LTExtrasNetwork;
+import com.lovetropics.extras.schedule.PlayerTimeZone;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
@@ -38,6 +39,7 @@ import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
@@ -56,6 +58,7 @@ public class LTExtras {
 
 	public static final Capability<CollectibleStore> COLLECTIBLE_STORE = CapabilityManager.get(new CapabilityToken<>() {});
 	public static final Capability<SpawnItemsStore> SPAWN_ITEMS_STORE = CapabilityManager.get(new CapabilityToken<>() {});
+	public static final Capability<PlayerTimeZone> PLAYER_TIME_ZONE = CapabilityManager.get(new CapabilityToken<>() {});
 
 	public static Registrate registrate() {
 		return REGISTRATE.get();
@@ -110,6 +113,8 @@ public class LTExtras {
 				)
 			);
 		});
+
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ExtrasConfig.COMMON_CONFIG);
 	}
 
 	private static final Pattern QUALIFIER = Pattern.compile("-\\w+\\+\\d+");

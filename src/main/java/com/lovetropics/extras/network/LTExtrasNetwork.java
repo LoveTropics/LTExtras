@@ -33,6 +33,12 @@ public class LTExtrasNetwork {
 				.decoder(ReturnCollectibleItemPacket::new)
 				.consumerMainThread(ReturnCollectibleItemPacket::handle)
 				.add();
+
+		CHANNEL.messageBuilder(SetTimeZonePacket.class, 3, NetworkDirection.PLAY_TO_SERVER)
+				.encoder(SetTimeZonePacket::write)
+				.decoder(SetTimeZonePacket::read)
+				.consumerMainThread(SetTimeZonePacket::handle)
+				.add();
 	}
 }
 

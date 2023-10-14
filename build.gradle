@@ -108,6 +108,7 @@ dependencies {
     }
 
     jarJar(implementation(fg.deobf("com.lovetropics.lib:LTLib:$ltlib_version")))
+    jarJar(implementation(fg.deobf("eu.pb4:placeholder-api:$placeholder_api_version")))
 
 //    runtimeOnly fg.deobf('com.jozufozu.flywheel:Flywheel-Forge:1.18-0.7.0.70')
 //    runtimeOnly fg.deobf('com.simibubi.create:Create:mc1.18.2_v0.4.1+113')
