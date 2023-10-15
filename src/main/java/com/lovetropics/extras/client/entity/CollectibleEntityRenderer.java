@@ -1,5 +1,6 @@
 package com.lovetropics.extras.client.entity;
 
+import com.lovetropics.extras.ExtraUtils;
 import com.lovetropics.extras.entity.CollectibleEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -19,11 +20,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity> {
     private static final ItemDisplayContext DISPLAY_CONTEXT = ItemDisplayContext.GROUND;
-    private static final Vector3f Y_AXIS = new Vector3f(0.0f, 1.0f, 0.0f);
 
     private final ItemRenderer itemRenderer;
 
@@ -49,7 +48,7 @@ public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity>
         final float groundScale = model.getTransforms().getTransform(DISPLAY_CONTEXT).scale.y();
         final float bob = (Mth.sin(age / 10.0f) + 1.0f) * 0.05f;
         poseStack.translate(0.0f, bob + 0.4f * groundScale, 0.0f);
-        poseStack.mulPose(rotationAbout(entityRenderDispatcher.cameraOrientation(), Y_AXIS, new Quaternionf()));
+        poseStack.mulPose(ExtraUtils.rotationAboutY(entityRenderDispatcher.cameraOrientation(), new Quaternionf()));
         poseStack.mulPose(Axis.YP.rotation(Mth.PI));
 
         final float scale = model.isGui3d() ? 2.25f : 2.0f;
@@ -60,11 +59,6 @@ public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity>
         poseStack.popPose();
 
         super.render(entity, yaw, partialTicks, poseStack, bufferSource, packedLight);
-    }
-
-    private static Quaternionf rotationAbout(final Quaternionf rotation, final Vector3f axis, final Quaternionf result) {
-        final float projectScale = axis.dot(rotation.x(), rotation.y(), rotation.z());
-        return result.set(axis.x() * projectScale, axis.y() * projectScale, axis.z() * projectScale, rotation.w());
     }
 
     @Override

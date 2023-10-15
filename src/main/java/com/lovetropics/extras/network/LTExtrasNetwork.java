@@ -39,6 +39,12 @@ public class LTExtrasNetwork {
 				.decoder(SetTimeZonePacket::read)
 				.consumerMainThread(SetTimeZonePacket::handle)
 				.add();
+
+		CHANNEL.messageBuilder(SetHologramTextPacket.class, 4, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(SetHologramTextPacket::write)
+				.decoder(SetHologramTextPacket::new)
+				.consumerMainThread(SetHologramTextPacket::handle)
+				.add();
 	}
 }
 

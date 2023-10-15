@@ -2,10 +2,12 @@ package com.lovetropics.extras.entity;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.entity.CollectibleEntityRenderer;
+import com.lovetropics.extras.client.entity.HologramEntityRenderer;
 import com.lovetropics.extras.client.entity.PartyBeamRenderer;
 import com.lovetropics.extras.entity.vfx.PartyBeamEntity;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.EntityEntry;
+import net.minecraft.SharedConstants;
 import net.minecraft.world.entity.MobCategory;
 
 public class ExtraEntities {
@@ -28,6 +30,16 @@ public class ExtraEntities {
 					.updateInterval(Integer.MAX_VALUE)
 			)
 			.renderer(() -> CollectibleEntityRenderer::new)
+			.register();
+
+	public static final EntityEntry<HologramEntity> HOLOGRAM = REGISTRATE.entity("hologram", HologramEntity::new, MobCategory.MISC)
+			.defaultLang()
+			.properties(builder -> builder
+					.sized(0.8f, 0.8f)
+					.clientTrackingRange(8)
+					.updateInterval(SharedConstants.TICKS_PER_SECOND)
+			)
+			.renderer(() -> HologramEntityRenderer::new)
 			.register();
 
 	public static void init() {
