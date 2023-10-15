@@ -22,7 +22,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -151,16 +150,15 @@ public class ExtraBlocks {
 				.build()
 			.register();
 
-	public static final TagKey<Block> TAG_STEEL_GIRDERS = BlockTags.create(new ResourceLocation(LTExtras.MODID, "steel_girders"));
 
 	public static final BlockEntry<GirderBlock> STEEL_GIRDER = steelGirder("");
 	public static final BlockEntry<GirderBlock> RUSTING_STEEL_GIRDER = steelGirder("rusting");
 	public static final BlockEntry<GirderBlock> RUSTED_STEEL_GIRDER = steelGirder("rusted");
 
 	private static BlockEntry<GirderBlock> steelGirder(String name) {
-		return REGISTRATE.block((name.isEmpty() ? name : (name + "_")) + "steel_girder", p -> new GirderBlock(TAG_STEEL_GIRDERS, p))
+		return REGISTRATE.block((name.isEmpty() ? name : (name + "_")) + "steel_girder", p -> new GirderBlock(ExtraTags.Blocks.STEEL_GIRDERS, p))
 			.initialProperties(() -> Blocks.IRON_BARS)
-			.tag(TAG_STEEL_GIRDERS)
+			.tag(ExtraTags.Blocks.STEEL_GIRDERS)
 			.tag(BlockTags.MINEABLE_WITH_PICKAXE)
 			.tag(BlockTags.NEEDS_IRON_TOOL)
 			.blockstate(ModelGenUtil::steelGirderBlockstate)
@@ -753,6 +751,7 @@ public class ExtraBlocks {
     public static final BlockEntry<CurtainBlock> CURTAIN = REGISTRATE.block("curtain", p -> (CurtainBlock) new CurtainBlock(p) {
             })
             .initialProperties(() -> Blocks.GLASS_PANE)
+			.tag(ExtraTags.Blocks.CREATE_MOVABLE_EMPTY_COLLIDER)
             .properties(p -> p.sound(SoundType.WOOL))
             .blockstate((ctx, prov) -> {
             }) // NO-OP, it's easier to just copy the file out of vanilla...
