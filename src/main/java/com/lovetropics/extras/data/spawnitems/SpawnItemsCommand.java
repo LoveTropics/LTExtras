@@ -41,7 +41,7 @@ public class SpawnItemsCommand {
                                             context.getSource().getPlayer().drop(stack.build(), true, true);
                                         }
                                     }
-                                    context.getSource().sendSuccess(() -> Component.literal("spawnitems.restored_successfully"), false);
+                                    context.getSource().sendSuccess(() -> Component.translatable("spawnitems.restored_successfully"), false);
 
                                     return Command.SINGLE_SUCCESS;
                                 }))));

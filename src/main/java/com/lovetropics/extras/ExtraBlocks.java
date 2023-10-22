@@ -490,13 +490,15 @@ public class ExtraBlocks {
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
 			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.normal())
-			.add(RUSTY_PAINTED_METAL, TextureType.normal());
+			.add(RUSTY_PAINTED_METAL, TextureType.normal())
+			.add(Blocks.MOSS_BLOCK, TextureType.normal());
 
 	private static final TemplateBuilder<SlabBlock, TextureType> SLAB_TEMPLATES = new TemplateBuilder<SlabBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
 			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.normal())
-			.add(RUSTY_PAINTED_METAL, TextureType.normal());
+			.add(RUSTY_PAINTED_METAL, TextureType.normal())
+			.add(Blocks.MOSS_BLOCK, TextureType.normal());
 
 	private static final TemplateBuilder<FenceBlock, TextureType> FENCE_TEMPLATES = new TemplateBuilder<FenceBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
