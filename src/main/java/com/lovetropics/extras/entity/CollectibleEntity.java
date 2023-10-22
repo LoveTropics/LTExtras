@@ -57,9 +57,11 @@ public class CollectibleEntity extends Entity {
             if (player.getUUID().equals(lastGrantedPlayerId)) {
                 return;
             }
-            final CollectibleStore collectibles = CollectibleStore.get(player);
-            collectibles.give(collectible);
-            lastGrantedPlayerId = player.getUUID();
+            final CollectibleStore collectibles = CollectibleStore.getNullable(player);
+            if (collectibles != null) {
+                collectibles.give(collectible);
+                lastGrantedPlayerId = player.getUUID();
+            }
         }
     }
 

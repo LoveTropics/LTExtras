@@ -74,7 +74,10 @@ public final class SpawnItemsStore implements ICapabilitySerializable<Tag> {
     }
 
     private static void sendItems(Player player) {
-        final var cap = get(player);
+        final var cap = getNullable(player);
+        if (cap == null) {
+            return;
+        }
         final var diff = getDiff(cap.receivedItems);
 
         for (final var entry : diff.entrySet()) {
@@ -121,11 +124,8 @@ public final class SpawnItemsStore implements ICapabilitySerializable<Tag> {
         newStore.receivedItems.putAll(oldStore.receivedItems);
     }
 
-    public static SpawnItemsStore get(final Player player) {
-        return player.getCapability(LTExtras.SPAWN_ITEMS_STORE).orElseThrow(IllegalStateException::new);
-    }
-
-    @Nullable public static SpawnItemsStore getNullable(final Player player) {
+    @Nullable
+    public static SpawnItemsStore getNullable(final Player player) {
         return player.getCapability(LTExtras.SPAWN_ITEMS_STORE).orElse(null);
     }
 }

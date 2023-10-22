@@ -25,7 +25,11 @@ public record ReturnCollectibleItemPacket(Collectible collectible) {
             return;
         }
 
-        final CollectibleStore collectibles = CollectibleStore.get(player);
+        final CollectibleStore collectibles = CollectibleStore.getNullable(player);
+        if (collectibles == null) {
+            return;
+        }
+
         if (collectibles.contains(collectible) && collectible.matches(player.inventoryMenu.getCarried())) {
             player.inventoryMenu.setCarried(ItemStack.EMPTY);
         } else {

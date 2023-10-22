@@ -55,7 +55,10 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event) {
-        get(event.getEntity()).sendToClient(true);
+        final CollectibleStore collectibles = getNullable(event.getEntity());
+        if (collectibles != null) {
+            collectibles.sendToClient(true);
+        }
     }
 
     @SubscribeEvent
@@ -71,10 +74,6 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
             newCollectibles.collectibles.addAll(oldCollectibles.collectibles);
             newCollectibles.sendToClient(true);
         }
-    }
-
-    public static CollectibleStore get(final Player player) {
-        return player.getCapability(LTExtras.COLLECTIBLE_STORE).orElseThrow(IllegalStateException::new);
     }
 
     @Nullable

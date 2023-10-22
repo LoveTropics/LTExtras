@@ -54,8 +54,8 @@ public class CollectibleCommand {
 
         int result = 0;
         for (final ServerPlayer player : players) {
-            final CollectibleStore collectibles = CollectibleStore.get(player);
-            if (collectibles.give(collectible)) {
+            final CollectibleStore collectibles = CollectibleStore.getNullable(player);
+            if (collectibles != null && collectibles.give(collectible)) {
                 result++;
             }
         }
@@ -75,7 +75,8 @@ public class CollectibleCommand {
 
         int count = 0;
         for (final ServerPlayer player : players) {
-            if (CollectibleStore.get(player).clear(predicate)) {
+            final CollectibleStore collectibles = CollectibleStore.getNullable(player);
+            if (collectibles != null && collectibles.clear(predicate)) {
                 clearCollectibleItems(player.getInventory(), predicate);
                 count++;
             }

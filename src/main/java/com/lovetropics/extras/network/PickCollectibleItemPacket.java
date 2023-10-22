@@ -26,8 +26,8 @@ public record PickCollectibleItemPacket(Collectible collectible) {
             return;
         }
 
-        final CollectibleStore collectibles = CollectibleStore.get(player);
-        if (!collectibles.contains(collectible)) {
+        final CollectibleStore collectibles = CollectibleStore.getNullable(player);
+        if (collectibles == null || !collectibles.contains(collectible)) {
             player.inventoryMenu.broadcastChanges();
             return;
         }
