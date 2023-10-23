@@ -14,6 +14,7 @@
     "LivingEntityMixin",
     "PlayerListMixin",
     "ScaffoldingBlockMixin",
+    "SignableCommandMixin",
     "SlotMixin",
     "TeamCommandMixin",
     "perf.BiomeManagerMixin",
