@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -61,6 +62,17 @@ public class Collectible {
         }
         final CompoundTag tag = stack.getTag();
         return tag != null && tag.hasUUID(KEY_ITEM_STACK_MARKER);
+    }
+
+    public static boolean isIllegalCollectible(final ItemStack stack, final ServerPlayer player) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        final CompoundTag tag = stack.getTag();
+        if (tag != null && tag.hasUUID(KEY_ITEM_STACK_MARKER)) {
+            return !player.getUUID().equals(tag.getUUID(KEY_ITEM_STACK_MARKER));
+        }
+        return false;
     }
 
     public ItemStack createItemStack(final UUID player) {
