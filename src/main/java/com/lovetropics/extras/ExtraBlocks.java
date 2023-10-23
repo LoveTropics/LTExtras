@@ -208,23 +208,23 @@ public class ExtraBlocks {
 				.build()
 			.register();
 
-	public static final BlockEntry<LadderBlock> METAL_LADDER = ladder("metal_ladder");
-	public static final BlockEntry<LadderBlock> RUSTY_METAL_LADDER = ladder("rusty_metal_ladder");
-
-	private static final BlockEntry<LadderBlock> ladder(String name) {
+	public static final BlockEntry<LadderBlock> METAL_LADDER = ladder("metal_ladder", "metal_ladder").register();
+	public static final BlockEntry<LadderBlock> RUSTY_METAL_LADDER = ladder("rusty_metal_ladder", "rusty_metal_ladder").register();
+	public static final BlockEntry<LadderBlock> FAST_METAL_LADDER = ladder("fast_metal_ladder", "metal_ladder").tag(ExtraTags.Blocks.CLIMBABLE_FAST).register();
+	public static final BlockEntry<LadderBlock> FAST_RUSTY_METAL_LADDER = ladder("fast_rusty_metal_ladder", "rusty_metal_ladder").tag(ExtraTags.Blocks.CLIMBABLE_FAST).register();
+	private static final BlockBuilder<LadderBlock, Registrate> ladder(String name, String texture) {
 		return REGISTRATE.block(name, p -> (LadderBlock) new LadderBlock(p) {}).initialProperties(() -> Blocks.IRON_BARS)
 				.tag(BlockTags.CLIMBABLE)
 				.tag(BlockTags.MINEABLE_WITH_PICKAXE)
 				.tag(BlockTags.NEEDS_IRON_TOOL)
 				.blockstate((ctx, prov) -> prov.horizontalBlock(ctx.getEntry(), prov.models()
 						.withExistingParent(ctx.getName(), "block/ladder")
-						.texture("texture", prov.blockTexture(ctx.getEntry()))
-						.texture("particle", prov.blockTexture(ctx.getEntry()))))
+						.texture("texture", prov.modLoc("block/" + texture))
+						.texture("particle", "#texture")))
 				.addLayer(() -> RenderType::cutout)
 				.item()
-				.model((ctx, prov) -> prov.blockSprite(ctx))
-				.build()
-				.register();
+				.model((ctx, prov) -> prov.blockSprite(ctx, prov.modLoc("block/" + texture)))
+				.build();
 	}
 
 	public static final BlockEntry<Block> RUSTY_PAINTED_METAL = REGISTRATE.block("rusty_painted_metal", Block::new)
@@ -332,10 +332,10 @@ public class ExtraBlocks {
 				.build()
 			.register();
 
-	public static final BlockEntry<RopeBlock> OLD_ROPE = rope("old_rope");
-	public static final BlockEntry<RopeBlock> PARACORD = rope("paracord");
+	public static final BlockEntry<RopeBlock> OLD_ROPE = rope("old_rope").register();
+	public static final BlockEntry<RopeBlock> PARACORD = rope("paracord").tag(ExtraTags.Blocks.CLIMBABLE_FAST).register();
 
-	private static BlockEntry<RopeBlock> rope(String name) {
+	private static BlockBuilder<RopeBlock, Registrate> rope(String name) {
 		return REGISTRATE.block(name, RopeBlock::new)
 				.properties(p -> p.mapColor(MapColor.WOOL).instabreak().noCollission().sound(SoundType.WOOL).ignitedByLava())
 				.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
@@ -349,8 +349,7 @@ public class ExtraBlocks {
 				.tag(BlockTags.CLIMBABLE)
 				.item()
 					.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/" + name + "_knot")))
-					.build()
-				.register();
+					.build();
 	}
 
 	private static final List<DyeColor> GLOW_STICKS_DYES = Arrays.stream(DyeColor.values())

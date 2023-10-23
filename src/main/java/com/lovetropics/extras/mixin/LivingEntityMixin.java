@@ -1,6 +1,6 @@
 package com.lovetropics.extras.mixin;
 
-import com.lovetropics.extras.ExtraBlocks;
+import com.lovetropics.extras.ExtraTags;
 import com.lovetropics.extras.effect.ExtraEffects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
@@ -26,7 +26,7 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@ModifyConstant(method = "handleRelativeFrictionAndCalculateMovement", constant = @Constant(doubleValue = 0.2))
 	private double modifyClimbSpeed(double speed) {
-		if (getFeetBlockState().is(ExtraBlocks.PARACORD.get())) {
+		if (getFeetBlockState().is(ExtraTags.Blocks.CLIMBABLE_FAST)) {
 			return speed * 2.0;
 		}
 		return speed;
