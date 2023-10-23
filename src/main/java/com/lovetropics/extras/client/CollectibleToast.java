@@ -3,6 +3,7 @@ package com.lovetropics.extras.client;
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.collectible.Collectible;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,7 +28,7 @@ public class CollectibleToast implements Toast {
     private final Minecraft minecraft = Minecraft.getInstance();
 
     public CollectibleToast(final Collectible collectible) {
-        stack = collectible.createItemStack();
+        stack = collectible.createItemStack(Util.NIL_UUID);
         name = stack.getHoverName().copy().withStyle(ChatFormatting.DARK_RED);
     }
 

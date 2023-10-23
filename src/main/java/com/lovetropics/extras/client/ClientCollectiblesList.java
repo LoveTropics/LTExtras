@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class ClientCollectiblesList {
@@ -46,9 +47,11 @@ public class ClientCollectiblesList {
     }
 
     public void update(final List<Collectible> collectibles, final boolean silent) {
+        final Minecraft minecraft = Minecraft.getInstance();
         final List<Collectible> newCollectibles = collectibles.stream().filter(c -> !this.collectibles.contains(c)).toList();
         this.collectibles = List.copyOf(collectibles);
-        itemStacks = collectibles.stream().map(Collectible::createItemStack).toList();
+        final UUID playerId = minecraft.player.getUUID();
+        itemStacks = collectibles.stream().map(collectible -> collectible.createItemStack(playerId)).toList();
         if (!silent && !newCollectibles.isEmpty()) {
             notifyCollections(newCollectibles);
         }

@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import net.minecraft.Util;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -71,7 +72,7 @@ public class CollectibleCommand {
     }
 
     private static int clear(final CommandContext<CommandSourceStack> ctx, final Collection<ServerPlayer> players, final Predicate<ItemStack> itemPredicate) throws CommandSyntaxException {
-        final Predicate<Collectible> predicate = collectible -> itemPredicate.test(collectible.createItemStack());
+        final Predicate<Collectible> predicate = collectible -> itemPredicate.test(collectible.createItemStack(Util.NIL_UUID));
 
         int count = 0;
         for (final ServerPlayer player : players) {

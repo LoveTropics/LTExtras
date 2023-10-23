@@ -1,7 +1,6 @@
 package com.lovetropics.extras.collectible;
 
 import com.lovetropics.extras.LTExtras;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;

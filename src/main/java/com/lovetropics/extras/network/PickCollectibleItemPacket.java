@@ -35,7 +35,7 @@ public record PickCollectibleItemPacket(Collectible collectible) {
         final Inventory inventory = player.getInventory();
         final int index = findCollectibleInInventory(inventory, collectible);
         if (index == NOT_FOUND) {
-            player.inventoryMenu.setCarried(collectible.createItemStack());
+            player.inventoryMenu.setCarried(collectible.createItemStack(player.getUUID()));
         } else {
             player.inventoryMenu.setCarried(inventory.removeItemNoUpdate(index));
         }

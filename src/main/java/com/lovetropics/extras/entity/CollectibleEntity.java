@@ -42,7 +42,7 @@ public class CollectibleEntity extends Entity {
 
     public void setCollectible(@Nullable final Collectible collectible) {
         this.collectible = collectible;
-        getEntityData().set(DATA_ITEM, collectible != null ? collectible.createItemStack() : ItemStack.EMPTY);
+        getEntityData().set(DATA_ITEM, collectible != null ? collectible.createItemStack(Util.NIL_UUID) : ItemStack.EMPTY);
         lastGrantedPlayerId = null;
     }
 

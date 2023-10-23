@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 public class Collectible {
     public static final Codec<Collectible> CODEC = RecordCodecBuilder.create(i -> i.group(
@@ -59,13 +60,13 @@ public class Collectible {
             return false;
         }
         final CompoundTag tag = stack.getTag();
-        return tag != null && tag.getBoolean(KEY_ITEM_STACK_MARKER);
+        return tag != null && tag.hasUUID(KEY_ITEM_STACK_MARKER);
     }
 
-    public ItemStack createItemStack() {
+    public ItemStack createItemStack(final UUID player) {
         final ItemStack stack = new ItemStack(item);
         tag.map(CompoundTag::copy).ifPresent(stack::setTag);
-        stack.getOrCreateTag().putBoolean(KEY_ITEM_STACK_MARKER, true);
+        stack.getOrCreateTag().putUUID(KEY_ITEM_STACK_MARKER, player);
         return stack;
     }
 
