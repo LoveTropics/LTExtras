@@ -11,6 +11,7 @@
     "FluidStateMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
+    "DedicatedServerMixin",
     "PlayerListMixin",
     "ScaffoldingBlockMixin",
     "TeamCommandMixin",
