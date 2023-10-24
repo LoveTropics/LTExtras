@@ -31,6 +31,8 @@ public class ExtraItems {
             })
             .register();
 
+    public static final ItemEntry<ImageItem> INVITE = REGISTRATE.item("invite", ImageItem::new).register();
+
     public static void init() {
     }
 }

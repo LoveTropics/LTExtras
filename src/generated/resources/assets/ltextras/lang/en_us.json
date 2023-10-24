@@ -132,6 +132,7 @@
   "item.ltextras.cosmetic_point": "Cosmetic Point",
   "item.ltextras.entity_wand": "Entity Wand",
   "item.ltextras.image": "Image",
+  "item.ltextras.invite": "Invite",
   "itemGroup.ltextras.ltextras": "LTExtras",
   "spawnitems.restored_successfully": "Items restored!",
   "spawnitems.set_not_restorable": "The spawn item set %s cannot be restored!",
