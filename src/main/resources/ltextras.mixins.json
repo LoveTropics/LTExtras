@@ -10,6 +10,7 @@
     "CreatureEntityMixin",
     "DedicatedServerMixin",
     "FluidStateMixin",
+    "ItemFrameMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerListMixin",

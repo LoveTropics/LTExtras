@@ -51,8 +51,9 @@ public class LTExtras {
 	public static final String MODID = "ltextras";
 
     private static final ResourceLocation TAB_ID = new ResourceLocation(MODID, "ltextras");
+	public static final ResourceKey<CreativeModeTab> TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, TAB_ID);
 
-    private static final NonNullLazy<Registrate> REGISTRATE = NonNullLazy.of(() -> Registrate.create(MODID).defaultCreativeTab(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TAB_ID)));
+    private static final NonNullLazy<Registrate> REGISTRATE = NonNullLazy.of(() -> Registrate.create(MODID).defaultCreativeTab(TAB_KEY));
 
 	public static final Capability<CollectibleStore> COLLECTIBLE_STORE = CapabilityManager.get(new CapabilityToken<>() {});
 	public static final Capability<SpawnItemsStore> SPAWN_ITEMS_STORE = CapabilityManager.get(new CapabilityToken<>() {});
