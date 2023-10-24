@@ -120,6 +120,16 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
         return collectibles.contains(collectible);
     }
 
+    public int count(final Predicate<Collectible> predicate) {
+        int count = 0;
+        for (final Collectible collectible : collectibles) {
+            if (predicate.test(collectible)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     private void sendToClient(final boolean silent) {
         LTExtrasNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new CollectiblesListPacket(collectibles, silent));
     }

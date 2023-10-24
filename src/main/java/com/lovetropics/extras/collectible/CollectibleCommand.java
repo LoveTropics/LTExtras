@@ -9,9 +9,13 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.item.ItemInput;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
@@ -46,6 +50,8 @@ public class CollectibleCommand {
                                 .executes(c -> clear(c, getPlayers(c, "target"), i -> true))
                         )
                 )
+                // Very hacky
+                .then(literal("countdisguises").executes(CollectibleCommand::countDisguises))
         );
     }
 
@@ -101,5 +107,21 @@ public class CollectibleCommand {
                 inventory.removeItemNoUpdate(i);
             }
         }
+    }
+
+    private static final ResourceKey<Item> DISGUISE = ResourceKey.create(Registries.ITEM, new ResourceLocation("ltminigames", "disguise"));
+
+    private static int countDisguises(final CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        final ServerPlayer player = context.getSource().getPlayerOrException();
+        final CollectibleStore collectibles = CollectibleStore.getNullable(player);
+        if (collectibles == null) {
+            return 0;
+        }
+        return collectibles.count(collectible -> {
+            if (collectible.item().is(DISGUISE)) {
+                return collectible.tag().isEmpty() || !collectible.tag().get().getBoolean("donation_goal");
+            }
+            return false;
+        });
     }
 }

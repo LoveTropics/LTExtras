@@ -6,6 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -84,6 +85,10 @@ public class Collectible {
 
     public Holder<Item> item() {
         return item;
+    }
+
+    public Optional<CompoundTag> tag() {
+        return tag;
     }
 
     public boolean matches(final ItemStack stack) {
