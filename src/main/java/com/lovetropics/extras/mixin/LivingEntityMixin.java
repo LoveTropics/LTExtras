@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,8 +27,11 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@ModifyConstant(method = "handleRelativeFrictionAndCalculateMovement", constant = @Constant(doubleValue = 0.2))
 	private double modifyClimbSpeed(double speed) {
-		if (getFeetBlockState().is(ExtraTags.Blocks.CLIMBABLE_FAST)) {
+		final BlockState state = getFeetBlockState();
+		if (state.is(ExtraTags.Blocks.CLIMBABLE_VERY_FAST)) {
 			return speed * 2.0;
+		} else if (state.is(ExtraTags.Blocks.CLIMBABLE_FAST)) {
+			return speed * 1.5;
 		}
 		return speed;
 	}

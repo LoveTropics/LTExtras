@@ -333,7 +333,7 @@ public class ExtraBlocks {
 			.register();
 
 	public static final BlockEntry<RopeBlock> OLD_ROPE = rope("old_rope").register();
-	public static final BlockEntry<RopeBlock> PARACORD = rope("paracord").tag(ExtraTags.Blocks.CLIMBABLE_FAST).register();
+	public static final BlockEntry<RopeBlock> PARACORD = rope("paracord").tag(ExtraTags.Blocks.CLIMBABLE_VERY_FAST).register();
 
 	private static BlockBuilder<RopeBlock, Registrate> rope(String name) {
 		return REGISTRATE.block(name, RopeBlock::new)
