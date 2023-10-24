@@ -14,8 +14,10 @@ public class UndroppableItems {
 
     @SubscribeEvent
     public static void onItemToss(final ItemTossEvent event) {
-        if (isUndroppable(event.getEntity().getItem())) {
+        final ItemStack stack = event.getEntity().getItem();
+        if (isUndroppable(stack)) {
             event.setCanceled(true);
+            event.getPlayer().addItem(stack);
         }
     }
 
