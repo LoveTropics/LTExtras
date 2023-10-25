@@ -3,6 +3,7 @@ package com.lovetropics.extras;
 import com.lovetropics.extras.item.CollectibleBasketItem;
 import com.lovetropics.extras.item.EntityWandItem;
 import com.lovetropics.extras.item.ImageItem;
+import com.lovetropics.extras.item.InviteItem;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.world.item.Item;
@@ -31,7 +32,7 @@ public class ExtraItems {
             })
             .register();
 
-    public static final ItemEntry<ImageItem> INVITE = REGISTRATE.item("invite", ImageItem::new).register();
+    public static final ItemEntry<InviteItem> INVITE = REGISTRATE.item("invite", InviteItem::new).register();
 
     public static void init() {
     }
