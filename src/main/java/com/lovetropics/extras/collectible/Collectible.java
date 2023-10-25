@@ -95,7 +95,7 @@ public class Collectible {
         if (!Collectible.isCollectible(stack)) {
             return false;
         }
-        return stack.is(item) && NbtUtils.compareNbt(tag.orElse(null), stack.getTag(), true);
+        return stack.is(item) && Objects.equals(tag.orElse(null), stack.getTag());
     }
 
     @Override
