@@ -39,10 +39,10 @@ public class ImageRenderer {
         final float y1 = image.height() / 2.0f;
 
         final VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityCutoutNoCullZOffset(image.texture()));
-        addVertex(consumer, pose, x0, y0, 0.0f, 0.0f, packedLight);
-        addVertex(consumer, pose, x0, y1, 0.0f, 1.0f, packedLight);
-        addVertex(consumer, pose, x1, y1, 1.0f, 1.0f, packedLight);
-        addVertex(consumer, pose, x1, y0, 1.0f, 0.0f, packedLight);
+        addVertex(consumer, pose, x0, y0, 0.0f, 1.0f, packedLight);
+        addVertex(consumer, pose, x0, y1, 0.0f, 0.0f, packedLight);
+        addVertex(consumer, pose, x1, y1, 1.0f, 0.0f, packedLight);
+        addVertex(consumer, pose, x1, y0, 1.0f, 1.0f, packedLight);
     }
 
     private static void addVertex(final VertexConsumer consumer, final PoseStack.Pose pose, final float x, final float y, final float u, final float v, final int packedLight) {
