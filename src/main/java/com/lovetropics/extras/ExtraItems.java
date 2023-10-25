@@ -15,7 +15,7 @@ public class ExtraItems {
             .properties(p -> p.stacksTo(1))
             .register();
 
-    public static final ItemEntry<Item> COSMETIC_POINT = REGISTRATE.item("cosmetic_point", Item::new).register();
+    public static final ItemEntry<Item> TROPICOIN = REGISTRATE.item("tropicoin", Item::new).lang("TropiCoin").register();
 
     public static final ItemEntry<CollectibleBasketItem> COLLECTIBLE_BASKET = REGISTRATE.item("collectible_basket", CollectibleBasketItem::new)
             .properties(p -> p.stacksTo(1))

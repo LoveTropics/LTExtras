@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ltextras:item/cosmetic_point"
+    "layer0": "ltextras:item/tropicoin"
   }
 }
