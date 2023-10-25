@@ -1,5 +1,6 @@
 package com.lovetropics.extras.item;
 
+import com.lovetropics.extras.LTExtras;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 public class ImageItem extends Item {
     public static final List<Data> PRESETS = List.of(
+            new Data(Component.literal("[Redacted]"), new ResourceLocation(LTExtras.MODID, "textures/images/ccfucc_banner.png"), 3.0f, 5.0f)
     );
 
     private static final String TAG_IMAGE = "image";
