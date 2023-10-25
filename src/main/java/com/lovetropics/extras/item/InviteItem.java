@@ -2,9 +2,10 @@ package com.lovetropics.extras.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class InviteItem extends ImageItem {
+public class InviteItem extends Item {
     public InviteItem(final Properties properties) {
         super(properties);
     }

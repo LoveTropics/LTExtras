@@ -1,6 +1,8 @@
 package com.lovetropics.extras.client;
 
+import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.ImageItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -20,14 +22,17 @@ public class ImageRenderer {
     @SubscribeEvent
     public static void onRenderItemInFrame(final RenderItemInFrameEvent event) {
         final ItemStack stack = event.getItemStack();
-        final ImageItem.Data image = ImageItem.get(stack).orElse(null);
+        if (!stack.is(ExtraItems.IMAGE.get())) {
+            return;
+        }
+        final ImageData image = ImageData.get(stack).orElse(null);
         if (image != null) {
             renderImage(image, event.getPoseStack().last(), event.getMultiBufferSource(), event.getPackedLight());
             event.setCanceled(true);
         }
     }
 
-    private static void renderImage(final ImageItem.Data image, final PoseStack.Pose pose, final MultiBufferSource bufferSource, final int packedLight) {
+    private static void renderImage(final ImageData image, final PoseStack.Pose pose, final MultiBufferSource bufferSource, final int packedLight) {
         final float x0 = -image.width() / 2.0f;
         final float y0 = -image.height() / 2.0f;
         final float x1 = image.width() / 2.0f;

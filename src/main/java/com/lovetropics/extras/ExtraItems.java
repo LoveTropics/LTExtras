@@ -1,9 +1,6 @@
 package com.lovetropics.extras;
 
-import com.lovetropics.extras.item.CollectibleBasketItem;
-import com.lovetropics.extras.item.EntityWandItem;
-import com.lovetropics.extras.item.ImageItem;
-import com.lovetropics.extras.item.InviteItem;
+import com.lovetropics.extras.item.*;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.world.item.Item;
@@ -24,9 +21,9 @@ public class ExtraItems {
 
     public static final ItemEntry<ImageItem> IMAGE = REGISTRATE.item("image", ImageItem::new)
             .tab(LTExtras.TAB_KEY, modifier -> {
-                for (final ImageItem.Data preset : ImageItem.PRESETS) {
+                for (final ImageData preset : ImageItem.PRESETS) {
                     final ItemStack stack = new ItemStack(ExtraItems.IMAGE.get());
-                    ImageItem.set(stack, preset);
+                    ImageData.set(stack, preset);
                     modifier.accept(stack);
                 }
             })

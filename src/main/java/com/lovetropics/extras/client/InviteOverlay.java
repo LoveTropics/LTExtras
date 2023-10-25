@@ -2,7 +2,7 @@ package com.lovetropics.extras.client;
 
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.item.ImageItem;
+import com.lovetropics.extras.item.ImageData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
@@ -28,12 +28,12 @@ public class InviteOverlay {
             }
             final ItemStack item = player.getMainHandItem();
             if (item.is(ExtraItems.INVITE.get())) {
-                ImageItem.get(item).ifPresent(image -> drawImage(graphics, screenWidth, screenHeight, image));
+                ImageData.get(item).ifPresent(image -> drawImage(graphics, screenWidth, screenHeight, image));
             }
         });
     }
 
-    private static void drawImage(final GuiGraphics graphics, final int screenWidth, final int screenHeight, final ImageItem.Data image) {
+    private static void drawImage(final GuiGraphics graphics, final int screenWidth, final int screenHeight, final ImageData image) {
         final int height = Math.min((int) image.height(), screenHeight - PADDING * 2);
         final int width = Mth.floor(height * image.width() / image.height());
 
