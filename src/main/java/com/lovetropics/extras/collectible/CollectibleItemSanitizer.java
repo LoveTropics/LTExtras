@@ -3,6 +3,7 @@ package com.lovetropics.extras.collectible;
 import com.lovetropics.extras.LTExtras;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -17,13 +18,13 @@ import net.minecraftforge.fml.common.Mod;
 public class CollectibleItemSanitizer {
     private static final int INVENTORY_CHECK_INTERVAL = SharedConstants.TICKS_PER_SECOND;
 
-    @SubscribeEvent
-    public static void onItemToss(final ItemTossEvent event) {
-        final ItemStack stack = event.getEntity().getItem();
+    public static boolean onItemToss(final Player player, final ItemEntity item) {
+        final ItemStack stack = item.getItem();
         if (Collectible.isCollectible(stack)) {
-            event.getPlayer().addItem(stack);
-            event.setCanceled(true);
+            player.addItem(stack);
+            return true;
         }
+        return false;
     }
 
     @SubscribeEvent
