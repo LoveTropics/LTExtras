@@ -77,8 +77,12 @@ public class Collectible {
     public ItemStack createItemStack(final UUID player) {
         final ItemStack stack = new ItemStack(item);
         tag.map(CompoundTag::copy).ifPresent(stack::setTag);
-        stack.getOrCreateTag().putUUID(KEY_ITEM_STACK_MARKER, player);
+        addMarkerTo(player, stack);
         return stack;
+    }
+
+    public static void addMarkerTo(final UUID player, final ItemStack stack) {
+        stack.getOrCreateTag().putUUID(KEY_ITEM_STACK_MARKER, player);
     }
 
     public Holder<Item> item() {

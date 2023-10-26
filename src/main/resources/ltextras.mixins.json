@@ -20,6 +20,7 @@
     "TeamCommandMixin",
     "collectible.ForgeHooksMixin",
     "collectible.ItemStackMixin",
+    "collectible.MerchantResultSlotMixin",
     "collectible.ServerPlayerGameModeMixin",
     "perf.BiomeManagerMixin",
     "perf.ChunkManagerMixin",
