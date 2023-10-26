@@ -89,7 +89,7 @@ public class CollectibleItemBehavior {
             stack.setCount(count);
             return result;
         }
-        return stack.use(level, player, hand);
+        return stack.getItem().use(level, player, hand);
     }
 
     public static InteractionResult wrapUseOn(final ItemStack stack, final UseOnContext context) {
