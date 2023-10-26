@@ -51,6 +51,12 @@ public class LTExtrasNetwork {
 				.decoder(SetSkyColorPacket::new)
 				.consumerMainThread(SetSkyColorPacket::handle)
 				.add();
+
+		CHANNEL.messageBuilder(WorldParticleEffectsPacket.class, 6, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(WorldParticleEffectsPacket::write)
+				.decoder(WorldParticleEffectsPacket::new)
+				.consumerMainThread(WorldParticleEffectsPacket::handle)
+				.add();
 	}
 }
 

@@ -34,6 +34,10 @@ public class EffectInterpolator<T> {
         }
     }
 
+    public void reset(final T state) {
+        setTarget(state, 0);
+    }
+
     public T get(final float partialTicks) {
         if (Objects.equals(state, lastState)) {
             return state;
