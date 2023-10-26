@@ -1,7 +1,7 @@
-package com.lovetropics.extras.mixin.collectible;
+package com.lovetropics.extras.mixin;
 
 import com.lovetropics.extras.collectible.CollectibleItemBehavior;
-import com.lovetropics.extras.item.UndroppableItems;
+import com.lovetropics.extras.item.ItemExtensions;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +21,7 @@ public class ForgeHooksMixin {
         if (!includeName) {
             return;
         }
-        if (UndroppableItems.onItemToss(player, entity) || CollectibleItemBehavior.onItemToss(player, entity)) {
+        if (ItemExtensions.onItemToss(player, entity) || CollectibleItemBehavior.onItemToss(player, entity)) {
             cir.setReturnValue(null);
         }
     }

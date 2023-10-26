@@ -1,6 +1,8 @@
 package com.lovetropics.extras.mixin.collectible;
 
 import com.lovetropics.extras.collectible.CollectibleItemBehavior;
+import com.lovetropics.extras.item.ItemExtensions;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +17,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class ItemStackMixin {
     @Redirect(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;"))
     private InteractionResultHolder<ItemStack> useItem(final Item item, final Level level, final Player player, final InteractionHand hand) {
-        return CollectibleItemBehavior.wrapUse((ItemStack) (Object) this, level, player, hand);
+        final InteractionResultHolder<ItemStack> result = CollectibleItemBehavior.wrapUse((ItemStack) (Object) this, level, player, hand);
+        if (player instanceof final ServerPlayer serverPlayer && result.getResult().consumesAction()) {
+            ItemExtensions.onItemUsed(serverPlayer, result.getObject());
+        }
+        return result;
     }
 }
