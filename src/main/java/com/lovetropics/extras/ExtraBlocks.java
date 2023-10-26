@@ -11,6 +11,7 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
+import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -19,6 +20,7 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -34,10 +36,7 @@ import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.item.ScaffoldingBlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.FoliageColor;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -47,10 +46,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.client.model.generators.BlockModelBuilder;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
+import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.data.loading.DatagenModLoader;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -455,6 +451,34 @@ public class ExtraBlocks {
 			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("block/end_rod")))
 			.build()
             .register();
+
+	public static final BlockEntry<Block> LIME_BLOCK = REGISTRATE.block("lime_block", Block::new)
+			.initialProperties(() -> Blocks.MELON)
+			.properties(p -> p.sound(SoundType.SLIME_BLOCK))
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().cubeColumn(ctx.getName(), prov.modLoc("block/lime_side"), prov.modLoc("block/lime_top"))))
+			.lang("Block of Lime")
+			.simpleItem()
+			.defaultLoot()
+			.register();
+
+	public static final BlockEntry<SlabBlock> SLICED_LIME = REGISTRATE.block("sliced_lime", SlabBlock::new)
+			.initialProperties(LIME_BLOCK)
+			.blockstate((ctx, prov) -> {
+				final ResourceLocation side = prov.modLoc("block/lime_side");
+				final ResourceLocation end = prov.modLoc("block/lime_top");
+				final ResourceLocation inside = prov.modLoc("block/lime_inside");
+				prov.slabBlock(ctx.get(),
+						prov.models().slab(ctx.getName(), side, end, inside),
+						prov.models().slabTop(ctx.getName() + "_top", side, inside, end),
+						prov.models().getExistingFile(prov.modLoc("block/lime_block"))
+				);
+			})
+			.loot((loot, block) -> loot.add(block, loot.createSlabItemTable(block)))
+			.simpleItem()
+			.recipe((ctx, prov) ->
+					prov.slab(DataIngredient.items((NonNullSupplier<? extends ItemLike>) LIME_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx, "lime_slab", false)
+			)
+			.register();
 
 	// Speedy blocks
 

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "ltextras:block/sliced_lime"
+    },
+    "type=double": {
+      "model": "ltextras:block/lime_block"
+    },
+    "type=top": {
+      "model": "ltextras:block/sliced_lime_top"
+    }
+  }
+}

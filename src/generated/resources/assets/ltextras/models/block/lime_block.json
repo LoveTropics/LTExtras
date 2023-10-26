@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "ltextras:block/lime_top",
+    "side": "ltextras:block/lime_side"
+  }
+}
