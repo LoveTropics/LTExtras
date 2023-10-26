@@ -297,6 +297,24 @@ public class ExtraBlocks {
 				.build()
 			.register();
 
+	public static final BlockEntry<CustomSugarCaneBlock> SUGAR_CANE = REGISTRATE.block("sugar_cane", CustomSugarCaneBlock::new)
+			.initialProperties(() -> Blocks.SUGAR_CANE)
+			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry()).forAllStates(state -> {
+				final CustomSugarCaneBlock.Type type = state.getValue(CustomSugarCaneBlock.TYPE);
+				final String modelName = ctx.getName() + "_" + type.getSerializedName();
+				return ConfiguredModel.builder().modelFile(prov.models()
+						.withExistingParent(modelName, "block/crop")
+						.texture("crop", prov.modLoc("block/" + modelName))
+						.texture("particle", "#crop")
+				).build();
+			}))
+			.addLayer(() -> RenderType::cutout)
+			.defaultLoot()
+			.item()
+			.model((ctx, prov) -> prov.generated(ctx::getEntry, prov.modLoc("block/sugar_cane_top")))
+			.build()
+			.register();
+
 	public static final BlockEntry<PianguasBlock> PIANGUAS = REGISTRATE.block("pianguas", PianguasBlock::new)
 			.properties(p -> p.mapColor(MapColor.STONE).noCollission().instabreak().instrument(NoteBlockInstrument.BASEDRUM))
 			.blockstate((ctx, prov) -> {

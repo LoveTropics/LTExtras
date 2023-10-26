@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "type=bottom,waterlogged=false": {
+      "model": "ltextras:block/sugar_cane_bottom"
+    },
+    "type=bottom,waterlogged=true": {
+      "model": "ltextras:block/sugar_cane_bottom"
+    },
+    "type=middle,waterlogged=false": {
+      "model": "ltextras:block/sugar_cane_middle"
+    },
+    "type=middle,waterlogged=true": {
+      "model": "ltextras:block/sugar_cane_middle"
+    },
+    "type=top,waterlogged=false": {
+      "model": "ltextras:block/sugar_cane_top"
+    },
+    "type=top,waterlogged=true": {
+      "model": "ltextras:block/sugar_cane_top"
+    }
+  }
+}

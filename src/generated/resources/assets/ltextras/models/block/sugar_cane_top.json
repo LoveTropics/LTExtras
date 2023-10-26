@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "ltextras:block/sugar_cane_top",
+    "particle": "#crop"
+  }
+}
