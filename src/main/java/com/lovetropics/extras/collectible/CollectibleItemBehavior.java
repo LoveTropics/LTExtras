@@ -85,7 +85,7 @@ public class CollectibleItemBehavior {
     public static InteractionResultHolder<ItemStack> wrapUse(final ItemStack stack, final Level level, final Player player, final InteractionHand hand) {
         if (Collectible.isCollectible(stack)) {
             final int count = stack.getCount();
-            final InteractionResultHolder<ItemStack> result = stack.use(level, player, hand);
+            final InteractionResultHolder<ItemStack> result = stack.getItem().use(level, player, hand);
             stack.setCount(count);
             return result;
         }

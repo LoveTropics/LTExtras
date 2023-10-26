@@ -19,6 +19,7 @@
     "SlotMixin",
     "TeamCommandMixin",
     "collectible.ForgeHooksMixin",
+    "collectible.ItemStackMixin",
     "collectible.ServerPlayerGameModeMixin",
     "perf.BiomeManagerMixin",
     "perf.ChunkManagerMixin",
