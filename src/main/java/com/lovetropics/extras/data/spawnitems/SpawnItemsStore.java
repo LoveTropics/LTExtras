@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -114,14 +115,20 @@ public final class SpawnItemsStore implements ICapabilitySerializable<Tag> {
 
     @SubscribeEvent
     static void onPlayerClone(final PlayerEvent.Clone event) {
-        final SpawnItemsStore oldStore = getNullable(event.getOriginal());
-        final SpawnItemsStore newStore = getNullable(event.getEntity());
-
-        if (oldStore == null || newStore == null) {
+        final Player oldPlayer = event.getOriginal();
+        if (event.isWasDeath() && !oldPlayer.level().getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).get()) {
             return;
         }
-
-        newStore.receivedItems.putAll(oldStore.receivedItems);
+        oldPlayer.reviveCaps();
+        try {
+            final SpawnItemsStore oldStore = getNullable(oldPlayer);
+            final SpawnItemsStore newStore = getNullable(event.getEntity());
+            if (oldStore != null && newStore != null) {
+                newStore.receivedItems.putAll(oldStore.receivedItems);
+            }
+        } finally {
+            oldPlayer.invalidateCaps();
+        }
     }
 
     @Nullable

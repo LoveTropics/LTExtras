@@ -35,12 +35,16 @@ public class PlayerTimeZone implements ICapabilityProvider {
 
     @SubscribeEvent
     public static void onPlayerClone(final PlayerEvent.Clone event) {
-        if (event.isWasDeath()) {
-            final PlayerTimeZone oldTimeZone = getOrNull(event.getOriginal());
+        final Player oldPlayer = event.getOriginal();
+        oldPlayer.reviveCaps();
+        try {
+            final PlayerTimeZone oldTimeZone = getOrNull(oldPlayer);
             final PlayerTimeZone newTimeZone = getOrNull(event.getEntity());
             if (oldTimeZone != null && newTimeZone != null) {
                 newTimeZone.zoneId = oldTimeZone.zoneId;
             }
+        } finally {
+            oldPlayer.invalidateCaps();
         }
     }
 

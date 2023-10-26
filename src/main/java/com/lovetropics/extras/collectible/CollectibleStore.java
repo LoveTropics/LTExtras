@@ -63,16 +63,18 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
 
     @SubscribeEvent
     public static void onPlayerClone(final PlayerEvent.Clone event) {
-        if (event.isWasDeath()) {
-            final CollectibleStore oldCollectibles = getNullable(event.getOriginal());
+        final Player oldPlayer = event.getOriginal();
+        oldPlayer.reviveCaps();
+        try {
+            final CollectibleStore oldCollectibles = getNullable(oldPlayer);
             final CollectibleStore newCollectibles = getNullable(event.getEntity());
 
-            if (oldCollectibles == null || newCollectibles == null) {
-                return;
+            if (oldCollectibles != null && newCollectibles != null) {
+                newCollectibles.collectibles.addAll(oldCollectibles.collectibles);
+                newCollectibles.sendToClient(true);
             }
-
-            newCollectibles.collectibles.addAll(oldCollectibles.collectibles);
-            newCollectibles.sendToClient(true);
+        } finally {
+            oldPlayer.invalidateCaps();
         }
     }
 
