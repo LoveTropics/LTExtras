@@ -1,4 +1,4 @@
-package com.lovetropics.extras.mixin;
+package com.lovetropics.extras.mixin.collectible;
 
 import com.lovetropics.extras.collectible.Collectible;
 import net.minecraft.world.Container;

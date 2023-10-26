@@ -87,6 +87,9 @@ public class WorldEffectManager {
 
     @SubscribeEvent
     public static void onServerTick(final TickEvent.ServerTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            return;
+        }
         final MinecraftServer server = event.getServer();
         final long gameTime = server.overworld().getGameTime();
         EFFECTS_BY_DIMENSION.entrySet().removeIf(entry -> {

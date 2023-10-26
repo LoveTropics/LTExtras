@@ -5,8 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -92,10 +90,17 @@ public class Collectible {
     }
 
     public boolean matches(final ItemStack stack) {
-        if (!Collectible.isCollectible(stack)) {
+        if (!stack.is(item) || !Collectible.isCollectible(stack)) {
             return false;
         }
-        return stack.is(item) && Objects.equals(tag.orElse(null), stack.getTag());
+        final CompoundTag tag = getTagWithoutMarker(stack);
+        return tag.equals(this.tag.orElseGet(CompoundTag::new));
+    }
+
+    private static CompoundTag getTagWithoutMarker(final ItemStack stack) {
+        final CompoundTag tag = stack.getOrCreateTag().copy();
+        tag.remove(KEY_ITEM_STACK_MARKER);
+        return tag;
     }
 
     @Override

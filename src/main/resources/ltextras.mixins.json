@@ -16,7 +16,7 @@
     "PlayerListMixin",
     "ScaffoldingBlockMixin",
     "SignableCommandMixin",
-    "SlotMixin",
+    "collectible.SlotMixin",
     "TeamCommandMixin",
     "collectible.ForgeHooksMixin",
     "collectible.ItemStackMixin",
