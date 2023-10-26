@@ -45,6 +45,12 @@ public class LTExtrasNetwork {
 				.decoder(SetHologramTextPacket::new)
 				.consumerMainThread(SetHologramTextPacket::handle)
 				.add();
+
+		CHANNEL.messageBuilder(SetSkyColorPacket.class, 5, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(SetSkyColorPacket::write)
+				.decoder(SetSkyColorPacket::new)
+				.consumerMainThread(SetSkyColorPacket::handle)
+				.add();
 	}
 }
 

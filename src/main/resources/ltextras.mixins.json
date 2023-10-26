@@ -32,7 +32,8 @@
     "client.perf.ClientChunkCacheStorageMixin",
     "client.perf.ClientWorldMixin",
     "client.perf.ViewFrustumAccess",
-    "client.perf.WorldRendererAccess"
+    "client.perf.WorldRendererAccess",
+    "client.world_effect.ClientLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

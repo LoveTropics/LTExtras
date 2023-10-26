@@ -12,6 +12,7 @@ import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
+import com.lovetropics.extras.world_effect.WorldEffectCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
@@ -143,6 +144,7 @@ public class LTExtras {
 		CollectibleCommand.register(dispatcher, buildContext);
 		SpawnItemsCommand.register(dispatcher);
 		TpCommand.register(dispatcher);
+		WorldEffectCommand.register(dispatcher);
 	}
 
 	@OnlyIn(Dist.CLIENT)
