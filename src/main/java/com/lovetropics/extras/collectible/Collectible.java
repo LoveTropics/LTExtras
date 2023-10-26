@@ -60,7 +60,7 @@ public class Collectible {
             return false;
         }
         final CompoundTag tag = stack.getTag();
-        return tag != null && tag.hasUUID(KEY_ITEM_STACK_MARKER);
+        return tag != null && tag.contains(KEY_ITEM_STACK_MARKER);
     }
 
     public static boolean isIllegalCollectible(final ItemStack stack, final ServerPlayer player) {
