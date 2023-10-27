@@ -53,7 +53,7 @@ public class WarpCommand {
             throw GENERAL_ERROR.create();
         }
 
-        player.teleportTo(level, target.globalPos().pos().getX(), blockPos.getY(), blockPos.getZ(), player.getYRot(), player.getXRot());
+        player.teleportTo(level, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, player.getYRot(), player.getXRot());
         player.playSound(SoundEvents.CHORUS_FRUIT_TELEPORT);
 
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.warp.success", target.description()), false);
