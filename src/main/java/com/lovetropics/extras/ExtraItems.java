@@ -29,7 +29,15 @@ public class ExtraItems {
             })
             .register();
 
-    public static final ItemEntry<InviteItem> INVITE = REGISTRATE.item("invite", InviteItem::new).register();
+    public static final ItemEntry<InviteItem> INVITE = REGISTRATE.item("invite", InviteItem::new)
+            .tab(LTExtras.TAB_KEY, modifier -> {
+                for (final ImageData preset : InviteItem.PRESETS) {
+                    final ItemStack stack = new ItemStack(ExtraItems.INVITE.get());
+                    ImageData.set(stack, preset);
+                    modifier.accept(stack);
+                }
+            })
+            .register();
 
     public static void init() {
     }

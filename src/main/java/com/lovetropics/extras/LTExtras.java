@@ -85,7 +85,8 @@ public class LTExtras {
 
 		MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
 
-        registrate()
+		ExtraLangKeys.init(registrate());
+		registrate()
                 .addDataGenerator(ProviderType.LANG, p -> {
                     p.add(ExtraEffects.FISH_EYE.get(), "Fish Eye");
 					p.add("toast.collectible.title", "New Collectible!");
