@@ -10,6 +10,7 @@ import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
@@ -21,6 +22,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -458,6 +460,13 @@ public class ExtraBlocks {
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().cubeColumn(ctx.getName(), prov.modLoc("block/lime_side"), prov.modLoc("block/lime_top"))))
 			.lang("Block of Lime")
 			.simpleItem()
+			.recipe((ctx, prov) -> {
+				final DataIngredient lime = DataIngredient.tag(ExtraTags.Items.LIME);
+				ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ctx.get())
+						.requires(lime, 9)
+						.unlockedBy("has_lime", RegistrateRecipeProvider.has(lime))
+						.save(prov);
+			})
 			.defaultLoot()
 			.register();
 
@@ -476,7 +485,7 @@ public class ExtraBlocks {
 			.loot((loot, block) -> loot.add(block, loot.createSlabItemTable(block)))
 			.simpleItem()
 			.recipe((ctx, prov) ->
-					prov.slab(DataIngredient.items((NonNullSupplier<? extends ItemLike>) LIME_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx, "lime_slab", false)
+					prov.slab(DataIngredient.items((NonNullSupplier<? extends ItemLike>) LIME_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx, "lime_slab", true)
 			)
 			.register();
 
