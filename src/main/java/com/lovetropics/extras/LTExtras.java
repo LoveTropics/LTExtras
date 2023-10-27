@@ -93,10 +93,6 @@ public class LTExtras {
 					p.add("spawnitems.set_not_restorable", "The spawn item set %s cannot be restored!");
 					p.add("spawnitems.unknown_set", "Unknown spawn item set: %s");
 					p.add("spawnitems.restored_successfully", "Items restored!");
-					p.add("lt.collectibles.unicode.secret", "\uE013");
-					p.add("lt.collectibles.unicode.milestone", "\uE012");
-					p.add("lt.collectibles.unicode.reward", "\uE011");
-					p.add("lt.collectibles.unicode.purchased", "\uE010");
 
 					TpCommand.addTranslations(p);
 					WarpCommand.addTranslations(p);
