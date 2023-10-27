@@ -29,9 +29,6 @@ public class CollectibleEntity extends Entity {
     @Nullable
     private Collectible collectible;
 
-    @Nullable
-    private UUID lastGrantedPlayerId;
-
     public CollectibleEntity(final EntityType<?> type, final Level level) {
         super(type, level);
     }
@@ -43,7 +40,6 @@ public class CollectibleEntity extends Entity {
     public void setCollectible(@Nullable final Collectible collectible) {
         this.collectible = collectible;
         getEntityData().set(DATA_ITEM, collectible != null ? collectible.createItemStack(Util.NIL_UUID) : ItemStack.EMPTY);
-        lastGrantedPlayerId = null;
     }
 
     @Override
@@ -54,13 +50,9 @@ public class CollectibleEntity extends Entity {
     @Override
     public void playerTouch(final Player player) {
         if (!level().isClientSide && collectible != null) {
-            if (player.getUUID().equals(lastGrantedPlayerId)) {
-                return;
-            }
             final CollectibleStore collectibles = CollectibleStore.getNullable(player);
             if (collectibles != null) {
                 collectibles.give(collectible);
-                lastGrantedPlayerId = player.getUUID();
             }
         }
     }
