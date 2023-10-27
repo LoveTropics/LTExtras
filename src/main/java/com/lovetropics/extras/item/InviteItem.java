@@ -7,9 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +14,10 @@ import java.util.Optional;
 public class InviteItem extends Item {
     public static final List<ImageData> PRESETS = List.of(
             new ImageData(
-                    Optional.of(Component.literal("1").withStyle(ChatFormatting.DARK_PURPLE)),
+                    Optional.of(Component.literal("... ")
+                            .append(Component.literal("1").withStyle(s -> s.withColor(ChatFormatting.DARK_PURPLE).withObfuscated(false)))
+                            .append(" ...").withStyle(ChatFormatting.OBFUSCATED)
+                    ),
                     new ResourceLocation(LTExtras.MODID, "textures/images/ccfucc_invite_1.png"),
                     371,
                     292,
@@ -33,7 +33,10 @@ public class InviteItem extends Item {
                     )
             ),
             new ImageData(
-                    Optional.of(Component.literal("2").withStyle(ChatFormatting.DARK_PURPLE)),
+                    Optional.of(Component.literal("... ")
+                            .append(Component.literal("2").withStyle(s -> s.withColor(ChatFormatting.DARK_PURPLE).withObfuscated(false)))
+                            .append(" ...").withStyle(ChatFormatting.OBFUSCATED)
+                    ),
                     new ResourceLocation(LTExtras.MODID, "textures/images/ccfucc_invite_2.png"),
                     371,
                     292,
@@ -56,12 +59,10 @@ public class InviteItem extends Item {
 
     @Override
     public Component getName(final ItemStack stack) {
+        final Optional<Component> name = ImageData.get(stack).flatMap(ImageData::name);
+        if (name.isPresent()) {
+            return name.get();
+        }
         return super.getName(stack).copy().withStyle(ChatFormatting.OBFUSCATED);
-    }
-
-    @Override
-    public void appendHoverText(final ItemStack stack, @Nullable final Level level, final List<Component> lines, final TooltipFlag flag) {
-        super.appendHoverText(stack, level, lines, flag);
-        ImageData.get(stack).flatMap(ImageData::name).ifPresent(lines::add);
     }
 }
