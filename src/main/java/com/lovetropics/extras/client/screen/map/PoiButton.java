@@ -69,6 +69,9 @@ class PoiButton extends AbstractButton {
             final int tooltipHeight = TOOLTIP_HEIGHT;
             setWidth(SIZE + tooltipWidth);
 
+            graphics.pose().pushPose();
+            graphics.pose().translate(0.0f, 0.0f, 100.0f);
+
             graphics.blitNineSliced(TOOLTIP_LOCATION, getX(), getY() + (getHeight() - tooltipHeight) / 2, getWidth(), tooltipHeight, BORDER_SIZE, 200, 20, 0, 29);
             graphics.blitNineSliced(TOOLTIP_LOCATION, getX(), getY(), SIZE, SIZE, BORDER_SIZE, 200, 20, 0, 55);
 
@@ -78,6 +81,8 @@ class PoiButton extends AbstractButton {
             graphics.drawString(font, getMessage(), textLeft, textTop, CommonColors.WHITE);
 
             graphics.disableScissor();
+
+            graphics.pose().popPose();
         } else {
             setWidth(SIZE);
             graphics.blitNineSliced(TOOLTIP_LOCATION, getX() + 1, getY() + 1, SIZE - 2, SIZE - 2, BORDER_SIZE, 200, 20, 0, 55);
