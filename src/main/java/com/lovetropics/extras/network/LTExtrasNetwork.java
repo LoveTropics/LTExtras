@@ -57,6 +57,12 @@ public class LTExtrasNetwork {
 				.decoder(WorldParticleEffectsPacket::new)
 				.consumerMainThread(WorldParticleEffectsPacket::handle)
 				.add();
+
+		CHANNEL.messageBuilder(ClientboundPoiPacket.class, 7, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(ClientboundPoiPacket::write)
+				.decoder(ClientboundPoiPacket::new)
+				.consumerMainThread(ClientboundPoiPacket::handle)
+				.add();
 	}
 }
 

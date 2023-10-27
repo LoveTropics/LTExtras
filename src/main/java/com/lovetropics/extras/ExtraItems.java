@@ -47,6 +47,11 @@ public class ExtraItems {
             })
             .register();
 
+    public static final ItemEntry<TropicMapItem> TROPICAL_MAP = REGISTRATE.item("tropical_map", TropicMapItem::new)
+            .initialProperties(() -> new Item.Properties().stacksTo(1))
+            .defaultModel()
+            .register();
+
     public static void init() {
     }
 }
