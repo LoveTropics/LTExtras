@@ -101,4 +101,9 @@ public class CollectibleEntity extends Entity {
     public boolean isPickable() {
         return true;
     }
+
+    @Nullable
+    public Collectible getCollectible() {
+        return collectible;
+    }
 }

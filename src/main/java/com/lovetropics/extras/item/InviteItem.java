@@ -4,6 +4,7 @@ import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.LTExtras;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -14,10 +15,7 @@ import java.util.Optional;
 public class InviteItem extends Item {
     public static final List<ImageData> PRESETS = List.of(
             new ImageData(
-                    Optional.of(Component.literal("... ")
-                            .append(Component.literal("1").withStyle(s -> s.withColor(ChatFormatting.DARK_PURPLE).withObfuscated(false)))
-                            .append(" ...").withStyle(ChatFormatting.OBFUSCATED)
-                    ),
+                    Optional.of(inviteName("1")),
                     new ResourceLocation(LTExtras.MODID, "textures/images/ccfucc_invite_1.png"),
                     371,
                     292,
@@ -33,10 +31,7 @@ public class InviteItem extends Item {
                     )
             ),
             new ImageData(
-                    Optional.of(Component.literal("... ")
-                            .append(Component.literal("2").withStyle(s -> s.withColor(ChatFormatting.DARK_PURPLE).withObfuscated(false)))
-                            .append(" ...").withStyle(ChatFormatting.OBFUSCATED)
-                    ),
+                    Optional.of(inviteName("2")),
                     new ResourceLocation(LTExtras.MODID, "textures/images/ccfucc_invite_2.png"),
                     371,
                     292,
@@ -52,6 +47,13 @@ public class InviteItem extends Item {
                     )
             )
     );
+
+    private static MutableComponent inviteName(final String number) {
+        return Component.empty()
+                .append(Component.literal("...").withStyle(ChatFormatting.OBFUSCATED))
+                .append(Component.literal(" " + number + " ").withStyle(ChatFormatting.DARK_PURPLE))
+                .append(Component.literal("...").withStyle(ChatFormatting.OBFUSCATED));
+    }
 
     public InviteItem(final Properties properties) {
         super(properties);

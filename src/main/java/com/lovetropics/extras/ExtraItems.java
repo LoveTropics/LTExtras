@@ -5,6 +5,8 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 public class ExtraItems {
     private static final Registrate REGISTRATE = LTExtras.registrate();
@@ -17,6 +19,12 @@ public class ExtraItems {
 
     public static final ItemEntry<CollectibleBasketItem> COLLECTIBLE_BASKET = REGISTRATE.item("collectible_basket", CollectibleBasketItem::new)
             .properties(p -> p.stacksTo(1))
+            .register();
+
+    public static final ItemEntry<CollectibleCompassItem> COLLECTIBLE_COMPASS = REGISTRATE.item("collectible_compass", CollectibleCompassItem::new)
+            .properties(p -> p.stacksTo(1))
+            .model((ctx, prov) -> {})
+            .onRegister(item -> DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ExtraItemProperties::registerCollectibleCompassAngle))
             .register();
 
     public static final ItemEntry<ImageItem> IMAGE = REGISTRATE.item("image", ImageItem::new)
