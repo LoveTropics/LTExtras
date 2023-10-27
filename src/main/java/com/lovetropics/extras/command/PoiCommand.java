@@ -4,13 +4,11 @@ import com.lovetropics.extras.data.poi.MapPoiManager;
 import com.lovetropics.extras.data.poi.Poi;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.ComponentArgument;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
@@ -19,13 +17,17 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.stream.Stream;
 
 import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
-import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
-import static com.mojang.brigadier.arguments.StringArgumentType.string;
+import static com.mojang.brigadier.arguments.BoolArgumentType.getBool;
+import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 import static com.mojang.brigadier.arguments.StringArgumentType.word;
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 import static net.minecraft.commands.SharedSuggestionProvider.suggest;
+import static net.minecraft.commands.SharedSuggestionProvider.suggestResource;
+import static net.minecraft.commands.arguments.ComponentArgument.getComponent;
 import static net.minecraft.commands.arguments.ComponentArgument.textComponent;
+import static net.minecraft.commands.arguments.ResourceLocationArgument.getId;
+import static net.minecraft.commands.arguments.ResourceLocationArgument.id;
 import static net.minecraft.commands.arguments.coordinates.BlockPosArgument.blockPos;
 
 public class PoiCommand {
@@ -41,7 +43,7 @@ public class PoiCommand {
                 .then(literal("add")
                     .then(argument("name", word())
                     .then(argument("description", textComponent())
-                    .then(argument("icon", string())
+                    .then(argument("icon", id())
                             .executes(PoiCommand::addWithDefaults)
                     .then(argument("blockpos", blockPos())
                     .then(argument("enabled", bool())
@@ -79,8 +81,8 @@ public class PoiCommand {
                             .suggests((ctx, builder) -> suggest(suggestName(ctx), builder))
                     .then(argument("description", textComponent())
                             .suggests((ctx, builder) -> suggest(suggestDescription(ctx), builder))
-                    .then(argument("icon", string())
-                            .suggests((ctx, builder) -> suggest(suggestIcon(ctx), builder))
+                    .then(argument("icon", id())
+                            .suggests((ctx, builder) -> suggestResource(suggestIcon(ctx), builder))
                     .then(argument("blockpos", blockPos())
                             .suggests((ctx, builder) -> suggest(suggestGlobalPos(ctx), builder)) //TODO how to suggest blockpos?
                     .then(argument("enabled", bool())
@@ -106,7 +108,7 @@ public class PoiCommand {
 
     private static int delete(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         final MapPoiManager manager = MapPoiManager.get(ctx.getSource().getServer());
-        final Poi poi = manager.getPoi(ctx.getArgument("name", String.class));
+        final Poi poi = manager.getPoi(getString(ctx, "name"));
 
         if (poi == null) {
             throw NOT_FOUND.create();
@@ -119,7 +121,7 @@ public class PoiCommand {
 
     private static int get(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         final Poi poi = MapPoiManager.get(ctx.getSource().getServer())
-                .getPoi(ctx.getArgument("name", String.class));
+                .getPoi(getString(ctx, "name"));
 
         if (poi == null) {
             throw NOT_FOUND.create();
@@ -147,20 +149,20 @@ public class PoiCommand {
     }
 
     private static int addWithDefaults(CommandContext<CommandSourceStack> ctx) {
-        final String name = StringArgumentType.getString(ctx, "name");
-        final Component description = ComponentArgument.getComponent(ctx, "description");
-        final String icon = ctx.getArgument("icon", String.class);
+        final String name = getString(ctx, "name");
+        final Component description = getComponent(ctx, "description");
+        final ResourceLocation icon = getId(ctx, "icon");
         final GlobalPos globalPos = GlobalPos.of(ctx.getSource().getLevel().dimension(), ctx.getSource().getPlayer().getOnPos().above());
         final boolean enabled = false;
 
-        final Poi newPoi = new Poi(name, description, new ResourceLocation(icon), globalPos, enabled);
+        final Poi newPoi = new Poi(name, description, icon, globalPos, enabled);
         MapPoiManager.get(ctx.getSource().getServer()).add(newPoi);
         ctx.getSource().sendSuccess(() -> Component.literal("Added new disabled POI " + newPoi.name() + " at your current position"), false);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int enable(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final String name = ctx.getArgument("name", String.class);
+        final String name = getString(ctx, "name");
         if (!MapPoiManager.get(ctx.getSource().getServer()).enable(name)) {
             throw GENERAL_ERROR.create();
         }
@@ -169,7 +171,7 @@ public class PoiCommand {
     }
 
     private static int disable(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final String name = ctx.getArgument("name", String.class);
+        final String name = getString(ctx, "name");
         if (!MapPoiManager.get(ctx.getSource().getServer()).disable(name)) {
             throw GENERAL_ERROR.create();
         }
@@ -179,7 +181,7 @@ public class PoiCommand {
 
     private static int edit(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         final Poi poi = MapPoiManager.get(ctx.getSource().getServer())
-                .getPoi(ctx.getArgument("name", String.class));
+                .getPoi(getString(ctx, "name"));
 
         if (poi == null) {
             throw NOT_FOUND.create();
@@ -210,7 +212,7 @@ public class PoiCommand {
     }
 
     private static Stream<String> suggestDescription(CommandContext<CommandSourceStack> ctx) {
-        final String name = ctx.getArgument("name", String.class);
+        final String name = getString(ctx, "name");
         Poi poi = MapPoiManager.get(ctx.getSource().getServer()).getPoi(name);
         if (poi != null) {
             return Stream.of("\"" + poi.description() + "\"");
@@ -219,7 +221,7 @@ public class PoiCommand {
     }
 
     private static Stream<String> suggestEnabled(CommandContext<CommandSourceStack> ctx) {
-        final String name = ctx.getArgument("name", String.class);
+        final String name = getString(ctx, "name");
         Poi poi = MapPoiManager.get(ctx.getSource().getServer()).getPoi(name);
         if (poi != null) {
             return Stream.of(String.valueOf(poi.enabled()));
@@ -228,18 +230,18 @@ public class PoiCommand {
     }
 
     private static Poi createPoiFromCtx(CommandContext<CommandSourceStack> ctx) {
-        final String name = StringArgumentType.getString(ctx, "name");
-        final Component description = ComponentArgument.getComponent(ctx, "description");
-        final String icon = ctx.getArgument("icon", String.class);
+        final String name = getString(ctx, "name");
+        final Component description = getComponent(ctx, "description");
+        final ResourceLocation icon = getId(ctx, "icon");
         final WorldCoordinates worldCoordinates = ctx.getArgument("blockpos", WorldCoordinates.class);
         final GlobalPos globalPos = GlobalPos.of(ctx.getSource().getLevel().dimension(), worldCoordinates.getBlockPos(ctx.getSource()));
-        final Boolean enabled = ctx.getArgument("enabled", Boolean.class);
+        final boolean enabled = getBool(ctx, "enabled");
 
-        return new Poi(name, description, new ResourceLocation(icon), globalPos, enabled);
+        return new Poi(name, description, icon, globalPos, enabled);
     }
 
     private static Stream<String> suggestGlobalPos(CommandContext<CommandSourceStack> ctx) {
-        final String name = ctx.getArgument("name", String.class);
+        final String name = getString(ctx, "name");
         Poi poi = MapPoiManager.get(ctx.getSource().getServer()).getPoi(name);
         if (poi != null) {
             return Stream.of(poi.globalPos().pos().toString());
@@ -247,11 +249,11 @@ public class PoiCommand {
         return Stream.empty();
     }
 
-    private static Stream<String> suggestIcon(CommandContext<CommandSourceStack> ctx) {
-        final String name = ctx.getArgument("name", String.class);
+    private static Stream<ResourceLocation> suggestIcon(CommandContext<CommandSourceStack> ctx) {
+        final String name = getString(ctx, "name");
         Poi poi = MapPoiManager.get(ctx.getSource().getServer()).getPoi(name);
         if (poi != null) {
-            return Stream.of("\"" + poi.resourceLocation().toString() + "\"");
+            return Stream.of(poi.resourceLocation());
         }
         return Stream.empty();
     }
