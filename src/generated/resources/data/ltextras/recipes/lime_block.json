@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "tropicraft:lime"
+    },
+    {
+      "tag": "tropicraft:lime"
+    },
+    {
+      "tag": "tropicraft:lime"
+    },
+    {
+      "tag": "tropicraft:lime"
+    },
+    {
+      "tag": "tropicraft:lime"
+    },
+    {
+      "tag": "tropicraft:lime"
+    },
+    {
+      "tag": "tropicraft:lime"
+    },
+    {
+      "tag": "tropicraft:lime"
+    },
+    {
+      "tag": "tropicraft:lime"
+    }
+  ],
+  "result": {
+    "item": "ltextras:lime_block"
+  }
+}

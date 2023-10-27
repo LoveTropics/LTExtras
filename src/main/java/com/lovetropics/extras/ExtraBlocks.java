@@ -464,7 +464,7 @@ public class ExtraBlocks {
 				final DataIngredient lime = DataIngredient.tag(ExtraTags.Items.LIME);
 				ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ctx.get())
 						.requires(lime, 9)
-						.unlockedBy("has_lime", RegistrateRecipeProvider.has(lime))
+						.unlockedBy("has_lime", RegistrateRecipeProvider.has(ExtraTags.Items.LIME))
 						.save(prov);
 			})
 			.defaultLoot()
