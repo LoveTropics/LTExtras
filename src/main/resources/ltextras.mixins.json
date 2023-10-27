@@ -22,6 +22,7 @@
     "collectible.MerchantResultSlotMixin",
     "collectible.ServerPlayerGameModeMixin",
     "collectible.SlotMixin",
+    "fix.ComponentArgumentMixin",
     "perf.BiomeManagerMixin",
     "perf.ChunkManagerMixin",
     "tag.MappedRegistryMixin",
