@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -53,6 +54,8 @@ public class WarpCommand {
         }
 
         player.teleportTo(level, target.globalPos().pos().getX(), blockPos.getY(), blockPos.getZ(), player.getYRot(), player.getXRot());
+        player.playSound(SoundEvents.CHORUS_FRUIT_TELEPORT);
+
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.warp.success", target.description()), false);
         return Command.SINGLE_SUCCESS;
     }

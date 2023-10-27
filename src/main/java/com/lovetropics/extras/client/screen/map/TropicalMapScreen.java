@@ -85,6 +85,7 @@ public class TropicalMapScreen extends Screen {
     private void doWarp(Poi mapPoi) {
         if (player instanceof final LocalPlayer localPlayer) {
             localPlayer.connection.sendUnsignedCommand("warp " + mapPoi.name());
+            onClose();
         }
     }
 }
