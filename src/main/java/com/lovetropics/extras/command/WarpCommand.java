@@ -10,6 +10,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -28,6 +29,10 @@ public class WarpCommand {
         // @formatter:off
 		dispatcher.register(literal("warp")
 				.then(argument(ARGUMENT_TARGET, StringArgumentType.word())
+                        .suggests((context, builder) -> {
+                            final MapPoiManager poiManager = MapPoiManager.get(context.getSource().getServer());
+                            return SharedSuggestionProvider.suggest(poiManager.getEnabledPois().stream().map(Poi::name), builder);
+                        })
 						.executes(WarpCommand::warp)
 		));
         // @formatter:on
