@@ -25,6 +25,8 @@ import java.util.List;
 
 public class CollectibleCompassItem extends Item {
     private static final String TAG_TARGET = "target";
+    private static final String ENTITY_TAG_IGNORE = "compass_hidden";
+
     private static final int COOLDOWN_TICKS = SharedConstants.TICKS_PER_SECOND * 5;
     private static final double SEARCH_RANGE = 80.0;
 
@@ -83,6 +85,9 @@ public class CollectibleCompassItem extends Item {
         }
 
         final List<CollectibleEntity> candidates = level.getEntitiesOfClass(CollectibleEntity.class, player.getBoundingBox().inflate(SEARCH_RANGE), entity -> {
+            if (entity.getTags().contains(ENTITY_TAG_IGNORE)) {
+                return false;
+            }
             final Collectible collectible = entity.getCollectible();
             return collectible != null && !collectibles.contains(collectible);
         });
