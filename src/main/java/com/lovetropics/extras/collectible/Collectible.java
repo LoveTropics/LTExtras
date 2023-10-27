@@ -16,9 +16,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class Collectible {
+    private static final Codec<CompoundTag> TAG_CODEC = CompoundTag.CODEC.xmap(CompoundTag::copy, CompoundTag::copy);
     public static final Codec<Collectible> CODEC = RecordCodecBuilder.create(i -> i.group(
             BuiltInRegistries.ITEM.holderByNameCodec().fieldOf("item").forGetter(c -> c.item),
-            CompoundTag.CODEC.optionalFieldOf("tag").forGetter(c -> c.tag)
+            TAG_CODEC.optionalFieldOf("tag").forGetter(c -> c.tag)
     ).apply(i, Collectible::new));
 
     private static final String KEY_ITEM_STACK_MARKER = "collectible_marker";
