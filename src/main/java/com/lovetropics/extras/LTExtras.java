@@ -3,11 +3,9 @@ package com.lovetropics.extras;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
 import com.lovetropics.extras.collectible.CollectibleStore;
-import com.lovetropics.extras.command.GenerateCommand;
-import com.lovetropics.extras.command.SetMaxPlayersCommand;
+import com.lovetropics.extras.command.*;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsStore;
-import com.lovetropics.extras.command.TpCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.network.LTExtrasNetwork;
@@ -101,6 +99,7 @@ public class LTExtras {
 					p.add("lt.collectibles.unicode.purchased", "\uE010");
 
 					TpCommand.addTranslations(p);
+					WarpCommand.addTranslations(p);
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
                         .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))
@@ -150,6 +149,8 @@ public class LTExtras {
 		SpawnItemsCommand.register(dispatcher);
 		TpCommand.register(dispatcher);
 		WorldEffectCommand.register(dispatcher);
+		WarpCommand.register(dispatcher);
+		PoiCommand.register(dispatcher);
 	}
 
 	@OnlyIn(Dist.CLIENT)
