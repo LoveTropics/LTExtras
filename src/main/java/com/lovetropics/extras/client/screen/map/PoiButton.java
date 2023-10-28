@@ -64,13 +64,15 @@ class PoiButton extends AbstractButton {
         float animation = Mth.lerp(partialTicks, lastFocusAnimation, focusAnimation) / HOVER_ANIMATION_LENGTH;
         animation = (float) (1.0 - Math.pow(1.0 - animation, 5.0));
 
+        final int zOffset = animation > 0.0f ? 100 : 0;
+
         if (animation > 0.0f) {
             final int tooltipWidth = Mth.floor((font.width(getMessage()) + BORDER_SIZE * 2) * animation);
             final int tooltipHeight = TOOLTIP_HEIGHT;
             setWidth(SIZE + tooltipWidth);
 
             graphics.pose().pushPose();
-            graphics.pose().translate(0.0f, 0.0f, 100.0f);
+            graphics.pose().translate(0.0f, 0.0f, zOffset);
 
             graphics.blitNineSliced(TOOLTIP_LOCATION, getX(), getY() + (getHeight() - tooltipHeight) / 2, getWidth(), tooltipHeight, BORDER_SIZE, 200, 20, 0, 29);
             graphics.blitNineSliced(TOOLTIP_LOCATION, getX(), getY(), SIZE, SIZE, BORDER_SIZE, 200, 20, 0, 55);
@@ -88,7 +90,7 @@ class PoiButton extends AbstractButton {
         }
 
         final ResourceLocation icon = poi.resourceLocation();
-        graphics.blit(icon, getX() + BORDER_SIZE, getY() + BORDER_SIZE, 0, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+        graphics.blit(icon, getX() + BORDER_SIZE, getY() + BORDER_SIZE, zOffset, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
     }
 
     @Override
