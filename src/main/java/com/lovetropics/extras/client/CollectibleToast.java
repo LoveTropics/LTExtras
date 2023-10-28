@@ -29,7 +29,7 @@ public class CollectibleToast implements Toast {
 
     public CollectibleToast(final Collectible collectible) {
         stack = collectible.createItemStack(Util.NIL_UUID);
-        name = stack.getHoverName().copy().withStyle(ChatFormatting.DARK_RED);
+        name = Component.empty().withStyle(ChatFormatting.DARK_RED).append(stack.getHoverName());
     }
 
     @Override
