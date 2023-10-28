@@ -85,7 +85,6 @@ class PoiButton extends AbstractButton {
             graphics.pose().popPose();
         } else {
             setWidth(SIZE);
-            graphics.blitNineSliced(TOOLTIP_LOCATION, getX() + 1, getY() + 1, SIZE - 2, SIZE - 2, BORDER_SIZE, 200, 20, 0, 55);
         }
 
         final ResourceLocation icon = poi.resourceLocation();
