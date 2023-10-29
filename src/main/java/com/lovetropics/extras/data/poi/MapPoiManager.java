@@ -34,10 +34,7 @@ public class MapPoiManager extends SavedData {
     public static final BoundingBox MAP_BB = new BoundingBox(2013, 0, 1883, 2910, 0, 2799);
     private static final Codec<Map<String, Poi>> CODEC = Codec.unboundedMap(Codec.STRING, Poi.CODEC);
     private static final String STORAGE_ID = LTExtras.MODID + "_map_poi";
-    private static final RoleOverrideType<Boolean> HOST_ROLE = (RoleOverrideType<Boolean>) RoleOverrideType.byId("host");
-    private static final Predicate<ServerPlayer> SPECIAL_RULE = p -> PermissionsApi.lookup().byPlayer(p).overrides().test(HOST_ROLE);
     private final Map<String, Poi> pois;
-
 
     public MapPoiManager(final Map<String, Poi> pois) {
         this.pois = pois;
@@ -193,7 +190,7 @@ public class MapPoiManager extends SavedData {
     private static Set<ServerPlayer> getHosts(final MinecraftServer server) {
         return server.getPlayerList().getPlayers()
                 .stream()
-                .filter(SPECIAL_RULE)
+                .filter(FacePredicate::shouldDrawFace)
                 .collect(Collectors.toSet());
     }
 
@@ -216,6 +213,15 @@ public class MapPoiManager extends SavedData {
                     manager.removeFace(poi.name(), face);
                 }
             }
+        }
+    }
+
+    private static class FacePredicate {
+        private static final RoleOverrideType<Boolean> HOST_ROLE = (RoleOverrideType<Boolean>) RoleOverrideType.byId("host");
+        private static final Predicate<ServerPlayer> SPECIAL_RULE = p -> PermissionsApi.lookup().byPlayer(p).overrides().test(HOST_ROLE);
+
+        public static boolean shouldDrawFace(ServerPlayer player) {
+            return SPECIAL_RULE.test(player);
         }
     }
 }
