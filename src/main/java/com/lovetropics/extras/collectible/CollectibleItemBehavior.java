@@ -36,10 +36,22 @@ public class CollectibleItemBehavior {
     @SubscribeEvent
     public static void onItemPickup(final EntityItemPickupEvent event) {
         final ItemStack stack = event.getItem().getItem();
-        if (Collectible.isCollectible(stack)) {
+        final Collectible collectible = Collectible.byItem(stack);
+        if (collectible == null) {
+            return;
+        }
+
+        final Player player = event.getEntity();
+        if (Collectible.isIllegalCollectible(stack, player)) {
             stack.setCount(0);
             event.getItem().discard();
             event.setCanceled(true);
+        } else {
+            final CollectibleStore store = CollectibleStore.getNullable(player);
+            if (store != null) {
+                store.give(collectible);
+                Collectible.addMarkerTo(player.getUUID(), stack);
+            }
         }
     }
 
