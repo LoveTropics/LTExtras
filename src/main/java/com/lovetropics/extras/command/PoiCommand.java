@@ -14,6 +14,8 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
@@ -154,8 +156,9 @@ public class PoiCommand {
         final ResourceLocation icon = getId(ctx, "icon");
         final GlobalPos globalPos = GlobalPos.of(ctx.getSource().getLevel().dimension(), ctx.getSource().getPlayer().getOnPos().above());
         final boolean enabled = false;
+        final List<UUID> faces = List.of();
 
-        final Poi newPoi = new Poi(name, description, icon, globalPos, enabled);
+        final Poi newPoi = new Poi(name, description, icon, globalPos, enabled, faces);
         MapPoiManager.get(ctx.getSource().getServer()).add(newPoi);
         ctx.getSource().sendSuccess(() -> Component.literal("Added new disabled POI " + newPoi.name() + " at your current position"), false);
         return Command.SINGLE_SUCCESS;
@@ -236,8 +239,9 @@ public class PoiCommand {
         final WorldCoordinates worldCoordinates = ctx.getArgument("blockpos", WorldCoordinates.class);
         final GlobalPos globalPos = GlobalPos.of(ctx.getSource().getLevel().dimension(), worldCoordinates.getBlockPos(ctx.getSource()));
         final boolean enabled = getBool(ctx, "enabled");
+        final List<UUID> faces = List.of();
 
-        return new Poi(name, description, icon, globalPos, enabled);
+        return new Poi(name, description, icon, globalPos, enabled, faces);
     }
 
     private static Stream<String> suggestGlobalPos(CommandContext<CommandSourceStack> ctx) {
