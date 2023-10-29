@@ -3,7 +3,6 @@ package com.lovetropics.extras.network;
 import com.lovetropics.extras.client.ClientMapPoiManager;
 import com.lovetropics.extras.data.poi.Poi;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -14,7 +13,8 @@ public record ClientboundPoiPacket(Poi poi, boolean delete) {
                 input.readComponent(),
                 input.readResourceLocation(),
                 input.readGlobalPos(),
-                input.readBoolean()),
+                input.readBoolean(),
+                input.readList(FriendlyByteBuf::readUUID)),
                 input.readBoolean());
     }
 
@@ -24,6 +24,7 @@ public record ClientboundPoiPacket(Poi poi, boolean delete) {
         output.writeResourceLocation(poi.resourceLocation());
         output.writeGlobalPos(poi.globalPos());
         output.writeBoolean(poi.enabled());
+        output.writeCollection(poi.faces(), FriendlyByteBuf::writeUUID);
         output.writeBoolean(delete);
     }
 

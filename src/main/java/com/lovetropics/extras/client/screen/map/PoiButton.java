@@ -1,20 +1,31 @@
 package com.lovetropics.extras.client.screen.map;
 
+import com.lovetropics.extras.client.ClientMapPoiManager;
 import com.lovetropics.extras.data.poi.Poi;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.PlayerFaceRenderer;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.SkinManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 class PoiButton extends AbstractButton {
     private static final int ICON_SIZE = 16;
+    private static final int HALF_ICON_SIZE = ICON_SIZE / 2;
     private static final int BORDER_SIZE = 3;
     private static final int SIZE = ICON_SIZE + BORDER_SIZE * 2;
     private static final int TOOLTIP_HEIGHT = 18;
@@ -91,6 +102,19 @@ class PoiButton extends AbstractButton {
 
         final ResourceLocation icon = poi.resourceLocation();
         graphics.blit(icon, getX() + BORDER_SIZE, getY() + BORDER_SIZE, zOffset, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+
+        final List<UUID> faces = poi.faces();
+        if (!faces.isEmpty()) {
+            final int faceFactor = faces.size() > 2 ? 2 : 1;
+            graphics.pose().pushPose();
+            graphics.pose().translate(0.0f, 0.0f, zOffset);
+            for (int i = 0; i < faces.size(); i++) {
+                final UUID uuid = faces.get(i);
+                final ResourceLocation face = ClientMapPoiManager.getFace(uuid);
+                PlayerFaceRenderer.draw(graphics, face, getX() + BORDER_SIZE + i * HALF_ICON_SIZE / faceFactor + i, getY() + ICON_SIZE, HALF_ICON_SIZE / faceFactor);
+            }
+            graphics.pose().popPose();
+        }
     }
 
     @Override
