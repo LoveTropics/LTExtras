@@ -14,7 +14,8 @@ import java.util.List;
 
 public class ImageItem extends Item {
     public static final List<ImageData> PRESETS = List.of(
-            new ImageData(Component.literal("[Redacted]"), new ResourceLocation(LTExtras.MODID, "textures/images/ccfucc_banner.png"), 3.0f, 5.0f)
+            new ImageData(Component.literal("[Redacted]"), new ResourceLocation(LTExtras.MODID, "textures/images/ccfucc_banner.png"), 3.0f, 5.0f),
+            new ImageData(Component.literal("Plantain Pano 50"), new ResourceLocation(LTExtras.MODID, "textures/images/plantain_pano_50.png"), 8.73f, 2.0f)
     );
 
     public ImageItem(final Properties properties) {
