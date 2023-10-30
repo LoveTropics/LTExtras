@@ -115,6 +115,7 @@
   "block.ltextras.white_glow_sticks": "White Glow Sticks",
   "block.ltextras.yellow_glow_sticks": "Yellow Glow Sticks",
   "chat.ltextras.message_translated": "This chat message has been machine-translated, and it may not be accurate. You can see the original message by hovering over the white bar to the left.",
+  "commands.nametag.success": "Always render nametags: %s",
   "commands.tpa.general_error": "Unable to teleport",
   "commands.tpa.help.back": "/back - Teleport back to where you were before teleporting",
   "commands.tpa.help.tpa": "/tpa <player> - Request to teleport to a player",

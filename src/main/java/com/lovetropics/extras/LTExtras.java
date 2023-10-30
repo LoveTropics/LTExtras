@@ -1,5 +1,6 @@
 package com.lovetropics.extras;
 
+import com.lovetropics.extras.client.command.RenderPlayerNameTagCommand;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
 import com.lovetropics.extras.collectible.CollectibleStore;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -82,6 +84,7 @@ public class LTExtras {
 		});
 
 		MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
+		MinecraftForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
 
 		ExtraLangKeys.init(registrate());
 		registrate()
@@ -96,6 +99,7 @@ public class LTExtras {
 
 					TpCommand.addTranslations(p);
 					WarpCommand.addTranslations(p);
+					RenderPlayerNameTagCommand.addTranslations(p);
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
                         .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))
@@ -147,6 +151,11 @@ public class LTExtras {
 		WorldEffectCommand.register(dispatcher);
 		WarpCommand.register(dispatcher);
 		PoiCommand.register(dispatcher);
+	}
+
+	private void onRegisterClientCommands(RegisterClientCommandsEvent event) {
+		CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+		RenderPlayerNameTagCommand.register(dispatcher);
 	}
 
 	@OnlyIn(Dist.CLIENT)
