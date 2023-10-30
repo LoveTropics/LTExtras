@@ -37,9 +37,9 @@ public class TranslationService {
     }
 
     public CompletableFuture<TranslationBundle> translate(final String language, final String text) {
-        final TranslatableLanguage languageType = TranslatableLanguage.CODEC.byName(language);
+        final TranslatableLanguage languageType = TranslatableLanguage.byKey(language);
         if (languageType == null || isDisabled()) {
-            return CompletableFuture.completedFuture(new TranslationBundle(Map.of(language, text)));
+            return CompletableFuture.completedFuture(TranslationBundle.EMPTY);
         }
         return switch (languageType) {
             case ENGLISH ->
@@ -58,15 +58,15 @@ public class TranslationService {
     }
 
     private static TranslationBundle createBundle(@Nullable final String english, @Nullable final String spanish, @Nullable final String french) {
-        final ImmutableMap.Builder<String, String> stringsByLanguage = ImmutableMap.builderWithExpectedSize(3);
+        final ImmutableMap.Builder<TranslatableLanguage, String> stringsByLanguage = ImmutableMap.builderWithExpectedSize(3);
         if (english != null) {
-            stringsByLanguage.put(TranslatableLanguage.ENGLISH.getSerializedName(), english);
+            stringsByLanguage.put(TranslatableLanguage.ENGLISH, english);
         }
         if (spanish != null) {
-            stringsByLanguage.put(TranslatableLanguage.SPANISH.getSerializedName(), spanish);
+            stringsByLanguage.put(TranslatableLanguage.SPANISH, spanish);
         }
         if (french != null) {
-            stringsByLanguage.put(TranslatableLanguage.FRENCH.getSerializedName(), french);
+            stringsByLanguage.put(TranslatableLanguage.FRENCH, french);
         }
         return new TranslationBundle(stringsByLanguage.build());
     }

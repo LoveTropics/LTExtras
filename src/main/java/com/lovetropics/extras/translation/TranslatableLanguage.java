@@ -1,23 +1,22 @@
 package com.lovetropics.extras.translation;
 
-import net.minecraft.util.StringRepresentable;
+import javax.annotation.Nullable;
 
-public enum TranslatableLanguage implements StringRepresentable {
-    ENGLISH("en_us"),
-    SPANISH("es_es"),
-    FRENCH("fr_fr"),
+public enum TranslatableLanguage {
+    ENGLISH,
+    SPANISH,
+    FRENCH,
     ;
 
-    public static final EnumCodec<TranslatableLanguage> CODEC = StringRepresentable.fromEnum(TranslatableLanguage::values);
-
-    private final String key;
-
-    TranslatableLanguage(final String key) {
-        this.key = key;
-    }
-
-    @Override
-    public String getSerializedName() {
-        return key;
+    @Nullable
+    public static TranslatableLanguage byKey(final String key) {
+        if (key.startsWith("en_")) {
+            return ENGLISH;
+        } else if (key.startsWith("es_")) {
+            return SPANISH;
+        } else if (key.startsWith("fr_")) {
+            return FRENCH;
+        }
+        return null;
     }
 }
