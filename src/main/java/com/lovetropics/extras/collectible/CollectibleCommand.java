@@ -50,6 +50,8 @@ public class CollectibleCommand {
                                 .executes(c -> clear(c, getPlayers(c, "target"), i -> true))
                         )
                 )
+                .then(literal("lock").then(argument("target", players()).executes(context -> setLocked(context, true))))
+                .then(literal("unlock").then(argument("target", players()).executes(context -> setLocked(context, false))))
                 // Very hacky
                 .then(literal("countdisguises").executes(CollectibleCommand::countDisguises))
         );
@@ -123,5 +125,14 @@ public class CollectibleCommand {
             }
             return false;
         });
+    }
+
+    private static int setLocked(final CommandContext<CommandSourceStack> context, final boolean locked) throws CommandSyntaxException {
+        final ServerPlayer player = context.getSource().getPlayerOrException();
+        final CollectibleStore store = CollectibleStore.getNullable(player);
+        if (store != null) {
+            store.setLocked(locked);
+        }
+        return 1;
     }
 }

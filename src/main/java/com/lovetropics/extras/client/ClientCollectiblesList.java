@@ -65,8 +65,9 @@ public class ClientCollectiblesList {
         minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0f));
     }
 
-    public static void openScreen(final Player player) {
-        Minecraft.getInstance().setScreen(new CollectibleBasketScreen(player.getInventory()));
+    public static void openScreen() {
+        final Minecraft minecraft = Minecraft.getInstance();
+        minecraft.setScreen(new CollectibleBasketScreen(minecraft.player.getInventory()));
     }
 
     public boolean isEmpty() {

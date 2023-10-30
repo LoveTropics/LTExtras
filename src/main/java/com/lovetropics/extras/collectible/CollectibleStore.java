@@ -41,6 +41,7 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
     private final ServerPlayer player;
 
     private final List<Collectible> collectibles = new ArrayList<>();
+    private boolean locked;
 
     private CollectibleStore(final ServerPlayer player) {
         this.player = player;
@@ -130,6 +131,14 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
             }
         }
         return count;
+    }
+
+    public void setLocked(final boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 
     private void sendToClient(final boolean silent) {

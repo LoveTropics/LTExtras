@@ -63,6 +63,12 @@ public class LTExtrasNetwork {
 				.decoder(ClientboundPoiPacket::new)
 				.consumerMainThread(ClientboundPoiPacket::handle)
 				.add();
+
+		CHANNEL.messageBuilder(OpenCollectibleBasketPacket.class, 8, NetworkDirection.PLAY_TO_CLIENT)
+				.encoder(OpenCollectibleBasketPacket::write)
+				.decoder(OpenCollectibleBasketPacket::new)
+				.consumerMainThread(OpenCollectibleBasketPacket::handle)
+				.add();
 	}
 }
 

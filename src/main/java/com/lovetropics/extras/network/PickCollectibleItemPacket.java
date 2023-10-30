@@ -27,7 +27,7 @@ public record PickCollectibleItemPacket(Collectible collectible) {
         }
 
         final CollectibleStore collectibles = CollectibleStore.getNullable(player);
-        if (collectibles == null || !collectibles.contains(collectible)) {
+        if (collectibles == null || collectibles.isLocked() || !collectibles.contains(collectible)) {
             player.inventoryMenu.broadcastChanges();
             return;
         }
