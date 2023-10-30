@@ -10,6 +10,7 @@
     "CreatureEntityMixin",
     "DedicatedServerMixin",
     "FluidStateMixin",
+    "ForgeHooksMixin",
     "ItemFrameMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
@@ -17,7 +18,6 @@
     "ScaffoldingBlockMixin",
     "SignableCommandMixin",
     "TeamCommandMixin",
-    "ForgeHooksMixin",
     "collectible.ItemStackMixin",
     "collectible.MerchantResultSlotMixin",
     "collectible.ServerPlayerGameModeMixin",
@@ -27,7 +27,11 @@
     "perf.ChunkManagerMixin",
     "tag.MappedRegistryMixin",
     "tag.NamespacedWrapperMixin",
-    "tag.TagNetworkSerializationMixin"
+    "tag.TagNetworkSerializationMixin",
+    "translation.FutureChainMixin",
+    "translation.MessageArgumentMixin",
+    "translation.PlayerChatMessageMixin",
+    "translation.ServerGamePacketListenerImplMixin"
   ],
   "client": [
     "client.LocalPlayerMixin",

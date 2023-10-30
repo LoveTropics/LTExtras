@@ -17,6 +17,7 @@ public class ExtrasConfig {
     public static final class CategoryTechStack {
         public final ConfigValue<String> authKey;
         public final ConfigValue<String> scheduleUrl;
+        public final ConfigValue<String> translationUrl;
 
         private CategoryTechStack() {
             COMMON_BUILDER.comment("Connection to the tech stack").push("techStack");
@@ -28,6 +29,10 @@ public class ExtrasConfig {
             scheduleUrl = COMMON_BUILDER
                     .comment("API URL to get stream schedule from")
                     .define("schedule", "http://localhost/schedule");
+
+            translationUrl = COMMON_BUILDER
+                    .comment("API URL to request translations from")
+                    .define("translationUrl", "");
 
             COMMON_BUILDER.pop();
         }

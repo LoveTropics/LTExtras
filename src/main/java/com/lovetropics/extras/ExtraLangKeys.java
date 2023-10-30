@@ -15,6 +15,7 @@ public enum ExtraLangKeys {
     CLUB_INVITE_1_BOTTOM("invite", "club_1.bottom", "Did you know disguises are fireproof?"),
     CLUB_INVITE_2_TOP("invite", "club_2.top", "See you there.\nWear a disguise.\nGrab a drink."),
     CLUB_INVITE_2_BOTTOM("invite", "club_2.bottom", "I hear the Limeade's good."),
+    MESSAGE_TRANSLATED("chat", "message_translated", "This chat message has been machine-translated, and it may not be accurate. You can see the original message by hovering over the white bar to the left.")
     ;
 
     private final String key;
