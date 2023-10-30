@@ -1,11 +1,11 @@
 package com.lovetropics.extras.item;
 
 import com.lovetropics.extras.LTExtras;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -43,7 +43,15 @@ public class ItemExtensions {
         event.getDrops().removeIf(item -> isUndroppable(item.getItem()));
     }
 
+    public static void onItemUsedOn(final ServerPlayer player, final ItemStack stack, final UseOnContext context) {
+        applyCooldownOverride(player, stack);
+    }
+
     public static void onItemUsed(final ServerPlayer player, final ItemStack stack) {
+        applyCooldownOverride(player, stack);
+    }
+
+    private static void applyCooldownOverride(final ServerPlayer player, final ItemStack stack) {
         if (player.isUsingItem()) {
             return;
         }
