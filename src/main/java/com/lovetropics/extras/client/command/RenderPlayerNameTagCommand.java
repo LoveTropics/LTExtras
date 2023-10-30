@@ -10,6 +10,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderNameTagEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,7 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
 import static net.minecraft.commands.Commands.literal;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID)
+@Mod.EventBusSubscriber(modid = LTExtras.MODID, value = Dist .CLIENT)
 public class RenderPlayerNameTagCommand {
     private static boolean alwaysRenderNameTags = false;
 
