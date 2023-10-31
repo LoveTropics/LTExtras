@@ -98,15 +98,15 @@ public abstract class ServerGamePacketListenerImplMixin {
     }
 
     @ModifyVariable(method = "sendPlayerChatMessage", at = @At("HEAD"), argsOnly = true)
-    private PlayerChatMessage modifyChatMessage(final PlayerChatMessage message) {
-        return ((TranslatableChatMessage) (Object) message).ltextras$translate(player.getLanguage());
-    }
-
-    @ModifyVariable(method = "sendPlayerChatMessage", at = @At("HEAD"), argsOnly = true)
     private ChatType.Bound modifyChatMessageType(final ChatType.Bound chatType, final PlayerChatMessage message) {
         if (((TranslatableChatMessage) (Object) message).ltextras$hasTranslationFor(player.getLanguage())) {
             return new ChatType.Bound(chatType.chatType(), chatType.name().copy().append(TRANSLATED_MARKER), chatType.targetName());
         }
         return chatType;
+    }
+
+    @ModifyVariable(method = "sendPlayerChatMessage", at = @At("HEAD"), argsOnly = true)
+    private PlayerChatMessage modifyChatMessage(final PlayerChatMessage message) {
+        return ((TranslatableChatMessage) (Object) message).ltextras$translate(player.getLanguage());
     }
 }
