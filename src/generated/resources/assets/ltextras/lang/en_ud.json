@@ -122,6 +122,7 @@
   "commands.tpa.help.tpaccept": "sʇsǝnbǝɹ buıpuǝd ןןɐ ʇdǝɔɔɐ oʇ \"ןןɐ\" ǝs∩ ˙ɹǝʎɐןd ɐ ɯoɹɟ ʇsǝnbǝɹ ʇɹodǝןǝʇ ɐ ʇdǝɔɔⱯ - >ɹǝʎɐןd< ʇdǝɔɔɐdʇ/",
   "commands.tpa.here": "]ǝɹǝɥ[",
   "commands.tpa.no_self_teleport": "ɟןǝsɹnoʎ oʇ ʇɹodǝןǝʇ ʇ,uɐɔ noʎ",
+  "commands.tpa.not_allowed_here": "ǝɹǝɥ pǝʍoןןɐ ʇou sı buıʇɹodǝןǝ⟘",
   "commands.tpa.pending_request_exists": "buıpuǝd ןןıʇs sı ʇsǝnbǝɹ Ɐ",
   "commands.tpa.player_not_found": "punoɟ ʇou ɹǝʎɐןԀ",
   "commands.tpa.request": "ʇdǝɔɔɐ oʇ )%s ʇdǝɔɔɐdʇ/( %s ʞɔıןƆ ˙noʎ oʇ ʇɹodǝןǝʇ oʇ sʇuɐʍ %s",

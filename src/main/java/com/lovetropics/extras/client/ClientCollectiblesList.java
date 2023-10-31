@@ -6,13 +6,13 @@ import com.lovetropics.extras.collectible.Collectible;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -23,9 +23,15 @@ public class ClientCollectiblesList {
 
     private List<Collectible> collectibles = List.of();
     private List<ItemStack> itemStacks = List.of();
+    private boolean hasUnseen;
 
     public static ClientCollectiblesList get() {
         return Objects.requireNonNull(instance, "Cannot get collectibles list, not currently in a world");
+    }
+
+    @Nullable
+    public static ClientCollectiblesList getOrNull() {
+        return instance;
     }
 
     @SubscribeEvent
@@ -46,7 +52,7 @@ public class ClientCollectiblesList {
         return itemStacks;
     }
 
-    public void update(final List<Collectible> collectibles, final boolean silent) {
+    public void update(final List<Collectible> collectibles, final boolean silent, final boolean hasUnseen) {
         final Minecraft minecraft = Minecraft.getInstance();
         final List<Collectible> newCollectibles = collectibles.stream().filter(c -> !this.collectibles.contains(c)).toList();
         this.collectibles = List.copyOf(collectibles);
@@ -55,6 +61,7 @@ public class ClientCollectiblesList {
         if (!silent && !newCollectibles.isEmpty()) {
             notifyCollections(newCollectibles);
         }
+        this.hasUnseen = hasUnseen;
     }
 
     private static void notifyCollections(final List<Collectible> newCollectibles) {
@@ -68,9 +75,14 @@ public class ClientCollectiblesList {
     public static void openScreen() {
         final Minecraft minecraft = Minecraft.getInstance();
         minecraft.setScreen(new CollectibleBasketScreen(minecraft.player.getInventory()));
+        get().hasUnseen = false;
     }
 
     public boolean isEmpty() {
         return collectibles.isEmpty();
+    }
+
+    public boolean hasUnseen() {
+        return hasUnseen;
     }
 }

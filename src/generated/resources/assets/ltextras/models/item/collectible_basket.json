@@ -1,5 +1,13 @@
 {
   "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "ltextras:item/collectible_basket_unseen",
+      "predicate": {
+        "ltextras:unseen": 1.0
+      }
+    }
+  ],
   "textures": {
     "layer0": "ltextras:item/collectible_basket"
   }

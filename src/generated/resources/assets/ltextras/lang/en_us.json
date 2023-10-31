@@ -122,6 +122,7 @@
   "commands.tpa.help.tpaccept": "/tpaccept <player> - Accept a teleport request from a player. Use \"all\" to accept all pending requests",
   "commands.tpa.here": "[here]",
   "commands.tpa.no_self_teleport": "You can't teleport to yourself",
+  "commands.tpa.not_allowed_here": "Teleporting is not allowed here",
   "commands.tpa.pending_request_exists": "A request is still pending",
   "commands.tpa.player_not_found": "Player not found",
   "commands.tpa.request": "%s wants to teleport to you. Click %s (/tpaccept %s) to accept",

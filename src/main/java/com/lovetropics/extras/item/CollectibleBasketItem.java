@@ -24,6 +24,7 @@ public class CollectibleBasketItem extends Item {
         if (!level.isClientSide() && player instanceof final ServerPlayer serverPlayer) {
             final CollectibleStore collectibles = CollectibleStore.getNullable(serverPlayer);
             if (collectibles != null && !collectibles.isLocked()) {
+                collectibles.markSeen();
                 LTExtrasNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new OpenCollectibleBasketPacket());
             } else {
                 serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLES_LOCKED.get().withStyle(ChatFormatting.RED), true);

@@ -5,6 +5,7 @@ import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.lovetropics.extras.network.CollectiblesListPacket;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.NbtOps;
@@ -34,13 +35,19 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static final Codec<List<Collectible>> CODEC = Collectible.CODEC.listOf().fieldOf("collectibles").codec();
+    private record Data(List<Collectible> collectibles, boolean hasUnseen) {
+        public static final Codec<Data> CODEC = RecordCodecBuilder.create(i -> i.group(
+                Collectible.CODEC.listOf().fieldOf("collectibles").forGetter(Data::collectibles),
+                Codec.BOOL.optionalFieldOf("has_unseen", false).forGetter(Data::hasUnseen)
+        ).apply(i, Data::new));
+    }
 
     private final LazyOptional<CollectibleStore> instance = LazyOptional.of(() -> this);
 
     private final ServerPlayer player;
 
     private final List<Collectible> collectibles = new ArrayList<>();
+    private boolean hasUnseen;
     private boolean locked;
 
     private CollectibleStore(final ServerPlayer player) {
@@ -91,20 +98,22 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
 
     @Override
     public Tag serializeNBT() {
-        return Util.getOrThrow(CODEC.encodeStart(NbtOps.INSTANCE, collectibles), IllegalStateException::new);
+        return Util.getOrThrow(Data.CODEC.encodeStart(NbtOps.INSTANCE, new Data(collectibles, hasUnseen)), IllegalStateException::new);
     }
 
     @Override
     public void deserializeNBT(final Tag nbt) {
-        CODEC.parse(NbtOps.INSTANCE, nbt).resultOrPartial(Util.prefix("Collectibles: ", LOGGER::error)).ifPresent(list -> {
+        Data.CODEC.parse(NbtOps.INSTANCE, nbt).resultOrPartial(Util.prefix("Collectibles: ", LOGGER::error)).ifPresent(data -> {
             collectibles.clear();
-            collectibles.addAll(list);
+            collectibles.addAll(data.collectibles());
+            hasUnseen = data.hasUnseen();
         });
     }
 
     public boolean give(final Collectible collectible) {
         if (!collectibles.contains(collectible)) {
             collectibles.add(collectible);
+            hasUnseen = true;
             sendToClient(false);
             return true;
         }
@@ -141,7 +150,11 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
         return locked;
     }
 
+    public void markSeen() {
+        hasUnseen = false;
+    }
+
     private void sendToClient(final boolean silent) {
-        LTExtrasNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new CollectiblesListPacket(collectibles, silent));
+        LTExtrasNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new CollectiblesListPacket(collectibles, silent, hasUnseen));
     }
 }

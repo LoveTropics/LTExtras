@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ltextras:item/collectible_basket_unseen"
+  }
+}

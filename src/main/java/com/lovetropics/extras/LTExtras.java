@@ -9,6 +9,7 @@ import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsStore;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
+import com.lovetropics.extras.item.ExtraItemProperties;
 import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
 import com.lovetropics.extras.translation.TranslationOptions;
@@ -164,7 +165,9 @@ public class LTExtras {
 	@OnlyIn(Dist.CLIENT)
 	private void clientSetup(FMLClientSetupEvent event) {
 		ForgeConfig.CLIENT.alwaysSetupTerrainOffThread.set(true);
-			((ForgeConfigSpec) ObfuscationReflectionHelper.getPrivateValue(ForgeConfig.class, null, "clientSpec")).save();
+		((ForgeConfigSpec) ObfuscationReflectionHelper.getPrivateValue(ForgeConfig.class, null, "clientSpec")).save();
+
+		ExtraItemProperties.register();
 	}
 
 	@OnlyIn(Dist.CLIENT)
