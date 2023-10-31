@@ -19,9 +19,10 @@ import java.util.function.Supplier;
 
 public class TranslationService {
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Duration TIMEOUT = Duration.ofSeconds(2);
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .executor(Util.ioPool())
-            .connectTimeout(Duration.ofSeconds(10))
+            .connectTimeout(TIMEOUT)
             .build();
 
     public static final TranslationService INSTANCE = new TranslationService(ExtrasConfig.TECH_STACK.translationUrl);
@@ -74,6 +75,7 @@ public class TranslationService {
     private CompletableFuture<String> translateTo(final String text, final TranslationMode mode) {
         final HttpRequest request = HttpRequest.newBuilder(URI.create(url.get() + "/" + mode.getSerializedName()))
                 .POST(HttpRequest.BodyPublishers.ofString(text))
+                .timeout(TIMEOUT)
                 .build();
         return HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(response -> {
