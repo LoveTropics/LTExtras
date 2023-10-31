@@ -22,7 +22,8 @@ public class ImageItem extends Item {
             new ImageData(Component.literal("Jocote"), new ResourceLocation(LTExtras.MODID, "textures/images/jocote.png"), 3.0f, 2.0f),
             new ImageData(Component.literal("Making Organic Fungicide"), new ResourceLocation(LTExtras.MODID, "textures/images/making_org_fung.png"), 2.672f, 2.0f),
             new ImageData(Component.literal("Panorama: Garden Bike"), new ResourceLocation(LTExtras.MODID, "textures/images/pano_garden_bike.png"), 2.63f, 1.0f),
-            new ImageData(Component.literal("Plantain Ent"), new ResourceLocation(LTExtras.MODID, "textures/images/plantain_ent.png"), 2.5f, 3.0f)
+            new ImageData(Component.literal("Plantain Ent"), new ResourceLocation(LTExtras.MODID, "textures/images/plantain_ent.png"), 2.5f, 3.0f),
+            new ImageData(Component.literal("Manatee"), new ResourceLocation(LTExtras.MODID, "textures/images/manatee.png"), 2.5f, 3.0f)
     );
 
     public ImageItem(final Properties properties) {
