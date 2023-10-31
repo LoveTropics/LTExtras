@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ltextras:banana"
+    }
+  ],
+  "result": {
+    "item": "ltextras:peeled_banana"
+  }
+}
