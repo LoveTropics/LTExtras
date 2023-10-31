@@ -1,19 +1,18 @@
 package com.lovetropics.extras.translation;
 
-import com.google.common.collect.ImmutableMap;
 import com.lovetropics.extras.ExtrasConfig;
 import com.mojang.logging.LogUtils;
 import net.minecraft.Util;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
@@ -42,7 +41,7 @@ public class TranslationService {
         if (languageType == null || isDisabled()) {
             return CompletableFuture.completedFuture(TranslationBundle.EMPTY);
         }
-        return switch (languageType) {
+        final CompletableFuture<TranslationBundle> future = switch (languageType) {
             case ENGLISH ->
                     translateTo(text, TranslationMode.EN_ES).thenCombine(translateTo(text, TranslationMode.EN_FR),
                             (spanish, french) -> createBundle(text, spanish, french)
@@ -56,20 +55,20 @@ public class TranslationService {
                             .thenApply(french -> createBundle(english, text, french))
                     );
         };
+        return future.handle((result, throwable) -> {
+            if (throwable != null) {
+                LOGGER.warn("Failed to translate text: {}", text, throwable);
+            }
+            return Objects.requireNonNullElse(result, TranslationBundle.EMPTY);
+        });
     }
 
-    private static TranslationBundle createBundle(@Nullable final String english, @Nullable final String spanish, @Nullable final String french) {
-        final ImmutableMap.Builder<TranslatableLanguage, String> stringsByLanguage = ImmutableMap.builderWithExpectedSize(3);
-        if (english != null) {
-            stringsByLanguage.put(TranslatableLanguage.ENGLISH, english);
-        }
-        if (spanish != null) {
-            stringsByLanguage.put(TranslatableLanguage.SPANISH, spanish);
-        }
-        if (french != null) {
-            stringsByLanguage.put(TranslatableLanguage.FRENCH, french);
-        }
-        return new TranslationBundle(stringsByLanguage.build());
+    private static TranslationBundle createBundle(final String english, final String spanish, final String french) {
+        return new TranslationBundle(Map.of(
+                TranslatableLanguage.ENGLISH, english,
+                TranslatableLanguage.SPANISH, spanish,
+                TranslatableLanguage.FRENCH, french
+        ));
     }
 
     private CompletableFuture<String> translateTo(final String text, final TranslationMode mode) {
@@ -77,20 +76,12 @@ public class TranslationService {
                 .POST(HttpRequest.BodyPublishers.ofString(text))
                 .timeout(TIMEOUT)
                 .build();
-        return HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(response -> {
-                    if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                        return response.body();
-                    } else {
-                        LOGGER.warn("Received unexpected response {} from translation of '{}' ({}): {}", response.statusCode(), text, mode, response.body());
-                        return null;
-                    }
-                })
-                .handle((result, throwable) -> {
-                    if (throwable != null) {
-                        LOGGER.warn("Failed to translate text: '{}' ({})", text, mode, throwable);
-                    }
-                    return result;
-                });
+        return HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(response -> {
+            if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                return response.body();
+            } else {
+                throw new RuntimeException("Received unexpected response " + response.statusCode() + " from translation of '" + text + "' (" + mode + "): " + response.body());
+            }
+        });
     }
 }
