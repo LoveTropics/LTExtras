@@ -69,6 +69,12 @@ public class LTExtrasNetwork {
 				.decoder(OpenCollectibleBasketPacket::new)
 				.consumerMainThread(OpenCollectibleBasketPacket::handle)
 				.add();
+
+		CHANNEL.messageBuilder(SetTranslationSettingsPacket.class, 9, NetworkDirection.PLAY_TO_SERVER)
+				.encoder(SetTranslationSettingsPacket::write)
+				.decoder(SetTranslationSettingsPacket::new)
+				.consumerMainThread(SetTranslationSettingsPacket::handle)
+				.add();
 	}
 }
 

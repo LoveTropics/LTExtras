@@ -11,8 +11,34 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 @EventBusSubscriber(modid = LTExtras.MODID, bus = Bus.MOD)
 public class ExtrasConfig {
     private static final Builder COMMON_BUILDER = new Builder();
+    private static final Builder CLIENT_BUILDER = new Builder();
 
+    public static final CategoryTranslation TRANSLATION = new CategoryTranslation();
     public static final CategoryTechStack TECH_STACK = new CategoryTechStack();
+
+    public static final class CategoryTranslation {
+        public final ConfigValue<Boolean> translateOutgoing;
+        public final ConfigValue<Boolean> translateIncoming;
+        public final ConfigValue<Boolean> prompted;
+
+        private CategoryTranslation() {
+            CLIENT_BUILDER.comment("Translation").push("translation");
+
+            translateOutgoing = CLIENT_BUILDER
+                    .comment("True if messages that you send should be translated for other players")
+                    .define("translateOutgoing", true);
+
+            translateIncoming = CLIENT_BUILDER
+                    .comment("True if messages that others send should be translated for you")
+                    .define("translateIncoming", true);
+
+            prompted = CLIENT_BUILDER
+                    .comment("True if the player has been prompted to select translation options yet")
+                    .define("prompted", false);
+
+            CLIENT_BUILDER.pop();
+        }
+    }
 
     public static final class CategoryTechStack {
         public final ConfigValue<String> authKey;
@@ -39,6 +65,7 @@ public class ExtrasConfig {
     }
 
     public static final ForgeConfigSpec COMMON_CONFIG = COMMON_BUILDER.build();
+    public static final ForgeConfigSpec CLIENT_CONFIG = CLIENT_BUILDER.build();
 
     @SubscribeEvent
 	public static void configLoad(final ModConfigEvent.Loading event) {

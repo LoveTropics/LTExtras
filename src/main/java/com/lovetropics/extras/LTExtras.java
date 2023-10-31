@@ -11,6 +11,7 @@ import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
+import com.lovetropics.extras.translation.TranslationOptions;
 import com.lovetropics.extras.world_effect.WorldEffectCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
@@ -59,6 +60,7 @@ public class LTExtras {
 	public static final Capability<CollectibleStore> COLLECTIBLE_STORE = CapabilityManager.get(new CapabilityToken<>() {});
 	public static final Capability<SpawnItemsStore> SPAWN_ITEMS_STORE = CapabilityManager.get(new CapabilityToken<>() {});
 	public static final Capability<PlayerTimeZone> PLAYER_TIME_ZONE = CapabilityManager.get(new CapabilityToken<>() {});
+	public static final Capability<TranslationOptions> TRANSLATION = CapabilityManager.get(new CapabilityToken<>() {});
 
 	public static Registrate registrate() {
 		return REGISTRATE.get();
@@ -110,6 +112,7 @@ public class LTExtras {
 		LTExtrasNetwork.register();
 
 		modLoadingContext.registerConfig(ModConfig.Type.COMMON, ExtrasConfig.COMMON_CONFIG);
+		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ExtrasConfig.CLIENT_CONFIG);
 
 		// Mark WorldEdit as only required on the server
 		ModList.get().getModContainerById("worldedit").ifPresent(worldedit -> {

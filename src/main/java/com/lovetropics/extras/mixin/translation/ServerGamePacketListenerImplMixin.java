@@ -3,7 +3,7 @@ package com.lovetropics.extras.mixin.translation;
 import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.translation.TranslatableChatMessage;
 import com.lovetropics.extras.translation.TranslationBundle;
-import com.lovetropics.extras.translation.TranslationService;
+import com.lovetropics.extras.translation.TranslationOptions;
 import net.minecraft.network.chat.*;
 import net.minecraft.network.protocol.game.ServerboundChatPacket;
 import net.minecraft.server.MinecraftServer;
@@ -83,7 +83,7 @@ public abstract class ServerGamePacketListenerImplMixin {
                 final CompletableFuture<FilteredText> filteredText = filterTextPacket(message.signedContent());
                 final CompletableFuture<Component> decoratedText = ForgeHooks.getServerChatSubmittedDecorator().decorate(player, message.decoratedContent());
                 // Also request translations at this point, but make sure to not change the order that we distribute chat messages
-                final CompletableFuture<TranslationBundle> translations = TranslationService.INSTANCE.translate(player.getLanguage(), message.signedContent());
+                final CompletableFuture<TranslationBundle> translations = TranslationOptions.translate(player, message);
                 chatMessageChain.append(executor -> CompletableFuture.allOf(filteredText, decoratedText, translations).thenAcceptAsync(unused -> {
                     final Component decoratedContent = decoratedText.join();
                     if (decoratedContent == null) {
@@ -99,6 +99,9 @@ public abstract class ServerGamePacketListenerImplMixin {
 
     @ModifyVariable(method = "sendPlayerChatMessage", at = @At("HEAD"), argsOnly = true)
     private ChatType.Bound modifyChatMessageType(final ChatType.Bound chatType, final PlayerChatMessage message) {
+        if (!TranslationOptions.shouldTranslateIncoming(player)) {
+            return chatType;
+        }
         if (((TranslatableChatMessage) (Object) message).ltextras$hasTranslationFor(player.getLanguage())) {
             return new ChatType.Bound(chatType.chatType(), chatType.name().copy().append(TRANSLATED_MARKER), chatType.targetName());
         }
@@ -107,6 +110,9 @@ public abstract class ServerGamePacketListenerImplMixin {
 
     @ModifyVariable(method = "sendPlayerChatMessage", at = @At("HEAD"), argsOnly = true)
     private PlayerChatMessage modifyChatMessage(final PlayerChatMessage message) {
+        if (!TranslationOptions.shouldTranslateIncoming(player)) {
+            return message;
+        }
         return ((TranslatableChatMessage) (Object) message).ltextras$translate(player.getLanguage());
     }
 }

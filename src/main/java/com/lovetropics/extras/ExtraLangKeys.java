@@ -16,6 +16,11 @@ public enum ExtraLangKeys {
     CLUB_INVITE_1_BOTTOM("invite", "club_1.bottom", "Did you know disguises are fireproof?"),
     CLUB_INVITE_2_TOP("invite", "club_2.top", "See you there.\nWear a disguise.\nGrab a drink."),
     CLUB_INVITE_2_BOTTOM("invite", "club_2.bottom", "I hear the Limeade's good."),
+    TRANSLATION_PROMPT_TITLE("screen", "translation_prompt.title", "Chat Translation"),
+    TRANSLATION_PROMPT("screen", "translation_prompt.message", "This is a multi-lingual server! We will try our best to translate chat for you - but to do this, we need to know what language you will be speaking and would like to see.\n\nEnglish, Spanish, and French are currently supported."),
+    TRANSLATION_PROMPT_UNRECOGNIZED("screen", "translation_prompt.unrecognized", "Unfortunately, we are not able to translate this language! Your messages will sent and received as original."),
+    TRANSLATION_PROMPT_OUTGOING("screen", "translation_prompt.outgoing", "Translate what I write"),
+    TRANSLATION_PROMPT_INCOMING("screen", "translation_prompt.incoming", "Translate what I read"),
     MESSAGE_TRANSLATED("chat", "message_translated", "This chat message has been machine-translated, and it may not be accurate. You can see the original message by hovering over the white bar to the left.")
     ;
 
