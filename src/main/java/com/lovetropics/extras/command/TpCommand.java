@@ -2,6 +2,7 @@ package com.lovetropics.extras.command;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.lovetropics.extras.ExtrasConfig;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -12,16 +13,21 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 
 import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static net.minecraft.commands.Commands.argument;
@@ -36,6 +42,7 @@ public class TpCommand {
     private static final SimpleCommandExceptionType TOO_MUCH = new SimpleCommandExceptionType(Component.translatable("commands.tpa.too_much"));
     private static final SimpleCommandExceptionType ALREADY_PENDING = new SimpleCommandExceptionType(Component.translatable("commands.tpa.pending_request_exists"));
     private static final SimpleCommandExceptionType NO_SELF_TELEPORT = new SimpleCommandExceptionType(Component.translatable("commands.tpa.no_self_teleport"));
+    private static final SimpleCommandExceptionType NOT_ALLOWED_HERE = new SimpleCommandExceptionType(Component.translatable("commands.tpa.not_allowed_here"));
 
     private static final int REQUEST_CACHE_SIZE = 50;
     private static final Duration REQUEST_TIMEOUT_DURATION = Duration.ofMinutes(1);
@@ -91,9 +98,9 @@ public class TpCommand {
 
         final ServerPlayer executingPlayer = ctx.getSource().getPlayerOrException();
         final GlobalPos newBackPos = GlobalPos.of(executingPlayer.level().dimension(), executingPlayer.blockPosition());
+        doTeleport(executingPlayer, globalPos);
         backCache.put(executingPlayer.getUUID(), newBackPos); //This allows going back and forth using /back
 
-        doTeleport(executingPlayer, globalPos);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -154,14 +161,28 @@ public class TpCommand {
         final GlobalPos globalPos = GlobalPos.of(player.level().dimension(), player.blockPosition());
         backCache.put(player.getUUID(), globalPos);
 
-        player.sendSystemMessage(Component.translatable("commands.tpa.tp_accepted", target.getName().getString()));
-
         doTeleport(player, GlobalPos.of(target.level().dimension(), target.blockPosition()));
+        player.sendSystemMessage(Component.translatable("commands.tpa.tp_accepted", target.getName().getString()));
     }
 
-    private static void doTeleport(ServerPlayer player, GlobalPos globalPos) {
+    private static void doTeleport(ServerPlayer player, GlobalPos globalPos) throws CommandSyntaxException {
+        final Predicate<ResourceKey<Level>> dimensionPredicate = dimensionPredicate();
+        if (!dimensionPredicate.test(player.serverLevel().dimension()) || !dimensionPredicate.test(globalPos.dimension())) {
+            throw NOT_ALLOWED_HERE.create();
+        }
+
         final ServerLevel level = player.getServer().getLevel(globalPos.dimension());
         player.teleportTo(level, globalPos.pos().getX(), globalPos.pos().getY(), globalPos.pos().getZ(), player.getYRot(), player.getXRot());
+    }
+
+    private static Predicate<ResourceKey<Level>> dimensionPredicate() {
+        final String string = ExtrasConfig.COMMANDS.tpaDimension.get();
+        final ResourceLocation id = ResourceLocation.tryParse(string);
+        if (string.isBlank() || id == null) {
+            return level -> true;
+        }
+        final ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, id);
+        return dimension -> dimension == key;
     }
 
     private static void spamCheck(UUID requester) throws CommandSyntaxException {
@@ -192,5 +213,6 @@ public class TpCommand {
         provider.add("commands.tpa.help.back", "/back - Teleport back to where you were before teleporting");
         provider.add("commands.tpa.pending_request_exists", "A request is still pending");
         provider.add("commands.tpa.no_self_teleport", "You can't teleport to yourself");
+        provider.add("commands.tpa.not_allowed_here", "Teleporting is not allowed here");
     }
 }

@@ -13,8 +13,23 @@ public class ExtrasConfig {
     private static final Builder COMMON_BUILDER = new Builder();
     private static final Builder CLIENT_BUILDER = new Builder();
 
+    public static final CategoryCommands COMMANDS = new CategoryCommands();
     public static final CategoryTranslation TRANSLATION = new CategoryTranslation();
     public static final CategoryTechStack TECH_STACK = new CategoryTechStack();
+
+    public static final class CategoryCommands {
+        public final ConfigValue<String> tpaDimension;
+
+        private CategoryCommands() {
+            COMMON_BUILDER.comment("Commands").push("commands");
+
+            tpaDimension = COMMON_BUILDER
+                    .comment("If not blank, the /tpa command will only be allowed in this dimension")
+                    .define("tpaDimension", "tropicraft:tropics");
+
+            COMMON_BUILDER.pop();
+        }
+    }
 
     public static final class CategoryTranslation {
         public final ConfigValue<Boolean> translateOutgoing;
@@ -68,10 +83,10 @@ public class ExtrasConfig {
     public static final ForgeConfigSpec CLIENT_CONFIG = CLIENT_BUILDER.build();
 
     @SubscribeEvent
-	public static void configLoad(final ModConfigEvent.Loading event) {
-	}
+    public static void configLoad(final ModConfigEvent.Loading event) {
+    }
 
-	@SubscribeEvent
-	public static void configReload(final ModConfigEvent.Reloading event) {
-	}
+    @SubscribeEvent
+    public static void configReload(final ModConfigEvent.Reloading event) {
+    }
 }
