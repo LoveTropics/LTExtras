@@ -71,15 +71,17 @@ public final class SpawnItemsStore implements ICapabilitySerializable<Tag> {
 
     @SubscribeEvent
     static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event) {
-        sendItems(event.getEntity());
+        if (event.getEntity() instanceof final ServerPlayer player) {
+            sendItems(player);
+        }
     }
 
-    private static void sendItems(Player player) {
+    private static void sendItems(ServerPlayer player) {
         final var cap = getNullable(player);
         if (cap == null) {
             return;
         }
-        final var diff = getDiff(cap.receivedItems);
+        final var diff = getDiff(player, cap.receivedItems);
 
         for (final var entry : diff.entrySet()) {
             entry.getValue().forEach(stack -> {
@@ -102,13 +104,15 @@ public final class SpawnItemsStore implements ICapabilitySerializable<Tag> {
         }
     }
 
-    private static Map<ResourceLocation, List<SpawnItems.Stack>> getDiff(Map<ResourceLocation, List<SpawnItems.Stack>> old) {
+    private static Map<ResourceLocation, List<SpawnItems.Stack>> getDiff(ServerPlayer player, Map<ResourceLocation, List<SpawnItems.Stack>> old) {
         final Map<ResourceLocation, List<SpawnItems.Stack>> diff = new HashMap<>();
         SpawnItemsReloadListener.REGISTRY.forEach((location, items) -> {
             final var oldReceived = old.getOrDefault(location, List.of());
-            diff.put(location, items.items().stream()
-                    .filter(Predicate.not(oldReceived::contains))
-                    .toList());
+            if (items.shouldApplyToPlayer(player)) {
+                diff.put(location, items.items().stream()
+                        .filter(Predicate.not(oldReceived::contains))
+                        .toList());
+            }
         });
         return diff;
     }
