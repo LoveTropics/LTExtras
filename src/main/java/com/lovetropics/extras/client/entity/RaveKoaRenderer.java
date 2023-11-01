@@ -2,10 +2,10 @@ package com.lovetropics.extras.client.entity;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.entity.model.RaveKoaModel;
-import com.lovetropics.extras.entity.RaveKoaEntity;
-import com.lovetropics.extras.entity.RaveKoaEntityDJ;
-import com.lovetropics.extras.entity.RaveKoaEntityDance1;
-import com.lovetropics.extras.entity.RaveKoaEntityDance2;
+import com.lovetropics.extras.entity.ravekoa.RaveKoaEntity;
+import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDJ;
+import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDance1;
+import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDance2;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;

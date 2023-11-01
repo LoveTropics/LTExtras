@@ -1,4 +1,4 @@
-package com.lovetropics.extras.entity;
+package com.lovetropics.extras.entity.ravekoa;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;

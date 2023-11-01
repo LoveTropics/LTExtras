@@ -5,8 +5,8 @@ package com.lovetropics.extras.client.entity.model;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.entity.animation.RaveKoaAnimation;
-import com.lovetropics.extras.entity.RaveKoaEntity;
-import com.lovetropics.extras.entity.RaveKoaEntityDJ;
+import com.lovetropics.extras.entity.ravekoa.RaveKoaEntity;
+import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDJ;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.HierarchicalModel;
