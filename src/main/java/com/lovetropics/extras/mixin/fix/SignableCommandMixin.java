@@ -1,4 +1,4 @@
-package com.lovetropics.extras.mixin;
+package com.lovetropics.extras.mixin.fix;
 
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContextBuilder;
