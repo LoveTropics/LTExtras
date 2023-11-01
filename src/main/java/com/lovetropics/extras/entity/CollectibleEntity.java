@@ -14,6 +14,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
@@ -57,10 +59,38 @@ public class CollectibleEntity extends Entity {
     @Override
     public void playerTouch(final Player player) {
         if (!level().isClientSide && collectible != null) {
-            final CollectibleStore collectibles = CollectibleStore.getNullable(player);
-            if (collectibles != null && collectibles.give(collectible)) {
-                recycleCollectibleCompass(player);
+            tryGiveCollectible(player, collectible);
+        }
+    }
+
+    @Override
+    public InteractionResult interact(final Player player, final InteractionHand hand) {
+        if (collectible == null) {
+            return super.interact(player, hand);
+        }
+        if (!level().isClientSide) {
+            tryGiveCollectible(player, collectible);
+            return InteractionResult.CONSUME;
+        } else {
+            return InteractionResult.SUCCESS;
+        }
+    }
+
+    @Override
+    public boolean skipAttackInteraction(final Entity entity) {
+        if (collectible != null && entity instanceof final Player player) {
+            if (!level().isClientSide) {
+                tryGiveCollectible(player, collectible);
             }
+            return true;
+        }
+        return false;
+    }
+
+    private void tryGiveCollectible(final Player player, final Collectible collectible) {
+        final CollectibleStore collectibles = CollectibleStore.getNullable(player);
+        if (collectibles != null && collectibles.give(collectible)) {
+            recycleCollectibleCompass(player);
         }
     }
 
