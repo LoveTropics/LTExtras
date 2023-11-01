@@ -1,7 +1,9 @@
 package com.lovetropics.extras.entity;
 
+import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.collectible.CollectibleStore;
+import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.mojang.logging.LogUtils;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -12,13 +14,13 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 public class CollectibleEntity extends Entity {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -51,8 +53,24 @@ public class CollectibleEntity extends Entity {
     public void playerTouch(final Player player) {
         if (!level().isClientSide && collectible != null) {
             final CollectibleStore collectibles = CollectibleStore.getNullable(player);
-            if (collectibles != null) {
-                collectibles.give(collectible);
+            if (collectibles != null && collectibles.give(collectible)) {
+                recycleCollectibleCompass(player);
+            }
+        }
+    }
+
+    private void recycleCollectibleCompass(final Player player) {
+        final Inventory inventory = player.getInventory();
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            final ItemStack stack = inventory.getItem(i);
+            final CollectibleCompassItem.Target target = CollectibleCompassItem.getTarget(stack);
+            if (target == null || !target.id().equals(getUUID())) {
+                continue;
+            }
+            inventory.removeItemNoUpdate(i);
+            final int coinCount = CollectibleCompassItem.getCoinCount(stack);
+            if (coinCount > 0) {
+                inventory.placeItemBackInInventory(new ItemStack(ExtraItems.TROPICOIN, coinCount));
             }
         }
     }

@@ -5,16 +5,17 @@ import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.entity.CollectibleEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,9 +23,11 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 public class CollectibleCompassItem extends Item {
     private static final String TAG_TARGET = "target";
+    private static final String COIN_COUNT = "coin_count";
     private static final String ENTITY_TAG_IGNORE = "compass_hidden";
 
     private static final int COOLDOWN_TICKS = SharedConstants.TICKS_PER_SECOND * 5;
@@ -35,20 +38,27 @@ public class CollectibleCompassItem extends Item {
     }
 
     @Nullable
-    public static GlobalPos getTarget(final ItemStack stack) {
+    public static Target getTarget(final ItemStack stack) {
         if (!stack.is(ExtraItems.COLLECTIBLE_COMPASS.get())) {
             return null;
         }
         final CompoundTag tag = stack.getTag();
         if (tag != null && tag.contains(TAG_TARGET)) {
-            return GlobalPos.CODEC.parse(NbtOps.INSTANCE, tag.getCompound(TAG_TARGET)).result().orElse(null);
+            return Target.CODEC.parse(NbtOps.INSTANCE, tag.getCompound(TAG_TARGET)).result().orElse(null);
         }
         return null;
     }
 
-    private static void setTarget(final ItemStack stack, final GlobalPos pos) {
+    public static int getCoinCount(final ItemStack stack) {
+        if (stack.getTag() == null) {
+            return 0;
+        }
+        return stack.getTag().getInt(COIN_COUNT);
+    }
+
+    private static void setTarget(final ItemStack stack, final Target target) {
         final CompoundTag tag = stack.getOrCreateTag();
-        tag.put(TAG_TARGET, Util.getOrThrow(GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, pos), IllegalStateException::new));
+        tag.put(TAG_TARGET, Util.getOrThrow(Target.CODEC.encodeStart(NbtOps.INSTANCE, target), IllegalStateException::new));
     }
 
     private static boolean hasTarget(final ItemStack stack) {
@@ -67,9 +77,9 @@ public class CollectibleCompassItem extends Item {
             player.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_ALREADY_USED.get().withStyle(ChatFormatting.RED));
             return InteractionResultHolder.fail(stack);
         }
-        final GlobalPos pos = tryLocateCollectible(level, player);
-        if (pos != null) {
-            setTarget(stack, pos);
+        final Target target = tryLocateCollectible(level, player);
+        if (target != null) {
+            setTarget(stack, target);
             player.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_SUCCESS.get().withStyle(ChatFormatting.GOLD));
         } else {
             player.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_FAIL.get().withStyle(ChatFormatting.RED));
@@ -78,7 +88,7 @@ public class CollectibleCompassItem extends Item {
     }
 
     @Nullable
-    private static GlobalPos tryLocateCollectible(final Level level, final Player player) {
+    private static Target tryLocateCollectible(final Level level, final Player player) {
         final CollectibleStore collectibles = CollectibleStore.getNullable(player);
         if (collectibles == null) {
             return null;
@@ -93,12 +103,19 @@ public class CollectibleCompassItem extends Item {
         });
 
         return Util.getRandomSafe(candidates, player.getRandom())
-                .map(entity -> GlobalPos.of(level.dimension(), entity.blockPosition()))
+                .map(entity -> new Target(GlobalPos.of(level.dimension(), entity.blockPosition()), entity.getUUID()))
                 .orElse(null);
     }
 
     @Override
     public boolean isFoil(final ItemStack stack) {
         return hasTarget(stack);
+    }
+
+    public record Target(GlobalPos pos, UUID id) {
+        public static final Codec<Target> CODEC = RecordCodecBuilder.create(i -> i.group(
+        		GlobalPos.CODEC.fieldOf("pos").forGetter(Target::pos),
+                UUIDUtil.CODEC.fieldOf("id").forGetter(Target::id)
+        ).apply(i, Target::new));
     }
 }

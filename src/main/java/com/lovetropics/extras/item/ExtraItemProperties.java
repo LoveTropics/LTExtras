@@ -12,9 +12,10 @@ public class ExtraItemProperties {
     public static final ResourceLocation UNSEEN = new ResourceLocation(LTExtras.MODID, "unseen");
 
     public static void register() {
-        ItemProperties.register(ExtraItems.COLLECTIBLE_COMPASS.get(), new ResourceLocation("angle"), new CompassItemPropertyFunction(
-                (level, stack, entity) -> CollectibleCompassItem.getTarget(stack))
-        );
+        ItemProperties.register(ExtraItems.COLLECTIBLE_COMPASS.get(), new ResourceLocation("angle"), new CompassItemPropertyFunction((level, stack, entity) -> {
+            final CollectibleCompassItem.Target target = CollectibleCompassItem.getTarget(stack);
+            return target != null ? target.pos() : null;
+        }));
 
         ItemProperties.register(ExtraItems.COLLECTIBLE_BASKET.get(), UNSEEN, (ClampedItemPropertyFunction) (stack, level, entity, seed) -> {
             final ClientCollectiblesList collectibles = ClientCollectiblesList.getOrNull();
