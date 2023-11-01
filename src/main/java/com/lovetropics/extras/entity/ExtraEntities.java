@@ -4,6 +4,7 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.entity.CollectibleEntityRenderer;
 import com.lovetropics.extras.client.entity.HologramEntityRenderer;
 import com.lovetropics.extras.client.entity.PartyBeamRenderer;
+import com.lovetropics.extras.client.entity.RaveKoaRenderer;
 import com.lovetropics.extras.entity.vfx.PartyBeamEntity;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.EntityEntry;
@@ -40,6 +41,39 @@ public class ExtraEntities {
 					.updateInterval(SharedConstants.TICKS_PER_SECOND)
 			)
 			.renderer(() -> HologramEntityRenderer::new)
+			.register();
+
+	public static final EntityEntry<RaveKoaEntityDJ> RAVEKOADJ = REGISTRATE.entity("ravekoa_dj", RaveKoaEntityDJ::new, MobCategory.MISC)
+			.defaultLang()
+			.properties(builder -> builder
+					.sized(0.8f, 1.6f)
+					.clientTrackingRange(8)
+					.updateInterval(SharedConstants.TICKS_PER_SECOND)
+			)
+			.attributes(RaveKoaEntity::createAttributes)
+			.renderer(() -> RaveKoaRenderer::new)
+			.register();
+
+	public static final EntityEntry<RaveKoaEntityDance1> RAVEKOADANCE1 = REGISTRATE.entity("ravekoa_dance1", RaveKoaEntityDance1::new, MobCategory.MISC)
+			.defaultLang()
+			.properties(builder -> builder
+					.sized(0.8f, 1.6f)
+					.clientTrackingRange(8)
+					.updateInterval(SharedConstants.TICKS_PER_SECOND)
+			)
+			.attributes(RaveKoaEntity::createAttributes)
+			.renderer(() -> RaveKoaRenderer::new)
+			.register();
+
+	public static final EntityEntry<RaveKoaEntityDance2> RAVEKOADANCE2 = REGISTRATE.entity("ravekoa_dance2", RaveKoaEntityDance2::new, MobCategory.MISC)
+			.defaultLang()
+			.properties(builder -> builder
+					.sized(0.8f, 1.6f)
+					.clientTrackingRange(8)
+					.updateInterval(SharedConstants.TICKS_PER_SECOND)
+			)
+			.attributes(RaveKoaEntity::createAttributes)
+			.renderer(() -> RaveKoaRenderer::new)
 			.register();
 
 	public static void init() {
