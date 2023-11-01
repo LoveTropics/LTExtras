@@ -26,7 +26,7 @@ public class InviteOverlay {
     @SubscribeEvent
     public static void onRegisterOverlays(final RegisterGuiOverlaysEvent event) {
         final Minecraft minecraft = Minecraft.getInstance();
-        event.registerAbove(VanillaGuiOverlay.SUBTITLES.id(), "invites", (gui, graphics, partialTick, screenWidth, screenHeight) -> {
+        event.registerAbove(VanillaGuiOverlay.CHAT_PANEL.id(), "invites", (gui, graphics, partialTick, screenWidth, screenHeight) -> {
             final LocalPlayer player = minecraft.player;
             if (player == null) {
                 return;
@@ -49,7 +49,7 @@ public class InviteOverlay {
         graphics.blit(image.texture(), left, top, width, height, 0, 0, 1, 1, 1, 1);
 
         graphics.pose().pushPose();
-        graphics.pose().translate(left, top, 0.0f);
+        graphics.pose().translate(left, top, 200.0f);
         graphics.pose().scale(scale, scale, scale);
 
         for (final ImageData.TextElement text : image.text()) {
