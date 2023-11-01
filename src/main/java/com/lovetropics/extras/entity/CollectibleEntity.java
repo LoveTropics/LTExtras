@@ -6,8 +6,10 @@ import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.mojang.logging.LogUtils;
 import net.minecraft.Util;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -25,8 +27,10 @@ import javax.annotation.Nullable;
 public class CollectibleEntity extends Entity {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final String KEY_COLLECTIBLE = "collectible";
+    private static final String KEY_PARTICLES = "particles";
 
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(CollectibleEntity.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<Boolean> DATA_PARTICLES = SynchedEntityData.defineId(CollectibleEntity.class, EntityDataSerializers.BOOLEAN);
 
     @Nullable
     private Collectible collectible;
@@ -47,6 +51,7 @@ public class CollectibleEntity extends Entity {
     @Override
     protected void defineSynchedData() {
         getEntityData().define(DATA_ITEM, ItemStack.EMPTY);
+        getEntityData().define(DATA_PARTICLES, true);
     }
 
     @Override
@@ -57,6 +62,32 @@ public class CollectibleEntity extends Entity {
                 recycleCollectibleCompass(player);
             }
         }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (level().isClientSide() && shouldShowParticles()) {
+            tickParticles();
+        }
+    }
+
+    private void tickParticles() {
+        final double x = getX() + random.nextGaussian() * 0.2;
+        final double y = getY() + random.nextGaussian() * 0.1 + 0.2;
+        final double z = getZ() + random.nextGaussian() * 0.1;
+        final double speedX = random.nextGaussian() * 0.005;
+        final double speedY = random.nextGaussian() * 0.005;
+        final double speedZ = random.nextGaussian() * 0.005;
+        level().addParticle(ParticleTypes.END_ROD, false, x, y, z, speedX, speedY, speedZ);
+    }
+
+    private void setShowParticles(final boolean particles) {
+        getEntityData().set(DATA_PARTICLES, particles);
+    }
+
+    private boolean shouldShowParticles() {
+        return getEntityData().get(DATA_PARTICLES);
     }
 
     private void recycleCollectibleCompass(final Player player) {
@@ -84,6 +115,11 @@ public class CollectibleEntity extends Entity {
         } else {
             setCollectible(null);
         }
+        if (tag.contains(KEY_PARTICLES, Tag.TAG_BYTE)) {
+            setShowParticles(tag.getBoolean(KEY_PARTICLES));
+        } else {
+            setShowParticles(true);
+        }
     }
 
     @Override
@@ -91,6 +127,7 @@ public class CollectibleEntity extends Entity {
         if (collectible != null) {
             tag.put(KEY_COLLECTIBLE, Util.getOrThrow(Collectible.CODEC.encodeStart(NbtOps.INSTANCE, collectible), IllegalStateException::new));
         }
+        tag.putBoolean(KEY_PARTICLES, shouldShowParticles());
     }
 
     @Override
