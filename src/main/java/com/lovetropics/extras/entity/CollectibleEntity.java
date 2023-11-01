@@ -74,8 +74,8 @@ public class CollectibleEntity extends Entity {
 
     private void tickParticles() {
         final double x = getX() + random.nextGaussian() * 0.2;
-        final double y = getY() + random.nextGaussian() * 0.1 + 0.2;
-        final double z = getZ() + random.nextGaussian() * 0.1;
+        final double y = getY() + random.nextGaussian() * 0.1 + 0.1;
+        final double z = getZ() + random.nextGaussian() * 0.2;
         final double speedX = random.nextGaussian() * 0.005;
         final double speedY = random.nextGaussian() * 0.005;
         final double speedZ = random.nextGaussian() * 0.005;
