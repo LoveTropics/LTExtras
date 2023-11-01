@@ -1,6 +1,7 @@
 package com.lovetropics.extras;
 
 import com.lovetropics.extras.client.command.RenderPlayerNameTagCommand;
+import com.lovetropics.extras.client.entity.model.RaveKoaModel;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
 import com.lovetropics.extras.collectible.CollectibleStore;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.ForgeConfig;
@@ -84,6 +86,7 @@ public class LTExtras {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			modBus.addListener(this::clientSetup);
 			modBus.addListener(this::registerItemColors);
+			modBus.addListener(this::registerLayerDefinitions);
 		});
 
 		MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
@@ -181,5 +184,10 @@ public class LTExtras {
 		}, ExtraBlocks.SUBMERGED_LILY_PAD.asItem());
 		evt.getItemColors().register((stack, index) -> 9551190,
 				ExtraBlocks.GRASS_GRASS.get());
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+		event.registerLayerDefinition(RaveKoaModel.LAYER_LOCATION, RaveKoaModel::createBodyLayer);
 	}
 }
