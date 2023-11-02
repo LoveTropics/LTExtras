@@ -20,7 +20,6 @@ public class RaveKoaEntity extends PathfinderMob {
 
     public RaveKoaEntity(EntityType<? extends RaveKoaEntity> type, Level world) {
         super(type, world);
-        this.setPersistenceRequired();
     }
 
     @Override
@@ -55,6 +54,17 @@ public class RaveKoaEntity extends PathfinderMob {
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        this.setPersistenceRequired();
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
+    @Override
+    protected boolean shouldDespawnInPeaceful() {
+        return false;
+    }
+
+    @Override
+    public void checkDespawn() {
+        //NO OP
     }
 }
