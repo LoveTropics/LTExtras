@@ -102,8 +102,6 @@ public class TranslationPromptScreen extends Screen {
         config.translateIncoming.set(translateIncoming.getValue());
         config.translateOutgoing.set(translateOutgoing.getValue());
         ExtrasConfig.CLIENT_CONFIG.save();
-
         callback.run();
-        super.onClose();
     }
 }
