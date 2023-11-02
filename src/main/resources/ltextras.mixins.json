@@ -24,6 +24,7 @@
     "fix.ComponentArgumentMixin",
     "fix.KeyMappingLookupMixin",
     "fix.SignableCommandMixin",
+    "no_vanilla.DropVanillaAdvancementsAndRecipesMixin",
     "perf.BiomeManagerMixin",
     "perf.ChunkManagerMixin",
     "tag.MappedRegistryMixin",
@@ -35,10 +36,16 @@
     "translation.ServerGamePacketListenerImplMixin"
   ],
   "client": [
-    "client.LocalPlayerMixin", "client.collectible.MultiPlayerGameModeMixin",
-    "client.perf.BlockModelRendererCacheMixin", "client.perf.ChunkRenderMixin",
-    "client.perf.ClientChunkCacheStorageMixin", "client.perf.ClientWorldMixin", "client.perf.ViewFrustumAccess",
-    "client.perf.WorldRendererAccess", "client.translation.MinecraftMixin", "client.world_effect.ClientLevelMixin"
+    "client.LocalPlayerMixin",
+    "client.collectible.MultiPlayerGameModeMixin",
+    "client.perf.BlockModelRendererCacheMixin",
+    "client.perf.ChunkRenderMixin",
+    "client.perf.ClientChunkCacheStorageMixin",
+    "client.perf.ClientWorldMixin",
+    "client.perf.ViewFrustumAccess",
+    "client.perf.WorldRendererAccess",
+    "client.translation.MinecraftMixin",
+    "client.world_effect.ClientLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
