@@ -108,7 +108,7 @@ public final class SpawnItemsStore implements ICapabilitySerializable<Tag> {
         final Map<ResourceLocation, List<SpawnItems.Stack>> diff = new HashMap<>();
         SpawnItemsReloadListener.REGISTRY.forEach((location, items) -> {
             final var oldReceived = old.getOrDefault(location, List.of());
-            if (items.shouldApplyToPlayer(player)) {
+            if (items.canApplyToPlayer(player)) {
                 diff.put(location, items.items().stream()
                         .filter(Predicate.not(oldReceived::contains))
                         .toList());

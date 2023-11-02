@@ -21,7 +21,7 @@ public record SpawnItems(List<Stack> items, boolean canBeRestored, Optional<Stri
             Codec.STRING.optionalFieldOf("exclude_tag").forGetter(SpawnItems::excludeTag)
     ).apply(in, SpawnItems::new));
 
-    public boolean shouldApplyToPlayer(final ServerPlayer player) {
+    public boolean canApplyToPlayer(final ServerPlayer player) {
         return excludeTag.map(tag -> !player.getTags().contains(tag)).orElse(true);
     }
 

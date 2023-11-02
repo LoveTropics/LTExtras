@@ -8,6 +8,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -23,22 +24,21 @@ public class SpawnItemsCommand {
                                 .executes(context -> {
                                     final var arg = context.getArgument("set", String.class);
                                     final var set = SpawnItemsReloadListener.REGISTRY.get(new ResourceLocation(arg));
+                                    final ServerPlayer player = context.getSource().getPlayerOrException();
 
                                     if (set == null) {
                                         context.getSource().sendFailure(Component.translatable("spawnitems.unknown_set", Component.literal(arg).withStyle(ChatFormatting.GOLD)));
                                         return Command.SINGLE_SUCCESS;
                                     }
 
-                                    if (!set.canBeRestored()) {
+                                    if (!set.canBeRestored() || !set.canApplyToPlayer(player)) {
                                         context.getSource().sendFailure(Component.translatable("spawnitems.set_not_restorable", Component.literal(arg).withStyle(ChatFormatting.GOLD)));
                                         return Command.SINGLE_SUCCESS;
                                     }
 
                                     for (SpawnItems.Stack stack : set.items()) {
-                                        if (!context.getSource().getPlayerOrException().addItem(stack.build())) {
-                                            assert context.getSource().getPlayer() != null;
-
-                                            context.getSource().getPlayer().drop(stack.build(), true, true);
+                                        if (!player.addItem(stack.build())) {
+                                            player.drop(stack.build(), true, true);
                                         }
                                     }
                                     context.getSource().sendSuccess(() -> Component.translatable("spawnitems.restored_successfully"), false);
