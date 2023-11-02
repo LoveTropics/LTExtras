@@ -515,6 +515,13 @@ public class ExtraBlocks {
 
 	// Imposter blocks
 
+	public static final BlockEntry<Block> DELIGHTED_OBSIDIAN = REGISTRATE.block("delighted_obsidian", Block::new)
+			.initialProperties(() -> Blocks.CRYING_OBSIDIAN)
+			.properties(p -> p.lightLevel(value -> 0))
+			.tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL)
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent(ctx.getName(), "block/crying_obsidian")))
+			.register();
+
 	private static final TemplateBuilder<Block, ImposterBlockTemplate> IMPOSTER_BLOCK_TEMPLATES = new TemplateBuilder<Block, ImposterBlockTemplate>()
 			.add(Blocks.BRAIN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.BUBBLE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
