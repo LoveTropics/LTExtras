@@ -15,19 +15,21 @@ import org.w3c.dom.Text;
 import java.util.List;
 import java.util.Optional;
 
-public record ImageData(Optional<Component> name, ResourceLocation texture, float width, float height, List<TextElement> text) {
+public record ImageData(Optional<Component> name, ResourceLocation texture, float width, float height, float offsetX, float offsetY, List<TextElement> text) {
     public static final Codec<ImageData> CODEC = RecordCodecBuilder.create(i -> i.group(
             ExtraCodecs.COMPONENT.optionalFieldOf("name").forGetter(ImageData::name),
             ResourceLocation.CODEC.fieldOf("texture").forGetter(ImageData::texture),
             Codec.FLOAT.fieldOf("width").forGetter(ImageData::width),
             Codec.FLOAT.fieldOf("height").forGetter(ImageData::height),
+            Codec.FLOAT.optionalFieldOf("offset_x", 0.0f).forGetter(ImageData::offsetX),
+            Codec.FLOAT.optionalFieldOf("offset_y", 0.0f).forGetter(ImageData::offsetY),
             TextElement.CODEC.listOf().optionalFieldOf("text", List.of()).forGetter(ImageData::text)
     ).apply(i, ImageData::new));
 
     private static final String TAG_IMAGE = "image";
 
     public ImageData(final Component name, final ResourceLocation texture, final float width, final float height) {
-        this(Optional.of(name), texture, width, height, List.of());
+        this(Optional.of(name), texture, width, height, 0.0f, 0.0f, List.of());
     }
 
     public static Optional<ImageData> get(final ItemStack stack) {

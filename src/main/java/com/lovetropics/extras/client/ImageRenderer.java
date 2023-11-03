@@ -33,10 +33,10 @@ public class ImageRenderer {
     }
 
     private static void renderImage(final ImageData image, final PoseStack.Pose pose, final MultiBufferSource bufferSource, final int packedLight) {
-        final float x0 = -image.width() / 2.0f;
-        final float y0 = -image.height() / 2.0f;
-        final float x1 = image.width() / 2.0f;
-        final float y1 = image.height() / 2.0f;
+        final float x0 = -image.width() / 2.0f + image.offsetX();
+        final float y0 = -image.height() / 2.0f + image.offsetY();
+        final float x1 = image.width() / 2.0f + image.offsetX();
+        final float y1 = image.height() / 2.0f + image.offsetY();
 
         final VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityCutoutNoCullZOffset(image.texture()));
         addVertex(consumer, pose, x0, y0, 1.0f, 1.0f, packedLight);
