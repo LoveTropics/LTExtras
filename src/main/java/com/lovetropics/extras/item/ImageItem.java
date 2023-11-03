@@ -39,7 +39,13 @@ public class ImageItem extends Item {
             new ImageData(Component.literal("Thatch House"), new ResourceLocation(LTExtras.MODID, "textures/images/thatch_house.png"), 1.5f, 2.0f),
             new ImageData(Component.literal("Water"), new ResourceLocation(LTExtras.MODID, "textures/images/water.png"), 1.5f, 2.0f),
             new ImageData(Component.literal("Plantain Ent"), new ResourceLocation(LTExtras.MODID, "textures/images/plantain_ent.png"), 2.5f, 3.0f),
-            new ImageData(Component.literal("Manatee"), new ResourceLocation(LTExtras.MODID, "textures/images/manatee.png"), 2.5f, 3.0f)
+            new ImageData(Component.literal("Manatee"), new ResourceLocation(LTExtras.MODID, "textures/images/manatee.png"), 2.5f, 3.0f),
+            new ImageData(Component.literal("Manatee (Real)"), new ResourceLocation(LTExtras.MODID, "textures/images/manatee_real.png"), 3.0f, 2.0f),
+            new ImageData(Component.literal("Gibnut 1"), new ResourceLocation(LTExtras.MODID, "textures/images/gibnut.png"), 2.66f, 2.0f),
+            new ImageData(Component.literal("Gibnut 2"), new ResourceLocation(LTExtras.MODID, "textures/images/gibnut_2.png"), 3.67f, 2.0f),
+            new ImageData(Component.literal("Mahogany Nut"), new ResourceLocation(LTExtras.MODID, "textures/images/mahogany_nut.png"), 1.48f, 2.0f),
+            new ImageData(Component.literal("Slender Harvest Mouse"), new ResourceLocation(LTExtras.MODID, "textures/images/slender_harvest_mouse.png"), 2.75f, 2.0f),
+            new ImageData(Component.literal("Toucan"), new ResourceLocation(LTExtras.MODID, "textures/images/toucan.png"), 2.0f, 2.0f)
     );
 
     public ImageItem(final Properties properties) {
