@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = LTExtras.MODID)
 public class MapPoiManager extends SavedData {
@@ -63,13 +64,23 @@ public class MapPoiManager extends SavedData {
     @SubscribeEvent
     public static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof final ServerPlayer serverPlayer) {
-            MapPoiManager.get(serverPlayer.getServer()).getEnabledPois()
+            final MapPoiManager poiManager = MapPoiManager.get(serverPlayer.getServer());
+            poiManager.getVisiblePois(serverPlayer)
                     .forEach(e -> LTExtrasNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientboundPoiPacket(e, false)));
         }
     }
 
     public Collection<Poi> getAllPois() {
         return pois.values();
+    }
+
+    public Stream<Poi> getVisiblePois(final ServerPlayer player) {
+        final Stream<Poi> stream = pois.values().stream();
+        if (player.canUseGameMasterBlocks()) {
+            return stream;
+        } else {
+            return stream.filter(Poi::enabled);
+        }
     }
 
     public Set<Poi> getEnabledPois() {
