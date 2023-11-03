@@ -28,6 +28,10 @@ public record ImageData(Optional<Component> name, ResourceLocation texture, floa
 
     private static final String TAG_IMAGE = "image";
 
+    public ImageData(final Component name, final ResourceLocation texture, final float width, final float height, final List<TextElement> text) {
+        this(Optional.of(name), texture, width, height, 0.0f, 0.0f, text);
+    }
+
     public ImageData(final Component name, final ResourceLocation texture, final float width, final float height) {
         this(Optional.of(name), texture, width, height, 0.0f, 0.0f, List.of());
     }

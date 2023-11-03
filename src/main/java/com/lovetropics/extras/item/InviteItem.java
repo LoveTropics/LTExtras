@@ -15,7 +15,7 @@ import java.util.Optional;
 public class InviteItem extends Item {
     public static final List<ImageData> PRESETS = List.of(
             new ImageData(
-                    Optional.of(inviteName("1")),
+                    inviteName("1"),
                     new ResourceLocation(LTExtras.MODID, "textures/images/ccfucc_invite_1.png"),
                     371,
                     292,
@@ -31,7 +31,7 @@ public class InviteItem extends Item {
                     )
             ),
             new ImageData(
-                    Optional.of(inviteName("2")),
+                    inviteName("2"),
                     new ResourceLocation(LTExtras.MODID, "textures/images/ccfucc_invite_2.png"),
                     371,
                     292,
