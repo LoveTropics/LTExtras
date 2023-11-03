@@ -10,6 +10,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -52,7 +53,7 @@ public class WarpCommand {
         final BlockPos blockPos = target.globalPos().pos();
         final ServerLevel level = player.getServer().getLevel(target.globalPos().dimension());
 
-        if (!target.enabled() && !player.canUseGameMasterBlocks()) {
+        if (!target.enabled() && !player.hasPermissions(Commands.LEVEL_GAMEMASTERS)) {
             throw GENERAL_ERROR.create();
         }
 

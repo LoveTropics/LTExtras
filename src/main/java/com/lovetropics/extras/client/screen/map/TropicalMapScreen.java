@@ -6,6 +6,7 @@ import com.lovetropics.extras.data.poi.Poi;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -36,7 +37,7 @@ public class TropicalMapScreen extends Screen {
         int yOffset = (this.height / 2) - (MAP_PNG_HEIGHT / 2);
 
         for (Poi mapPoi : ClientMapPoiManager.getPois().values()) {
-            if (!mapPoi.enabled() && !player.canUseGameMasterBlocks()) {
+            if (!mapPoi.enabled() && !player.hasPermissions(Commands.LEVEL_GAMEMASTERS)) {
                 continue;
             }
 
