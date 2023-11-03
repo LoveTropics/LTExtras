@@ -7,10 +7,12 @@ import com.lovetropics.lib.permission.PermissionsApi;
 import com.lovetropics.lib.permission.role.RoleOverrideType;
 import com.mojang.serialization.Codec;
 import net.minecraft.Util;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -76,7 +78,7 @@ public class MapPoiManager extends SavedData {
 
     public Stream<Poi> getVisiblePois(final ServerPlayer player) {
         final Stream<Poi> stream = pois.values().stream();
-        if (player.canUseGameMasterBlocks()) {
+        if (player.hasPermissions(Commands.LEVEL_GAMEMASTERS)) {
             return stream;
         } else {
             return stream.filter(Poi::enabled);
