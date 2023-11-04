@@ -17,6 +17,11 @@ import java.util.Map;
 public class DropVanillaAdvancementsAndRecipesMixin {
     @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("HEAD"))
     private void load(final Map<ResourceLocation, JsonElement> json, final ResourceManager resourceManager, final ProfilerFiller profiler, final CallbackInfo ci) {
-        json.keySet().removeIf(path -> path.getNamespace().equals("minecraft"));
+        json.keySet().removeIf(path -> path.getNamespace().equals("minecraft") && !isAllowed(path));
+    }
+
+    // It's important, ok?
+    private static boolean isAllowed(final ResourceLocation path) {
+        return path.getPath().contains("glass");
     }
 }
