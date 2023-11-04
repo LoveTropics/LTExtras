@@ -1,11 +1,9 @@
 package com.lovetropics.extras.collectible;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.lovetropics.extras.network.CollectiblesListPacket;
+import com.lovetropics.extras.network.LTExtrasNetwork;
 import com.mojang.logging.LogUtils;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.NbtOps;
@@ -34,13 +32,6 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
     public static final ResourceLocation ID = new ResourceLocation(LTExtras.MODID, "collectibles");
 
     private static final Logger LOGGER = LogUtils.getLogger();
-
-    private record Data(List<Collectible> collectibles, boolean hasUnseen) {
-        public static final Codec<Data> CODEC = RecordCodecBuilder.create(i -> i.group(
-                Collectible.CODEC.listOf().fieldOf("collectibles").forGetter(Data::collectibles),
-                Codec.BOOL.optionalFieldOf("has_unseen", false).forGetter(Data::hasUnseen)
-        ).apply(i, Data::new));
-    }
 
     private final LazyOptional<CollectibleStore> instance = LazyOptional.of(() -> this);
 
@@ -98,12 +89,16 @@ public class CollectibleStore implements ICapabilitySerializable<Tag> {
 
     @Override
     public Tag serializeNBT() {
-        return Util.getOrThrow(Data.CODEC.encodeStart(NbtOps.INSTANCE, new Data(collectibles, hasUnseen)), IllegalStateException::new);
+        return Util.getOrThrow(CollectibleData.CODEC.encodeStart(NbtOps.INSTANCE, asData()), IllegalStateException::new);
+    }
+
+    public CollectibleData asData() {
+        return new CollectibleData(collectibles, hasUnseen);
     }
 
     @Override
     public void deserializeNBT(final Tag nbt) {
-        Data.CODEC.parse(NbtOps.INSTANCE, nbt).resultOrPartial(Util.prefix("Collectibles: ", LOGGER::error)).ifPresent(data -> {
+        CollectibleData.CODEC.parse(NbtOps.INSTANCE, nbt).resultOrPartial(Util.prefix("Collectibles: ", LOGGER::error)).ifPresent(data -> {
             collectibles.clear();
             collectibles.addAll(data.collectibles());
             hasUnseen = data.hasUnseen();

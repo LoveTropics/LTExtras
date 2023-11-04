@@ -14,6 +14,7 @@
     "ItemFrameMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
+    "MinecraftServerAccessor",
     "PlayerListMixin",
     "ScaffoldingBlockMixin",
     "TeamCommandMixin",

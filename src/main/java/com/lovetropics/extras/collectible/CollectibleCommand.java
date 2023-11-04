@@ -1,5 +1,6 @@
 package com.lovetropics.extras.collectible;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -13,13 +14,17 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -54,6 +59,12 @@ public class CollectibleCommand {
                 .then(literal("unlock").then(argument("target", players()).executes(context -> setLocked(context, false))))
                 // Very hacky
                 .then(literal("countdisguises").executes(CollectibleCommand::countDisguises))
+                .then(literal("find")
+                        .executes(context -> findCollectibles(context.getSource(), stack -> true))
+                        .then(argument("item", item(buildContext))
+                                .executes(context -> findCollectibles(context.getSource(), getItem(context, "item")))
+                        )
+                )
         );
     }
 
@@ -133,6 +144,25 @@ public class CollectibleCommand {
         if (store != null) {
             store.setLocked(locked);
         }
+        return 1;
+    }
+
+    private static int findCollectibles(final CommandSourceStack source, final Predicate<ItemStack> item) {
+        final MinecraftServer server = source.getServer();
+        final GameProfileCache profileCache = server.getProfileCache();
+        CollectibleLister.listPlayersWithItem(server, item)
+                .thenApplyAsync(
+                        profileIds -> profileIds.stream().map(profileCache::get).flatMap(Optional::stream).toList(),
+                        Util.backgroundExecutor()
+                )
+                .thenAcceptAsync(profiles -> {
+                    if (profiles.isEmpty()) {
+                        source.sendSuccess(() -> Component.literal("Found no players"), false);
+                    } else {
+                        final String names = profiles.stream().map(GameProfile::getName).collect(Collectors.joining(", "));
+                        source.sendSuccess(() -> Component.literal("Found " + profiles.size() + " players: " + names), false);
+                    }
+                }, server);
         return 1;
     }
 }
