@@ -45,7 +45,8 @@ public class ImageItem extends Item {
             new ImageData(Component.literal("Gibnut 2"), new ResourceLocation(LTExtras.MODID, "textures/images/gibnut_2.png"), 3.67f, 2.0f),
             new ImageData(Component.literal("Mahogany Nut"), new ResourceLocation(LTExtras.MODID, "textures/images/mahogany_nut.png"), 1.48f, 2.0f),
             new ImageData(Component.literal("Slender Harvest Mouse"), new ResourceLocation(LTExtras.MODID, "textures/images/slender_harvest_mouse.png"), 2.75f, 2.0f),
-            new ImageData(Component.literal("Toucan"), new ResourceLocation(LTExtras.MODID, "textures/images/toucan.png"), 2.0f, 2.0f)
+            new ImageData(Component.literal("Toucan"), new ResourceLocation(LTExtras.MODID, "textures/images/toucan.png"), 2.0f, 2.0f),
+            new ImageData(Component.literal("Background: STT2"), new ResourceLocation(LTExtras.MODID, "textures/images/play_stt2.png"), 22.0f, 11.0f)
     );
 
     public ImageItem(final Properties properties) {
