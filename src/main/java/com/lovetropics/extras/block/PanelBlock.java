@@ -1,24 +1,23 @@
 package com.lovetropics.extras.block;
 
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.StateDefinition.Builder;
-import net.minecraft.core.Direction;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.level.BlockGetter;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import java.util.Map;
 
 public class PanelBlock extends DirectionalBlock {
+	public static final MapCodec<PanelBlock> CODEC = simpleCodec(PanelBlock::new);
 
 	public static final Map<Direction, VoxelShape> SHAPES = Maps.immutableEnumMap(
 			ImmutableMap.<Direction, VoxelShape>builder()
@@ -32,6 +31,11 @@ public class PanelBlock extends DirectionalBlock {
 
 	public PanelBlock(Properties builder) {
 		super(builder);
+	}
+
+	@Override
+	protected MapCodec<? extends DirectionalBlock> codec() {
+		return CODEC;
 	}
 
 	@Override

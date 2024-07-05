@@ -2,6 +2,7 @@ package com.lovetropics.extras.block;
 
 import com.lovetropics.extras.ExtraBlocks;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -14,8 +15,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class MobControllerBlock extends BaseEntityBlock {
+	public static final MapCodec<MobControllerBlock> CODEC = simpleCodec(MobControllerBlock::new);
 	public MobControllerBlock(Properties properties) {
 		super(properties);
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return CODEC;
 	}
 
 	@Override

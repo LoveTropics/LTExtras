@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "com.lovetropics.extras.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "plugin": "com.lovetropics.extras.mixin.LTExtrasMixinPlugin",
   "refmap": "ltextras.refmap.json",
   "mixins": [
@@ -12,7 +12,6 @@
     "FluidStateMixin",
     "ForgeHooksMixin",
     "ItemFrameMixin",
-    "ItemStackMixin",
     "LivingEntityMixin",
     "MinecraftServerAccessor",
     "PlayerListMixin",
@@ -22,19 +21,8 @@
     "collectible.MerchantResultSlotMixin",
     "collectible.ServerPlayerGameModeMixin",
     "collectible.SlotMixin",
-    "fix.ComponentArgumentMixin",
-    "fix.KeyMappingLookupMixin",
-    "fix.SignableCommandMixin",
     "no_vanilla.DropVanillaAdvancementsAndRecipesMixin",
-    "perf.BiomeManagerMixin",
-    "perf.ChunkManagerMixin",
-    "tag.MappedRegistryMixin",
-    "tag.NamespacedWrapperMixin",
-    "tag.TagNetworkSerializationMixin",
-    "translation.FutureChainMixin",
-    "translation.MessageArgumentMixin",
-    "translation.PlayerChatMessageMixin",
-    "translation.ServerGamePacketListenerImplMixin"
+    "perf.BiomeManagerMixin"
   ],
   "client": [
     "client.LocalPlayerMixin",
@@ -45,7 +33,6 @@
     "client.perf.ClientWorldMixin",
     "client.perf.ViewFrustumAccess",
     "client.perf.WorldRendererAccess",
-    "client.translation.MinecraftMixin",
     "client.world_effect.ClientLevelMixin"
   ],
   "injectors": {

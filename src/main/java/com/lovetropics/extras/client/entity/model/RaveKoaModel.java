@@ -13,12 +13,16 @@ import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.ResourceLocation;
 
 public class RaveKoaModel<T extends RaveKoaEntity> extends HierarchicalModel<T> {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(LTExtras.MODID, "rave_koa_model"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "rave_koa_model"), "main");
     private final ModelPart CenterPivot;
     private final ModelPart booth;
     private final ModelPart root;
@@ -78,9 +82,9 @@ public class RaveKoaModel<T extends RaveKoaEntity> extends HierarchicalModel<T> 
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        CenterPivot.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        booth.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+        CenterPivot.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        booth.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
     }
 
     @Override

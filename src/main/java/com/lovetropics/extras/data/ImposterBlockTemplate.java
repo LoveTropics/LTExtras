@@ -3,9 +3,9 @@ package com.lovetropics.extras.data;
 import com.lovetropics.extras.BlockFactory;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 
 public final class ImposterBlockTemplate {
 	public final BlockFactory<? extends Block> factory;
@@ -41,7 +41,7 @@ public final class ImposterBlockTemplate {
 							.simpleItem();
 				}
 				case CROSS: {
-					ResourceLocation texture = new ResourceLocation(id.getNamespace(), "block/" + id.getPath());
+					ResourceLocation texture = id.withPath("block/");
 					return block.blockstate((ctx, prov) -> {
 								prov.simpleBlock(ctx.getEntry(), prov.models().cross(ctx.getName(), texture));
 							})

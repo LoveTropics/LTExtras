@@ -17,7 +17,7 @@ public class ExtraTags {
         public static final TagKey<Block> CLIMBABLE_VERY_FAST = modTag("climbable_very_fast");
 
         static TagKey<Block> tag(final String modid, final String name) {
-            return TagKey.create(Registries.BLOCK, new ResourceLocation(modid, name));
+            return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(modid, name));
         }
 
         static TagKey<Block> modTag(final String name) {
@@ -29,7 +29,7 @@ public class ExtraTags {
         public static final TagKey<Item> LIME = tag(TROPICRAFT_ID, "lime");
 
         static TagKey<Item> tag(final String modid, final String name) {
-            return TagKey.create(Registries.ITEM, new ResourceLocation(modid, name));
+            return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(modid, name));
         }
 
         static TagKey<Item> modTag(final String name) {

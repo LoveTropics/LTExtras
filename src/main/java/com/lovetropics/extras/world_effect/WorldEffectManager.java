@@ -10,16 +10,18 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber(modid = LTExtras.MODID)
 public class WorldEffectManager {
     private static final Map<ResourceKey<Level>, Map<ResourceLocation, Entry>> EFFECTS_BY_DIMENSION = new Reference2ObjectOpenHashMap<>();
 
@@ -86,10 +88,7 @@ public class WorldEffectManager {
     }
 
     @SubscribeEvent
-    public static void onServerTick(final TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            return;
-        }
+    public static void onServerTick(final ServerTickEvent.Post event) {
         final MinecraftServer server = event.getServer();
         final long gameTime = server.overworld().getGameTime();
         EFFECTS_BY_DIMENSION.entrySet().removeIf(entry -> {

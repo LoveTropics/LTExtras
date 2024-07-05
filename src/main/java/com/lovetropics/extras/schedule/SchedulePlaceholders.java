@@ -6,17 +6,21 @@ import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import javax.annotation.Nullable;
-import java.time.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber(modid = LTExtras.MODID)
 public class SchedulePlaceholders {
     private static final PlaceholderResult UNKNOWN = PlaceholderResult.value("?");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("EEE HH:mm");
@@ -44,7 +48,7 @@ public class SchedulePlaceholders {
     }
 
     private static void registerPlaceholder(final String id, final boolean next, final PlaceholderFunction function) {
-        Placeholders.register(new ResourceLocation(LTExtras.MODID, "schedule/" + id), (ctx, arg) -> {
+        Placeholders.register(ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "schedule/" + id), (ctx, arg) -> {
             final StreamSchedule schedule = SchedulePlaceholders.schedule;
             if (schedule == null) {
                 return UNKNOWN;
@@ -84,11 +88,7 @@ public class SchedulePlaceholders {
     }
 
     @SubscribeEvent
-    public static void onServerTick(final TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            return;
-        }
-
+    public static void onServerTick(final ServerTickEvent.Pre event) {
         if (!fetchFuture.isDone()) {
             return;
         }

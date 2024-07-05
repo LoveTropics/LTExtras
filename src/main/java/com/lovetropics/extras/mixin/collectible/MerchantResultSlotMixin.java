@@ -24,10 +24,8 @@ public class MerchantResultSlotMixin {
         if (collectible == null) {
             return;
         }
-        final CollectibleStore store = CollectibleStore.getNullable(player);
-        if (store != null) {
-            store.give(collectible);
-            Collectible.addMarkerTo(player.getUUID(), stack);
-        }
+        final CollectibleStore store = CollectibleStore.get(player);
+        store.give(collectible);
+        Collectible.addMarkerTo(player.getUUID(), stack);
     }
 }

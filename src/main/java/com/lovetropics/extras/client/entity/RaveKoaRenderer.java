@@ -9,14 +9,14 @@ import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDance2;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class RaveKoaRenderer extends MobRenderer<RaveKoaEntity, RaveKoaModel<RaveKoaEntity>> {
-   private static final ResourceLocation TEXTURE_MAN_HUNTER = new ResourceLocation(LTExtras.MODID, "textures/entity/koa_man_hunter.png");
-   private static final ResourceLocation TEXTURE_MAN_FISHER = new ResourceLocation(LTExtras.MODID, "textures/entity/koa_man_fisher.png");
-   private static final ResourceLocation TEXTURE_WOMAN_FISHER = new ResourceLocation(LTExtras.MODID, "textures/entity/koa_woman_fisher.png");
+   private static final ResourceLocation TEXTURE_MAN_HUNTER = ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "textures/entity/koa_man_hunter.png");
+   private static final ResourceLocation TEXTURE_MAN_FISHER = ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "textures/entity/koa_man_fisher.png");
+   private static final ResourceLocation TEXTURE_WOMAN_FISHER = ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "textures/entity/koa_woman_fisher.png");
 
    public RaveKoaRenderer(EntityRendererProvider.Context p_234787_) {
       super(p_234787_, new RaveKoaModel<>(p_234787_.bakeLayer(RaveKoaModel.LAYER_LOCATION)), 0.9F);

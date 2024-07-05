@@ -19,7 +19,7 @@ public abstract class LocalPlayerMixin extends Player {
 
 	@Inject(method = "getWaterVision", at = @At("HEAD"), cancellable = true)
 	private void getWaterVision(CallbackInfoReturnable<Float> ci) {
-		if (hasEffect(ExtraEffects.FISH_EYE.get())) {
+		if (hasEffect(ExtraEffects.FISH_EYE)) {
 			ci.setReturnValue(1.0f);
 		}
 	}

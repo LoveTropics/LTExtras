@@ -1,5 +1,6 @@
 package com.lovetropics.extras.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +20,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 
 public final class ThornStemBlock extends PipeBlock implements SimpleWaterloggedBlock {
+	public static final MapCodec<ThornStemBlock> CODEC = simpleCodec(ThornStemBlock::new);
+
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	public ThornStemBlock(Properties properties) {
@@ -90,7 +93,12 @@ public final class ThornStemBlock extends PipeBlock implements SimpleWaterlogged
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
+	public boolean isPathfindable(BlockState state, PathComputationType type) {
 		return false;
+	}
+
+	@Override
+	protected MapCodec<? extends PipeBlock> codec() {
+		return CODEC;
 	}
 }

@@ -5,24 +5,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class SkyColorEffectHandler {
     private static final EffectInterpolator<State> INTERPOLATOR = new EffectInterpolator<>(State::lerp, State.NONE);
 
     @SubscribeEvent
-    public static void onClientTick(final TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            final Minecraft minecraft = Minecraft.getInstance();
-            if (minecraft.level != null) {
-                INTERPOLATOR.step();
-            } else {
-                INTERPOLATOR.reset(State.NONE);
-            }
+    public static void onClientTick(final ClientTickEvent.Pre event) {
+        final Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level != null) {
+            INTERPOLATOR.step();
+        } else {
+            INTERPOLATOR.reset(State.NONE);
         }
     }
 

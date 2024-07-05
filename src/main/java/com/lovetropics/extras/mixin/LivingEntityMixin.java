@@ -2,6 +2,7 @@ package com.lovetropics.extras.mixin;
 
 import com.lovetropics.extras.ExtraTags;
 import com.lovetropics.extras.effect.ExtraEffects;
+import net.minecraft.core.Holder;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
@@ -23,11 +24,11 @@ public abstract class LivingEntityMixin extends Entity {
 	}
 
 	@Shadow
-	public abstract boolean hasEffect(MobEffect effect);
+	public abstract boolean hasEffect(Holder<MobEffect> effect);
 
 	@ModifyConstant(method = "handleRelativeFrictionAndCalculateMovement", constant = @Constant(doubleValue = 0.2))
 	private double modifyClimbSpeed(double speed) {
-		final BlockState state = getFeetBlockState();
+		final BlockState state = getInBlockState();
 		if (state.is(ExtraTags.Blocks.CLIMBABLE_VERY_FAST)) {
 			return speed * 2.0;
 		} else if (state.is(ExtraTags.Blocks.CLIMBABLE_FAST)) {
@@ -38,7 +39,7 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@Override
 	public boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> fluid, double scale) {
-		if (fluid == FluidTags.WATER && hasEffect(ExtraEffects.FISH_EYE.get())) {
+		if (fluid == FluidTags.WATER && hasEffect(ExtraEffects.FISH_EYE)) {
 			return false;
 		}
 		return super.updateFluidHeightAndDoFluidPushing(fluid, scale);
@@ -46,7 +47,7 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@Override
 	public boolean isEyeInFluid(TagKey<Fluid> fluid) {
-		if (fluid == FluidTags.WATER && hasEffect(ExtraEffects.FISH_EYE.get())) {
+		if (fluid == FluidTags.WATER && hasEffect(ExtraEffects.FISH_EYE)) {
 			return false;
 		}
 		return super.isEyeInFluid(fluid);

@@ -10,18 +10,16 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class ClientMapPoiManager {
     private static final Map<String, Poi> POIS = new HashMap<>();
 
@@ -55,8 +53,8 @@ public class ClientMapPoiManager {
 
         final PlayerInfo playerInfo;
         if (connection == null || (playerInfo = connection.getPlayerInfo(uuid)) == null) {
-            return DefaultPlayerSkin.getDefaultSkin(uuid);
+            return DefaultPlayerSkin.get(uuid).texture();
         }
-        return playerInfo.getSkinLocation();
+        return playerInfo.getSkin().texture();
     }
 }

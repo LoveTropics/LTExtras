@@ -1,10 +1,11 @@
 package com.lovetropics.extras.item;
 
+import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.entity.ExtendedCreatureEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -14,7 +15,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.UUID;
 
 public class EntityWandItem extends Item {
 	public EntityWandItem(Properties properties) {
@@ -22,47 +24,44 @@ public class EntityWandItem extends Item {
 	}
 
 	@Override
-	public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
-		if (!playerIn.level().isClientSide()) {
-			if (target instanceof ExtendedCreatureEntity) {
-				int id = target.getId();
-				ItemStack stack1 = playerIn.getItemInHand(hand);
-				stack1.getOrCreateTag().putInt("EntityId", id);
-				playerIn.displayClientMessage(Component.literal("Targeted entity!"), true);
-				return InteractionResult.SUCCESS;
-			} else {
-				playerIn.displayClientMessage(Component.literal("This entity cannot be targeted!"), true);
-			}
-		}
+	public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
+        if (player.level().isClientSide()) {
+            return super.interactLivingEntity(stack, player, target, hand);
+        }
 
-		return super.interactLivingEntity(stack, playerIn, target, hand);
+        if (target instanceof ExtendedCreatureEntity) {
+            ItemStack heldItem = player.getItemInHand(hand);
+            heldItem.set(ExtraDataComponents.TARGETED_ENTITY, target.getUUID());
+            player.displayClientMessage(Component.literal("Targeted entity!"), true);
+            return InteractionResult.SUCCESS;
+        } else {
+            player.displayClientMessage(Component.literal("This entity cannot be targeted!"), true);
+        }
+
+        return super.interactLivingEntity(stack, player, target, hand);
 	}
 
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
-		BlockPos pos = context.getClickedPos();
-		Level world = context.getLevel();
-		ItemStack stack = context.getItemInHand();
-
-		if (!world.isClientSide()) {
-			BlockEntity te = world.getBlockEntity(pos);
-
-			if (te instanceof MobControllerBlockEntity) {
-				MobControllerBlockEntity mobController = (MobControllerBlockEntity) te;
-				CompoundTag nbt = stack.getTag();
-
-				if (nbt != null && nbt.contains("EntityId")) {
-					int id = nbt.getInt("EntityId");
-
-					Entity entity = world.getEntity(id);
-					if (entity != null) {
-						mobController.addEntity(entity);
-						context.getPlayer().displayClientMessage(Component.literal("Added entity!"), true);
-					}
-				}
-			}
+		Level level = context.getLevel();
+		if (!(level instanceof ServerLevel serverLevel)) {
+			return super.useOn(context);
 		}
 
-		return super.useOn(context);
+		BlockPos pos = context.getClickedPos();
+		ItemStack stack = context.getItemInHand();
+
+        if (level.getBlockEntity(pos) instanceof MobControllerBlockEntity mobController) {
+            UUID entityId = stack.get(ExtraDataComponents.TARGETED_ENTITY);
+            if (entityId != null) {
+                Entity entity = serverLevel.getEntity(entityId);
+                if (entity != null) {
+                    mobController.addEntity(entity);
+                    context.getPlayer().displayClientMessage(Component.literal("Added entity!"), true);
+                }
+            }
+        }
+
+        return super.useOn(context);
 	}
 }

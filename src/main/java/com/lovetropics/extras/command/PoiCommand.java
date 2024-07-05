@@ -7,6 +7,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
@@ -38,13 +39,13 @@ public class PoiCommand {
     private static final SimpleCommandExceptionType GENERAL_ERROR = new SimpleCommandExceptionType(Component.literal("General error"));
     private static final SimpleCommandExceptionType NOT_FOUND = new SimpleCommandExceptionType(Component.literal("POI not found"));
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         // @formatter:off
         dispatcher.register(literal(COMMAND_BASE)
                 .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(literal("add")
                     .then(argument("name", word())
-                    .then(argument("description", textComponent())
+                    .then(argument("description", textComponent(context))
                     .then(argument("icon", id())
                             .executes(PoiCommand::addWithDefaults)
                     .then(argument("blockpos", blockPos())
@@ -81,7 +82,7 @@ public class PoiCommand {
             .then(literal("edit")
                     .then(argument("name", word())
                             .suggests((ctx, builder) -> suggest(suggestName(ctx), builder))
-                    .then(argument("description", textComponent())
+                    .then(argument("description", textComponent(context))
                             .suggests((ctx, builder) -> suggest(suggestDescription(ctx), builder))
                     .then(argument("icon", id())
                             .suggests((ctx, builder) -> suggestResource(suggestIcon(ctx), builder))

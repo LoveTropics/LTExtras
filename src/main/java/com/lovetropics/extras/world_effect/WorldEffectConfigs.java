@@ -10,15 +10,17 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.Util;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -30,7 +32,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber(modid = LTExtras.MODID)
 public class WorldEffectConfigs {
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -39,8 +41,10 @@ public class WorldEffectConfigs {
 
     @SubscribeEvent
     public static void addReloadListener(final AddReloadListenerEvent event) {
+        final RegistryAccess registries = event.getRegistryAccess();
+        final RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
         event.addListener((stage, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor) ->
-                CompletableFuture.supplyAsync(() -> listEffects(resourceManager, backgroundExecutor), backgroundExecutor).thenCompose(f -> f)
+                CompletableFuture.supplyAsync(() -> listEffects(ops, resourceManager, backgroundExecutor), backgroundExecutor).thenCompose(f -> f)
                         .thenCompose(stage::wait)
                         .thenAcceptAsync(effects -> {
                             REGISTRY.clear();
@@ -55,13 +59,13 @@ public class WorldEffectConfigs {
         );
     }
 
-    private static CompletableFuture<Map<ResourceLocation, WorldEffect>> listEffects(final ResourceManager resourceManager, final Executor executor) {
+    private static CompletableFuture<Map<ResourceLocation, WorldEffect>> listEffects(final DynamicOps<JsonElement> ops, final ResourceManager resourceManager, final Executor executor) {
         final List<CompletableFuture<Pair<ResourceLocation, WorldEffect>>> futures = LISTER.listMatchingResources(resourceManager).entrySet().stream()
                 .map(entry -> {
                     final ResourceLocation path = entry.getKey();
                     final ResourceLocation id = LISTER.fileToId(path);
                     final Resource resource = entry.getValue();
-                    return CompletableFuture.supplyAsync(() -> Pair.of(id, loadEffect(JsonOps.INSTANCE, path, resource)), executor);
+                    return CompletableFuture.supplyAsync(() -> Pair.of(id, loadEffect(ops, path, resource)), executor);
                 })
                 .toList();
         return Util.sequence(futures).thenApply(configs -> configs.stream().filter(pair -> pair.getSecond() != null).collect(Collectors.toMap(Pair::getFirst, Pair::getSecond)));

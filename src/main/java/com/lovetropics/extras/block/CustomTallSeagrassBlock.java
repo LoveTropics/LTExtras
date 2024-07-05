@@ -5,21 +5,23 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SeagrassBlock;
 import net.minecraft.world.level.block.TallSeagrassBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraft.world.phys.HitResult;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 
 public class CustomTallSeagrassBlock extends TallSeagrassBlock {
 
 	// TODO: Should probably be a util in ExtraBlocks
-	public static BlockBuilder<CustomTallSeagrassBlock, Registrate> dropping(RegistryEntry<? extends SeagrassBlock> drop) {
+	public static BlockBuilder<CustomTallSeagrassBlock, Registrate> dropping(RegistryEntry<Block, ? extends SeagrassBlock> drop) {
 		return ExtraBlocks.REGISTRATE.block("tall_" + drop.getId().getPath(), p -> new CustomTallSeagrassBlock(p, drop))
 				.initialProperties(drop)
 				.loot((p, b) -> p.dropOther(b, drop.get()))
@@ -40,7 +42,7 @@ public class CustomTallSeagrassBlock extends TallSeagrassBlock {
  	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockGetter p_154749_, BlockPos p_154750_, BlockState p_154751_) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
 		return new ItemStack(drop.get());
 	}
 }

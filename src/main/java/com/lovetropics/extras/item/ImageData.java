@@ -2,22 +2,17 @@ package com.lovetropics.extras.item;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.Util;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.item.ItemStack;
-import org.w3c.dom.Text;
 
 import java.util.List;
 import java.util.Optional;
 
 public record ImageData(Optional<Component> name, ResourceLocation texture, float width, float height, float offsetX, float offsetY, List<TextElement> text) {
     public static final Codec<ImageData> CODEC = RecordCodecBuilder.create(i -> i.group(
-            ExtraCodecs.COMPONENT.optionalFieldOf("name").forGetter(ImageData::name),
+            ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(ImageData::name),
             ResourceLocation.CODEC.fieldOf("texture").forGetter(ImageData::texture),
             Codec.FLOAT.fieldOf("width").forGetter(ImageData::width),
             Codec.FLOAT.fieldOf("height").forGetter(ImageData::height),
@@ -26,26 +21,12 @@ public record ImageData(Optional<Component> name, ResourceLocation texture, floa
             TextElement.CODEC.listOf().optionalFieldOf("text", List.of()).forGetter(ImageData::text)
     ).apply(i, ImageData::new));
 
-    private static final String TAG_IMAGE = "image";
-
     public ImageData(final Component name, final ResourceLocation texture, final float width, final float height, final List<TextElement> text) {
         this(Optional.of(name), texture, width, height, 0.0f, 0.0f, text);
     }
 
     public ImageData(final Component name, final ResourceLocation texture, final float width, final float height) {
         this(Optional.of(name), texture, width, height, 0.0f, 0.0f, List.of());
-    }
-
-    public static Optional<ImageData> get(final ItemStack stack) {
-        final CompoundTag tag = stack.getTag();
-        if (tag != null && tag.contains(TAG_IMAGE)) {
-            return ImageData.CODEC.parse(NbtOps.INSTANCE, tag.get(TAG_IMAGE)).result();
-        }
-        return Optional.empty();
-    }
-
-    public static void set(final ItemStack stack, final ImageData data) {
-        stack.getOrCreateTag().put(TAG_IMAGE, Util.getOrThrow(ImageData.CODEC.encodeStart(NbtOps.INSTANCE, data), IllegalStateException::new));
     }
 
     public static TextElement text(final Component text, final float x, final float y) {
@@ -56,7 +37,7 @@ public record ImageData(Optional<Component> name, ResourceLocation texture, floa
         private static final float DEFAULT_LINE_SPACING = 9;
 
         public static final Codec<TextElement> CODEC = RecordCodecBuilder.create(i -> i.group(
-                ExtraCodecs.COMPONENT.fieldOf("text").forGetter(TextElement::text),
+                ComponentSerialization.CODEC.fieldOf("text").forGetter(TextElement::text),
                 Codec.FLOAT.fieldOf("x").forGetter(TextElement::x),
                 Codec.FLOAT.fieldOf("y").forGetter(TextElement::y),
                 Codec.FLOAT.optionalFieldOf("max_width", Float.MAX_VALUE).forGetter(TextElement::maxWidth),

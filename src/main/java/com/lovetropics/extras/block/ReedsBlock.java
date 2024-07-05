@@ -23,12 +23,9 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
-import java.util.Random;
-
-public final class ReedsBlock extends Block implements SimpleWaterloggedBlock, IPlantable {
+public final class ReedsBlock extends Block implements SimpleWaterloggedBlock {
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 	public static final EnumProperty<Type> TYPE = EnumProperty.create("type", Type.class);
 
@@ -84,7 +81,7 @@ public final class ReedsBlock extends Block implements SimpleWaterloggedBlock, I
 	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
 		BlockPos groundPos = pos.below();
 		BlockState growOn = world.getBlockState(groundPos);
-		if (growOn.canSustainPlant(world, groundPos, Direction.UP, this)) {
+		if (growOn.canSustainPlant(world, groundPos, Direction.UP, state).isTrue()) {
 			return true;
 		}
 
@@ -93,7 +90,7 @@ public final class ReedsBlock extends Block implements SimpleWaterloggedBlock, I
 
 	private boolean canGrowOn(BlockState state) {
 		return state.is(Blocks.GRASS_BLOCK)
-				|| state.is(BlockTags.SAND) || state.is(BlockTags.DIRT) || state.is(Tags.Blocks.GRAVEL)
+				|| state.is(BlockTags.SAND) || state.is(BlockTags.DIRT) || state.is(Tags.Blocks.GRAVELS)
 				|| state.is(Blocks.CLAY);
 	}
 
@@ -105,11 +102,6 @@ public final class ReedsBlock extends Block implements SimpleWaterloggedBlock, I
 	@Override
 	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-	}
-
-	@Override
-	public BlockState getPlant(BlockGetter world, BlockPos pos) {
-		return this.defaultBlockState();
 	}
 
 	public enum Type implements StringRepresentable {

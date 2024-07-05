@@ -1,6 +1,28 @@
 package com.lovetropics.extras;
 
-import com.lovetropics.extras.block.*;
+import com.lovetropics.extras.block.BoringEndRodBlock;
+import com.lovetropics.extras.block.CheckpointBlock;
+import com.lovetropics.extras.block.CurtainBlock;
+import com.lovetropics.extras.block.CustomSeagrassBlock;
+import com.lovetropics.extras.block.CustomSugarCaneBlock;
+import com.lovetropics.extras.block.CustomTallSeagrassBlock;
+import com.lovetropics.extras.block.FakeWaterBlock;
+import com.lovetropics.extras.block.GirderBlock;
+import com.lovetropics.extras.block.GlowSticksBlock;
+import com.lovetropics.extras.block.ImposterCoralBlock;
+import com.lovetropics.extras.block.LightweightBarrierBlock;
+import com.lovetropics.extras.block.MobControllerBlock;
+import com.lovetropics.extras.block.PanelBlock;
+import com.lovetropics.extras.block.ParticleEmitterBlock;
+import com.lovetropics.extras.block.PassableBarrierBlock;
+import com.lovetropics.extras.block.PianguasBlock;
+import com.lovetropics.extras.block.ReedsBlock;
+import com.lovetropics.extras.block.RopeBlock;
+import com.lovetropics.extras.block.ScientificNameBlock;
+import com.lovetropics.extras.block.SpeedyBlock;
+import com.lovetropics.extras.block.SubmergedLilyBlock;
+import com.lovetropics.extras.block.ThornStemBlock;
+import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
@@ -21,6 +43,8 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -38,8 +62,27 @@ import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.item.ScaffoldingBlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BaseCoralFanBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.ScaffoldingBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.StainedGlassBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.TallSeagrassBlock;
+import net.minecraft.world.level.block.VineBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -48,10 +91,13 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.client.model.generators.*;
-import net.minecraftforge.data.loading.DatagenModLoader;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder;
+import net.neoforged.neoforge.data.loading.DatagenModLoader;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -75,9 +121,9 @@ public class ExtraBlocks {
 			.initialProperties(() -> Blocks.BARRIER)
 			.properties(p -> p.noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
-					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
+					prov.models().getBuilder(ctx.getName()).texture("particle", ResourceLocation.withDefaultNamespace("item/barrier"))))
 			.item()
-				.model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/water_still"), new ResourceLocation("item/barrier")))
+				.model((ctx, prov) -> prov.generated(ctx::getEntry, ResourceLocation.withDefaultNamespace("block/water_still"), ResourceLocation.withDefaultNamespace("item/barrier")))
 				.build()
 			.register();
 
@@ -85,9 +131,9 @@ public class ExtraBlocks {
 			.initialProperties(() -> Blocks.BARRIER)
 			.properties(p -> p.strength(0.0F, 3.6e6f).noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
-					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
+					prov.models().getBuilder(ctx.getName()).texture("particle", ResourceLocation.withDefaultNamespace("item/barrier"))))
 			.item()
-			.model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("item/barrier")))
+			.model((ctx, prov) -> prov.generated(ctx::getEntry, ResourceLocation.withDefaultNamespace("item/barrier")))
 			.build()
 			.register();
 
@@ -95,9 +141,9 @@ public class ExtraBlocks {
 			.initialProperties(() -> Blocks.BARRIER)
 			.properties(p -> p.noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
-					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("item/barrier"))))
+					prov.models().getBuilder(ctx.getName()).texture("particle", ResourceLocation.withDefaultNamespace("item/barrier"))))
 			.item()
-			.model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("item/barrier")))
+			.model((ctx, prov) -> prov.generated(ctx::getEntry, ResourceLocation.withDefaultNamespace("item/barrier")))
 			.build()
 			.register();
 
@@ -105,9 +151,9 @@ public class ExtraBlocks {
 			.initialProperties(() -> Blocks.BARRIER)
 			.properties(p -> p.noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
-					prov.models().getBuilder(ctx.getName()).texture("particle", new ResourceLocation("block/water_still"))))
+					prov.models().getBuilder(ctx.getName()).texture("particle", ResourceLocation.withDefaultNamespace("block/water_still"))))
 			.item()
-				.model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("block/water_still")))
+				.model((ctx, prov) -> prov.generated(ctx::getEntry, ResourceLocation.withDefaultNamespace("block/water_still")))
 				.build()
 			.register();
 
@@ -118,11 +164,11 @@ public class ExtraBlocks {
 					p))
 			.initialProperties(() -> Blocks.BEACON)
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
-					.withExistingParent(ctx.getName(), new ResourceLocation("block/block"))
+					.withExistingParent(ctx.getName(), ResourceLocation.withDefaultNamespace("block/block"))
 						.ao(false)
-						.texture("beacon", new ResourceLocation("block/beacon"))
-						.texture("base", new ResourceLocation("block/dark_prismarine"))
-						.texture("particle", new ResourceLocation("block/dark_prismarine"))
+						.texture("beacon", ResourceLocation.withDefaultNamespace("block/beacon"))
+						.texture("base", ResourceLocation.withDefaultNamespace("block/dark_prismarine"))
+						.texture("particle", ResourceLocation.withDefaultNamespace("block/dark_prismarine"))
 						.element()
 							.from(2, 0, 2)
 							.to(14, 3, 14)
@@ -165,12 +211,12 @@ public class ExtraBlocks {
 	}
 
 	public static final BlockEntry<CheckpointBlock> CHECKPOINT = REGISTRATE.block("checkpoint", CheckpointBlock::new)
-			.initialProperties(() -> Blocks.BARRIER)
+			.initialProperties(() -> Blocks.BEDROCK)
 			.properties(p -> p.noLootTable())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
 				.getBuilder(ctx.getName()).texture("particle", prov.mcLoc("item/structure_void"))))
 			.item()
-				.model((ctx, prov) -> prov.generated(ctx::getEntry, new ResourceLocation("item/structure_void")))
+				.model((ctx, prov) -> prov.generated(ctx::getEntry, ResourceLocation.withDefaultNamespace("item/structure_void")))
 				.build()
 			.register();
 
@@ -239,7 +285,7 @@ public class ExtraBlocks {
 				.build()
 			.register();
 
-	public static final BlockEntityEntry<MobControllerBlockEntity> MOB_CONTROLLER_BE = BlockEntityEntry.cast(MOB_CONTROLLER.getSibling(ForgeRegistries.BLOCK_ENTITY_TYPES));
+	public static final BlockEntityEntry<MobControllerBlockEntity> MOB_CONTROLLER_BE = BlockEntityEntry.cast(MOB_CONTROLLER.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
 	public static final BlockEntry<ParticleEmitterBlock> PARTICLE_EMITTER = REGISTRATE.block("particle_emitter", ParticleEmitterBlock::new)
 			.initialProperties(() -> Blocks.IRON_BLOCK)
@@ -248,14 +294,14 @@ public class ExtraBlocks {
 			.build()
 			.register();
 
-	public static final BlockEntityEntry<ParticleEmitterBlockEntity> PARTICLE_EMITTER_BE = BlockEntityEntry.cast(PARTICLE_EMITTER.getSibling(ForgeRegistries.BLOCK_ENTITY_TYPES));
+	public static final BlockEntityEntry<ParticleEmitterBlockEntity> PARTICLE_EMITTER_BE = BlockEntityEntry.cast(PARTICLE_EMITTER.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
 	public static final BlockEntry<Block> BLACK_CONCRETE_POWDER_FAKE = REGISTRATE.block("black_concrete_powder_fake", Block::new)
 			.initialProperties(() -> Blocks.DIRT)
 			.item()
-				.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("block/black_concrete_powder")))
+				.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), ResourceLocation.withDefaultNamespace("block/black_concrete_powder")))
 				.build()
-			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), ConfiguredModel.allYRotations(prov.models().getExistingFile(new ResourceLocation("block/black_concrete_powder")), 0, false)))
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), ConfiguredModel.allYRotations(prov.models().getExistingFile(ResourceLocation.withDefaultNamespace("block/black_concrete_powder")), 0, false)))
 			.register();
 
 	public static final BlockEntry<StainedGlassBlock> SMOOTH_LIGHT_GRAY_STAINED_GLASS = REGISTRATE.block("smooth_light_gray_stained_glass", p -> new StainedGlassBlock(DyeColor.LIGHT_GRAY, p))
@@ -401,18 +447,18 @@ public class ExtraBlocks {
 					? BiomeColors.getAverageFoliageColor(reader, pos)
 					: FoliageColor.getDefaultColor())
 			.item()
-				.model((ctx, prov) -> prov.generated(ctx, new ResourceLocation("block/vine"), new ResourceLocation("item/barrier")))
+				.model((ctx, prov) -> prov.generated(ctx, ResourceLocation.withDefaultNamespace("block/vine"), ResourceLocation.withDefaultNamespace("item/barrier")))
 				.color(() -> () -> ($, layer) -> layer == 0 ? FoliageColor.getDefaultColor() : -1)
 				.build()
 			.register();
 
-	public static final BlockEntry<DoorBlock> HEAVY_SPRUCE_DOOR = REGISTRATE.block("heavy_spruce_door", p -> new DoorBlock(p, BlockSetType.IRON))
+	public static final BlockEntry<DoorBlock> HEAVY_SPRUCE_DOOR = REGISTRATE.block("heavy_spruce_door", p -> new DoorBlock(BlockSetType.IRON, p))
 			.initialProperties(() -> Blocks.SPRUCE_DOOR)
 			.blockstate((ctx, prov) -> {})
 			.addLayer(() -> RenderType::cutout)
 			.tag(BlockTags.MINEABLE_WITH_AXE)
 			.item()
-			.model((ctx, prov) -> prov.generated(ctx, new ResourceLocation("item/spruce_door")))
+			.model((ctx, prov) -> prov.generated(ctx, ResourceLocation.withDefaultNamespace("item/spruce_door")))
 			.build()
 			.register();
 
@@ -463,7 +509,7 @@ public class ExtraBlocks {
 			.recipe((ctx, prov) -> {
 				final DataIngredient lime = DataIngredient.tag(ExtraTags.Items.LIME);
 				ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ctx.get())
-						.requires(lime, 9)
+						.requires(lime.toVanilla(), 9)
 						.unlockedBy("has_lime", RegistrateRecipeProvider.has(ExtraTags.Items.LIME))
 						.save(prov);
 			})
@@ -504,11 +550,11 @@ public class ExtraBlocks {
 			.add(Blocks.BLACK_CONCRETE_POWDER, SpeedyBlock::opaque)
 			.add(Blocks.SPRUCE_SLAB, SpeedyBlock::slab);
 
-	public static final Map<NamedSupplier<Block>, BlockEntry<? extends SpeedyBlock>> SPEEDY_BLOCKS = SPEEDY_BLOCK_TEMPLATES
+	public static final Map<Holder<Block>, BlockEntry<? extends SpeedyBlock>> SPEEDY_BLOCKS = SPEEDY_BLOCK_TEMPLATES
 			.build((object, factory) -> REGISTRATE
-					.block("speedy_" + object.getId().getPath(), factory)
-					.initialProperties(NonNullSupplier.of(object))
-					.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(object.getId())))
+					.block("speedy_" + getName(object), factory)
+					.initialProperties(object::value)
+					.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(getId(object))))
 					.simpleItem()
 					.register()
 			);
@@ -527,17 +573,17 @@ public class ExtraBlocks {
 			.add(Blocks.BUBBLE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.HORN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.TUBE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
-			.add(Blocks.BRAIN_CORAL, ImposterBlockTemplate.cross(BaseCoralPlantTypeBlock::new))
-			.add(Blocks.BUBBLE_CORAL, ImposterBlockTemplate.cross(BaseCoralPlantTypeBlock::new))
-			.add(Blocks.HORN_CORAL, ImposterBlockTemplate.cross(BaseCoralPlantTypeBlock::new))
-			.add(Blocks.TUBE_CORAL, ImposterBlockTemplate.cross(BaseCoralPlantTypeBlock::new));
+			.add(Blocks.BRAIN_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
+			.add(Blocks.BUBBLE_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
+			.add(Blocks.HORN_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
+			.add(Blocks.TUBE_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new));
 
-	public static final Map<NamedSupplier<Block>, BlockEntry<? extends Block>> IMPOSTER_BLOCKS = IMPOSTER_BLOCK_TEMPLATES
+	public static final Map<Holder<Block>, BlockEntry<? extends Block>> IMPOSTER_BLOCKS = IMPOSTER_BLOCK_TEMPLATES
 			.build((object, template) -> {
 						BlockBuilder<? extends Block, Registrate> block = REGISTRATE
-								.block("imposter_" + object.getId().getPath(), template.factory)
-								.initialProperties(NonNullSupplier.of(object));
-						return template.model.apply(block, object.getId()).register();
+								.block("imposter_" + getName(object), template.factory)
+								.initialProperties(object::value);
+						return template.model.apply(block, getId(object)).register();
 					}
 			);
 
@@ -575,10 +621,10 @@ public class ExtraBlocks {
 			.add(Blocks.POLISHED_DIORITE, TextureType.normal())
 			.add(RUSTY_PAINTED_METAL, TextureType.normal());
 
-	public static final Map<NamedSupplier<Block>, BlockEntry<? extends StairBlock>> STAIRS = STAIR_TEMPLATES
+	public static final Map<Holder<Block>, BlockEntry<? extends StairBlock>> STAIRS = STAIR_TEMPLATES
 			.build((object, textureType) -> REGISTRATE
-					.block(object.getId().getPath() + "_stairs", p -> new StairBlock(() -> object.get().defaultBlockState(), p))
-					.initialProperties(NonNullSupplier.of(object))
+					.block(getName(object) + "_stairs", p -> new StairBlock(object.value().defaultBlockState(), p))
+					.initialProperties(object::value)
 					.tag(BlockTags.STAIRS)
 					.blockstate(stairsBlock(object, textureType))
 					.item()
@@ -587,10 +633,10 @@ public class ExtraBlocks {
 					.register()
 			);
 
-	public static final Map<NamedSupplier<Block>, BlockEntry<? extends SlabBlock>> SLABS = SLAB_TEMPLATES
+	public static final Map<Holder<Block>, BlockEntry<? extends SlabBlock>> SLABS = SLAB_TEMPLATES
 			.build((object, textureType) -> REGISTRATE
-					.block(object.getId().getPath() + "_slab", SlabBlock::new)
-					.initialProperties(NonNullSupplier.of(object))
+					.block(getName(object) + "_slab", SlabBlock::new)
+					.initialProperties(object::value)
 					.tag(BlockTags.STAIRS)
 					.blockstate(slabBlock(object, textureType))
 					.item()
@@ -599,10 +645,10 @@ public class ExtraBlocks {
 					.register()
 			);
 
-	public static final Map<NamedSupplier<Block>, BlockEntry<? extends FenceBlock>> FENCES = FENCE_TEMPLATES
+	public static final Map<Holder<Block>, BlockEntry<? extends FenceBlock>> FENCES = FENCE_TEMPLATES
 			.build((block, textureType) -> REGISTRATE
-					.block(block.getId().getPath() + "_fence", FenceBlock::new)
-					.initialProperties(NonNullSupplier.of(block))
+					.block(getName(block) + "_fence", FenceBlock::new)
+					.initialProperties(block::value)
 					.tag(BlockTags.FENCES)
 					.blockstate(fenceBlock(block, textureType))
 					.item()
@@ -612,10 +658,10 @@ public class ExtraBlocks {
 					.register()
 			);
 
-	public static final Map<NamedSupplier<Block>, BlockEntry<? extends WallBlock>> WALLS = WALL_TEMPLATES
+	public static final Map<Holder<Block>, BlockEntry<? extends WallBlock>> WALLS = WALL_TEMPLATES
 			.build((block, textureType) -> REGISTRATE
-					.block(block.getId().getPath() + "_wall", WallBlock::new)
-					.initialProperties(NonNullSupplier.of(block))
+					.block(getName(block) + "_wall", WallBlock::new)
+					.initialProperties(block::value)
 					.tag(BlockTags.WALLS)
 					.blockstate(wallBlock(block, textureType))
 					.item()
@@ -763,7 +809,7 @@ public class ExtraBlocks {
 					return new InteractionResultHolder<>(result, player.getItemInHand(hand));
 				}
 			})
-			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("minecraft:item/generated")).texture("layer0", "minecraft:block/lily_pad"))
+			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), ResourceLocation.withDefaultNamespace("minecraft:item/generated")).texture("layer0", "minecraft:block/lily_pad"))
 			.build()
 			.register();
 
@@ -848,24 +894,27 @@ public class ExtraBlocks {
 	public static void init() {
 	}
 
+	private static String getName(Holder<?> holder) {
+		return getId(holder).getPath();
+	}
+
+	private static ResourceLocation getId(Holder<?> holder) {
+		return holder.unwrapKey().orElseThrow().location();
+	}
+
 	public static final class TemplateBuilder<T extends Block, P> {
-		private final Map<NamedSupplier<Block>, P> templates = new Object2ObjectOpenHashMap<>();
+		private final Map<Holder<Block>, P> templates = new Object2ObjectOpenHashMap<>();
 
 		public TemplateBuilder<T, P> add(Block block, P parameter) {
-			return this.add(NamedSupplier.of(ForgeRegistries.BLOCKS, ForgeRegistries.BLOCKS.getKey(block)), parameter);
+			return this.add(block.builtInRegistryHolder(), parameter);
 		}
 
 		public TemplateBuilder<T, P> add(ResourceLocation id, P parameter) {
-			NamedSupplier<Block> block = NamedSupplier.of(ForgeRegistries.BLOCKS, id);
-			return this.add(block, parameter);
+			return this.add(DeferredHolder.create(Registries.BLOCK, id), parameter);
 		}
 
-		public TemplateBuilder<T, P> add(BlockEntry<Block> block, P parameter) {
-			return this.add(NamedSupplier.of(block), parameter);
-		}
-
-		public TemplateBuilder<T, P> add(NamedSupplier<Block> block, P parameter) {
-			String namespace = block.getId().getNamespace();
+		public TemplateBuilder<T, P> add(Holder<Block> block, P parameter) {
+			String namespace = block.unwrapKey().orElseThrow().location().getNamespace();
 			if (ModList.get().isLoaded(namespace)) {
 				this.templates.put(block, parameter);
 			} else {
@@ -876,8 +925,8 @@ public class ExtraBlocks {
 			return this;
 		}
 
-		public Map<NamedSupplier<Block>, BlockEntry<? extends T>> build(
-				BiFunction<NamedSupplier<Block>, P, BlockEntry<? extends T>> factory
+		public Map<Holder<Block>, BlockEntry<? extends T>> build(
+				BiFunction<Holder<Block>, P, BlockEntry<? extends T>> factory
 		) {
 			return this.templates.entrySet().stream()
 					.collect(Collectors.toMap(

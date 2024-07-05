@@ -8,19 +8,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 import javax.annotation.Nullable;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class WorldParticleEffectHandler {
     private static ParticlesEffect effect;
 
     @SubscribeEvent
-    public static void onClientTick(final TickEvent.ClientTickEvent event) {
+    public static void onClientTick(final ClientTickEvent.Pre event) {
         final Minecraft minecraft = Minecraft.getInstance();
         final LocalPlayer player = minecraft.player;
         if (player == null) {
@@ -28,7 +28,7 @@ public class WorldParticleEffectHandler {
             return;
         }
 
-        if (effect != null && event.phase == TickEvent.Phase.START && !minecraft.isPaused()) {
+        if (effect != null && !minecraft.isPaused()) {
             for (final ParticlesEffect.Particle particle : effect.particles()) {
                 addParticles(player.level(), player.getRandom(), player.blockPosition(), particle);
             }

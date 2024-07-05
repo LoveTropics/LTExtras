@@ -1,10 +1,10 @@
 package com.lovetropics.extras.block;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.ScaffoldingBlock;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.ScaffoldingBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class ScaffoldingHooks {
 

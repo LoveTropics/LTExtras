@@ -3,9 +3,8 @@ package com.lovetropics.extras.client.screen.container;
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.client.ClientCollectiblesList;
 import com.lovetropics.extras.collectible.Collectible;
-import com.lovetropics.extras.network.LTExtrasNetwork;
-import com.lovetropics.extras.network.PickCollectibleItemPacket;
-import com.lovetropics.extras.network.ReturnCollectibleItemPacket;
+import com.lovetropics.extras.network.message.ServerboundPickCollectibleItemPacket;
+import com.lovetropics.extras.network.message.ServerboundReturnCollectibleItemPacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -21,6 +20,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -31,8 +31,8 @@ import java.util.List;
 public class CollectibleBasketScreen extends AbstractContainerScreen<CollectibleBasketScreen.Menu> {
     private static final Component TITLE = ExtraItems.COLLECTIBLE_BASKET.get().getDescription();
 
-    private static final ResourceLocation BACKGROUND_LOCATION = new ResourceLocation("textures/gui/container/creative_inventory/tab_items.png");
-    private static final ResourceLocation CREATIVE_TABS_LOCATION = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
+    private static final ResourceLocation BACKGROUND_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/creative_inventory/tab_items.png");
+    private static final ResourceLocation CREATIVE_TABS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/creative_inventory/tabs.png");
 
     private static final int BACKGROUND_WIDTH = 195;
     private static final int BACKGROUND_HEIGHT = 136;
@@ -67,7 +67,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
 
     @Override
     public void render(final GuiGraphics graphics, final int mouseX, final int mouseY, final float partialTicks) {
-        renderBackground(graphics);
+        renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
         renderTooltip(graphics, mouseX, mouseY);
 
@@ -103,9 +103,9 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     @Override
-    public boolean mouseScrolled(final double mouseX, final double mouseY, final double delta) {
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
         if (canScroll()) {
-            scroll = clampScroll(scroll - (float) delta);
+            scroll = clampScroll(scroll - (float) pScrollY);
             return true;
         }
         return false;
@@ -170,7 +170,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         final Collectible collectible = collectibleSlot.getCollectible();
         if (collectible != null) {
             menu.setCarried(slot.getItem().copy());
-            LTExtrasNetwork.CHANNEL.sendToServer(new PickCollectibleItemPacket(collectible));
+            PacketDistributor.sendToServer(new ServerboundPickCollectibleItemPacket(collectible));
         }
     }
 
@@ -178,7 +178,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         final Collectible carriedCollectible = Collectible.byItem(carried);
         if (carriedCollectible != null) {
             menu.setCarried(ItemStack.EMPTY);
-            LTExtrasNetwork.CHANNEL.sendToServer(new ReturnCollectibleItemPacket(carriedCollectible));
+            PacketDistributor.sendToServer(new ServerboundReturnCollectibleItemPacket(carriedCollectible));
         }
     }
 

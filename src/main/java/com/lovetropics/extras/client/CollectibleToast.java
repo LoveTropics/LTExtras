@@ -21,7 +21,7 @@ public class CollectibleToast implements Toast {
     private static final int WIDTH = 160;
     private static final int HEIGHT = 32;
 
-    private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/toasts.png");
+    private static final ResourceLocation SPRITE = ResourceLocation.withDefaultNamespace("toast/recipe");
 
     private final ItemStack stack;
     private final Component name;
@@ -34,11 +34,11 @@ public class CollectibleToast implements Toast {
 
     @Override
     public Visibility render(final GuiGraphics graphics, final ToastComponent component, final long time) {
-        graphics.blit(TEXTURE_LOCATION, 0, 0, 0, 32, WIDTH, HEIGHT);
+        graphics.blitSprite(SPRITE, 0, 0, WIDTH, HEIGHT);
 
         graphics.pose().pushPose();
         graphics.pose().translate(0.0f, 0.0f, 100.0f);
-        graphics.renderFakeItem(new ItemStack(ExtraItems.COLLECTIBLE_BASKET), 11, 12);
+        graphics.renderFakeItem(new ItemStack(ExtraItems.COLLECTIBLE_BASKET.asItem()), 11, 12);
         graphics.pose().popPose();
         graphics.renderFakeItem(stack, 5, 4);
 

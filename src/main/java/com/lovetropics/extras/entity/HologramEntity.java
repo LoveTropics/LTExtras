@@ -1,7 +1,6 @@
 package com.lovetropics.extras.entity;
 
-import com.lovetropics.extras.network.LTExtrasNetwork;
-import com.lovetropics.extras.network.SetHologramTextPacket;
+import com.lovetropics.extras.network.message.ClientboundSetHologramTextPacket;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.Placeholders;
 import eu.pb4.placeholders.api.node.TextNode;
@@ -25,7 +24,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -64,12 +63,12 @@ public class HologramEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        entityData.define(DATA_SCALE, 1.0f / 16.0f);
-        entityData.define(DATA_FORWARD_X, 0.0f);
-        entityData.define(DATA_FORWARD_Y, 0.0f);
-        entityData.define(DATA_FORWARD_Z, 0.0f);
-        entityData.define(DATA_FULLBRIGHT, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(DATA_SCALE, 1.0f / 16.0f);
+        builder.define(DATA_FORWARD_X, 0.0f);
+        builder.define(DATA_FORWARD_Y, 0.0f);
+        builder.define(DATA_FORWARD_Z, 0.0f);
+        builder.define(DATA_FULLBRIGHT, false);
     }
 
     @Override
@@ -122,7 +121,7 @@ public class HologramEntity extends Entity {
     }
 
     private void sendTextToPlayer(final ServerPlayer player, final Component text) {
-        LTExtrasNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SetHologramTextPacket(getId(), text));
+        PacketDistributor.sendToPlayer(player, new ClientboundSetHologramTextPacket(getId(), text));
     }
 
     @Override

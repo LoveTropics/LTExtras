@@ -1,23 +1,23 @@
 package com.lovetropics.extras.client;
 
+import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.item.ImageData;
-import com.lovetropics.extras.item.ImageItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderItemInFrameEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderItemInFrameEvent;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class ImageRenderer {
     @SubscribeEvent
     public static void onRenderItemInFrame(final RenderItemInFrameEvent event) {
@@ -25,7 +25,7 @@ public class ImageRenderer {
         if (!stack.is(ExtraItems.IMAGE.get())) {
             return;
         }
-        final ImageData image = ImageData.get(stack).orElse(null);
+        final ImageData image = stack.get(ExtraDataComponents.IMAGE);
         if (image != null) {
             renderImage(image, event.getPoseStack().last(), event.getMultiBufferSource(), event.getPackedLight());
             event.setCanceled(true);
@@ -48,12 +48,11 @@ public class ImageRenderer {
     private static void addVertex(final VertexConsumer consumer, final PoseStack.Pose pose, final float x, final float y, final float u, final float v, final int packedLight) {
         final Matrix4f matrix = pose.pose();
         final Matrix3f normal = pose.normal();
-        consumer.vertex(matrix, x, y, 0.0f)
-                .color(1.0f, 1.0f, 1.0f, 1.0f)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(packedLight)
-                .normal(normal, 0.0f, 0.0f, -1.0f)
-                .endVertex();
+        consumer.addVertex(matrix, x, y, 0.0f)
+                .setColor(1.0f, 1.0f, 1.0f, 1.0f)
+                .setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(packedLight)
+                .setNormal(pose, 0.0f, 0.0f, -1.0f);
     }
 }

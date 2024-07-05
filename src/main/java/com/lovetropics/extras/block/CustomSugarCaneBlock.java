@@ -23,10 +23,10 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.util.TriState;
 
-public final class CustomSugarCaneBlock extends Block implements SimpleWaterloggedBlock, IPlantable {
+public final class CustomSugarCaneBlock extends Block implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final EnumProperty<Type> TYPE = EnumProperty.create("type", Type.class);
 
@@ -88,14 +88,15 @@ public final class CustomSugarCaneBlock extends Block implements SimpleWaterlogg
     public boolean canSurvive(final BlockState state, final LevelReader world, final BlockPos pos) {
         final BlockPos groundPos = pos.below();
         final BlockState groundState = world.getBlockState(groundPos);
-        if (groundState.canSustainPlant(world, groundPos, Direction.UP, this)) {
-            return true;
+        final TriState result = groundState.canSustainPlant(world, groundPos, Direction.UP, defaultBlockState());
+        if (result.isDefault()) {
+            return groundState.getBlock() == this || canGrowOn(groundState);
         }
-        return groundState.getBlock() == this || canGrowOn(groundState);
+        return result.isTrue();
     }
 
     private boolean canGrowOn(final BlockState state) {
-        return state.is(Blocks.GRASS_BLOCK) || state.is(BlockTags.SAND) || state.is(BlockTags.DIRT) || state.is(Tags.Blocks.GRAVEL) || state.is(Blocks.CLAY);
+        return state.is(Blocks.GRASS_BLOCK) || state.is(BlockTags.SAND) || state.is(BlockTags.DIRT) || state.is(Tags.Blocks.GRAVELS) || state.is(Blocks.CLAY);
     }
 
     @Override
@@ -106,11 +107,6 @@ public final class CustomSugarCaneBlock extends Block implements SimpleWaterlogg
     @Override
     public FluidState getFluidState(final BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
-
-    @Override
-    public BlockState getPlant(final BlockGetter world, final BlockPos pos) {
-        return defaultBlockState();
     }
 
     public enum Type implements StringRepresentable {

@@ -1,24 +1,20 @@
 package com.lovetropics.extras;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.Builder;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-
-@EventBusSubscriber(modid = LTExtras.MODID, bus = Bus.MOD)
+@EventBusSubscriber(modid = LTExtras.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ExtrasConfig {
-    private static final Builder COMMON_BUILDER = new Builder();
-    private static final Builder CLIENT_BUILDER = new Builder();
+    private static final ModConfigSpec.Builder COMMON_BUILDER = new ModConfigSpec.Builder();
+    private static final ModConfigSpec.Builder CLIENT_BUILDER = new ModConfigSpec.Builder();
 
     public static final CategoryCommands COMMANDS = new CategoryCommands();
     public static final CategoryTranslation TRANSLATION = new CategoryTranslation();
     public static final CategoryTechStack TECH_STACK = new CategoryTechStack();
 
     public static final class CategoryCommands {
-        public final ConfigValue<String> tpaDimension;
+        public final ModConfigSpec.ConfigValue<String> tpaDimension;
 
         private CategoryCommands() {
             COMMON_BUILDER.comment("Commands").push("commands");
@@ -32,9 +28,9 @@ public class ExtrasConfig {
     }
 
     public static final class CategoryTranslation {
-        public final ConfigValue<Boolean> translateOutgoing;
-        public final ConfigValue<Boolean> translateIncoming;
-        public final ConfigValue<Boolean> prompted;
+        public final ModConfigSpec.ConfigValue<Boolean> translateOutgoing;
+        public final ModConfigSpec.ConfigValue<Boolean> translateIncoming;
+        public final ModConfigSpec.ConfigValue<Boolean> prompted;
 
         private CategoryTranslation() {
             CLIENT_BUILDER.comment("Translation").push("translation");
@@ -56,9 +52,9 @@ public class ExtrasConfig {
     }
 
     public static final class CategoryTechStack {
-        public final ConfigValue<String> authKey;
-        public final ConfigValue<String> scheduleUrl;
-        public final ConfigValue<String> translationUrl;
+        public final ModConfigSpec.ConfigValue<String> authKey;
+        public final ModConfigSpec.ConfigValue<String> scheduleUrl;
+        public final ModConfigSpec.ConfigValue<String> translationUrl;
 
         private CategoryTechStack() {
             COMMON_BUILDER.comment("Connection to the tech stack").push("techStack");
@@ -79,8 +75,8 @@ public class ExtrasConfig {
         }
     }
 
-    public static final ForgeConfigSpec COMMON_CONFIG = COMMON_BUILDER.build();
-    public static final ForgeConfigSpec CLIENT_CONFIG = CLIENT_BUILDER.build();
+    public static final ModConfigSpec COMMON_CONFIG = COMMON_BUILDER.build();
+    public static final ModConfigSpec CLIENT_CONFIG = CLIENT_BUILDER.build();
 
     @SubscribeEvent
     public static void configLoad(final ModConfigEvent.Loading event) {

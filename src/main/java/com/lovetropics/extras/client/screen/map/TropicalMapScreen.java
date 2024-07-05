@@ -19,7 +19,7 @@ import java.util.List;
 public class TropicalMapScreen extends Screen {
     private static final int MAP_PNG_HEIGHT = 256;
     private static final int MAP_PNG_WIDTH = 256;
-    private static final ResourceLocation MAP_LOCATION = new ResourceLocation("ltextras", "textures/map.png");
+    private static final ResourceLocation MAP_LOCATION = ResourceLocation.fromNamespaceAndPath("ltextras", "textures/map.png");
     private final Player player;
     private final List<PoiButton> poiButtons = new ArrayList<>();
 
@@ -70,17 +70,18 @@ public class TropicalMapScreen extends Screen {
 
     @Override
     public void render(final GuiGraphics graphics, final int pMouseX, final int pMouseY, final float pPartialTick) {
-        renderBackground(graphics);
+        renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
     }
 
     @Override
-    public void renderBackground(final GuiGraphics guiGraphics) {
-        super.renderBackground(guiGraphics);
+    public void renderBackground(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
+
         int h = (this.height - MAP_PNG_HEIGHT) / 2;
         int w = (this.width - MAP_PNG_WIDTH) / 2;
 
-        guiGraphics.blit(MAP_LOCATION, w, h, 0, 0.0F, 0.0F, MAP_PNG_WIDTH, MAP_PNG_HEIGHT, MAP_PNG_WIDTH, MAP_PNG_HEIGHT);
+        graphics.blit(MAP_LOCATION, w, h, 0, 0.0F, 0.0F, MAP_PNG_WIDTH, MAP_PNG_HEIGHT, MAP_PNG_WIDTH, MAP_PNG_HEIGHT);
     }
 
     private void doWarp(Poi mapPoi) {

@@ -1,80 +1,34 @@
 package com.lovetropics.extras.network;
 
 import com.lovetropics.extras.LTExtras;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
+import com.lovetropics.extras.network.message.ClientboundOpenCollectibleBasketPacket;
+import com.lovetropics.extras.network.message.ClientboundPoiPacket;
+import com.lovetropics.extras.network.message.ClientboundSetHologramTextPacket;
+import com.lovetropics.extras.network.message.ClientboundSetSkyColorPacket;
+import com.lovetropics.extras.network.message.ClientboundWorldParticleEffectsPacket;
+import com.lovetropics.extras.network.message.ServerboundPickCollectibleItemPacket;
+import com.lovetropics.extras.network.message.ServerboundReturnCollectibleItemPacket;
+import com.lovetropics.extras.network.message.ServerboundSetTimeZonePacket;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
+@EventBusSubscriber(modid = LTExtras.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class LTExtrasNetwork {
+    @SubscribeEvent
+    public static void registerPackets(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar(LTExtras.getCompatVersion());
 
-	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-			new ResourceLocation(LTExtras.MODID, "main"),
-			LTExtras::getCompatVersion,
-			LTExtras::isCompatibleVersion,
-			LTExtras::isCompatibleVersion
-	);
-
-	public static void register() {
-		CHANNEL.messageBuilder(CollectiblesListPacket.class, 0, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(CollectiblesListPacket::write)
-				.decoder(CollectiblesListPacket::new)
-				.consumerMainThread(CollectiblesListPacket::handle)
-				.add();
-
-		CHANNEL.messageBuilder(PickCollectibleItemPacket.class, 1, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(PickCollectibleItemPacket::write)
-				.decoder(PickCollectibleItemPacket::new)
-				.consumerMainThread(PickCollectibleItemPacket::handle)
-				.add();
-
-		CHANNEL.messageBuilder(ReturnCollectibleItemPacket.class, 2, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(ReturnCollectibleItemPacket::write)
-				.decoder(ReturnCollectibleItemPacket::new)
-				.consumerMainThread(ReturnCollectibleItemPacket::handle)
-				.add();
-
-		CHANNEL.messageBuilder(SetTimeZonePacket.class, 3, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(SetTimeZonePacket::write)
-				.decoder(SetTimeZonePacket::read)
-				.consumerMainThread(SetTimeZonePacket::handle)
-				.add();
-
-		CHANNEL.messageBuilder(SetHologramTextPacket.class, 4, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(SetHologramTextPacket::write)
-				.decoder(SetHologramTextPacket::new)
-				.consumerMainThread(SetHologramTextPacket::handle)
-				.add();
-
-		CHANNEL.messageBuilder(SetSkyColorPacket.class, 5, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(SetSkyColorPacket::write)
-				.decoder(SetSkyColorPacket::new)
-				.consumerMainThread(SetSkyColorPacket::handle)
-				.add();
-
-		CHANNEL.messageBuilder(WorldParticleEffectsPacket.class, 6, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(WorldParticleEffectsPacket::write)
-				.decoder(WorldParticleEffectsPacket::new)
-				.consumerMainThread(WorldParticleEffectsPacket::handle)
-				.add();
-
-		CHANNEL.messageBuilder(ClientboundPoiPacket.class, 7, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(ClientboundPoiPacket::write)
-				.decoder(ClientboundPoiPacket::new)
-				.consumerMainThread(ClientboundPoiPacket::handle)
-				.add();
-
-		CHANNEL.messageBuilder(OpenCollectibleBasketPacket.class, 8, NetworkDirection.PLAY_TO_CLIENT)
-				.encoder(OpenCollectibleBasketPacket::write)
-				.decoder(OpenCollectibleBasketPacket::new)
-				.consumerMainThread(OpenCollectibleBasketPacket::handle)
-				.add();
-
-		CHANNEL.messageBuilder(SetTranslationSettingsPacket.class, 9, NetworkDirection.PLAY_TO_SERVER)
-				.encoder(SetTranslationSettingsPacket::write)
-				.decoder(SetTranslationSettingsPacket::new)
-				.consumerMainThread(SetTranslationSettingsPacket::handle)
-				.add();
-	}
+        registrar.playToClient(ClientboundCollectiblesListPacket.TYPE, ClientboundCollectiblesListPacket.STREAM_CODEC, ClientboundCollectiblesListPacket::handle);
+        registrar.playToServer(ServerboundPickCollectibleItemPacket.TYPE, ServerboundPickCollectibleItemPacket.STREAM_CODEC, ServerboundPickCollectibleItemPacket::handle);
+        registrar.playToServer(ServerboundReturnCollectibleItemPacket.TYPE, ServerboundReturnCollectibleItemPacket.STREAM_CODEC, ServerboundReturnCollectibleItemPacket::handle);
+        registrar.playToServer(ServerboundSetTimeZonePacket.TYPE, ServerboundSetTimeZonePacket.STREAM_CODEC, ServerboundSetTimeZonePacket::handle);
+        registrar.playToClient(ClientboundSetHologramTextPacket.TYPE, ClientboundSetHologramTextPacket.STREAM_CODEC, ClientboundSetHologramTextPacket::handle);
+        registrar.playToClient(ClientboundSetSkyColorPacket.TYPE, ClientboundSetSkyColorPacket.STREAM_CODEC, ClientboundSetSkyColorPacket::handle);
+        registrar.playToClient(ClientboundWorldParticleEffectsPacket.TYPE, ClientboundWorldParticleEffectsPacket.STREAM_CODEC, ClientboundWorldParticleEffectsPacket::handle);
+        registrar.playToClient(ClientboundPoiPacket.TYPE, ClientboundPoiPacket.STREAM_CODEC, ClientboundPoiPacket::handle);
+        registrar.playToClient(ClientboundOpenCollectibleBasketPacket.TYPE, ClientboundOpenCollectibleBasketPacket.STREAM_CODEC, ClientboundOpenCollectibleBasketPacket::handle);
+    }
 }
-

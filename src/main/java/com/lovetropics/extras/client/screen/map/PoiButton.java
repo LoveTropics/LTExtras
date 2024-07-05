@@ -3,22 +3,16 @@ package com.lovetropics.extras.client.screen.map;
 import com.lovetropics.extras.client.ClientMapPoiManager;
 import com.lovetropics.extras.data.poi.Poi;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.PlayerFaceRenderer;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.resources.SkinManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -32,7 +26,7 @@ class PoiButton extends AbstractButton {
 
     private static final int HOVER_ANIMATION_LENGTH = 8;
 
-    private static final ResourceLocation TOOLTIP_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
+    private static final ResourceLocation TOOLTIP_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/advancements/widgets.png");
 
     private final Poi poi;
     private final Font font;
@@ -85,8 +79,8 @@ class PoiButton extends AbstractButton {
             graphics.pose().pushPose();
             graphics.pose().translate(0.0f, 0.0f, zOffset);
 
-            graphics.blitNineSliced(TOOLTIP_LOCATION, getX(), getY() + (getHeight() - tooltipHeight) / 2, getWidth(), tooltipHeight, BORDER_SIZE, 200, 20, 0, 29);
-            graphics.blitNineSliced(TOOLTIP_LOCATION, getX(), getY(), SIZE, SIZE, BORDER_SIZE, 200, 20, 0, 55);
+            graphics.blitSprite(TOOLTIP_LOCATION, getX(), getY() + (getHeight() - tooltipHeight) / 2, getWidth(), tooltipHeight, BORDER_SIZE, 200, 20, 0, 29);
+            graphics.blitSprite(TOOLTIP_LOCATION, getX(), getY(), SIZE, SIZE, BORDER_SIZE, 200, 20, 0, 55);
 
             graphics.enableScissor(getX() + BORDER_SIZE, getY() + BORDER_SIZE, getX() + getWidth() - BORDER_SIZE, getY() + getHeight() - BORDER_SIZE);
             final int textLeft = getX() + SIZE + BORDER_SIZE - 1;

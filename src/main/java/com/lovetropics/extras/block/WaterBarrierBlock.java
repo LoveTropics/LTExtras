@@ -1,6 +1,7 @@
 package com.lovetropics.extras.block;
 
 import com.lovetropics.extras.ExtendedFluidState;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -28,7 +30,7 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
 	private static final FluidState WATERLOGGED_FLUID = createNoDripState(Fluids.WATER.getSource(false));
 
 	private static FluidState createNoDripState(FluidState parent) {
-		FluidState state = new FluidState(parent.getType(), parent.getValues(), parent.propertiesCodec);
+		FluidState state = new FluidState(parent.getType(), (Reference2ObjectArrayMap<Property<?>, Comparable<?>>) parent.getValues(), parent.propertiesCodec);
 		((ExtendedFluidState) (Object) state).setNoDripParticles();
 		return state;
 	}
@@ -39,8 +41,7 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
 	}
 
 	@Override
-	@Deprecated
-	public FluidState getFluidState(BlockState state) {
+	protected FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? WATERLOGGED_FLUID : super.getFluidState(state);
 	}
 
@@ -56,7 +57,7 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
 	}
 
 	@Override
-	public boolean canPlaceLiquid(BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
+	public boolean canPlaceLiquid(@Nullable Player pPlayer, BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
 		return false;
 	}
 
@@ -66,7 +67,7 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
 	}
 
 	@Override
-	public ItemStack pickupBlock(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+	public ItemStack pickupBlock(@Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
 		return ItemStack.EMPTY;
 	}
 

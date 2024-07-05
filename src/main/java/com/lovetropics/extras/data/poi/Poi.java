@@ -4,11 +4,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,11 +19,21 @@ import java.util.UUID;
 public final class Poi {
     public static final Codec<Poi> CODEC = RecordCodecBuilder.create(i -> i.group(
             Codec.STRING.fieldOf("name").forGetter(Poi::name),
-            ExtraCodecs.COMPONENT.fieldOf("description").forGetter(Poi::description),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(Poi::description),
             ResourceLocation.CODEC.fieldOf("resourceLocation").forGetter(Poi::resourceLocation),
             GlobalPos.CODEC.fieldOf("blockPos").forGetter(Poi::globalPos),
             Codec.BOOL.fieldOf("enabled").forGetter(Poi::enabled)
     ).apply(i, Poi::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, Poi> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.stringUtf8(50), Poi::name,
+            ComponentSerialization.STREAM_CODEC, Poi::description,
+            ResourceLocation.STREAM_CODEC, Poi::resourceLocation,
+            GlobalPos.STREAM_CODEC, Poi::globalPos,
+            ByteBufCodecs.BOOL, Poi::enabled,
+            UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.list()), Poi::faces,
+            Poi::new
+    );
 
     private final String name;
     private final Component description;

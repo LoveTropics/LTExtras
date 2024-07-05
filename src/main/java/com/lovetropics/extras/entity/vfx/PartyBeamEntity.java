@@ -67,7 +67,7 @@ public class PartyBeamEntity extends EndCrystal {
         super.readAdditionalSaveData(tag);
 
         if (tag.contains("TargetPos", Tag.TAG_COMPOUND)) {
-            targetPos = NbtUtils.readBlockPos(tag.getCompound("TargetPos"));
+            targetPos = NbtUtils.readBlockPos(tag, "TargetPos").orElse(null);
         }
 
         if (tag.contains("TargetColor", Tag.TAG_COMPOUND)) {
@@ -84,9 +84,10 @@ public class PartyBeamEntity extends EndCrystal {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_COLOR, new Vector3f(0.0f, 0.0f, 0.0f));
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+
+        builder.define(DATA_COLOR, new Vector3f(0.0f, 0.0f, 0.0f));
     }
 
     @Override

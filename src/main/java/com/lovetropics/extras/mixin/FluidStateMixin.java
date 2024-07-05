@@ -1,8 +1,8 @@
 package com.lovetropics.extras.mixin;
 
 import com.lovetropics.extras.ExtendedFluidState;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.level.material.FluidState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

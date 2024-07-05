@@ -41,7 +41,7 @@ public class SubmergedLilyBlock extends WaterlilyBlock implements SimpleWaterlog
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    public boolean isPathfindable(BlockState pState, PathComputationType pType) {
         return true;
     }
 

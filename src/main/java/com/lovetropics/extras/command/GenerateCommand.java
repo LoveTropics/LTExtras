@@ -3,8 +3,6 @@ package com.lovetropics.extras.command;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.lovetropics.extras.LTExtras;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -13,13 +11,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.tags.TagFile;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
@@ -56,14 +55,14 @@ public class GenerateCommand {
 
 		TagBuilder tagBuilder = TagBuilder.create();
 
-		for (Entry<ResourceKey<Item>, Item> e : ForgeRegistries.ITEMS.getEntries()) {
+		for (Entry<ResourceKey<Item>, Item> e : BuiltInRegistries.ITEM.entrySet()) {
 			ResourceLocation id = e.getKey().location();
 			if (pattern.matcher(id.toString()).matches()) {
 				tagBuilder.addElement(id);
 			}
 		}
 
-		JsonElement json = TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(tagBuilder.build(), false)).getOrThrow(false, System.err::println);
+		JsonElement json = TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(tagBuilder.build(), false, List.of())).getOrThrow();
 
 		Path output = Paths.get("export", "generated", "tags", "item", StringArgumentType.getString(ctx, "name") + ".json");
 		try {

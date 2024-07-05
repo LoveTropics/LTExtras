@@ -1,7 +1,6 @@
 package com.lovetropics.extras.world_effect;
 
-import com.lovetropics.extras.network.LTExtrasNetwork;
-import com.lovetropics.extras.network.SetSkyColorPacket;
+import com.lovetropics.extras.network.message.ClientboundSetSkyColorPacket;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,7 +8,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.FastColor;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public record SkyColorEffect(int red, int green, int blue, int fadeLength) implements WorldEffect {
     private static final Codec<Integer> COLOR_COMPONENT_CODEC = ExtraCodecs.intRange(0, 255);
@@ -24,12 +23,12 @@ public record SkyColorEffect(int red, int green, int blue, int fadeLength) imple
     @Override
     public void apply(final ServerPlayer player, final boolean immediate) {
         final int color = FastColor.ARGB32.color(0, red, green, blue);
-        LTExtrasNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SetSkyColorPacket(color, immediate ? 0 : fadeLength));
+        PacketDistributor.sendToPlayer(player, new ClientboundSetSkyColorPacket(color, immediate ? 0 : fadeLength));
     }
 
     @Override
     public void clear(final ServerPlayer player, final boolean immediate) {
-        LTExtrasNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), SetSkyColorPacket.clear(fadeLength));
+        PacketDistributor.sendToPlayer(player, ClientboundSetSkyColorPacket.clear(fadeLength));
     }
 
     @Override

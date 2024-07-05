@@ -1,5 +1,6 @@
 package com.lovetropics.extras.collectible;
 
+import com.lovetropics.extras.ExtraDataComponents;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -32,6 +33,8 @@ import static net.minecraft.commands.arguments.EntityArgument.getPlayers;
 import static net.minecraft.commands.arguments.EntityArgument.players;
 import static net.minecraft.commands.arguments.item.ItemArgument.getItem;
 import static net.minecraft.commands.arguments.item.ItemArgument.item;
+import static net.minecraft.commands.arguments.item.ItemPredicateArgument.getItemPredicate;
+import static net.minecraft.commands.arguments.item.ItemPredicateArgument.itemPredicate;
 
 public class CollectibleCommand {
     private static final SimpleCommandExceptionType GAVE_TO_NO_PLAYERS = new SimpleCommandExceptionType(Component.literal("Did not find any players to give this collectible to"));
@@ -49,8 +52,8 @@ public class CollectibleCommand {
                 )
                 .then(literal("clear")
                         .then(argument("target", players())
-                                .then(argument("item", item(buildContext))
-                                        .executes(c -> clear(c, getPlayers(c, "target"), getItem(c, "item")))
+                                .then(argument("item", itemPredicate(buildContext))
+                                        .executes(c -> clear(c, getPlayers(c, "target"), getItemPredicate(c, "item")))
                                 )
                                 .executes(c -> clear(c, getPlayers(c, "target"), i -> true))
                         )
@@ -61,8 +64,8 @@ public class CollectibleCommand {
                 .then(literal("countdisguises").executes(CollectibleCommand::countDisguises))
                 .then(literal("find")
                         .executes(context -> findCollectibles(context.getSource(), stack -> true))
-                        .then(argument("item", item(buildContext))
-                                .executes(context -> findCollectibles(context.getSource(), getItem(context, "item")))
+                        .then(argument("item", itemPredicate(buildContext))
+                                .executes(context -> findCollectibles(context.getSource(), getItemPredicate(context, "item")))
                         )
                 )
         );
@@ -74,8 +77,8 @@ public class CollectibleCommand {
 
         int result = 0;
         for (final ServerPlayer player : players) {
-            final CollectibleStore collectibles = CollectibleStore.getNullable(player);
-            if (collectibles != null && collectibles.give(collectible)) {
+            final CollectibleStore collectibles = CollectibleStore.get(player);
+            if (collectibles.give(collectible)) {
                 result++;
             }
         }
@@ -95,8 +98,8 @@ public class CollectibleCommand {
 
         int count = 0;
         for (final ServerPlayer player : players) {
-            final CollectibleStore collectibles = CollectibleStore.getNullable(player);
-            if (collectibles != null && collectibles.clear(predicate)) {
+            final CollectibleStore collectibles = CollectibleStore.get(player);
+            if (collectibles.clear(predicate)) {
                 clearCollectibleItems(player.getInventory(), predicate);
                 count++;
             }
@@ -122,28 +125,20 @@ public class CollectibleCommand {
         }
     }
 
-    private static final ResourceKey<Item> DISGUISE = ResourceKey.create(Registries.ITEM, new ResourceLocation("ltminigames", "disguise"));
+    private static final ResourceKey<Item> DISGUISE = ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("ltminigames", "disguise"));
 
     private static int countDisguises(final CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         final ServerPlayer player = context.getSource().getPlayerOrException();
-        final CollectibleStore collectibles = CollectibleStore.getNullable(player);
-        if (collectibles == null) {
-            return 0;
-        }
-        return collectibles.count(collectible -> {
-            if (collectible.item().is(DISGUISE)) {
-                return collectible.tag().isEmpty() || !collectible.tag().get().getBoolean("donation_goal");
-            }
-            return false;
-        });
+        final CollectibleStore collectibles = CollectibleStore.get(player);
+        return collectibles.count(collectible ->
+                collectible.item().is(DISGUISE) && !collectible.has(ExtraDataComponents.DONATION_GOAL.value())
+        );
     }
 
     private static int setLocked(final CommandContext<CommandSourceStack> context, final boolean locked) throws CommandSyntaxException {
         final ServerPlayer player = context.getSource().getPlayerOrException();
-        final CollectibleStore store = CollectibleStore.getNullable(player);
-        if (store != null) {
-            store.setLocked(locked);
-        }
+        final CollectibleStore store = CollectibleStore.get(player);
+        store.setLocked(locked);
         return 1;
     }
 

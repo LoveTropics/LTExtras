@@ -1,35 +1,39 @@
 package com.lovetropics.extras.data.poi;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.network.ClientboundPoiPacket;
-import com.lovetropics.extras.network.LTExtrasNetwork;
+import com.lovetropics.extras.network.message.ClientboundPoiPacket;
 import com.lovetropics.lib.permission.PermissionsApi;
 import com.lovetropics.lib.permission.role.RoleOverrideType;
 import com.mojang.serialization.Codec;
-import net.minecraft.Util;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber(modid = LTExtras.MODID)
 public class MapPoiManager extends SavedData {
+    private static final Factory<MapPoiManager> FACTORY = new Factory<>(MapPoiManager::new, MapPoiManager::load);
 
     //This is used to calculate where to draw POIs on the map item itself. Update when map.png is updated.
     //What I did: Set BlueMap to Flat perspective, disable markers&areas. Move mouse to top left corner of desired map, note coordinates.
@@ -47,18 +51,18 @@ public class MapPoiManager extends SavedData {
         this.pois = new HashMap<>();
     }
 
-    public static MapPoiManager get(final MinecraftServer server) {
-        return server.overworld().getDataStorage().computeIfAbsent(MapPoiManager::load, MapPoiManager::new, STORAGE_ID);
-    }
-
     @Override
-    public CompoundTag save(final CompoundTag tag) {
-        tag.put("map_pois", Util.getOrThrow(CODEC.encodeStart(NbtOps.INSTANCE, pois), IllegalStateException::new));
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+        tag.put("map_pois", CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), pois).getOrThrow());
         return tag;
     }
 
-    private static MapPoiManager load(final CompoundTag tag) {
-        return CODEC.parse(NbtOps.INSTANCE, tag.get("map_pois")).result()
+    public static MapPoiManager get(final MinecraftServer server) {
+        return server.overworld().getDataStorage().computeIfAbsent(FACTORY, STORAGE_ID);
+    }
+
+    private static MapPoiManager load(final CompoundTag tag, final HolderLookup.Provider registries) {
+        return CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), tag.get("map_pois")).result()
                 .map(result -> new MapPoiManager(new HashMap<>(result)))
                 .orElseGet(MapPoiManager::new);
     }
@@ -68,7 +72,7 @@ public class MapPoiManager extends SavedData {
         if (event.getEntity() instanceof final ServerPlayer serverPlayer) {
             final MapPoiManager poiManager = MapPoiManager.get(serverPlayer.getServer());
             poiManager.getVisiblePois(serverPlayer)
-                    .forEach(e -> LTExtrasNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientboundPoiPacket(e, false)));
+                    .forEach(e -> PacketDistributor.sendToPlayer(serverPlayer, new ClientboundPoiPacket(e, false)));
         }
     }
 
@@ -95,7 +99,7 @@ public class MapPoiManager extends SavedData {
         final Poi poi = pois.get(name);
         if (poi != null) {
             poi.removeFace(face);
-            LTExtrasNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(), new ClientboundPoiPacket(poi, false));
+            PacketDistributor.sendToAllPlayers(new ClientboundPoiPacket(poi, false));
         }
         setDirty();
     }
@@ -109,7 +113,7 @@ public class MapPoiManager extends SavedData {
                     .forEach(p -> removeFace(p.name(), face));
             poi.addFace(face);
             setDirty();
-            LTExtrasNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(), new ClientboundPoiPacket(poi, false));
+            PacketDistributor.sendToAllPlayers(new ClientboundPoiPacket(poi, false));
         }
     }
 
@@ -118,7 +122,7 @@ public class MapPoiManager extends SavedData {
                 .stream()
                 .filter(Poi::hasFaces)
                 .map(Poi::clearFaces)
-                .forEach(p -> LTExtrasNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(), new ClientboundPoiPacket(p, false)));
+                .forEach(p -> PacketDistributor.sendToAllPlayers(new ClientboundPoiPacket(p, false)));
         setDirty();
     }
 
@@ -163,18 +167,18 @@ public class MapPoiManager extends SavedData {
     }
 
     private void updateClients(final Poi poi) {
-        LTExtrasNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(), new ClientboundPoiPacket(poi, false));
+        PacketDistributor.sendToAllPlayers(new ClientboundPoiPacket(poi, false));
     }
 
     public void remove(String name) {
         final Poi poi = pois.remove(name);
         setDirty();
-        LTExtrasNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(), new ClientboundPoiPacket(poi, true));
+        PacketDistributor.sendToAllPlayers(new ClientboundPoiPacket(poi, true));
     }
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.START || event.getServer().getTickCount() % 20 != 0) {
+    public static void onServerTick(ServerTickEvent.Pre event) {
+        if (event.getServer().getTickCount() % 20 != 0) {
             return;
         }
         final MapPoiManager manager = MapPoiManager.get(event.getServer());

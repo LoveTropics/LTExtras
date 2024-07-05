@@ -18,12 +18,13 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import org.jetbrains.annotations.Nullable;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class WaterBarrierParticle extends TextureSheetParticle {
 	WaterBarrierParticle(ClientLevel world, double x, double y, double z, ItemLike item) {
 		super(world, x, y, z);
@@ -61,18 +62,14 @@ public class WaterBarrierParticle extends TextureSheetParticle {
 		private RenderType() {
 		}
 
+		@Nullable
 		@Override
-		public void begin(BufferBuilder builder, TextureManager textureManager) {
+		public BufferBuilder begin(Tesselator tess, TextureManager pTextureManager) {
 			RenderSystem.disableBlend();
 			RenderSystem.disableDepthTest();
 			RenderSystem.depthMask(true);
 			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
-			builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-		}
-
-		@Override
-		public void end(Tesselator tessellator) {
-			tessellator.end();
+			return tess.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
 		}
 	}
 }

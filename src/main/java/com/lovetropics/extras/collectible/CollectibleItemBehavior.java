@@ -12,15 +12,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerDestroyItemEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber(modid = LTExtras.MODID)
 public class CollectibleItemBehavior {
     private static final int INVENTORY_CHECK_INTERVAL = SharedConstants.TICKS_PER_SECOND;
 
@@ -34,24 +35,22 @@ public class CollectibleItemBehavior {
     }
 
     @SubscribeEvent
-    public static void onItemPickup(final EntityItemPickupEvent event) {
-        final ItemStack stack = event.getItem().getItem();
+    public static void onItemPickup(final ItemEntityPickupEvent.Pre event) {
+        final ItemStack stack = event.getItemEntity().getItem();
         final Collectible collectible = Collectible.byItem(stack);
         if (collectible == null) {
             return;
         }
 
-        final Player player = event.getEntity();
+        final Player player = event.getPlayer();
         if (Collectible.isIllegalCollectible(stack, player)) {
             stack.setCount(0);
-            event.getItem().discard();
-            event.setCanceled(true);
+            event.getItemEntity().discard();
+            event.setCanPickup(TriState.FALSE);
         } else {
-            final CollectibleStore store = CollectibleStore.getNullable(player);
-            if (store != null) {
-                store.give(collectible);
-                Collectible.addMarkerTo(player.getUUID(), stack);
-            }
+            final CollectibleStore store = CollectibleStore.get(player);
+            store.give(collectible);
+            Collectible.addMarkerTo(player.getUUID(), stack);
         }
     }
 
@@ -61,11 +60,8 @@ public class CollectibleItemBehavior {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(final TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            return;
-        }
-        final Player player = event.player;
+    public static void onPlayerTick(final PlayerTickEvent.Post event) {
+        final Player player = event.getEntity();
         if (player instanceof final ServerPlayer serverPlayer && serverPlayer.tickCount % INVENTORY_CHECK_INTERVAL == 0) {
             final Inventory inventory = serverPlayer.getInventory();
             final int count = inventory.clearOrCountMatchingItems(stack -> Collectible.isIllegalCollectible(stack, serverPlayer), -1, serverPlayer.inventoryMenu.getCraftSlots());

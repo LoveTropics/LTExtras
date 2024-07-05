@@ -1,6 +1,6 @@
 package com.lovetropics.extras.entity.ravekoa;
 
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 
 public class RaveKoaEntityDJ extends RaveKoaEntity {

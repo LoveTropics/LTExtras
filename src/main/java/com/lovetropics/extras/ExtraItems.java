@@ -1,11 +1,18 @@
 package com.lovetropics.extras;
 
-import com.lovetropics.extras.item.*;
+import com.lovetropics.extras.item.CollectibleBasketItem;
+import com.lovetropics.extras.item.CollectibleCompassItem;
+import com.lovetropics.extras.item.EntityWandItem;
+import com.lovetropics.extras.item.ExtraItemProperties;
+import com.lovetropics.extras.item.ImageData;
+import com.lovetropics.extras.item.ImageItem;
+import com.lovetropics.extras.item.InviteItem;
+import com.lovetropics.extras.item.TropicMapItem;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 
 public class ExtraItems {
     private static final Registrate REGISTRATE = LTExtras.registrate();
@@ -37,7 +44,7 @@ public class ExtraItems {
             .tab(LTExtras.TAB_KEY, modifier -> {
                 for (final ImageData preset : ImageItem.PRESETS) {
                     final ItemStack stack = new ItemStack(ExtraItems.IMAGE.get());
-                    ImageData.set(stack, preset);
+                    stack.set(ExtraDataComponents.IMAGE, preset);
                     modifier.accept(stack);
                 }
             })
@@ -47,7 +54,7 @@ public class ExtraItems {
             .tab(LTExtras.TAB_KEY, modifier -> {
                 for (final ImageData preset : InviteItem.PRESETS) {
                     final ItemStack stack = new ItemStack(ExtraItems.INVITE.get());
-                    ImageData.set(stack, preset);
+                    stack.set(ExtraDataComponents.IMAGE, preset);
                     modifier.accept(stack);
                 }
             })

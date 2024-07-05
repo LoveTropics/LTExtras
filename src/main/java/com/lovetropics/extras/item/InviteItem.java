@@ -1,5 +1,6 @@
 package com.lovetropics.extras.item;
 
+import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.LTExtras;
 import net.minecraft.ChatFormatting;
@@ -10,13 +11,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
-import java.util.Optional;
 
 public class InviteItem extends Item {
     public static final List<ImageData> PRESETS = List.of(
             new ImageData(
                     inviteName("1"),
-                    new ResourceLocation(LTExtras.MODID, "textures/images/ccfucc_invite_1.png"),
+                    ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "textures/images/ccfucc_invite_1.png"),
                     371,
                     292,
                     List.of(
@@ -32,7 +32,7 @@ public class InviteItem extends Item {
             ),
             new ImageData(
                     inviteName("2"),
-                    new ResourceLocation(LTExtras.MODID, "textures/images/ccfucc_invite_2.png"),
+                    ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "textures/images/ccfucc_invite_2.png"),
                     371,
                     292,
                     List.of(
@@ -61,9 +61,9 @@ public class InviteItem extends Item {
 
     @Override
     public Component getName(final ItemStack stack) {
-        final Optional<Component> name = ImageData.get(stack).flatMap(ImageData::name);
-        if (name.isPresent()) {
-            return name.get();
+        final ImageData image = stack.get(ExtraDataComponents.IMAGE);
+        if (image != null && image.name().isPresent()) {
+            return image.name().get();
         }
         return super.getName(stack).copy().withStyle(ChatFormatting.OBFUSCATED);
     }

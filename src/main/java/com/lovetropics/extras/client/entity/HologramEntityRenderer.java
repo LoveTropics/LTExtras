@@ -1,6 +1,5 @@
 package com.lovetropics.extras.client.entity;
 
-import com.lovetropics.extras.ExtraUtils;
 import com.lovetropics.extras.entity.HologramEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -42,7 +41,7 @@ public class HologramEntityRenderer extends EntityRenderer<HologramEntity> {
         if (rotation != null) {
             poseStack.mulPose(rotation);
         } else {
-            poseStack.mulPose(ExtraUtils.rotationAboutY(entityRenderDispatcher.cameraOrientation(), new Quaternionf()));
+            poseStack.mulPose(Mth.rotationAroundAxis(Mth.Y_AXIS, entityRenderDispatcher.cameraOrientation(), new Quaternionf()));
         }
 
         final float scale = entity.scale();

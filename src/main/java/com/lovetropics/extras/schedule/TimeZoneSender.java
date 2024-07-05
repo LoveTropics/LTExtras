@@ -1,16 +1,16 @@
 package com.lovetropics.extras.schedule;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.network.LTExtrasNetwork;
-import com.lovetropics.extras.network.SetTimeZonePacket;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import com.lovetropics.extras.network.message.ServerboundSetTimeZonePacket;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.time.ZoneId;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class TimeZoneSender {
     @SubscribeEvent
     public static void onLogIn(final ClientPlayerNetworkEvent.LoggingIn event) {
@@ -24,6 +24,6 @@ public class TimeZoneSender {
     }
 
     private static void sendTimeZoneToServer() {
-        LTExtrasNetwork.CHANNEL.sendToServer(new SetTimeZonePacket(ZoneId.systemDefault()));
+        PacketDistributor.sendToServer(new ServerboundSetTimeZonePacket(ZoneId.systemDefault()));
     }
 }

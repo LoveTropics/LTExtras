@@ -1,27 +1,22 @@
 package com.lovetropics.extras.data.spawnitems;
 
-import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import net.minecraft.Util;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
-import net.minecraftforge.common.capabilities.AutoRegisterCapability;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
+import net.neoforged.neoforge.attachment.IAttachmentSerializer;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -32,42 +27,13 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-@Mod.EventBusSubscriber
-@AutoRegisterCapability
-public final class SpawnItemsStore implements ICapabilitySerializable<Tag> {
-    public static final ResourceLocation ID = new ResourceLocation(LTExtras.MODID, "spawn_items");
-
+@EventBusSubscriber
+public final class SpawnItemsStore implements IAttachmentSerializer<Tag, SpawnItemsStore> {
     private static final Codec<Map<ResourceLocation, List<SpawnItems.Stack>>> CODEC = Codec.unboundedMap(ResourceLocation.CODEC, SpawnItems.Stack.CODEC.listOf()
             .xmap(ArrayList::new, Function.identity())); // Make list mutable
     private static final Logger LOGGER = LogUtils.getLogger();
 
     private final Map<ResourceLocation, List<SpawnItems.Stack>> receivedItems = new HashMap<>();
-    private final LazyOptional<SpawnItemsStore> instance = LazyOptional.of(() -> this);
-
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return LTExtras.SPAWN_ITEMS_STORE.orEmpty(cap, instance);
-    }
-
-    @Override
-    public Tag serializeNBT() {
-        return Util.getOrThrow(CODEC.encodeStart(NbtOps.INSTANCE, receivedItems), IllegalStateException::new);
-    }
-
-    @Override
-    public void deserializeNBT(final Tag nbt) {
-        CODEC.parse(NbtOps.INSTANCE, nbt).resultOrPartial(Util.prefix("Spawn Items: ", LOGGER::error)).ifPresent(map -> {
-            receivedItems.clear();
-            receivedItems.putAll(map);
-        });
-    }
-
-    @SubscribeEvent
-    static void onAttachEntityCapabilities(final AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof ServerPlayer) {
-            event.addCapability(ID, new SpawnItemsStore());
-        }
-    }
 
     @SubscribeEvent
     static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event) {
@@ -77,10 +43,7 @@ public final class SpawnItemsStore implements ICapabilitySerializable<Tag> {
     }
 
     private static void sendItems(ServerPlayer player) {
-        final var cap = getNullable(player);
-        if (cap == null) {
-            return;
-        }
+        final var cap = get(player);
         final var diff = getDiff(player, cap.receivedItems);
 
         for (final var entry : diff.entrySet()) {
@@ -123,20 +86,29 @@ public final class SpawnItemsStore implements ICapabilitySerializable<Tag> {
         if (event.isWasDeath() && !oldPlayer.level().getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).get()) {
             return;
         }
-        oldPlayer.reviveCaps();
-        try {
-            final SpawnItemsStore oldStore = getNullable(oldPlayer);
-            final SpawnItemsStore newStore = getNullable(event.getEntity());
-            if (oldStore != null && newStore != null) {
-                newStore.receivedItems.putAll(oldStore.receivedItems);
-            }
-        } finally {
-            oldPlayer.invalidateCaps();
-        }
+
+        final SpawnItemsStore oldStore = get(oldPlayer);
+        final SpawnItemsStore newStore = get(event.getEntity());
+        newStore.receivedItems.putAll(oldStore.receivedItems);
     }
 
+    public static SpawnItemsStore get(final Player player) {
+        return player.getData(ExtraAttachments.SPAWN_ITEMS_STORE);
+    }
+
+    @Override
+    public SpawnItemsStore read(IAttachmentHolder holder, Tag tag, HolderLookup.Provider registries) {
+        CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), tag).resultOrPartial(Util.prefix("Spawn Items: ", LOGGER::error)).ifPresent(map -> {
+            receivedItems.clear();
+            receivedItems.putAll(map);
+        });
+
+        return this;
+    }
+
+    @Override
     @Nullable
-    public static SpawnItemsStore getNullable(final Player player) {
-        return player.getCapability(LTExtras.SPAWN_ITEMS_STORE).orElse(null);
+    public Tag write(SpawnItemsStore attachment, HolderLookup.Provider registries) {
+        return CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), receivedItems).getOrThrow();
     }
 }

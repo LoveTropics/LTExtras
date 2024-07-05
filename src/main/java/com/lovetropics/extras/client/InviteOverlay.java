@@ -1,6 +1,6 @@
 package com.lovetropics.extras.client;
 
-import com.lovetropics.extras.ExtraItems;
+import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.item.ImageData;
 import net.minecraft.client.Minecraft;
@@ -10,42 +10,42 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class InviteOverlay {
     private static final int PADDING = 10;
 
     @SubscribeEvent
-    public static void onRegisterOverlays(final RegisterGuiOverlaysEvent event) {
+    public static void onRegisterOverlays(final RegisterGuiLayersEvent event) {
         final Minecraft minecraft = Minecraft.getInstance();
-        event.registerAbove(VanillaGuiOverlay.CHAT_PANEL.id(), "invites", (gui, graphics, partialTick, screenWidth, screenHeight) -> {
+        event.registerAbove(VanillaGuiLayers.CHAT, LTExtras.location("invites"), (graphics, deltaTracker) -> {
             final LocalPlayer player = minecraft.player;
             if (player == null) {
                 return;
             }
-            final ItemStack item = player.getMainHandItem();
-            if (item.is(ExtraItems.INVITE.get())) {
-                ImageData.get(item).ifPresent(image -> drawImage(graphics, gui.getFont(), screenWidth, screenHeight, image));
+            final ImageData image = player.getMainHandItem().get(ExtraDataComponents.IMAGE);
+            if (image != null) {
+                drawImage(graphics, image);
             }
         });
     }
 
-    private static void drawImage(final GuiGraphics graphics, final Font font, final int screenWidth, final int screenHeight, final ImageData image) {
-        final int height = Math.min((int) image.height(), screenHeight - PADDING * 2);
+    private static void drawImage(final GuiGraphics graphics, final ImageData image) {
+        final Font font = Minecraft.getInstance().font;
+        final int height = Math.min((int) image.height(), graphics.guiHeight() - PADDING * 2);
         final float scale = height / image.height();
 
         final int width = Mth.floor(image.width() * scale);
 
-        final int left = (screenWidth - width) / 2;
-        final int top = (screenHeight - height) / 2;
+        final int left = (graphics.guiWidth() - width) / 2;
+        final int top = (graphics.guiHeight() - height) / 2;
         graphics.blit(image.texture(), left, top, width, height, 0, 0, 1, 1, 1, 1);
 
         graphics.pose().pushPose();

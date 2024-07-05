@@ -1,12 +1,14 @@
 package com.lovetropics.extras.data;
 
-import com.lovetropics.extras.NamedSupplier;
 import com.lovetropics.extras.block.BoringEndRodBlock;
 import com.lovetropics.extras.block.GirderBlock;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FenceBlock;
@@ -16,12 +18,10 @@ import net.minecraft.world.level.block.ScaffoldingBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
-import net.minecraft.core.Direction.Axis;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
-import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder.PartBuilder;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder;
+import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder.PartBuilder;
 
 import java.util.function.Function;
 
@@ -124,17 +124,17 @@ public class ModelGenUtil {
 				.texture("bars", tex).texture("edge", tex).texture("particle", tex);
 	}
 
-	private static ResourceLocation blockTexture(NamedSupplier<Block> block) {
-		ResourceLocation base = block.getId();
-		return new ResourceLocation(base.getNamespace(), "block/" + base.getPath());
+	private static ResourceLocation blockTexture(Holder<Block> block) {
+		ResourceLocation base = block.unwrapKey().orElseThrow().location();
+		return base.withPrefix("block/");
 	}
 
-	private static ResourceLocation blockTexture(NamedSupplier<Block> block, String suffix) {
+	private static ResourceLocation blockTexture(Holder<Block> block, String suffix) {
 		ResourceLocation base = blockTexture(block);
-		return new ResourceLocation(base.getNamespace(), base.getPath() + "_" + suffix);
+		return base.withSuffix("_" + suffix);
 	}
 
-	public static ResourceLocation getMainTexture(NamedSupplier<Block> block, TextureType texture) {
+	public static ResourceLocation getMainTexture(Holder<Block> block, TextureType texture) {
 		return texture.getSideTexture(block);
 	}
 
@@ -169,7 +169,7 @@ public class ModelGenUtil {
 				.end();
 	}
 
-	public static <T extends StairBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> stairsBlock(NamedSupplier<Block> object, TextureType textureType) {
+	public static <T extends StairBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> stairsBlock(Holder<Block> object, TextureType textureType) {
 		return (ctx, prov) -> {
 			ResourceLocation side = textureType.getSideTexture(object);
 			ResourceLocation top = textureType.getTopTexture(object);
@@ -177,7 +177,7 @@ public class ModelGenUtil {
 		};
 	}
 
-	public static <T extends SlabBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> slabBlock(NamedSupplier<Block> object, TextureType textureType) {
+	public static <T extends SlabBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> slabBlock(Holder<Block> object, TextureType textureType) {
 		return (ctx, prov) -> {
 			ResourceLocation model = textureType.getModel(object);
 			ResourceLocation side = textureType.getSideTexture(object);
@@ -186,11 +186,11 @@ public class ModelGenUtil {
 		};
 	}
 
-	public static <T extends FenceBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> fenceBlock(NamedSupplier<Block> object, TextureType textureType) {
+	public static <T extends FenceBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> fenceBlock(Holder<Block> object, TextureType textureType) {
 		return (ctx, prov) -> prov.fenceBlock(ctx.getEntry(), textureType.getTopTexture(object));
 	}
 
-	public static <T extends WallBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> wallBlock(NamedSupplier<Block> object, TextureType textureType) {
+	public static <T extends WallBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> wallBlock(Holder<Block> object, TextureType textureType) {
 		return (ctx, prov) -> prov.wallBlock(ctx.getEntry(), textureType.getSideTexture(object));
 	}
 
@@ -202,17 +202,17 @@ public class ModelGenUtil {
 		static TextureType sideTopSuffix() {
 			return new TextureType() {
 				@Override
-				public ResourceLocation getModel(NamedSupplier<Block> block) {
+				public ResourceLocation getModel(Holder<Block> block) {
 					return ModelGenUtil.blockTexture(block);
 				}
 
 				@Override
-				public ResourceLocation getSideTexture(NamedSupplier<Block> block) {
+				public ResourceLocation getSideTexture(Holder<Block> block) {
 					return ModelGenUtil.blockTexture(block, "side");
 				}
 
 				@Override
-				public ResourceLocation getTopTexture(NamedSupplier<Block> block) {
+				public ResourceLocation getTopTexture(Holder<Block> block) {
 					return ModelGenUtil.blockTexture(block, "top");
 				}
 			};
@@ -222,33 +222,33 @@ public class ModelGenUtil {
 			return allTexture(b -> texture);
 		}
 
-		static TextureType allTexture(Function<NamedSupplier<Block>, ResourceLocation> texture) {
+		static TextureType allTexture(Function<Holder<Block>, ResourceLocation> texture) {
 			return simple(ModelGenUtil::blockTexture, texture);
 		}
 
-		static TextureType simple(Function<NamedSupplier<Block>, ResourceLocation> model, Function<NamedSupplier<Block>, ResourceLocation> texture) {
+		static TextureType simple(Function<Holder<Block>, ResourceLocation> model, Function<Holder<Block>, ResourceLocation> texture) {
 			return new TextureType() {
 				@Override
-				public ResourceLocation getModel(NamedSupplier<Block> block) {
+				public ResourceLocation getModel(Holder<Block> block) {
 					return model.apply(block);
 				}
 
 				@Override
-				public ResourceLocation getSideTexture(NamedSupplier<Block> block) {
+				public ResourceLocation getSideTexture(Holder<Block> block) {
 					return texture.apply(block);
 				}
 
 				@Override
-				public ResourceLocation getTopTexture(NamedSupplier<Block> block) {
+				public ResourceLocation getTopTexture(Holder<Block> block) {
 					return texture.apply(block);
 				}
 			};
 		}
 
-		ResourceLocation getModel(NamedSupplier<Block> block);
+		ResourceLocation getModel(Holder<Block> block);
 
-		ResourceLocation getSideTexture(NamedSupplier<Block> block);
+		ResourceLocation getSideTexture(Holder<Block> block);
 
-		ResourceLocation getTopTexture(NamedSupplier<Block> block);
+		ResourceLocation getTopTexture(Holder<Block> block);
 	}
 }

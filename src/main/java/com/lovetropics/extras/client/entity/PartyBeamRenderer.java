@@ -6,11 +6,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -20,14 +15,14 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class PartyBeamRenderer extends EntityRenderer<PartyBeamEntity> {
-    private static final ResourceLocation END_CRYSTAL_LOCATION = new ResourceLocation("textures/entity/end_crystal/end_crystal.png");
+    private static final ResourceLocation END_CRYSTAL_LOCATION = ResourceLocation.withDefaultNamespace("textures/entity/end_crystal/end_crystal.png");
     private static final RenderType BEAM = RenderType.entitySmoothCutout(EnderDragonRenderer.CRYSTAL_BEAM_LOCATION);
     private static final RenderType RENDER_TYPE = RenderType.entityCutoutNoCull(END_CRYSTAL_LOCATION);
     private static final float SIN_45 = Mth.sin(Mth.PI / 4.0f);
@@ -42,15 +37,6 @@ public class PartyBeamRenderer extends EntityRenderer<PartyBeamEntity> {
         glass = root.getChild("glass");
         cube = root.getChild("cube");
         base = root.getChild("base");
-    }
-
-    public static LayerDefinition createBodyLayer() {
-        final MeshDefinition mesh = new MeshDefinition();
-        final PartDefinition root = mesh.getRoot();
-        root.addOrReplaceChild("glass", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
-        root.addOrReplaceChild("cube", CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
-        root.addOrReplaceChild("base", CubeListBuilder.create().texOffs(0, 16).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 4.0F, 12.0F), PartPose.ZERO);
-        return LayerDefinition.create(mesh, 64, 32);
     }
 
     @Override
@@ -111,21 +97,17 @@ public class PartyBeamRenderer extends EntityRenderer<PartyBeamEntity> {
         float lastY = 0.75F;
         float lastProgress = 0.0F;
         final PoseStack.Pose pose = poseStack.last();
-        final Matrix4f matrix = pose.pose();
-        final Matrix3f normal = pose.normal();
 
         for (int i = 1; i <= 8; i++) {
             final float x = Mth.sin(i * Mth.TWO_PI / 8.0F) * 0.75F;
             final float y = Mth.cos(i * Mth.TWO_PI / 8.0F) * 0.75F;
             final float progress = i / 8.0F;
             final Vector3f color = entity.getColor();
-            final int r = Mth.floor(color.x() * 255.0f);
-            final int g = Mth.floor(color.y() * 255.0f);
-            final int b = Mth.floor(color.z() * 255.0f);
-            consumer.vertex(matrix, lastX * 0.2F, lastY * 0.2F, 0.0F).color(0, 0, 0, 255).uv(lastProgress, startTextureOffset).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(normal, 0.0F, -1.0F, 0.0F).endVertex();
-            consumer.vertex(matrix, lastX, lastY, length).color(r, g, b, 255).uv(lastProgress, endTextureOffset).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(normal, 0.0F, -1.0F, 0.0F).endVertex();
-            consumer.vertex(matrix, x, y, length).color(r, g, b, 255).uv(progress, endTextureOffset).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(normal, 0.0F, -1.0F, 0.0F).endVertex();
-            consumer.vertex(matrix, x * 0.2F, y * 0.2F, 0.0F).color(0, 0, 0, 255).uv(progress, startTextureOffset).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(normal, 0.0F, -1.0F, 0.0F).endVertex();
+            final int packedColor = FastColor.ARGB32.colorFromFloat(1.0f, color.x, color.y, color.z);
+            consumer.addVertex(pose, lastX * 0.2F, lastY * 0.2F, 0.0F).setColor(CommonColors.BLACK).setUv(lastProgress, startTextureOffset).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(pose, 0.0F, -1.0F, 0.0F);
+            consumer.addVertex(pose, lastX, lastY, length).setColor(packedColor).setUv(lastProgress, endTextureOffset).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(pose, 0.0F, -1.0F, 0.0F);
+            consumer.addVertex(pose, x, y, length).setColor(packedColor).setUv(progress, endTextureOffset).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(pose, 0.0F, -1.0F, 0.0F);
+            consumer.addVertex(pose, x * 0.2F, y * 0.2F, 0.0F).setColor(CommonColors.BLACK).setUv(progress, startTextureOffset).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(pose, 0.0F, -1.0F, 0.0F);
             lastX = x;
             lastY = y;
             lastProgress = progress;

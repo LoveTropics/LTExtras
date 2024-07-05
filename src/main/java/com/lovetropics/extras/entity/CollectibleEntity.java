@@ -1,5 +1,6 @@
 package com.lovetropics.extras.entity;
 
+import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.collectible.CollectibleStore;
@@ -51,9 +52,9 @@ public class CollectibleEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        getEntityData().define(DATA_ITEM, ItemStack.EMPTY);
-        getEntityData().define(DATA_PARTICLES, true);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(DATA_ITEM, ItemStack.EMPTY);
+        builder.define(DATA_PARTICLES, true);
     }
 
     @Override
@@ -88,8 +89,8 @@ public class CollectibleEntity extends Entity {
     }
 
     private void tryGiveCollectible(final Player player, final Collectible collectible) {
-        final CollectibleStore collectibles = CollectibleStore.getNullable(player);
-        if (collectibles != null && collectibles.give(collectible)) {
+        final CollectibleStore collectibles = CollectibleStore.get(player);
+        if (collectibles.give(collectible)) {
             recycleCollectibleCompass(player);
         }
     }
@@ -124,14 +125,14 @@ public class CollectibleEntity extends Entity {
         final Inventory inventory = player.getInventory();
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             final ItemStack stack = inventory.getItem(i);
-            final CollectibleCompassItem.Target target = CollectibleCompassItem.getTarget(stack);
+            final CollectibleCompassItem.Target target = stack.get(ExtraDataComponents.COLLECTIBLE_TARGET);
             if (target == null || !target.id().equals(getUUID())) {
                 continue;
             }
             inventory.removeItemNoUpdate(i);
-            final int coinCount = CollectibleCompassItem.getCoinCount(stack);
+            final int coinCount = stack.getOrDefault(ExtraDataComponents.COIN_COUNT, 0);
             if (coinCount > 0) {
-                inventory.placeItemBackInInventory(new ItemStack(ExtraItems.TROPICOIN, coinCount));
+                inventory.placeItemBackInInventory(new ItemStack(ExtraItems.TROPICOIN.asItem(), coinCount));
             }
         }
     }
@@ -155,7 +156,7 @@ public class CollectibleEntity extends Entity {
     @Override
     protected void addAdditionalSaveData(final CompoundTag tag) {
         if (collectible != null) {
-            tag.put(KEY_COLLECTIBLE, Util.getOrThrow(Collectible.CODEC.encodeStart(NbtOps.INSTANCE, collectible), IllegalStateException::new));
+            tag.put(KEY_COLLECTIBLE, Collectible.CODEC.encodeStart(NbtOps.INSTANCE, collectible).getOrThrow());
         }
         tag.putBoolean(KEY_PARTICLES, shouldShowParticles());
     }

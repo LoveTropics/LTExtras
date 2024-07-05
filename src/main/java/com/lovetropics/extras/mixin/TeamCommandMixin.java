@@ -1,15 +1,13 @@
 package com.lovetropics.extras.mixin;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.server.commands.TeamCommand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.commands.TeamCommand;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentUtils;
 
 @Mixin(TeamCommand.class)
 public class TeamCommandMixin {

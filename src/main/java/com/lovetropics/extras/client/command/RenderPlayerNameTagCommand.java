@@ -10,15 +10,16 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderNameTagEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderNameTagEvent;
+import net.neoforged.neoforge.common.util.TriState;
 
 import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
 import static net.minecraft.commands.Commands.literal;
 
-@Mod.EventBusSubscriber(modid = LTExtras.MODID, value = Dist .CLIENT)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class RenderPlayerNameTagCommand {
     private static boolean alwaysRenderNameTags = false;
 
@@ -48,7 +49,7 @@ public class RenderPlayerNameTagCommand {
     @SubscribeEvent
     public static void onRenderNameTagEvent(RenderNameTagEvent evt) {
         if (alwaysRenderNameTags && evt.getEntity() instanceof Player) {
-            evt.setResult(RenderNameTagEvent.Result.ALLOW);
+            evt.setCanRender(TriState.TRUE);
         }
     }
 

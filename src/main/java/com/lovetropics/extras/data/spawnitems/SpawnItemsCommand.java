@@ -23,7 +23,7 @@ public class SpawnItemsCommand {
                                                 .map(e -> e.getKey().toString()), builder))
                                 .executes(context -> {
                                     final var arg = context.getArgument("set", String.class);
-                                    final var set = SpawnItemsReloadListener.REGISTRY.get(new ResourceLocation(arg));
+                                    final var set = SpawnItemsReloadListener.REGISTRY.get(ResourceLocation.parse(arg));
                                     final ServerPlayer player = context.getSource().getPlayerOrException();
 
                                     if (set == null) {
