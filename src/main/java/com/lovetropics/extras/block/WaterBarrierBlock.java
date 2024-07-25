@@ -37,7 +37,7 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
 
 	public WaterBarrierBlock(Properties properties) {
 		super(properties);
-		this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, true));
+		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, true));
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
 	@Override
 	@Nullable
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return this.defaultBlockState().setValue(WATERLOGGED, true);
+		return defaultBlockState().setValue(WATERLOGGED, true);
 	}
 
 	@Override
@@ -72,9 +72,9 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
 	}
 
 	@Override
-	public boolean onDestroyedByPlayer(final BlockState state, final Level level, final BlockPos pos, final Player player, final boolean willHarvest, final FluidState fluid) {
+	public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
 		// Copied from super
-		this.asBlock().playerWillDestroy(level, pos, state, player);
+		asBlock().playerWillDestroy(level, pos, state, player);
 		// Changed to set air instead of the fluid state
 		return level.setBlock(pos, Blocks.AIR.defaultBlockState(), level.isClientSide ? 11 : 3);
 	}

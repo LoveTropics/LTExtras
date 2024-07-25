@@ -24,8 +24,8 @@ public class BlockModelRendererCacheMixin {
 
 	@Inject(method = "disable()V", at = @At("RETURN"))
 	private void disable(CallbackInfo ci) {
-		this.fastPackedLightCache.clear();
-		this.fastBrightnessCache.clear();
+		fastPackedLightCache.clear();
+		fastBrightnessCache.clear();
 	}
 
 	/**
@@ -34,12 +34,12 @@ public class BlockModelRendererCacheMixin {
 	 */
 	@Overwrite
 	public int getLightColor(BlockState state, BlockAndTintGetter world, BlockPos pos) {
-		if (!this.enabled) {
+		if (!enabled) {
 			return LevelRenderer.getLightColor(world, state, pos);
 		}
 
 		long posKey = pos.asLong();
-		LossyLightCache.Packed cache = this.fastPackedLightCache;
+		LossyLightCache.Packed cache = fastPackedLightCache;
 
 		int light = cache.get(posKey);
 		if (light != Integer.MAX_VALUE) {
@@ -58,12 +58,12 @@ public class BlockModelRendererCacheMixin {
 	 */
 	@Overwrite
 	public float getShadeBrightness(BlockState state, BlockAndTintGetter world, BlockPos pos) {
-		if (!this.enabled) {
+		if (!enabled) {
 			return state.getShadeBrightness(world, pos);
 		}
 
 		long posKey = pos.asLong();
-		LossyLightCache.Brightness cache = this.fastBrightnessCache;
+		LossyLightCache.Brightness cache = fastBrightnessCache;
 
 		float brightness = cache.get(posKey);
 		if (!Float.isNaN(brightness)) {

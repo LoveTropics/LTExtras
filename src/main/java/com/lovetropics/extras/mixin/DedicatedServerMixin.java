@@ -15,8 +15,8 @@ public class DedicatedServerMixin {
     // Hackfix: some mods keep non-daemon threads running after server exit.
     // Forcefully shut down the process if we fail to shut down within 3 seconds.
     @Inject(method = "onServerExit", at = @At("RETURN"))
-    private void onServerExit(final CallbackInfo ci) {
-        final Timer timer = new Timer(true);
+    private void onServerExit(CallbackInfo ci) {
+        Timer timer = new Timer(true);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {

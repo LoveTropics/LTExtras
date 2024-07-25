@@ -35,12 +35,12 @@ public class ClientCollectiblesList {
     }
 
     @SubscribeEvent
-    public static void onLogIn(final ClientPlayerNetworkEvent.LoggingIn event) {
+    public static void onLogIn(ClientPlayerNetworkEvent.LoggingIn event) {
         instance = new ClientCollectiblesList();
     }
 
     @SubscribeEvent
-    public static void onLogOut(final ClientPlayerNetworkEvent.LoggingOut event) {
+    public static void onLogOut(ClientPlayerNetworkEvent.LoggingOut event) {
         instance = null;
     }
 
@@ -52,11 +52,11 @@ public class ClientCollectiblesList {
         return itemStacks;
     }
 
-    public void update(final List<Collectible> collectibles, final boolean silent, final boolean hasUnseen) {
-        final Minecraft minecraft = Minecraft.getInstance();
-        final List<Collectible> newCollectibles = collectibles.stream().filter(c -> !this.collectibles.contains(c)).toList();
+    public void update(List<Collectible> collectibles, boolean silent, boolean hasUnseen) {
+        Minecraft minecraft = Minecraft.getInstance();
+        List<Collectible> newCollectibles = collectibles.stream().filter(c -> !this.collectibles.contains(c)).toList();
         this.collectibles = List.copyOf(collectibles);
-        final UUID playerId = minecraft.player.getUUID();
+        UUID playerId = minecraft.player.getUUID();
         itemStacks = collectibles.stream().map(collectible -> collectible.createItemStack(playerId)).toList();
         if (!silent && !newCollectibles.isEmpty()) {
             notifyCollections(newCollectibles);
@@ -64,16 +64,16 @@ public class ClientCollectiblesList {
         this.hasUnseen = hasUnseen;
     }
 
-    private static void notifyCollections(final List<Collectible> newCollectibles) {
-        final Minecraft minecraft = Minecraft.getInstance();
-        for (final Collectible newCollectible : newCollectibles) {
+    private static void notifyCollections(List<Collectible> newCollectibles) {
+        Minecraft minecraft = Minecraft.getInstance();
+        for (Collectible newCollectible : newCollectibles) {
             minecraft.getToasts().addToast(new CollectibleToast(newCollectible));
         }
         minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0f));
     }
 
     public static void openScreen() {
-        final Minecraft minecraft = Minecraft.getInstance();
+        Minecraft minecraft = Minecraft.getInstance();
         minecraft.setScreen(new CollectibleBasketScreen(minecraft.player.getInventory()));
         get().hasUnseen = false;
     }

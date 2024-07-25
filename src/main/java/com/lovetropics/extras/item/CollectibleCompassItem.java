@@ -31,13 +31,13 @@ public class CollectibleCompassItem extends Item {
     private static final int COOLDOWN_TICKS = SharedConstants.TICKS_PER_SECOND * 5;
     private static final double SEARCH_RANGE = 80.0;
 
-    public CollectibleCompassItem(final Properties properties) {
+    public CollectibleCompassItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(final Level level, final Player player, final InteractionHand hand) {
-        final ItemStack stack = player.getItemInHand(hand);
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
         if (level.isClientSide()) {
             return InteractionResultHolder.success(stack);
         }
@@ -46,7 +46,7 @@ public class CollectibleCompassItem extends Item {
             player.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_ALREADY_USED.get().withStyle(ChatFormatting.RED));
             return InteractionResultHolder.fail(stack);
         }
-        final Target target = tryLocateCollectible(level, player);
+        Target target = tryLocateCollectible(level, player);
         if (target != null) {
             stack.set(ExtraDataComponents.COLLECTIBLE_TARGET, target);
             player.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_SUCCESS.get().withStyle(ChatFormatting.GOLD));
@@ -57,14 +57,14 @@ public class CollectibleCompassItem extends Item {
     }
 
     @Nullable
-    private static Target tryLocateCollectible(final Level level, final Player player) {
-        final CollectibleStore collectibles = CollectibleStore.get(player);
+    private static Target tryLocateCollectible(Level level, Player player) {
+        CollectibleStore collectibles = CollectibleStore.get(player);
 
-        final List<CollectibleEntity> candidates = level.getEntitiesOfClass(CollectibleEntity.class, player.getBoundingBox().inflate(SEARCH_RANGE), entity -> {
+        List<CollectibleEntity> candidates = level.getEntitiesOfClass(CollectibleEntity.class, player.getBoundingBox().inflate(SEARCH_RANGE), entity -> {
             if (entity.getTags().contains(ENTITY_TAG_IGNORE)) {
                 return false;
             }
-            final Collectible collectible = entity.getCollectible();
+            Collectible collectible = entity.getCollectible();
             return collectible != null && !collectibles.contains(collectible);
         });
 
@@ -74,7 +74,7 @@ public class CollectibleCompassItem extends Item {
     }
 
     @Override
-    public boolean isFoil(final ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return stack.has(ExtraDataComponents.COLLECTIBLE_TARGET);
     }
 

@@ -33,7 +33,7 @@ public class WarpCommand {
 		dispatcher.register(literal("warp")
 				.then(argument(ARGUMENT_TARGET, StringArgumentType.word())
                         .suggests((context, builder) -> {
-                            final MapPoiManager poiManager = MapPoiManager.get(context.getSource().getServer());
+                            MapPoiManager poiManager = MapPoiManager.get(context.getSource().getServer());
                             return SharedSuggestionProvider.suggest(poiManager.getEnabledPois().stream().map(Poi::name), builder);
                         })
 						.executes(WarpCommand::warp)
@@ -42,14 +42,14 @@ public class WarpCommand {
     }
 
     private static int warp(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final String targetName = ctx.getArgument(ARGUMENT_TARGET, String.class);
-        final Poi target = MapPoiManager.get(ctx.getSource().getServer()).getPoi(targetName);
+        String targetName = ctx.getArgument(ARGUMENT_TARGET, String.class);
+        Poi target = MapPoiManager.get(ctx.getSource().getServer()).getPoi(targetName);
         if (target == null) {
             throw NOT_FOUND.create();
         }
-        final ServerPlayer player = ctx.getSource().getPlayerOrException();
-        final BlockPos blockPos = target.globalPos().pos();
-        final ServerLevel level = player.getServer().getLevel(target.globalPos().dimension());
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        BlockPos blockPos = target.globalPos().pos();
+        ServerLevel level = player.getServer().getLevel(target.globalPos().dimension());
 
         if (!target.enabled() && !player.hasPermissions(Commands.LEVEL_GAMEMASTERS)) {
             throw GENERAL_ERROR.create();
@@ -62,7 +62,7 @@ public class WarpCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    public static void addTranslations(final RegistrateLangProvider provider) {
+    public static void addTranslations(RegistrateLangProvider provider) {
         provider.add("commands.warp.general_error", "Couldn't go there");
         provider.add("commands.warp.success", "Warped to %s");
         provider.add("commands.warp.not_found", "Destination not found");

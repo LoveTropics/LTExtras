@@ -37,24 +37,24 @@ public class CollectibleStore implements IAttachmentSerializer<Tag, CollectibleS
 
 
     @SubscribeEvent
-    public static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event) {
-        final CollectibleStore collectibles = get(event.getEntity());
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        CollectibleStore collectibles = get(event.getEntity());
         collectibles.sendToClient(true);
     }
 
     @SubscribeEvent
-    public static void onPlayerClone(final PlayerEvent.Clone event) {
-        final Player oldPlayer = event.getOriginal();
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        Player oldPlayer = event.getOriginal();
         if (event.isWasDeath()) {
-            final CollectibleStore oldCollectibles = get(oldPlayer);
-            final CollectibleStore newCollectibles = get(event.getEntity());
+            CollectibleStore oldCollectibles = get(oldPlayer);
+            CollectibleStore newCollectibles = get(event.getEntity());
 
             newCollectibles.collectibles.addAll(oldCollectibles.collectibles);
             newCollectibles.sendToClient(true);
         }
     }
 
-    public static CollectibleStore get(final Player player) {
+    public static CollectibleStore get(Player player) {
         CollectibleStore data = player.getData(ExtraAttachments.COLLECTABLE_STORE);
         data.player = (ServerPlayer) player;
         return data;
@@ -64,7 +64,7 @@ public class CollectibleStore implements IAttachmentSerializer<Tag, CollectibleS
         return new CollectibleData(collectibles, hasUnseen);
     }
 
-    public boolean give(final Collectible collectible) {
+    public boolean give(Collectible collectible) {
         if (!collectibles.contains(collectible)) {
             collectibles.add(collectible);
             hasUnseen = true;
@@ -74,7 +74,7 @@ public class CollectibleStore implements IAttachmentSerializer<Tag, CollectibleS
         return false;
     }
 
-    public boolean clear(final Predicate<Collectible> predicate) {
+    public boolean clear(Predicate<Collectible> predicate) {
         if (collectibles.removeIf(predicate)) {
             sendToClient(false);
             return true;
@@ -82,13 +82,13 @@ public class CollectibleStore implements IAttachmentSerializer<Tag, CollectibleS
         return false;
     }
 
-    public boolean contains(final Collectible collectible) {
+    public boolean contains(Collectible collectible) {
         return collectibles.contains(collectible);
     }
 
-    public int count(final Predicate<Collectible> predicate) {
+    public int count(Predicate<Collectible> predicate) {
         int count = 0;
-        for (final Collectible collectible : collectibles) {
+        for (Collectible collectible : collectibles) {
             if (predicate.test(collectible)) {
                 count++;
             }
@@ -96,7 +96,7 @@ public class CollectibleStore implements IAttachmentSerializer<Tag, CollectibleS
         return count;
     }
 
-    public void setLocked(final boolean locked) {
+    public void setLocked(boolean locked) {
         this.locked = locked;
     }
 
@@ -108,7 +108,7 @@ public class CollectibleStore implements IAttachmentSerializer<Tag, CollectibleS
         hasUnseen = false;
     }
 
-    private void sendToClient(final boolean silent) {
+    private void sendToClient(boolean silent) {
         if (player != null) {
             PacketDistributor.sendToPlayer(player, new ClientboundCollectiblesListPacket(collectibles, silent, hasUnseen));
         }

@@ -18,7 +18,7 @@ public record ServerboundSetTimeZonePacket(ZoneId id) implements CustomPacketPay
             id -> {
                 try {
                     return new ServerboundSetTimeZonePacket(ZoneId.of(id));
-                } catch (final DateTimeException e) {
+                } catch (DateTimeException e) {
                     return new ServerboundSetTimeZonePacket(ZoneOffset.UTC);
                 }
             },
@@ -27,8 +27,8 @@ public record ServerboundSetTimeZonePacket(ZoneId id) implements CustomPacketPay
 
     public static final Type<ServerboundSetTimeZonePacket> TYPE = new Type<>(LTExtras.location("set_time_zone"));
 
-    public static void handle(final ServerboundSetTimeZonePacket packet, final IPayloadContext ctx) {
-        final ServerPlayer player = (ServerPlayer) ctx.player();
+    public static void handle(ServerboundSetTimeZonePacket packet, IPayloadContext ctx) {
+        ServerPlayer player = (ServerPlayer) ctx.player();
         PlayerTimeZone.set(player, packet.id());
     }
 

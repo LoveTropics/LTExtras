@@ -13,22 +13,22 @@ public class MoveBackToOriginGoal extends RandomStrollGoal {
 	public MoveBackToOriginGoal(PathfinderMob creatureIn, double speedIn, Vec3 vec, int range) {
 		super(creatureIn, speedIn);
 		this.vec = vec;
-		this.rangeSq = range * range;
+		rangeSq = range * range;
 	}
 
 	@Override
 	public boolean canUse() {
-		if (this.mob.position().distanceToSqr(this.vec) > this.rangeSq) {
-			Vec3 vec = this.getPosition();
+		if (mob.position().distanceToSqr(vec) > rangeSq) {
+			Vec3 vec = getPosition();
 
 			if (vec == null) {
 				return false;
 			}
 
 			// Store position- we don't call super so we must do this ourselves
-			this.wantedX = vec.x();
-			this.wantedY = vec.y();
-			this.wantedZ = vec.z();
+			wantedX = vec.x();
+			wantedY = vec.y();
+			wantedZ = vec.z();
 
 			return true;
 		}
@@ -39,6 +39,6 @@ public class MoveBackToOriginGoal extends RandomStrollGoal {
 	@Nullable
 	@Override
 	protected Vec3 getPosition() {
-		return this.vec;
+		return vec;
 	}
 }

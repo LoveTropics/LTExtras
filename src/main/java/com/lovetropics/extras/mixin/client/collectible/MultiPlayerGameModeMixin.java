@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {
     @Redirect(method = "performUseItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;useOn(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;", ordinal = 1))
-    private InteractionResult useItemOn(final ItemStack stack, final UseOnContext context) {
+    private InteractionResult useItemOn(ItemStack stack, UseOnContext context) {
         return CollectibleItemBehavior.wrapUseOn(stack, context);
     }
 }

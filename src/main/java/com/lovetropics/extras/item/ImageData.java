@@ -21,15 +21,15 @@ public record ImageData(Optional<Component> name, ResourceLocation texture, floa
             TextElement.CODEC.listOf().optionalFieldOf("text", List.of()).forGetter(ImageData::text)
     ).apply(i, ImageData::new));
 
-    public ImageData(final Component name, final ResourceLocation texture, final float width, final float height, final List<TextElement> text) {
+    public ImageData(Component name, ResourceLocation texture, float width, float height, List<TextElement> text) {
         this(Optional.of(name), texture, width, height, 0.0f, 0.0f, text);
     }
 
-    public ImageData(final Component name, final ResourceLocation texture, final float width, final float height) {
+    public ImageData(Component name, ResourceLocation texture, float width, float height) {
         this(Optional.of(name), texture, width, height, 0.0f, 0.0f, List.of());
     }
 
-    public static TextElement text(final Component text, final float x, final float y) {
+    public static TextElement text(Component text, float x, float y) {
         return new TextElement(text, x, y, Float.MAX_VALUE, TextElement.DEFAULT_LINE_SPACING, Align.START, Align.START);
     }
 
@@ -46,15 +46,15 @@ public record ImageData(Optional<Component> name, ResourceLocation texture, floa
                 Align.CODEC.fieldOf("align_vertical").forGetter(TextElement::alignVertical)
         ).apply(i, TextElement::new));
 
-        public TextElement align(final Align horizontal, final Align vertical) {
+        public TextElement align(Align horizontal, Align vertical) {
             return new TextElement(text, x, y, maxWidth, lineSpacing, horizontal, vertical);
         }
 
-        public TextElement maxWidth(final float maxWidth) {
+        public TextElement maxWidth(float maxWidth) {
             return new TextElement(text, x, y, maxWidth, lineSpacing, alignHorizontal, alignVertical);
         }
 
-        public TextElement lineSpacing(final float lineSpacing) {
+        public TextElement lineSpacing(float lineSpacing) {
             return new TextElement(text, x, y, maxWidth, lineSpacing, alignHorizontal, alignVertical);
         }
     }
@@ -69,11 +69,11 @@ public record ImageData(Optional<Component> name, ResourceLocation texture, floa
 
         private final String name;
 
-        Align(final String name) {
+        Align(String name) {
             this.name = name;
         }
 
-        public float resolve(final float min, final float size) {
+        public float resolve(float min, float size) {
             return switch (this) {
                 case START -> min;
                 case CENTER -> min - size / 2.0f;

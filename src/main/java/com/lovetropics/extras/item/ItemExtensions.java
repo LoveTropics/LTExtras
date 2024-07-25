@@ -16,8 +16,8 @@ import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class ItemExtensions {
-    public static boolean onItemToss(final Player player, final ItemEntity item) {
-        final ItemStack stack = item.getItem();
+    public static boolean onItemToss(Player player, ItemEntity item) {
+        ItemStack stack = item.getItem();
         if (stack.has(ExtraDataComponents.UNDROPPABLE)) {
             player.addItem(stack);
             return true;
@@ -26,8 +26,8 @@ public class ItemExtensions {
     }
 
     @SubscribeEvent
-    public static void onItemPickup(final ItemEntityPickupEvent.Pre event) {
-        final ItemStack stack = event.getItemEntity().getItem();
+    public static void onItemPickup(ItemEntityPickupEvent.Pre event) {
+        ItemStack stack = event.getItemEntity().getItem();
         if (stack.has(ExtraDataComponents.UNDROPPABLE)) {
             stack.setCount(0);
             event.getItemEntity().discard();
@@ -36,33 +36,33 @@ public class ItemExtensions {
     }
 
     @SubscribeEvent
-    public static void onLivingDrops(final LivingDropsEvent event) {
+    public static void onLivingDrops(LivingDropsEvent event) {
         event.getDrops().removeIf(item -> item.getItem().has(ExtraDataComponents.UNDROPPABLE));
     }
 
-    public static void onItemUsedOn(final ServerPlayer player, final ItemStack stack, final UseOnContext context) {
+    public static void onItemUsedOn(ServerPlayer player, ItemStack stack, UseOnContext context) {
         applyCooldownOverride(player, stack);
     }
 
-    public static void onItemUsed(final ServerPlayer player, final ItemStack stack) {
+    public static void onItemUsed(ServerPlayer player, ItemStack stack) {
         applyCooldownOverride(player, stack);
     }
 
-    private static void applyCooldownOverride(final ServerPlayer player, final ItemStack stack) {
+    private static void applyCooldownOverride(ServerPlayer player, ItemStack stack) {
         if (player.isUsingItem()) {
             return;
         }
-        final int cooldown = stack.getOrDefault(ExtraDataComponents.COOLDOWN_OVERRIDE, 0);
+        int cooldown = stack.getOrDefault(ExtraDataComponents.COOLDOWN_OVERRIDE, 0);
         if (cooldown != 0) {
             player.getCooldowns().addCooldown(stack.getItem(), cooldown);
         }
     }
 
     @SubscribeEvent
-    public static void onItemFinishedUsing(final LivingEntityUseItemEvent.Finish event) {
-        if (event.getEntity() instanceof final ServerPlayer player) {
-            final ItemStack stack = event.getItem();
-            final int cooldown = stack.getOrDefault(ExtraDataComponents.COOLDOWN_OVERRIDE, 0);
+    public static void onItemFinishedUsing(LivingEntityUseItemEvent.Finish event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            ItemStack stack = event.getItem();
+            int cooldown = stack.getOrDefault(ExtraDataComponents.COOLDOWN_OVERRIDE, 0);
             if (cooldown != 0) {
                 player.getCooldowns().addCooldown(event.getItem().getItem(), cooldown);
             }

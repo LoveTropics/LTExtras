@@ -32,16 +32,16 @@ public abstract class ChunkRenderMixin implements ChunkRendererExt {
 	 */
 	@Overwrite
 	public boolean hasAllNeighbors() {
-		if (this.neighborChunksLoaded) {
+		if (neighborChunksLoaded) {
 			return true;
 		}
 
-		if (this.getDistToPlayerSqr() > 24.0 * 24.0) {
-			this.neighborChunksLoaded = this.doesChunkExistAt(this.relativeOrigins[Direction.WEST.ordinal()])
-					&& this.doesChunkExistAt(this.relativeOrigins[Direction.NORTH.ordinal()])
-					&& this.doesChunkExistAt(this.relativeOrigins[Direction.EAST.ordinal()])
-					&& this.doesChunkExistAt(this.relativeOrigins[Direction.SOUTH.ordinal()]);
-			return this.neighborChunksLoaded;
+		if (getDistToPlayerSqr() > 24.0 * 24.0) {
+			neighborChunksLoaded = doesChunkExistAt(relativeOrigins[Direction.WEST.ordinal()])
+					&& doesChunkExistAt(relativeOrigins[Direction.NORTH.ordinal()])
+					&& doesChunkExistAt(relativeOrigins[Direction.EAST.ordinal()])
+					&& doesChunkExistAt(relativeOrigins[Direction.SOUTH.ordinal()]);
+			return neighborChunksLoaded;
 		} else {
 			return true;
 		}
@@ -49,11 +49,11 @@ public abstract class ChunkRenderMixin implements ChunkRendererExt {
 
 	@Inject(method = "setOrigin", at = @At("HEAD"))
 	private void setOrigin(int x, int y, int z, CallbackInfo ci) {
-		this.neighborChunksLoaded = false;
+		neighborChunksLoaded = false;
 	}
 
 	@Override
 	public void extras$markNeighborChunksUnloaded() {
-		this.neighborChunksLoaded = false;
+		neighborChunksLoaded = false;
 	}
 }

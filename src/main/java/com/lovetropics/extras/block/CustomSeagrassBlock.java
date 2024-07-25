@@ -25,14 +25,14 @@ public class CustomSeagrassBlock extends SeagrassBlock {
 	@Nullable
 	private final Supplier<Supplier<? extends TallSeagrassBlock>> tall;
 
-	public CustomSeagrassBlock(final Properties properties, final String scientificName, @Nullable final Supplier<Supplier<? extends TallSeagrassBlock>> tall) {
+	public CustomSeagrassBlock(Properties properties, String scientificName, @Nullable Supplier<Supplier<? extends TallSeagrassBlock>> tall) {
 		super(properties);
 		this.scientificName = scientificName;
 		this.tall = tall;
 	}
 
 	@Override
-	public void appendHoverText(final ItemStack itemStack, @Nullable final Item.TooltipContext ctx, final List<Component> tooltip, final TooltipFlag flag) {
+	public void appendHoverText(ItemStack itemStack, @Nullable Item.TooltipContext ctx, List<Component> tooltip, TooltipFlag flag) {
 		tooltip.add(Component.literal(scientificName).withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
 	}
 

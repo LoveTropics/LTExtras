@@ -43,12 +43,12 @@ public class MapPoiManager extends SavedData {
     private static final String STORAGE_ID = LTExtras.MODID + "_map_poi";
     private final Map<String, Poi> pois;
 
-    public MapPoiManager(final Map<String, Poi> pois) {
+    public MapPoiManager(Map<String, Poi> pois) {
         this.pois = pois;
     }
 
     public MapPoiManager() {
-        this.pois = new HashMap<>();
+        pois = new HashMap<>();
     }
 
     @Override
@@ -57,20 +57,20 @@ public class MapPoiManager extends SavedData {
         return tag;
     }
 
-    public static MapPoiManager get(final MinecraftServer server) {
+    public static MapPoiManager get(MinecraftServer server) {
         return server.overworld().getDataStorage().computeIfAbsent(FACTORY, STORAGE_ID);
     }
 
-    private static MapPoiManager load(final CompoundTag tag, final HolderLookup.Provider registries) {
+    private static MapPoiManager load(CompoundTag tag, HolderLookup.Provider registries) {
         return CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), tag.get("map_pois")).result()
                 .map(result -> new MapPoiManager(new HashMap<>(result)))
                 .orElseGet(MapPoiManager::new);
     }
 
     @SubscribeEvent
-    public static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof final ServerPlayer serverPlayer) {
-            final MapPoiManager poiManager = MapPoiManager.get(serverPlayer.getServer());
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            MapPoiManager poiManager = MapPoiManager.get(serverPlayer.getServer());
             poiManager.getVisiblePois(serverPlayer)
                     .forEach(e -> PacketDistributor.sendToPlayer(serverPlayer, new ClientboundPoiPacket(e, false)));
         }
@@ -80,8 +80,8 @@ public class MapPoiManager extends SavedData {
         return pois.values();
     }
 
-    public Stream<Poi> getVisiblePois(final ServerPlayer player) {
-        final Stream<Poi> stream = pois.values().stream();
+    public Stream<Poi> getVisiblePois(ServerPlayer player) {
+        Stream<Poi> stream = pois.values().stream();
         if (player.hasPermissions(Commands.LEVEL_GAMEMASTERS)) {
             return stream;
         } else {
@@ -96,7 +96,7 @@ public class MapPoiManager extends SavedData {
     }
 
     private void removeFace(String name, UUID face) {
-        final Poi poi = pois.get(name);
+        Poi poi = pois.get(name);
         if (poi != null) {
             poi.removeFace(face);
             PacketDistributor.sendToAllPlayers(new ClientboundPoiPacket(poi, false));
@@ -105,7 +105,7 @@ public class MapPoiManager extends SavedData {
     }
 
     public void addFace(String name, UUID face) {
-        final Poi poi = pois.get(name);
+        Poi poi = pois.get(name);
         if (poi != null) {
             getAllPois().stream()
                     .filter(p -> p != poi)
@@ -133,14 +133,14 @@ public class MapPoiManager extends SavedData {
     }
 
     @Nullable
-    public Poi getPoi(final String name) {
+    public Poi getPoi(String name) {
         return pois.values().stream()
                 .filter(p -> p.name().equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);
     }
 
-    public void add(final Poi poi) {
+    public void add(Poi poi) {
         setDirty();
         pois.put(poi.name(), poi);
         updateClients(poi);
@@ -154,7 +154,7 @@ public class MapPoiManager extends SavedData {
         return setPoiState(name, false);
     }
 
-    private boolean setPoiState(final String name, final boolean newState) {
+    private boolean setPoiState(String name, boolean newState) {
         setDirty();
         Poi poi = pois.get(name);
         if (poi != null) {
@@ -166,12 +166,12 @@ public class MapPoiManager extends SavedData {
         return false;
     }
 
-    private void updateClients(final Poi poi) {
+    private void updateClients(Poi poi) {
         PacketDistributor.sendToAllPlayers(new ClientboundPoiPacket(poi, false));
     }
 
     public void remove(String name) {
-        final Poi poi = pois.remove(name);
+        Poi poi = pois.remove(name);
         setDirty();
         PacketDistributor.sendToAllPlayers(new ClientboundPoiPacket(poi, true));
     }
@@ -181,8 +181,8 @@ public class MapPoiManager extends SavedData {
         if (event.getServer().getTickCount() % 20 != 0) {
             return;
         }
-        final MapPoiManager manager = MapPoiManager.get(event.getServer());
-        final Set<ServerPlayer> hosts = getHosts(event.getServer());
+        MapPoiManager manager = MapPoiManager.get(event.getServer());
+        Set<ServerPlayer> hosts = getHosts(event.getServer());
 
         if (hosts.isEmpty()) {
             manager.clearFaces();
@@ -204,16 +204,16 @@ public class MapPoiManager extends SavedData {
         }
     }
 
-    private static Set<ServerPlayer> getHosts(final MinecraftServer server) {
+    private static Set<ServerPlayer> getHosts(MinecraftServer server) {
         return server.getPlayerList().getPlayers()
                 .stream()
                 .filter(FacePredicate::shouldDrawFace)
                 .collect(Collectors.toSet());
     }
 
-    private static void addNewFacesToPois(final MapPoiManager manager, final Set<ServerPlayer> hosts) {
+    private static void addNewFacesToPois(MapPoiManager manager, Set<ServerPlayer> hosts) {
         for (ServerPlayer host : hosts) {
-            final BlockPos hostPosition = host.blockPosition();
+            BlockPos hostPosition = host.blockPosition();
             manager.getEnabledPois()
                     .stream()
                     .filter(p -> p.globalPos().dimension() == host.level().dimension())
@@ -223,7 +223,7 @@ public class MapPoiManager extends SavedData {
         }
     }
 
-    private static void removeNoLongerHostingFaces(final MapPoiManager manager, final Set<ServerPlayer> currentHosts) {
+    private static void removeNoLongerHostingFaces(MapPoiManager manager, Set<ServerPlayer> currentHosts) {
         for (Poi poi : manager.getAllPois()) {
             for (UUID face : poi.faces()) {
                 if (currentHosts.stream().noneMatch(p -> p.getUUID().equals(face))) {

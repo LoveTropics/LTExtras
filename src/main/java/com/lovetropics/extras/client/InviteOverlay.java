@@ -23,50 +23,50 @@ public class InviteOverlay {
     private static final int PADDING = 10;
 
     @SubscribeEvent
-    public static void onRegisterOverlays(final RegisterGuiLayersEvent event) {
-        final Minecraft minecraft = Minecraft.getInstance();
+    public static void onRegisterOverlays(RegisterGuiLayersEvent event) {
+        Minecraft minecraft = Minecraft.getInstance();
         event.registerAbove(VanillaGuiLayers.CHAT, LTExtras.location("invites"), (graphics, deltaTracker) -> {
-            final LocalPlayer player = minecraft.player;
+            LocalPlayer player = minecraft.player;
             if (player == null) {
                 return;
             }
-            final ImageData image = player.getMainHandItem().get(ExtraDataComponents.IMAGE);
+            ImageData image = player.getMainHandItem().get(ExtraDataComponents.IMAGE);
             if (image != null) {
                 drawImage(graphics, image);
             }
         });
     }
 
-    private static void drawImage(final GuiGraphics graphics, final ImageData image) {
-        final Font font = Minecraft.getInstance().font;
-        final int height = Math.min((int) image.height(), graphics.guiHeight() - PADDING * 2);
-        final float scale = height / image.height();
+    private static void drawImage(GuiGraphics graphics, ImageData image) {
+        Font font = Minecraft.getInstance().font;
+        int height = Math.min((int) image.height(), graphics.guiHeight() - PADDING * 2);
+        float scale = height / image.height();
 
-        final int width = Mth.floor(image.width() * scale);
+        int width = Mth.floor(image.width() * scale);
 
-        final int left = (graphics.guiWidth() - width) / 2;
-        final int top = (graphics.guiHeight() - height) / 2;
+        int left = (graphics.guiWidth() - width) / 2;
+        int top = (graphics.guiHeight() - height) / 2;
         graphics.blit(image.texture(), left, top, width, height, 0, 0, 1, 1, 1, 1);
 
         graphics.pose().pushPose();
         graphics.pose().translate(left, top, 200.0f);
         graphics.pose().scale(scale, scale, scale);
 
-        for (final ImageData.TextElement text : image.text()) {
-            final int maxWidth = text.maxWidth() != Float.MAX_VALUE ? Mth.floor(text.maxWidth()) : Integer.MAX_VALUE;
-            final List<FormattedCharSequence> lines = font.split(text.text(), maxWidth);
+        for (ImageData.TextElement text : image.text()) {
+            int maxWidth = text.maxWidth() != Float.MAX_VALUE ? Mth.floor(text.maxWidth()) : Integer.MAX_VALUE;
+            List<FormattedCharSequence> lines = font.split(text.text(), maxWidth);
 
             float textWidth = 0.0f;
-            for (final FormattedCharSequence line : lines) {
+            for (FormattedCharSequence line : lines) {
                 textWidth = Math.max(textWidth, font.width(line));
             }
 
-            final float lineSpacing = text.lineSpacing();
-            final float textHeight = lines.size() * lineSpacing;
+            float lineSpacing = text.lineSpacing();
+            float textHeight = lines.size() * lineSpacing;
 
             float lineTop = text.alignVertical().resolve(text.y(), textHeight);
-            for (final FormattedCharSequence line : lines) {
-                final float lineLeft = text.alignHorizontal().resolve(text.x(), font.width(line));
+            for (FormattedCharSequence line : lines) {
+                float lineLeft = text.alignHorizontal().resolve(text.x(), font.width(line));
                 graphics.drawString(font, line, Mth.floor(lineLeft), Mth.floor(lineTop), CommonColors.WHITE);
                 lineTop += lineSpacing;
             }

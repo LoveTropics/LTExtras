@@ -6,7 +6,6 @@ import com.lovetropics.extras.LTExtras;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -48,20 +47,20 @@ public class InviteItem extends Item {
             )
     );
 
-    private static MutableComponent inviteName(final String number) {
+    private static MutableComponent inviteName(String number) {
         return Component.empty()
                 .append(Component.literal("...").withStyle(ChatFormatting.OBFUSCATED))
                 .append(Component.literal(" " + number + " ").withStyle(ChatFormatting.DARK_PURPLE))
                 .append(Component.literal("...").withStyle(ChatFormatting.OBFUSCATED));
     }
 
-    public InviteItem(final Properties properties) {
+    public InviteItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    public Component getName(final ItemStack stack) {
-        final ImageData image = stack.get(ExtraDataComponents.IMAGE);
+    public Component getName(ItemStack stack) {
+        ImageData image = stack.get(ExtraDataComponents.IMAGE);
         if (image != null && image.name().isPresent()) {
             return image.name().get();
         }

@@ -36,41 +36,41 @@ public class Collectible implements DataComponentHolder {
     private final DataComponentPatch components;
     private final DataComponentMap combinedComponents;
 
-    private Collectible(final Holder<Item> item, final DataComponentPatch components) {
+    private Collectible(Holder<Item> item, DataComponentPatch components) {
         this.item = item;
         this.components = components;
         combinedComponents = PatchedDataComponentMap.fromPatch(item.value().components(), components);
     }
 
-    public Collectible(final ItemStack stack) {
+    public Collectible(ItemStack stack) {
         this(stack.getItemHolder(), componentsWithoutMarker(stack.getComponentsPatch()));
     }
 
     @Nullable
-    public static Collectible byItem(final ItemStack stack) {
+    public static Collectible byItem(ItemStack stack) {
         if (isCollectible(stack)) {
             return new Collectible(stack);
         }
         return null;
     }
 
-    public static boolean isCollectible(final ItemStack stack) {
+    public static boolean isCollectible(ItemStack stack) {
         return stack.has(ExtraDataComponents.COLLECTIBLE_OWNER);
     }
 
-    public static boolean isIllegalCollectible(final ItemStack stack, final Player player) {
-        final UUID owner = stack.get(ExtraDataComponents.COLLECTIBLE_OWNER);
+    public static boolean isIllegalCollectible(ItemStack stack, Player player) {
+        UUID owner = stack.get(ExtraDataComponents.COLLECTIBLE_OWNER);
         return owner != null && !player.getUUID().equals(owner);
     }
 
-    public ItemStack createItemStack(final UUID player) {
-        final ItemStack stack = new ItemStack(item);
+    public ItemStack createItemStack(UUID player) {
+        ItemStack stack = new ItemStack(item);
         stack.applyComponents(components);
         addMarkerTo(player, stack);
         return stack;
     }
 
-    public static void addMarkerTo(final UUID player, final ItemStack stack) {
+    public static void addMarkerTo(UUID player, ItemStack stack) {
         stack.set(ExtraDataComponents.COLLECTIBLE_OWNER, player);
     }
 
@@ -82,7 +82,7 @@ public class Collectible implements DataComponentHolder {
         return components;
     }
 
-    public boolean matches(final ItemStack stack) {
+    public boolean matches(ItemStack stack) {
         if (!stack.is(item) || !Collectible.isCollectible(stack)) {
             return false;
         }
@@ -94,11 +94,11 @@ public class Collectible implements DataComponentHolder {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof final Collectible collectible) {
+        if (obj instanceof Collectible collectible) {
             return item.equals(collectible.item) && components.equals(collectible.components);
         }
         return false;

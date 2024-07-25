@@ -24,7 +24,7 @@ public class TropicalMapScreen extends Screen {
     private final Player player;
     private final List<PoiButton> poiButtons = new ArrayList<>();
 
-    public TropicalMapScreen(final Component title, final Player player) {
+    public TropicalMapScreen(Component title, Player player) {
         super(title);
         this.player = player;
     }
@@ -34,43 +34,43 @@ public class TropicalMapScreen extends Screen {
         super.init();
 
         poiButtons.clear();
-        int xOffset = (this.width / 2) - (MAP_PNG_WIDTH / 2);
-        int yOffset = (this.height / 2) - (MAP_PNG_HEIGHT / 2);
+        int xOffset = (width / 2) - (MAP_PNG_WIDTH / 2);
+        int yOffset = (height / 2) - (MAP_PNG_HEIGHT / 2);
 
         for (Poi mapPoi : ClientMapPoiManager.getPois().values()) {
             if (!mapPoi.enabled() && !player.hasPermissions(Commands.LEVEL_GAMEMASTERS)) {
                 continue;
             }
 
-            final BlockPos pos = mapPoi.globalPos().pos();
-            final Pair<Integer, Integer> poiPos = getPoiPos(pos);
-            final int screenX = poiPos.getLeft() + xOffset;
-            final int screenY = poiPos.getRight() + yOffset;
+            BlockPos pos = mapPoi.globalPos().pos();
+            Pair<Integer, Integer> poiPos = getPoiPos(pos);
+            int screenX = poiPos.getLeft() + xOffset;
+            int screenY = poiPos.getRight() + yOffset;
 
-            final PoiButton button = PoiButton.create(font, screenX, screenY, mapPoi, this::doWarp);
+            PoiButton button = PoiButton.create(font, screenX, screenY, mapPoi, this::doWarp);
             addRenderableWidget(button);
             poiButtons.add(button);
         }
     }
 
-    private Pair<Integer, Integer> getPoiPos(final BlockPos blockPos) {
-        final int mapWidth = MapPoiManager.MAP_BB.maxX() - MapPoiManager.MAP_BB.minX();
-        final int mapHeight = MapPoiManager.MAP_BB.maxZ() - MapPoiManager.MAP_BB.minZ();
-        final int screenX = (blockPos.getX() - MapPoiManager.MAP_BB.minX()) * MAP_PNG_WIDTH / mapWidth;
-        final int screenY = (blockPos.getZ() - MapPoiManager.MAP_BB.minZ()) * MAP_PNG_HEIGHT / mapHeight;
+    private Pair<Integer, Integer> getPoiPos(BlockPos blockPos) {
+        int mapWidth = MapPoiManager.MAP_BB.maxX() - MapPoiManager.MAP_BB.minX();
+        int mapHeight = MapPoiManager.MAP_BB.maxZ() - MapPoiManager.MAP_BB.minZ();
+        int screenX = (blockPos.getX() - MapPoiManager.MAP_BB.minX()) * MAP_PNG_WIDTH / mapWidth;
+        int screenY = (blockPos.getZ() - MapPoiManager.MAP_BB.minZ()) * MAP_PNG_HEIGHT / mapHeight;
         return Pair.of(screenX, screenY);
     }
 
     @Override
     public void tick() {
         super.tick();
-        for (final PoiButton button : poiButtons) {
+        for (PoiButton button : poiButtons) {
             button.tick();
         }
     }
 
     @Override
-    public void render(final GuiGraphics graphics, final int pMouseX, final int pMouseY, final float pPartialTick) {
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
     }
@@ -79,14 +79,14 @@ public class TropicalMapScreen extends Screen {
     public void renderBackground(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
 
-        int h = (this.height - MAP_PNG_HEIGHT) / 2;
-        int w = (this.width - MAP_PNG_WIDTH) / 2;
+        int h = (height - MAP_PNG_HEIGHT) / 2;
+        int w = (width - MAP_PNG_WIDTH) / 2;
 
         graphics.blit(MAP_LOCATION, w, h, 0, 0.0F, 0.0F, MAP_PNG_WIDTH, MAP_PNG_HEIGHT, MAP_PNG_WIDTH, MAP_PNG_HEIGHT);
     }
 
     private void doWarp(Poi mapPoi) {
-        if (player instanceof final LocalPlayer localPlayer) {
+        if (player instanceof LocalPlayer localPlayer) {
             localPlayer.connection.sendUnsignedCommand("warp " + mapPoi.name());
             onClose();
         }

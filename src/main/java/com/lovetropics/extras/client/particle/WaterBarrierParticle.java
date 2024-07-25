@@ -28,10 +28,10 @@ import org.jetbrains.annotations.Nullable;
 public class WaterBarrierParticle extends TextureSheetParticle {
 	WaterBarrierParticle(ClientLevel world, double x, double y, double z, ItemLike item) {
 		super(world, x, y, z);
-		this.setSprite(ExtraParticles.getItemSprite(world, new ItemStack(item)));
-		this.gravity = 0.0F;
-		this.lifetime = 80;
-		this.hasPhysics = false;
+		setSprite(ExtraParticles.getItemSprite(world, new ItemStack(item)));
+		gravity = 0.0F;
+		lifetime = 80;
+		hasPhysics = false;
 	}
 
 	@SubscribeEvent

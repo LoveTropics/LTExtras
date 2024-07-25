@@ -9,7 +9,7 @@ public class EffectInterpolator<T> {
     private T targetState;
     private int interpolationSteps;
 
-    public EffectInterpolator(final Function<T> function, final T defaultState) {
+    public EffectInterpolator(Function<T> function, T defaultState) {
         this.function = function;
         lastState = state = targetState = defaultState;
     }
@@ -17,7 +17,7 @@ public class EffectInterpolator<T> {
     public void step() {
         lastState = state;
         if (interpolationSteps > 0) {
-            final int steps = interpolationSteps--;
+            int steps = interpolationSteps--;
             if (steps != 1) {
                 state = function.apply(state, targetState, 1.0f / steps);
             } else {
@@ -26,7 +26,7 @@ public class EffectInterpolator<T> {
         }
     }
 
-    public void setTarget(final T state, final int steps) {
+    public void setTarget(T state, int steps) {
         targetState = state;
         interpolationSteps = steps;
         if (steps == 0) {
@@ -34,11 +34,11 @@ public class EffectInterpolator<T> {
         }
     }
 
-    public void reset(final T state) {
+    public void reset(T state) {
         setTarget(state, 0);
     }
 
-    public T get(final float partialTicks) {
+    public T get(float partialTicks) {
         if (Objects.equals(state, lastState)) {
             return state;
         }

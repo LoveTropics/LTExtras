@@ -18,17 +18,17 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 public class EmittedParticle extends TextureSheetParticle {
 	EmittedParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
 		super(world, x, y, z);
-		this.lifetime = 80;
-		this.gravity = 0.5f;
-		this.yd = 0.75f;
-		this.xd = (Math.random() - Math.random()) * 0.05;
-		this.zd = (Math.random() - Math.random()) * 0.05;
-		this.setSize(0.5f, 0.5f);
+		lifetime = 80;
+		gravity = 0.5f;
+		yd = 0.75f;
+		xd = (Math.random() - Math.random()) * 0.05;
+		zd = (Math.random() - Math.random()) * 0.05;
+		setSize(0.5f, 0.5f);
 
 		float f = (float)(Math.random() * (double)0.3F + (double)0.6F);
-		this.rCol = f;
-		this.gCol = f;
-		this.bCol = f;
+		rCol = f;
+		gCol = f;
+		bCol = f;
 
 		pickSprite(sprites);
 	}
@@ -47,12 +47,12 @@ public class EmittedParticle extends TextureSheetParticle {
 		private final SpriteSet sprites;
 
 		public Factory(SpriteSet pSprites) {
-			this.sprites = pSprites;
+			sprites = pSprites;
 		}
 
 		@Override
 		public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-			return new EmittedParticle(pLevel, pX, pY, pZ, this.sprites);
+			return new EmittedParticle(pLevel, pX, pY, pZ, sprites);
 		}
 	}
 }

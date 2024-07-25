@@ -15,8 +15,8 @@ public class SkyColorEffectHandler {
     private static final EffectInterpolator<State> INTERPOLATOR = new EffectInterpolator<>(State::lerp, State.NONE);
 
     @SubscribeEvent
-    public static void onClientTick(final ClientTickEvent.Pre event) {
-        final Minecraft minecraft = Minecraft.getInstance();
+    public static void onClientTick(ClientTickEvent.Pre event) {
+        Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.level != null) {
             INTERPOLATOR.step();
         } else {
@@ -24,8 +24,8 @@ public class SkyColorEffectHandler {
         }
     }
 
-    public static Vec3 modifyColor(final Vec3 color, final float partialTicks) {
-        final State frameState = INTERPOLATOR.get(partialTicks);
+    public static Vec3 modifyColor(Vec3 color, float partialTicks) {
+        State frameState = INTERPOLATOR.get(partialTicks);
         if (frameState.alpha == 0.0f) {
             return color;
         } else if (frameState.alpha == 1.0f) {
@@ -34,7 +34,7 @@ public class SkyColorEffectHandler {
         return color.lerp(frameState.color, frameState.alpha);
     }
 
-    public static void apply(final int color, final int fadeLength) {
+    public static void apply(int color, int fadeLength) {
         INTERPOLATOR.setTarget(new State(
                 new Vec3(
                         FastColor.ARGB32.red(color) / 255.0,
@@ -45,14 +45,14 @@ public class SkyColorEffectHandler {
         ), fadeLength);
     }
 
-    public static void clear(final int fadeLength) {
+    public static void clear(int fadeLength) {
         INTERPOLATOR.setTarget(State.NONE, fadeLength);
     }
 
     private record State(Vec3 color, float alpha) {
         public static final State NONE = new State(Vec3.ZERO, 0.0f);
 
-        public State lerp(final State target, final float x) {
+        public State lerp(State target, float x) {
             return new State(
                     color.lerp(target.color, x),
                     Mth.lerp(x, alpha, target.alpha)

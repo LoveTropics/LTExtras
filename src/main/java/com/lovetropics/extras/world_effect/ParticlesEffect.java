@@ -29,12 +29,12 @@ public record ParticlesEffect(List<Particle> particles) implements WorldEffect {
     );
 
     @Override
-    public void apply(final ServerPlayer player, final boolean immediate) {
+    public void apply(ServerPlayer player, boolean immediate) {
         PacketDistributor.sendToPlayer(player, new ClientboundWorldParticleEffectsPacket(Optional.of(this)));
     }
 
     @Override
-    public void clear(final ServerPlayer player, final boolean immediate) {
+    public void clear(ServerPlayer player, boolean immediate) {
         PacketDistributor.sendToPlayer(player, new ClientboundWorldParticleEffectsPacket(Optional.empty()));
     }
 

@@ -26,7 +26,7 @@ public final class ThornStemBlock extends PipeBlock implements SimpleWaterlogged
 
 	public ThornStemBlock(Properties properties) {
 		super(3.0F / 16.0F, properties);
-		this.registerDefaultState(this.getStateDefinition().any()
+		registerDefaultState(getStateDefinition().any()
 				.setValue(NORTH, false)
 				.setValue(EAST, false)
 				.setValue(SOUTH, false)
@@ -46,13 +46,13 @@ public final class ThornStemBlock extends PipeBlock implements SimpleWaterlogged
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
-		return this.defaultBlockState()
-				.setValue(NORTH, this.canConnectAlong(world, pos, Direction.NORTH))
-				.setValue(EAST, this.canConnectAlong(world, pos, Direction.EAST))
-				.setValue(SOUTH, this.canConnectAlong(world, pos, Direction.SOUTH))
-				.setValue(WEST, this.canConnectAlong(world, pos, Direction.WEST))
-				.setValue(UP, this.canConnectAlong(world, pos, Direction.UP))
-				.setValue(DOWN, this.canConnectAlong(world, pos, Direction.DOWN))
+		return defaultBlockState()
+				.setValue(NORTH, canConnectAlong(world, pos, Direction.NORTH))
+				.setValue(EAST, canConnectAlong(world, pos, Direction.EAST))
+				.setValue(SOUTH, canConnectAlong(world, pos, Direction.SOUTH))
+				.setValue(WEST, canConnectAlong(world, pos, Direction.WEST))
+				.setValue(UP, canConnectAlong(world, pos, Direction.UP))
+				.setValue(DOWN, canConnectAlong(world, pos, Direction.DOWN))
 				.setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
 	}
 
@@ -63,7 +63,7 @@ public final class ThornStemBlock extends PipeBlock implements SimpleWaterlogged
 		}
 
 		BooleanProperty property = PROPERTY_BY_DIRECTION.get(facing);
-		boolean connected = this.canConnectTo(world, facingPos, facing.getOpposite());
+		boolean connected = canConnectTo(world, facingPos, facing.getOpposite());
 		return state.setValue(property, connected);
 	}
 
@@ -75,11 +75,11 @@ public final class ThornStemBlock extends PipeBlock implements SimpleWaterlogged
 	private boolean canConnectAlong(BlockGetter world, BlockPos pos, Direction direction) {
 		BlockPos adjacentPos = pos.relative(direction);
 		BlockState adjacentState = world.getBlockState(adjacentPos);
-		return this.canConnectTo(adjacentState, world, adjacentPos, direction);
+		return canConnectTo(adjacentState, world, adjacentPos, direction);
 	}
 
 	private boolean canConnectTo(BlockGetter world, BlockPos pos, Direction direction) {
-		return this.canConnectTo(world.getBlockState(pos), world, pos, direction);
+		return canConnectTo(world.getBlockState(pos), world, pos, direction);
 	}
 
 	private boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {

@@ -22,7 +22,7 @@ public class HologramEntityRenderer extends EntityRenderer<HologramEntity> {
     private final EntityRenderDispatcher entityRenderDispatcher;
     private final Function<Component, List<HologramEntity.Line>> textSplitter;
 
-    public HologramEntityRenderer(final EntityRendererProvider.Context context) {
+    public HologramEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
         shadowRadius = 0.0f;
         entityRenderDispatcher = context.getEntityRenderDispatcher();
@@ -33,27 +33,27 @@ public class HologramEntityRenderer extends EntityRenderer<HologramEntity> {
     }
 
     @Override
-    public void render(final HologramEntity entity, final float yaw, final float partialTicks, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
-        final HologramEntity.DisplayInfo display = entity.display(textSplitter);
+    public void render(HologramEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        HologramEntity.DisplayInfo display = entity.display(textSplitter);
 
         poseStack.pushPose();
-        final Quaternionf rotation = display.rotation();
+        Quaternionf rotation = display.rotation();
         if (rotation != null) {
             poseStack.mulPose(rotation);
         } else {
             poseStack.mulPose(Mth.rotationAroundAxis(Mth.Y_AXIS, entityRenderDispatcher.cameraOrientation(), new Quaternionf()));
         }
 
-        final float scale = entity.scale();
+        float scale = entity.scale();
         poseStack.scale(-scale, -scale, scale);
 
-        final float backgroundOpacity = Minecraft.getInstance().options.getBackgroundOpacity(0.25f);
-        final int backgroundColor = Mth.floor(backgroundOpacity * 255.0F) << 24;
-        final int textLight = entity.fullbright() ? 0xf000f0 : packedLight;
+        float backgroundOpacity = Minecraft.getInstance().options.getBackgroundOpacity(0.25f);
+        int backgroundColor = Mth.floor(backgroundOpacity * 255.0F) << 24;
+        int textLight = entity.fullbright() ? 0xf000f0 : packedLight;
 
         final int lineHeight = font.lineHeight + 1;
         float lineY = -(display.lines().size() * lineHeight) / 2.0f;
-        for (final HologramEntity.Line line : display.lines()) {
+        for (HologramEntity.Line line : display.lines()) {
             font.drawInBatch(line.text(), -line.width() / 2.0f, lineY, 0xffffffff, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, backgroundColor, textLight);
             lineY += lineHeight;
         }
@@ -64,7 +64,7 @@ public class HologramEntityRenderer extends EntityRenderer<HologramEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(final HologramEntity entity) {
+    public ResourceLocation getTextureLocation(HologramEntity entity) {
         return TextureAtlas.LOCATION_BLOCKS;
     }
 }

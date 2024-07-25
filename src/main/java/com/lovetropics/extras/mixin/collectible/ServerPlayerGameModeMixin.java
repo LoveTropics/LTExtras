@@ -20,8 +20,8 @@ public class ServerPlayerGameModeMixin {
     protected ServerPlayer player;
 
     @Redirect(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;useOn(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;", ordinal = 1))
-    private InteractionResult useItemOn(final ItemStack stack, final UseOnContext context) {
-        final InteractionResult result = CollectibleItemBehavior.wrapUseOn(stack, context);
+    private InteractionResult useItemOn(ItemStack stack, UseOnContext context) {
+        InteractionResult result = CollectibleItemBehavior.wrapUseOn(stack, context);
         if (result.consumesAction()) {
             ItemExtensions.onItemUsedOn(player, stack, context);
         }

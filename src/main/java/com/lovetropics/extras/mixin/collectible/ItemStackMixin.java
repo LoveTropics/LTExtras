@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
     @Redirect(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;"))
-    private InteractionResultHolder<ItemStack> useItem(final Item item, final Level level, final Player player, final InteractionHand hand) {
-        final InteractionResultHolder<ItemStack> result = CollectibleItemBehavior.wrapUse((ItemStack) (Object) this, level, player, hand);
-        if (player instanceof final ServerPlayer serverPlayer && result.getResult().consumesAction()) {
+    private InteractionResultHolder<ItemStack> useItem(Item item, Level level, Player player, InteractionHand hand) {
+        InteractionResultHolder<ItemStack> result = CollectibleItemBehavior.wrapUse((ItemStack) (Object) this, level, player, hand);
+        if (player instanceof ServerPlayer serverPlayer && result.getResult().consumesAction()) {
             ItemExtensions.onItemUsed(serverPlayer, result.getObject());
         }
         return result;

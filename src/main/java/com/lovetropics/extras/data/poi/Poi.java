@@ -40,7 +40,7 @@ public final class Poi {
     private final ResourceLocation resourceLocation;
     private final GlobalPos globalPos;
     private boolean enabled;
-    private List<UUID> faces;
+    private final List<UUID> faces;
 
     public Poi(
             String name,
@@ -68,12 +68,12 @@ public final class Poi {
         this.resourceLocation = resourceLocation;
         this.globalPos = globalPos;
         this.enabled = enabled;
-        this.faces = new ArrayList<>();
+        faces = new ArrayList<>();
     }
 
     //Use only the name for equals&hashCode. Maybe tiny bit risky but dupe handling is free
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Poi poi = (Poi) o;
@@ -136,7 +136,7 @@ public final class Poi {
         this.enabled = enabled;
     }
 
-    public void removeFace(final UUID face) {
+    public void removeFace(UUID face) {
         faces.remove(face);
     }
 }

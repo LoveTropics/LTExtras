@@ -28,7 +28,7 @@ public class ClientWorldMixin {
 		ChunkPos chunkPos = chunk.getPos();
 		BlockPos pos = new BlockPos(chunkPos.getMinBlockX(), 0, chunkPos.getMinBlockZ());
 
-		WorldRendererAccess worldRenderer = (WorldRendererAccess) this.levelRenderer;
+		WorldRendererAccess worldRenderer = (WorldRendererAccess) levelRenderer;
 		ViewFrustumAccess frustum = (ViewFrustumAccess) worldRenderer.getViewFrustum();
 
 		SectionRenderDispatcher.RenderSection renderChunk = frustum.ltextras$getRenderChunk(pos);

@@ -83,47 +83,47 @@ public class TpCommand {
         // @formatter:on
     }
 
-    private static int tpHelp(final CommandContext<CommandSourceStack> ctx) {
+    private static int tpHelp(CommandContext<CommandSourceStack> ctx) {
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.tpa.help.tpa"), false);
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.tpa.help.tpaccept"), false);
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.tpa.help.back"), false);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int tpBack(final CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final GlobalPos globalPos = backCache.getIfPresent(ctx.getSource().getPlayerOrException().getUUID());
+    private static int tpBack(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        GlobalPos globalPos = backCache.getIfPresent(ctx.getSource().getPlayerOrException().getUUID());
         if (globalPos == null) {
             throw GENERAL_ERROR.create();
         }
 
-        final ServerPlayer executingPlayer = ctx.getSource().getPlayerOrException();
-        final GlobalPos newBackPos = GlobalPos.of(executingPlayer.level().dimension(), executingPlayer.blockPosition());
+        ServerPlayer executingPlayer = ctx.getSource().getPlayerOrException();
+        GlobalPos newBackPos = GlobalPos.of(executingPlayer.level().dimension(), executingPlayer.blockPosition());
         doTeleport(executingPlayer, globalPos);
         backCache.put(executingPlayer.getUUID(), newBackPos); //This allows going back and forth using /back
 
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int tpAccept(final CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final ServerPlayer tpRequester = EntityArgument.getPlayer(ctx, ARGUMENT_NAME);
-        final UUID requestedTarget = requestCache.getIfPresent(tpRequester.getUUID());
+    private static int tpAccept(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer tpRequester = EntityArgument.getPlayer(ctx, ARGUMENT_NAME);
+        UUID requestedTarget = requestCache.getIfPresent(tpRequester.getUUID());
 
-        final UUID commandExecutor = ctx.getSource().getPlayerOrException().getUUID();
+        UUID commandExecutor = ctx.getSource().getPlayerOrException().getUUID();
 
         if (requestedTarget == null || !requestedTarget.equals(commandExecutor)) {
             throw REQUEST_NOT_FOUND.create();
         }
 
-        final ServerPlayer executingPlayer = ctx.getSource().getPlayerOrException();
+        ServerPlayer executingPlayer = ctx.getSource().getPlayerOrException();
         teleportAndSendMessage(tpRequester, executingPlayer);
 
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int acceptAllTpRequests(final CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final ServerPlayer executingPlayer = ctx.getSource().getPlayerOrException();
+    private static int acceptAllTpRequests(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer executingPlayer = ctx.getSource().getPlayerOrException();
 
-        final Map<UUID, UUID> requesterTargetMap = requestCache.asMap().entrySet().stream()
+        Map<UUID, UUID> requesterTargetMap = requestCache.asMap().entrySet().stream()
                 .filter(entry -> entry.getValue().equals(executingPlayer.getUUID()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
@@ -135,9 +135,9 @@ public class TpCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int tpRequest(final CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final ServerPlayer requestingPlayer = ctx.getSource().getPlayerOrException();
-        final ServerPlayer targetPlayer = EntityArgument.getPlayer(ctx, ARGUMENT_NAME);
+    private static int tpRequest(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer requestingPlayer = ctx.getSource().getPlayerOrException();
+        ServerPlayer targetPlayer = EntityArgument.getPlayer(ctx, ARGUMENT_NAME);
 
         if (requestingPlayer.getUUID().equals(targetPlayer.getUUID())) {
             throw NO_SELF_TELEPORT.create();
@@ -145,9 +145,9 @@ public class TpCommand {
 
         spamCheck(requestingPlayer.getUUID());
 
-        final Style style = Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept " + requestingPlayer.getGameProfile().getName()));
-        final MutableComponent hereComponent = Component.translatable("commands.tpa.here").withStyle(style);
-        final MutableComponent translatable = Component.translatable("commands.tpa.request", requestingPlayer.getName(), hereComponent, requestingPlayer.getName());
+        Style style = Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept " + requestingPlayer.getGameProfile().getName()));
+        MutableComponent hereComponent = Component.translatable("commands.tpa.here").withStyle(style);
+        MutableComponent translatable = Component.translatable("commands.tpa.request", requestingPlayer.getName(), hereComponent, requestingPlayer.getName());
         targetPlayer.sendSystemMessage(translatable);
 
         requestingPlayer.sendSystemMessage(Component.translatable("commands.tpa.request_sent"));
@@ -158,7 +158,7 @@ public class TpCommand {
 
     private static void teleportAndSendMessage(ServerPlayer player, ServerPlayer target) throws CommandSyntaxException {
         requestCache.invalidate(player.getUUID());
-        final GlobalPos globalPos = GlobalPos.of(player.level().dimension(), player.blockPosition());
+        GlobalPos globalPos = GlobalPos.of(player.level().dimension(), player.blockPosition());
         backCache.put(player.getUUID(), globalPos);
 
         doTeleport(player, GlobalPos.of(target.level().dimension(), target.blockPosition()));
@@ -166,22 +166,22 @@ public class TpCommand {
     }
 
     private static void doTeleport(ServerPlayer player, GlobalPos globalPos) throws CommandSyntaxException {
-        final Predicate<ResourceKey<Level>> dimensionPredicate = dimensionPredicate();
+        Predicate<ResourceKey<Level>> dimensionPredicate = dimensionPredicate();
         if (!dimensionPredicate.test(player.serverLevel().dimension()) || !dimensionPredicate.test(globalPos.dimension())) {
             throw NOT_ALLOWED_HERE.create();
         }
 
-        final ServerLevel level = player.getServer().getLevel(globalPos.dimension());
+        ServerLevel level = player.getServer().getLevel(globalPos.dimension());
         player.teleportTo(level, globalPos.pos().getX(), globalPos.pos().getY(), globalPos.pos().getZ(), player.getYRot(), player.getXRot());
     }
 
     private static Predicate<ResourceKey<Level>> dimensionPredicate() {
-        final String string = ExtrasConfig.COMMANDS.tpaDimension.get();
-        final ResourceLocation id = ResourceLocation.tryParse(string);
+        String string = ExtrasConfig.COMMANDS.tpaDimension.get();
+        ResourceLocation id = ResourceLocation.tryParse(string);
         if (string.isBlank() || id == null) {
             return level -> true;
         }
-        final ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, id);
+        ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, id);
         return dimension -> dimension == key;
     }
 
@@ -191,15 +191,15 @@ public class TpCommand {
         }
     }
 
-    private static ServerPlayer nonNullPlayerByUUID(final CommandContext<CommandSourceStack> ctx, UUID uuid) throws CommandSyntaxException {
-        final ServerPlayer player = ctx.getSource().getServer().getPlayerList().getPlayer(uuid);
+    private static ServerPlayer nonNullPlayerByUUID(CommandContext<CommandSourceStack> ctx, UUID uuid) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getServer().getPlayerList().getPlayer(uuid);
         if (player == null) {
             throw PLAYER_NOT_FOUND.create();
         }
         return player;
     }
 
-    public static void addTranslations(final RegistrateLangProvider provider) {
+    public static void addTranslations(RegistrateLangProvider provider) {
         provider.add("commands.tpa.request", "%s wants to teleport to you. Click %s (/tpaccept %s) to accept");
         provider.add("commands.tpa.here", "[here]");
         provider.add("commands.tpa.tp_accepted", "%s has accepted your teleport request. Use /back to return");

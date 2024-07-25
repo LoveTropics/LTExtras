@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(ClientLevel.class)
 public class ClientLevelMixin {
     @ModifyVariable(method = "getSkyColor", ordinal = 2, at = @At(value = "STORE", ordinal = 0))
-    private Vec3 modifySkyColor(final Vec3 color, final Vec3 position, final float partialTicks) {
+    private Vec3 modifySkyColor(Vec3 color, Vec3 position, float partialTicks) {
         return SkyColorEffectHandler.modifyColor(color, partialTicks);
     }
 }

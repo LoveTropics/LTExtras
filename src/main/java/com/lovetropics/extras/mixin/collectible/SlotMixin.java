@@ -19,7 +19,7 @@ public class SlotMixin {
     public Container container;
 
     @Inject(method = "setByPlayer(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"), cancellable = true)
-    private void setByPlayer(final ItemStack stack, final ItemStack oldStack, final CallbackInfo ci) {
+    private void setByPlayer(ItemStack stack, ItemStack oldStack, CallbackInfo ci) {
         if (!(container instanceof Inventory) && Collectible.isCollectible(stack)) {
             ci.cancel();
         }

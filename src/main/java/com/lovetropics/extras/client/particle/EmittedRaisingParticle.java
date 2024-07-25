@@ -8,11 +8,11 @@ import net.minecraft.client.particle.TextureSheetParticle;
 public class EmittedRaisingParticle extends TextureSheetParticle {
     protected EmittedRaisingParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
         super(world, x, y, z);
-        this.lifetime = 40 + (int) (Math.random() * 5);
-        this.yd = 0.25f;
-        this.xd = (Math.random() - Math.random()) * 0.05;
-        this.zd = (Math.random() - Math.random()) * 0.05;
-        this.setSize(0.5f, 0.5f);
+        lifetime = 40 + (int) (Math.random() * 5);
+        yd = 0.25f;
+        xd = (Math.random() - Math.random()) * 0.05;
+        zd = (Math.random() - Math.random()) * 0.05;
+        setSize(0.5f, 0.5f);
 
         pickSprite(sprites);
     }

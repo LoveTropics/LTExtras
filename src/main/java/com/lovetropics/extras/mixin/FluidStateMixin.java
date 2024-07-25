@@ -16,12 +16,12 @@ public class FluidStateMixin implements ExtendedFluidState {
 
 	@Override
 	public void setNoDripParticles() {
-		this.noDripParticles = true;
+		noDripParticles = true;
 	}
 
 	@Inject(method = "getDripParticle", at = @At("HEAD"), cancellable = true)
 	private void getDripParticles(CallbackInfoReturnable<ParticleOptions> ci) {
-		if (this.noDripParticles) {
+		if (noDripParticles) {
 			ci.setReturnValue(null);
 		}
 	}

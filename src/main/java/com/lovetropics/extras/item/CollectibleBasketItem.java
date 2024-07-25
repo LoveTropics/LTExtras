@@ -14,14 +14,14 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class CollectibleBasketItem extends Item {
-    public CollectibleBasketItem(final Properties properties) {
+    public CollectibleBasketItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(final Level level, final Player player, final InteractionHand hand) {
-        if (!level.isClientSide() && player instanceof final ServerPlayer serverPlayer) {
-            final CollectibleStore collectibles = CollectibleStore.get(serverPlayer);
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
+            CollectibleStore collectibles = CollectibleStore.get(serverPlayer);
             if (!collectibles.isLocked()) {
                 collectibles.markSeen();
                 PacketDistributor.sendToPlayer(serverPlayer, new ClientboundOpenCollectibleBasketPacket());

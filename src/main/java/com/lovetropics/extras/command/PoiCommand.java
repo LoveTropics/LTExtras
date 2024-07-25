@@ -110,8 +110,8 @@ public class PoiCommand {
     }
 
     private static int delete(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final MapPoiManager manager = MapPoiManager.get(ctx.getSource().getServer());
-        final Poi poi = manager.getPoi(getString(ctx, "name"));
+        MapPoiManager manager = MapPoiManager.get(ctx.getSource().getServer());
+        Poi poi = manager.getPoi(getString(ctx, "name"));
 
         if (poi == null) {
             throw NOT_FOUND.create();
@@ -123,7 +123,7 @@ public class PoiCommand {
     }
 
     private static int get(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final Poi poi = MapPoiManager.get(ctx.getSource().getServer())
+        Poi poi = MapPoiManager.get(ctx.getSource().getServer())
                 .getPoi(getString(ctx, "name"));
 
         if (poi == null) {
@@ -143,7 +143,7 @@ public class PoiCommand {
     }
 
     private static int add(CommandContext<CommandSourceStack> ctx) {
-        final Poi newPoi = createPoiFromCtx(ctx);
+        Poi newPoi = createPoiFromCtx(ctx);
 
         MapPoiManager.get(ctx.getSource().getServer()).add(newPoi);
 
@@ -152,21 +152,21 @@ public class PoiCommand {
     }
 
     private static int addWithDefaults(CommandContext<CommandSourceStack> ctx) {
-        final String name = getString(ctx, "name");
-        final Component description = getComponent(ctx, "description");
-        final ResourceLocation icon = getId(ctx, "icon");
-        final GlobalPos globalPos = GlobalPos.of(ctx.getSource().getLevel().dimension(), ctx.getSource().getPlayer().getOnPos().above());
+        String name = getString(ctx, "name");
+        Component description = getComponent(ctx, "description");
+        ResourceLocation icon = getId(ctx, "icon");
+        GlobalPos globalPos = GlobalPos.of(ctx.getSource().getLevel().dimension(), ctx.getSource().getPlayer().getOnPos().above());
         final boolean enabled = false;
-        final List<UUID> faces = List.of();
+        List<UUID> faces = List.of();
 
-        final Poi newPoi = new Poi(name, description, icon, globalPos, enabled, faces);
+        Poi newPoi = new Poi(name, description, icon, globalPos, enabled, faces);
         MapPoiManager.get(ctx.getSource().getServer()).add(newPoi);
         ctx.getSource().sendSuccess(() -> Component.literal("Added new disabled POI " + newPoi.name() + " at your current position"), false);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int enable(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final String name = getString(ctx, "name");
+        String name = getString(ctx, "name");
         if (!MapPoiManager.get(ctx.getSource().getServer()).enable(name)) {
             throw GENERAL_ERROR.create();
         }
@@ -175,7 +175,7 @@ public class PoiCommand {
     }
 
     private static int disable(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final String name = getString(ctx, "name");
+        String name = getString(ctx, "name");
         if (!MapPoiManager.get(ctx.getSource().getServer()).disable(name)) {
             throw GENERAL_ERROR.create();
         }
@@ -184,26 +184,26 @@ public class PoiCommand {
     }
 
     private static int edit(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        final Poi poi = MapPoiManager.get(ctx.getSource().getServer())
+        Poi poi = MapPoiManager.get(ctx.getSource().getServer())
                 .getPoi(getString(ctx, "name"));
 
         if (poi == null) {
             throw NOT_FOUND.create();
         }
 
-        final Poi updatedPoi = createPoiFromCtx(ctx);
+        Poi updatedPoi = createPoiFromCtx(ctx);
         MapPoiManager.get(ctx.getSource().getServer()).add(updatedPoi);
         ctx.getSource().sendSuccess(() -> Component.literal("Updated POI \"" + poi.name() + "\""), false);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static Stream<String> suggestEnabledPois(final CommandContext<CommandSourceStack> ctx) {
+    private static Stream<String> suggestEnabledPois(CommandContext<CommandSourceStack> ctx) {
         return MapPoiManager.get(ctx.getSource().getServer()).getEnabledPois()
                 .stream()
                 .map(Poi::name);
     }
 
-    private static Stream<String> suggestDisabledPois(final CommandContext<CommandSourceStack> ctx) {
+    private static Stream<String> suggestDisabledPois(CommandContext<CommandSourceStack> ctx) {
         return MapPoiManager.get(ctx.getSource().getServer()).getDisabledPois()
                 .stream()
                 .map(Poi::name);
@@ -216,7 +216,7 @@ public class PoiCommand {
     }
 
     private static Stream<String> suggestDescription(CommandContext<CommandSourceStack> ctx) {
-        final String name = getString(ctx, "name");
+        String name = getString(ctx, "name");
         Poi poi = MapPoiManager.get(ctx.getSource().getServer()).getPoi(name);
         if (poi != null) {
             return Stream.of("\"" + poi.description() + "\"");
@@ -225,7 +225,7 @@ public class PoiCommand {
     }
 
     private static Stream<String> suggestEnabled(CommandContext<CommandSourceStack> ctx) {
-        final String name = getString(ctx, "name");
+        String name = getString(ctx, "name");
         Poi poi = MapPoiManager.get(ctx.getSource().getServer()).getPoi(name);
         if (poi != null) {
             return Stream.of(String.valueOf(poi.enabled()));
@@ -234,19 +234,19 @@ public class PoiCommand {
     }
 
     private static Poi createPoiFromCtx(CommandContext<CommandSourceStack> ctx) {
-        final String name = getString(ctx, "name");
-        final Component description = getComponent(ctx, "description");
-        final ResourceLocation icon = getId(ctx, "icon");
-        final WorldCoordinates worldCoordinates = ctx.getArgument("blockpos", WorldCoordinates.class);
-        final GlobalPos globalPos = GlobalPos.of(ctx.getSource().getLevel().dimension(), worldCoordinates.getBlockPos(ctx.getSource()));
-        final boolean enabled = getBool(ctx, "enabled");
-        final List<UUID> faces = List.of();
+        String name = getString(ctx, "name");
+        Component description = getComponent(ctx, "description");
+        ResourceLocation icon = getId(ctx, "icon");
+        WorldCoordinates worldCoordinates = ctx.getArgument("blockpos", WorldCoordinates.class);
+        GlobalPos globalPos = GlobalPos.of(ctx.getSource().getLevel().dimension(), worldCoordinates.getBlockPos(ctx.getSource()));
+        boolean enabled = getBool(ctx, "enabled");
+        List<UUID> faces = List.of();
 
         return new Poi(name, description, icon, globalPos, enabled, faces);
     }
 
     private static Stream<String> suggestGlobalPos(CommandContext<CommandSourceStack> ctx) {
-        final String name = getString(ctx, "name");
+        String name = getString(ctx, "name");
         Poi poi = MapPoiManager.get(ctx.getSource().getServer()).getPoi(name);
         if (poi != null) {
             return Stream.of(poi.globalPos().pos().toString());
@@ -255,7 +255,7 @@ public class PoiCommand {
     }
 
     private static Stream<ResourceLocation> suggestIcon(CommandContext<CommandSourceStack> ctx) {
-        final String name = getString(ctx, "name");
+        String name = getString(ctx, "name");
         Poi poi = MapPoiManager.get(ctx.getSource().getServer()).getPoi(name);
         if (poi != null) {
             return Stream.of(poi.resourceLocation());

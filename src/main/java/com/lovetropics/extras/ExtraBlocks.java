@@ -344,8 +344,8 @@ public class ExtraBlocks {
 	public static final BlockEntry<CustomSugarCaneBlock> SUGAR_CANE = REGISTRATE.block("sugar_cane", CustomSugarCaneBlock::new)
 			.initialProperties(() -> Blocks.SUGAR_CANE)
 			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry()).forAllStates(state -> {
-				final CustomSugarCaneBlock.Type type = state.getValue(CustomSugarCaneBlock.TYPE);
-				final String modelName = ctx.getName() + "_" + type.getSerializedName();
+				CustomSugarCaneBlock.Type type = state.getValue(CustomSugarCaneBlock.TYPE);
+				String modelName = ctx.getName() + "_" + type.getSerializedName();
 				return ConfiguredModel.builder().modelFile(prov.models()
 						.withExistingParent(modelName, "block/crop")
 						.texture("crop", prov.modLoc("block/" + modelName))
@@ -507,7 +507,7 @@ public class ExtraBlocks {
 			.lang("Block of Lime")
 			.simpleItem()
 			.recipe((ctx, prov) -> {
-				final DataIngredient lime = DataIngredient.tag(ExtraTags.Items.LIME);
+				DataIngredient lime = DataIngredient.tag(ExtraTags.Items.LIME);
 				ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ctx.get())
 						.requires(lime.toVanilla(), 9)
 						.unlockedBy("has_lime", RegistrateRecipeProvider.has(ExtraTags.Items.LIME))
@@ -519,9 +519,9 @@ public class ExtraBlocks {
 	public static final BlockEntry<SlabBlock> SLICED_LIME = REGISTRATE.block("sliced_lime", SlabBlock::new)
 			.initialProperties(LIME_BLOCK)
 			.blockstate((ctx, prov) -> {
-				final ResourceLocation side = prov.modLoc("block/lime_side");
-				final ResourceLocation end = prov.modLoc("block/lime_top");
-				final ResourceLocation inside = prov.modLoc("block/lime_inside");
+				ResourceLocation side = prov.modLoc("block/lime_side");
+				ResourceLocation end = prov.modLoc("block/lime_top");
+				ResourceLocation inside = prov.modLoc("block/lime_inside");
 				prov.slabBlock(ctx.get(),
 						prov.models().slab(ctx.getName(), side, end, inside),
 						prov.models().slabTop(ctx.getName() + "_top", side, inside, end),
@@ -674,7 +674,7 @@ public class ExtraBlocks {
 	public static final BlockEntry<Block> GREEN_ANEMONE = anemoneBlock("green_anemone");
 	public static final BlockEntry<Block> PURPLE_ANEMONE = anemoneBlock("purple_anemone");
 
-	private static BlockEntry<Block> anemoneBlock(final String name) {
+	private static BlockEntry<Block> anemoneBlock(String name) {
 		return REGISTRATE.block(name, Block::new)
 				.initialProperties(() -> Blocks.MELON)
 				.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
@@ -698,11 +698,11 @@ public class ExtraBlocks {
 
 	// Seagrasses
 
-	private static BlockEntry<CustomSeagrassBlock> seagrass(final String blockName) {
+	private static BlockEntry<CustomSeagrassBlock> seagrass(String blockName) {
 		return seagrass(blockName, null);
 	}
 
-	private static BlockEntry<CustomSeagrassBlock> seagrass(final String blockName, @Nullable final Supplier<Supplier<? extends TallSeagrassBlock>> tall) {
+	private static BlockEntry<CustomSeagrassBlock> seagrass(String blockName, @Nullable Supplier<Supplier<? extends TallSeagrassBlock>> tall) {
 		return REGISTRATE.block(blockName, p -> new CustomSeagrassBlock(p, RegistrateLangProvider.toEnglishName(blockName), tall))
 				.lang("Seagrass")
 				.initialProperties(() -> Blocks.SEAGRASS)
@@ -757,7 +757,7 @@ public class ExtraBlocks {
 			.color(() -> () -> (state, level, pos, index) -> level != null && pos != null ? 2129968 : 7455580)
 			.addLayer(() -> RenderType::cutout)
 			.blockstate((ctx, prov) -> {
-				final var model = prov.models().getBuilder("submerged_lily_pad")
+				var model = prov.models().getBuilder("submerged_lily_pad")
 							.ao(false)
 							.texture("particle", "minecraft:block/lily_pad")
 							.texture("texture", "minecraft:block/lily_pad")
@@ -906,17 +906,17 @@ public class ExtraBlocks {
 		private final Map<Holder<Block>, P> templates = new Object2ObjectOpenHashMap<>();
 
 		public TemplateBuilder<T, P> add(Block block, P parameter) {
-			return this.add(block.builtInRegistryHolder(), parameter);
+			return add(block.builtInRegistryHolder(), parameter);
 		}
 
 		public TemplateBuilder<T, P> add(ResourceLocation id, P parameter) {
-			return this.add(DeferredHolder.create(Registries.BLOCK, id), parameter);
+			return add(DeferredHolder.create(Registries.BLOCK, id), parameter);
 		}
 
 		public TemplateBuilder<T, P> add(Holder<Block> block, P parameter) {
 			String namespace = block.unwrapKey().orElseThrow().location().getNamespace();
 			if (ModList.get().isLoaded(namespace)) {
-				this.templates.put(block, parameter);
+				templates.put(block, parameter);
 			} else {
 				if (DatagenModLoader.isRunningDataGen()) {
 					throw new UnsupportedOperationException("All soft-dependent mods must be present for datagen! Missing: " + namespace);
@@ -928,7 +928,7 @@ public class ExtraBlocks {
 		public Map<Holder<Block>, BlockEntry<? extends T>> build(
 				BiFunction<Holder<Block>, P, BlockEntry<? extends T>> factory
 		) {
-			return this.templates.entrySet().stream()
+			return templates.entrySet().stream()
 					.collect(Collectors.toMap(
 							Entry::getKey,
 							entry -> factory.apply(entry.getKey(), entry.getValue())

@@ -42,12 +42,12 @@ public class MobControllerBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	public void loadAdditional(final CompoundTag tag, final HolderLookup.Provider registries) {
+	public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
 		super.loadAdditional(tag, registries);
 
 		ListTag mobUuids = tag.getList("Mobs", Tag.TAG_COMPOUND);
 
-		this.uuids.clear();
+		uuids.clear();
 		for (Tag mobNbt : mobUuids) {
 			CompoundTag compoundNBT = (CompoundTag) mobNbt;
 			UUID uuid = compoundNBT.getUUID("UUID");
@@ -55,33 +55,33 @@ public class MobControllerBlockEntity extends BlockEntity {
 
 			ListTag pos = compoundNBT.getList("Pos", Tag.TAG_DOUBLE);
 			registries.lookupOrThrow(Registries.ENTITY_TYPE).get(ResourceKey.create(Registries.ENTITY_TYPE, type)).ifPresent(entityType -> {
-				this.uuids.add(uuid);
-				this.types.put(uuid, entityType.value());
-				this.positions.put(uuid, new Vec3(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)));
+				uuids.add(uuid);
+				types.put(uuid, entityType.value());
+				positions.put(uuid, new Vec3(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)));
 			});
 		}
 
-		this.loadState = tag.getBoolean("LoadState");
+		loadState = tag.getBoolean("LoadState");
 	}
 
 	@Override
-	protected void saveAdditional(final CompoundTag compound, final HolderLookup.Provider registries) {
+	protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
 		super.saveAdditional(compound, registries);
 
 		ListTag mobs = new ListTag();
-		for (UUID uuid : this.uuids) {
+		for (UUID uuid : uuids) {
 			CompoundTag compoundNBT = new CompoundTag();
 			compoundNBT.putUUID("UUID", uuid);
-			compoundNBT.putString("Type", EntityType.getKey(this.types.get(uuid)).toString());
+			compoundNBT.putString("Type", EntityType.getKey(types.get(uuid)).toString());
 
-			Vec3 pos = this.positions.get(uuid);
+			Vec3 pos = positions.get(uuid);
 			compoundNBT.put("Pos", newDoubleNBTList(pos.x, pos.y, pos.z));
 
 			mobs.add(compoundNBT);
 		}
 
 		compound.put("Mobs", mobs);
-		compound.putBoolean("LoadState", this.loadState);
+		compound.putBoolean("LoadState", loadState);
 	}
 
 	protected ListTag newDoubleNBTList(double... numbers) {
@@ -101,13 +101,13 @@ public class MobControllerBlockEntity extends BlockEntity {
 			ex.linkToBlockEntity(this);
 
 			UUID uuid = entity.getUUID();
-			this.uuids.add(uuid);
-			this.types.put(uuid, entity.getType());
-			this.positions.put(uuid, entity.position());
+			uuids.add(uuid);
+			types.put(uuid, entity.getType());
+			positions.put(uuid, entity.position());
 		}
 	}
 
-	public static void tick(final Level level, final BlockPos pos, final BlockState state, final MobControllerBlockEntity controller) {
+	public static void tick(Level level, BlockPos pos, BlockState state, MobControllerBlockEntity controller) {
 		if (level instanceof ServerLevel serverLevel) {
 			long ticks = level.getGameTime();
 

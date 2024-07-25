@@ -54,7 +54,7 @@ public final class PianguasBlock extends Block implements SimpleWaterloggedBlock
 	public PianguasBlock(BlockBehaviour.Properties properties) {
 		super(properties);
 
-		this.registerDefaultState(this.stateDefinition.any()
+		registerDefaultState(stateDefinition.any()
 				.setValue(UP, false)
 				.setValue(DOWN, false)
 				.setValue(NORTH, false)
@@ -64,7 +64,7 @@ public final class PianguasBlock extends Block implements SimpleWaterloggedBlock
 				.setValue(WATERLOGGED, false)
 		);
 
-		this.stateToShape = this.stateDefinition.getPossibleStates().stream()
+		stateToShape = stateDefinition.getPossibleStates().stream()
 				.collect(Collectors.toMap(
 						Function.identity(),
 						PianguasBlock::getShapeForState
@@ -73,7 +73,7 @@ public final class PianguasBlock extends Block implements SimpleWaterloggedBlock
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-		return this.stateToShape.get(state);
+		return stateToShape.get(state);
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public final class PianguasBlock extends Block implements SimpleWaterloggedBlock
 		BlockState currentState = world.getBlockState(pos);
 		boolean extend = currentState.is(this);
 
-		BlockState placementState = extend ? currentState : this.defaultBlockState();
+		BlockState placementState = extend ? currentState : defaultBlockState();
 
 		Fluid fluid = world.getFluidState(pos).getType();
 		placementState = placementState.setValue(WATERLOGGED, fluid == Fluids.WATER);
@@ -142,28 +142,24 @@ public final class PianguasBlock extends Block implements SimpleWaterloggedBlock
 
 	@Override
 	public BlockState rotate(BlockState state, Rotation rotation) {
-		switch (rotation) {
-			case CLOCKWISE_180:
-				return state.setValue(NORTH, state.getValue(SOUTH)).setValue(EAST, state.getValue(WEST)).setValue(SOUTH, state.getValue(NORTH)).setValue(WEST, state.getValue(EAST));
-			case COUNTERCLOCKWISE_90:
-				return state.setValue(NORTH, state.getValue(EAST)).setValue(EAST, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(WEST)).setValue(WEST, state.getValue(NORTH));
-			case CLOCKWISE_90:
-				return state.setValue(NORTH, state.getValue(WEST)).setValue(EAST, state.getValue(NORTH)).setValue(SOUTH, state.getValue(EAST)).setValue(WEST, state.getValue(SOUTH));
-			default:
-				return state;
-		}
+        return switch (rotation) {
+            case CLOCKWISE_180 ->
+                    state.setValue(NORTH, state.getValue(SOUTH)).setValue(EAST, state.getValue(WEST)).setValue(SOUTH, state.getValue(NORTH)).setValue(WEST, state.getValue(EAST));
+            case COUNTERCLOCKWISE_90 ->
+                    state.setValue(NORTH, state.getValue(EAST)).setValue(EAST, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(WEST)).setValue(WEST, state.getValue(NORTH));
+            case CLOCKWISE_90 ->
+                    state.setValue(NORTH, state.getValue(WEST)).setValue(EAST, state.getValue(NORTH)).setValue(SOUTH, state.getValue(EAST)).setValue(WEST, state.getValue(SOUTH));
+            default -> state;
+        };
 	}
 
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirror) {
-		switch (mirror) {
-			case LEFT_RIGHT:
-				return state.setValue(NORTH, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(NORTH));
-			case FRONT_BACK:
-				return state.setValue(EAST, state.getValue(WEST)).setValue(WEST, state.getValue(EAST));
-			default:
-				return super.mirror(state, mirror);
-		}
+        return switch (mirror) {
+            case LEFT_RIGHT -> state.setValue(NORTH, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(NORTH));
+            case FRONT_BACK -> state.setValue(EAST, state.getValue(WEST)).setValue(WEST, state.getValue(EAST));
+            default -> super.mirror(state, mirror);
+        };
 	}
 
 	public static boolean canAttachTo(BlockGetter world, BlockPos attachPos, Direction direction) {

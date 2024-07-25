@@ -4,7 +4,6 @@ import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -48,14 +47,14 @@ public class ImageItem extends Item {
             new ImageData(Component.literal("Background: STT2"), LTExtras.location("textures/images/play_stt2.png"), 22.0f, 11.0f)
     );
 
-    public ImageItem(final Properties properties) {
+    public ImageItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    public void appendHoverText(final ItemStack stack, TooltipContext context, final List<Component> lines, final TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag flag) {
         super.appendHoverText(stack, context, lines, flag);
-        final ImageData image = stack.get(ExtraDataComponents.IMAGE);
+        ImageData image = stack.get(ExtraDataComponents.IMAGE);
         if (image != null && image.name().isPresent()) {
             lines.add(image.name().get().copy().withStyle(ChatFormatting.GRAY));
         }

@@ -33,7 +33,7 @@ public class SpawnItemsReloadListener extends SimpleJsonResourceReloadListener {
     }
 
     @SubscribeEvent
-    static void onAddReloadListeners(final AddReloadListenerEvent event) {
+    static void onAddReloadListeners(AddReloadListenerEvent event) {
         event.addListener(new SpawnItemsReloadListener(new GsonBuilder().setLenient().create(), "spawn_items", event.getRegistryAccess()));
     }
 

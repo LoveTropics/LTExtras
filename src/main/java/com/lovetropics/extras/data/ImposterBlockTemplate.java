@@ -33,26 +33,20 @@ public final class ImposterBlockTemplate {
 		CROSS;
 
 		public BlockBuilder<? extends Block, Registrate> apply(BlockBuilder<? extends Block, Registrate> block, ResourceLocation id) {
-			switch (this) {
-				case CUBE: {
-					return block.blockstate((ctx, prov) -> {
-								prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(id));
-							})
-							.simpleItem();
-				}
-				case CROSS: {
-					ResourceLocation texture = id.withPath("block/");
-					return block.blockstate((ctx, prov) -> {
-								prov.simpleBlock(ctx.getEntry(), prov.models().cross(ctx.getName(), texture));
-							})
-							.item()
-							.model((ctx, prov) -> prov.generated(ctx, texture))
-							.build()
-							.addLayer(() -> RenderType::cutout);
-				}
-				default:
-					return block;
-			}
+            return switch (this) {
+                case CUBE -> block.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(id)))
+                        .simpleItem();
+                case CROSS -> {
+                    ResourceLocation texture = id.withPath("block/");
+                    yield block.blockstate((ctx, prov) -> {
+                                prov.simpleBlock(ctx.getEntry(), prov.models().cross(ctx.getName(), texture));
+                            })
+                            .item()
+                            .model((ctx, prov) -> prov.generated(ctx, texture))
+                            .build()
+                            .addLayer(() -> RenderType::cutout);
+                }
+            };
 		}
 	}
 }

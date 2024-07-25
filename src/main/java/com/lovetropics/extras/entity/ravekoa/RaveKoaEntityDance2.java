@@ -11,7 +11,7 @@ public class RaveKoaEntityDance2 extends RaveKoaEntity {
 
     @Override
     public void tick() {
-        raveAnimationStateDance2.startIfStopped(this.tickCount);
+        raveAnimationStateDance2.startIfStopped(tickCount);
         super.tick();
     }
 }

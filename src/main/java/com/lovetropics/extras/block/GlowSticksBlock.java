@@ -22,7 +22,7 @@ public final class GlowSticksBlock extends Block implements SimpleWaterloggedBlo
 
 	public GlowSticksBlock(Properties properties) {
 		super(properties);
-		this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false));
+		registerDefaultState(stateDefinition.any().setValue(WATERLOGGED, false));
 	}
 
 	@Override

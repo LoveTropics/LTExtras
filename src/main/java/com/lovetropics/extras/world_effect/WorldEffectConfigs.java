@@ -40,9 +40,9 @@ public class WorldEffectConfigs {
     private static final FileToIdConverter LISTER = FileToIdConverter.json("world_effects");
 
     @SubscribeEvent
-    public static void addReloadListener(final AddReloadListenerEvent event) {
-        final RegistryAccess registries = event.getRegistryAccess();
-        final RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
+    public static void addReloadListener(AddReloadListenerEvent event) {
+        RegistryAccess registries = event.getRegistryAccess();
+        RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
         event.addListener((stage, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor) ->
                 CompletableFuture.supplyAsync(() -> listEffects(ops, resourceManager, backgroundExecutor), backgroundExecutor).thenCompose(f -> f)
                         .thenCompose(stage::wait)
@@ -51,7 +51,7 @@ public class WorldEffectConfigs {
                             effects.forEach((id, effect) ->
                                     REGISTRY.register(id, new WorldEffectHolder(id, effect))
                             );
-                            final MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+                            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
                             if (server != null) {
                                 WorldEffectManager.reload(server);
                             }
@@ -59,12 +59,12 @@ public class WorldEffectConfigs {
         );
     }
 
-    private static CompletableFuture<Map<ResourceLocation, WorldEffect>> listEffects(final DynamicOps<JsonElement> ops, final ResourceManager resourceManager, final Executor executor) {
-        final List<CompletableFuture<Pair<ResourceLocation, WorldEffect>>> futures = LISTER.listMatchingResources(resourceManager).entrySet().stream()
+    private static CompletableFuture<Map<ResourceLocation, WorldEffect>> listEffects(DynamicOps<JsonElement> ops, ResourceManager resourceManager, Executor executor) {
+        List<CompletableFuture<Pair<ResourceLocation, WorldEffect>>> futures = LISTER.listMatchingResources(resourceManager).entrySet().stream()
                 .map(entry -> {
-                    final ResourceLocation path = entry.getKey();
-                    final ResourceLocation id = LISTER.fileToId(path);
-                    final Resource resource = entry.getValue();
+                    ResourceLocation path = entry.getKey();
+                    ResourceLocation id = LISTER.fileToId(path);
+                    Resource resource = entry.getValue();
                     return CompletableFuture.supplyAsync(() -> Pair.of(id, loadEffect(ops, path, resource)), executor);
                 })
                 .toList();
@@ -72,18 +72,18 @@ public class WorldEffectConfigs {
     }
 
     @Nullable
-    private static WorldEffect loadEffect(final DynamicOps<JsonElement> ops, final ResourceLocation path, final Resource resource) {
+    private static WorldEffect loadEffect(DynamicOps<JsonElement> ops, ResourceLocation path, Resource resource) {
         try {
-            final DataResult<WorldEffect> result;
-            try (final BufferedReader reader = resource.openAsReader()) {
-                final JsonElement json = JsonParser.parseReader(reader);
+            DataResult<WorldEffect> result;
+            try (BufferedReader reader = resource.openAsReader()) {
+                JsonElement json = JsonParser.parseReader(reader);
                 result = WorldEffect.CODEC.parse(ops, json);
             }
             if (result.error().isPresent()) {
                 LOGGER.error("Failed to load world effect at {}: {}", path, result.error().get());
             }
             return result.result().orElse(null);
-        } catch (final IOException e) {
+        } catch (IOException e) {
             LOGGER.error("Failed to load world effect at {}", path, e);
             return null;
         }

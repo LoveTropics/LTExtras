@@ -57,7 +57,7 @@ public class HologramEntity extends Entity {
 
     private final Map<ServerPlayer, Component> trackingPlayers = new Reference2ObjectOpenHashMap<>();
 
-    public HologramEntity(final EntityType<?> type, final Level level) {
+    public HologramEntity(EntityType<?> type, Level level) {
         super(type, level);
         noCulling = true;
     }
@@ -72,7 +72,7 @@ public class HologramEntity extends Entity {
     }
 
     @Override
-    public void onSyncedDataUpdated(final EntityDataAccessor<?> key) {
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if (DATA_FORWARD_X.equals(key) || DATA_FORWARD_Y.equals(key) || DATA_FORWARD_Z.equals(key)) {
             displayCache = null;
@@ -91,9 +91,9 @@ public class HologramEntity extends Entity {
     }
 
     private void sendTextUpdatesToPlayers() {
-        for (final Map.Entry<ServerPlayer, Component> entry : trackingPlayers.entrySet()) {
-            final ServerPlayer player = entry.getKey();
-            final Component text = resolveTextForPlayer(player);
+        for (Map.Entry<ServerPlayer, Component> entry : trackingPlayers.entrySet()) {
+            ServerPlayer player = entry.getKey();
+            Component text = resolveTextForPlayer(player);
             if (!text.equals(entry.getValue())) {
                 entry.setValue(text);
                 sendTextToPlayer(player, text);
@@ -102,32 +102,32 @@ public class HologramEntity extends Entity {
     }
 
     @Override
-    public void startSeenByPlayer(final ServerPlayer player) {
+    public void startSeenByPlayer(ServerPlayer player) {
         super.startSeenByPlayer(player);
-        final Component text = resolveTextForPlayer(player);
+        Component text = resolveTextForPlayer(player);
         trackingPlayers.put(player, text);
         sendTextToPlayer(player, text);
     }
 
     @Override
-    public void stopSeenByPlayer(final ServerPlayer player) {
+    public void stopSeenByPlayer(ServerPlayer player) {
         super.stopSeenByPlayer(player);
         trackingPlayers.remove(player);
     }
 
-    private Component resolveTextForPlayer(final ServerPlayer player) {
-        final PlaceholderContext context = PlaceholderContext.of(player);
+    private Component resolveTextForPlayer(ServerPlayer player) {
+        PlaceholderContext context = PlaceholderContext.of(player);
         return parsedTemplate.toText(context);
     }
 
-    private void sendTextToPlayer(final ServerPlayer player, final Component text) {
+    private void sendTextToPlayer(ServerPlayer player, Component text) {
         PacketDistributor.sendToPlayer(player, new ClientboundSetHologramTextPacket(getId(), text));
     }
 
     @Override
-    protected void readAdditionalSaveData(final CompoundTag tag) {
+    protected void readAdditionalSaveData(CompoundTag tag) {
         if (tag.contains("text", Tag.TAG_LIST)) {
-            final ListTag lines = tag.getList("text", Tag.TAG_STRING);
+            ListTag lines = tag.getList("text", Tag.TAG_STRING);
             setTemplateText(lines.stream().map(Tag::getAsString).collect(Collectors.joining("<r>\n")));
         } else if (tag.contains("text", Tag.TAG_STRING)) {
             setTemplateText(tag.getString("text"));
@@ -138,7 +138,7 @@ public class HologramEntity extends Entity {
         }
 
         if (tag.contains("forward", Tag.TAG_LIST)) {
-            final ListTag forward = tag.getList("forward", Tag.TAG_FLOAT);
+            ListTag forward = tag.getList("forward", Tag.TAG_FLOAT);
             setForward(new Vector3f(forward.getFloat(0), forward.getFloat(1), forward.getFloat(2)));
         }
 
@@ -148,13 +148,13 @@ public class HologramEntity extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(final CompoundTag tag) {
+    protected void addAdditionalSaveData(CompoundTag tag) {
         tag.putString("text", templateText);
         tag.putFloat("scale", scale());
 
-        final Vector3f forward = forward();
+        Vector3f forward = forward();
         if (forward != null) {
-            final ListTag forwardList = new ListTag();
+            ListTag forwardList = new ListTag();
             forwardList.add(FloatTag.valueOf(forward.x()));
             forwardList.add(FloatTag.valueOf(forward.y()));
             forwardList.add(FloatTag.valueOf(forward.z()));
@@ -164,17 +164,17 @@ public class HologramEntity extends Entity {
         tag.putBoolean("fullbright", fullbright());
     }
 
-    public void setTemplateText(final String templateText) {
+    public void setTemplateText(String templateText) {
         this.templateText = templateText;
         parsedTemplate = TEXT_PARSER.parseNode(templateText);
     }
 
-    public void setDisplayText(final Component text) {
+    public void setDisplayText(Component text) {
         displayText = text;
         displayCache = null;
     }
 
-    public void setScale(final float scale) {
+    public void setScale(float scale) {
         entityData.set(DATA_SCALE, scale);
     }
 
@@ -182,7 +182,7 @@ public class HologramEntity extends Entity {
         return entityData.get(DATA_SCALE);
     }
 
-    public void setForward(@Nullable final Vector3f forward) {
+    public void setForward(@Nullable Vector3f forward) {
         if (forward != null) {
             entityData.set(DATA_FORWARD_X, forward.x());
             entityData.set(DATA_FORWARD_Y, forward.y());
@@ -197,16 +197,16 @@ public class HologramEntity extends Entity {
 
     @Nullable
     public Vector3f forward() {
-        final float x = entityData.get(DATA_FORWARD_X);
-        final float y = entityData.get(DATA_FORWARD_Y);
-        final float z = entityData.get(DATA_FORWARD_Z);
+        float x = entityData.get(DATA_FORWARD_X);
+        float y = entityData.get(DATA_FORWARD_Y);
+        float z = entityData.get(DATA_FORWARD_Z);
         if (Mth.equal(x, 0.0f) && Mth.equal(y, 0.0f) && Mth.equal(z, 0.0f)) {
             return null;
         }
         return new Vector3f(x, y, z);
     }
 
-    public void setFullbright(final boolean fullbright) {
+    public void setFullbright(boolean fullbright) {
         entityData.set(DATA_FULLBRIGHT, fullbright);
     }
 
@@ -214,16 +214,16 @@ public class HologramEntity extends Entity {
         return entityData.get(DATA_FULLBRIGHT);
     }
 
-    public DisplayInfo display(final Function<Component, List<Line>> splitter) {
+    public DisplayInfo display(Function<Component, List<Line>> splitter) {
         DisplayInfo display = displayCache;
         if (display == null) {
-            final Vector3f forward = forward();
+            Vector3f forward = forward();
             displayCache = display = computeDisplay(splitter, forward);
         }
         return display;
     }
 
-    private DisplayInfo computeDisplay(final Function<Component, List<Line>> splitter, final Vector3f forward) {
+    private DisplayInfo computeDisplay(Function<Component, List<Line>> splitter, Vector3f forward) {
         return new DisplayInfo(
                 forward != null ? new Quaternionf().rotationTo(GLOBAL_FORWARD, forward) : null,
                 splitter.apply(displayText)

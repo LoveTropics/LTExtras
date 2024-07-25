@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemFrame.class)
 public abstract class ItemFrameMixin extends Entity {
-    private ItemFrameMixin(final EntityType<?> type, final Level level) {
+    private ItemFrameMixin(EntityType<?> type, Level level) {
         super(type, level);
     }
 
     @Inject(method = "setItem(Lnet/minecraft/world/item/ItemStack;Z)V", at = @At("HEAD"))
-    private void setItem(final ItemStack stack, final boolean pUpdateNeighbours, final CallbackInfo ci) {
+    private void setItem(ItemStack stack, boolean pUpdateNeighbours, CallbackInfo ci) {
         if (stack.is(ExtraItems.IMAGE.get())) {
             setInvisible(true);
         }

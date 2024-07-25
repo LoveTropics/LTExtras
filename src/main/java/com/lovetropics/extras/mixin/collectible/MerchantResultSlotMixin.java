@@ -19,12 +19,12 @@ public class MerchantResultSlotMixin {
     private Player player;
 
     @Inject(method = "checkTakeAchievements", at = @At("HEAD"))
-    private void onTake(final ItemStack stack, final CallbackInfo ci) {
-        final Collectible collectible = Collectible.byItem(stack);
+    private void onTake(ItemStack stack, CallbackInfo ci) {
+        Collectible collectible = Collectible.byItem(stack);
         if (collectible == null) {
             return;
         }
-        final CollectibleStore store = CollectibleStore.get(player);
+        CollectibleStore store = CollectibleStore.get(player);
         store.give(collectible);
         Collectible.addMarkerTo(player.getUUID(), stack);
     }

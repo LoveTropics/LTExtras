@@ -5,7 +5,6 @@ import com.tterrag.registrate.providers.ProviderType;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 
 public enum ExtraLangKeys {
     COLLECTIBLE_COMPASS_ALREADY_USED("item", "collectible_compass.already_used", "This Compass already points to a Collectible. If you want to find something else, you will need to find a new one!"),
@@ -21,7 +20,7 @@ public enum ExtraLangKeys {
     private final String key;
     private final String value;
 
-    ExtraLangKeys(final String type, final String key, final String value) {
+    ExtraLangKeys(String type, String key, String value) {
         this.key = Util.makeDescriptionId(type, LTExtras.location(key));
         this.value = value;
     }
@@ -30,13 +29,13 @@ public enum ExtraLangKeys {
         return Component.translatable(key);
     }
 
-    public MutableComponent format(final Object... args) {
+    public MutableComponent format(Object... args) {
         return Component.translatable(key, args);
     }
 
-    public static void init(final Registrate registrate) {
+    public static void init(Registrate registrate) {
         registrate.addDataGenerator(ProviderType.LANG, prov -> {
-            for (final ExtraLangKeys lang : values()) {
+            for (ExtraLangKeys lang : values()) {
                 prov.add(lang.key, lang.value);
             }
         });

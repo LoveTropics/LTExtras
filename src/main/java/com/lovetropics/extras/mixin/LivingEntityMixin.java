@@ -28,7 +28,7 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@ModifyConstant(method = "handleRelativeFrictionAndCalculateMovement", constant = @Constant(doubleValue = 0.2))
 	private double modifyClimbSpeed(double speed) {
-		final BlockState state = getInBlockState();
+		BlockState state = getInBlockState();
 		if (state.is(ExtraTags.Blocks.CLIMBABLE_VERY_FAST)) {
 			return speed * 2.0;
 		} else if (state.is(ExtraTags.Blocks.CLIMBABLE_FAST)) {

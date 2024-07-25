@@ -30,7 +30,7 @@ public final class RopeBlock extends Block implements SimpleWaterloggedBlock {
 
 	public RopeBlock(Properties properties) {
 		super(properties);
-		this.registerDefaultState(this.stateDefinition.any().setValue(KNOT, false).setValue(WATERLOGGED, false));
+		registerDefaultState(stateDefinition.any().setValue(KNOT, false).setValue(WATERLOGGED, false));
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public final class RopeBlock extends Block implements SimpleWaterloggedBlock {
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
-		if (facing == Direction.UP && !this.canHangFrom(world, facingPos, facingState)) {
+		if (facing == Direction.UP && !canHangFrom(world, facingPos, facingState)) {
 			return Blocks.AIR.defaultBlockState();
 		}
 
@@ -61,9 +61,9 @@ public final class RopeBlock extends Block implements SimpleWaterloggedBlock {
 		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 
-		if (this.canHangAt(world, pos)) {
-			return this.defaultBlockState()
-					.setValue(KNOT, this.isKnottedAt(world, pos))
+		if (canHangAt(world, pos)) {
+			return defaultBlockState()
+					.setValue(KNOT, isKnottedAt(world, pos))
 					.setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
 		} else {
 			return null;
@@ -72,13 +72,13 @@ public final class RopeBlock extends Block implements SimpleWaterloggedBlock {
 
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-		return this.canHangAt(world, pos);
+		return canHangAt(world, pos);
 	}
 
 	private boolean canHangAt(LevelReader world, BlockPos pos) {
 		BlockPos attachPos = pos.above();
 		BlockState attachState = world.getBlockState(attachPos);
-		return this.canHangFrom(world, attachPos, attachState);
+		return canHangFrom(world, attachPos, attachState);
 	}
 
 	private boolean canHangFrom(LevelReader world, BlockPos attachPos, BlockState attachState) {

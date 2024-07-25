@@ -22,19 +22,19 @@ public class EmittedFireParticle extends EmittedRaisingParticle {
 
 	@Override
 	public void move(double pX, double pY, double pZ) {
-		this.setBoundingBox(this.getBoundingBox().move(pX, pY, pZ));
-		this.setLocationFromBoundingbox();
+		setBoundingBox(getBoundingBox().move(pX, pY, pZ));
+		setLocationFromBoundingbox();
 	}
 
 	@Override
 	public float getQuadSize(float pScaleFactor) {
-		float f = ((float)this.age + pScaleFactor) / (float)this.lifetime;
-		return this.quadSize * (1.0F - f * f * 0.5F);
+		float f = ((float) age + pScaleFactor) / (float) lifetime;
+		return quadSize * (1.0F - f * f * 0.5F);
 	}
 
 	@Override
 	public int getLightColor(float pPartialTick) {
-		float f = ((float)this.age + pPartialTick) / (float)this.lifetime;
+		float f = ((float) age + pPartialTick) / (float) lifetime;
 		f = Mth.clamp(f, 0.0F, 1.0F);
 		int i = super.getLightColor(pPartialTick);
 		int j = i & 255;
@@ -61,12 +61,12 @@ public class EmittedFireParticle extends EmittedRaisingParticle {
 		private final SpriteSet sprites;
 
 		public Factory(SpriteSet pSprites) {
-			this.sprites = pSprites;
+			sprites = pSprites;
 		}
 
 		@Override
 		public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-			return new EmittedFireParticle(pLevel, pX, pY, pZ, this.sprites);
+			return new EmittedFireParticle(pLevel, pX, pY, pZ, sprites);
 		}
 	}
 }

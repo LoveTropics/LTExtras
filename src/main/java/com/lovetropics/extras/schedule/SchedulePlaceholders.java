@@ -4,7 +4,6 @@ import com.lovetropics.extras.LTExtras;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -37,8 +36,8 @@ public class SchedulePlaceholders {
         registerForEntry(true);
     }
 
-    private static void registerForEntry(final boolean next) {
-        final String prefix = next ? "next" : "current";
+    private static void registerForEntry(boolean next) {
+        String prefix = next ? "next" : "current";
         registerPlaceholder(prefix + "/short_description", next, (ctx, entry) -> PlaceholderResult.value(entry.shortDescription()));
         registerPlaceholder(prefix + "/long_description", next, (ctx, entry) -> PlaceholderResult.value(entry.longDescription()));
         registerPlaceholder(prefix + "/hosts", next, (ctx, entry) -> formatHosts(entry));
@@ -47,14 +46,14 @@ public class SchedulePlaceholders {
         registerPlaceholder(prefix + "/time_until", next, (ctx, entry) -> formatTimeUntil(entry));
     }
 
-    private static void registerPlaceholder(final String id, final boolean next, final PlaceholderFunction function) {
+    private static void registerPlaceholder(String id, boolean next, PlaceholderFunction function) {
         Placeholders.register(LTExtras.location("schedule/" + id), (ctx, arg) -> {
-            final StreamSchedule schedule = SchedulePlaceholders.schedule;
+            StreamSchedule schedule = SchedulePlaceholders.schedule;
             if (schedule == null) {
                 return UNKNOWN;
             }
-            final Instant time = Instant.now();
-            final StreamSchedule.Entry entry = next ? schedule.nextAfter(time) : schedule.currentAt(time);
+            Instant time = Instant.now();
+            StreamSchedule.Entry entry = next ? schedule.nextAfter(time) : schedule.currentAt(time);
             if (entry != null) {
                 return function.get(ctx, entry);
             }
@@ -62,14 +61,14 @@ public class SchedulePlaceholders {
         });
     }
 
-    private static PlaceholderResult formatHosts(final StreamSchedule.Entry entry) {
+    private static PlaceholderResult formatHosts(StreamSchedule.Entry entry) {
         return PlaceholderResult.value(entry.hosts().stream()
                 .map(StreamSchedule.Host::name)
                 .collect(Collectors.joining(" + "))
         );
     }
 
-    private static PlaceholderResult formatTimeUntil(final StreamSchedule.Entry entry) {
+    private static PlaceholderResult formatTimeUntil(StreamSchedule.Entry entry) {
         Duration duration = Duration.between(Instant.now(), entry.startTime());
         if (duration.isNegative()) {
             duration = Duration.ZERO;
@@ -77,23 +76,23 @@ public class SchedulePlaceholders {
         return PlaceholderResult.value(duration.toMinutes() + " minutes");
     }
 
-    private static PlaceholderResult formatLocalTime(final PlaceholderContext ctx, final Instant time) {
-        final LocalDateTime localTime = time.atZone(getTimeZone(ctx)).toLocalDateTime();
+    private static PlaceholderResult formatLocalTime(PlaceholderContext ctx, Instant time) {
+        LocalDateTime localTime = time.atZone(getTimeZone(ctx)).toLocalDateTime();
         return PlaceholderResult.value(TIME_FORMATTER.format(localTime));
     }
 
-    private static ZoneId getTimeZone(final PlaceholderContext ctx) {
-        final ServerPlayer player = ctx.player();
+    private static ZoneId getTimeZone(PlaceholderContext ctx) {
+        ServerPlayer player = ctx.player();
         return player != null ? PlayerTimeZone.get(player) : ZoneOffset.UTC;
     }
 
     @SubscribeEvent
-    public static void onServerTick(final ServerTickEvent.Pre event) {
+    public static void onServerTick(ServerTickEvent.Pre event) {
         if (!fetchFuture.isDone()) {
             return;
         }
 
-        final Instant time = Instant.now();
+        Instant time = Instant.now();
         if (Duration.between(lastFetchTime, time).compareTo(FETCH_INTERVAL) > 0) {
             fetchFuture = StreamSchedule.fetch().thenAccept(opt -> opt.ifPresent(s -> schedule = s));
             lastFetchTime = time;

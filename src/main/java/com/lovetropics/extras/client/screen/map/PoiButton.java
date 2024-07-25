@@ -35,14 +35,14 @@ class PoiButton extends AbstractButton {
     private int lastFocusAnimation;
     private int focusAnimation;
 
-    private PoiButton(final Font font, final int x, final int y, final Component message, final Poi poi, final Consumer<Poi> action) {
+    private PoiButton(Font font, int x, int y, Component message, Poi poi, Consumer<Poi> action) {
         super(x, y, SIZE, SIZE, message);
         this.poi = poi;
         this.font = font;
         this.action = action;
     }
 
-    public static PoiButton create(final Font font, final int x, final int y, final Poi poi, final Consumer<Poi> action) {
+    public static PoiButton create(Font font, int x, int y, Poi poi, Consumer<Poi> action) {
         Component description = poi.description();
         if (!poi.enabled()) {
             description = Component.empty()
@@ -56,7 +56,7 @@ class PoiButton extends AbstractButton {
     public void tick() {
         lastFocusAnimation = focusAnimation;
 
-        final boolean focused = isHoveredOrFocused();
+        boolean focused = isHoveredOrFocused();
         if (focused && focusAnimation < HOVER_ANIMATION_LENGTH) {
             focusAnimation++;
         } else if (!focused && focusAnimation > 0) {
@@ -65,14 +65,14 @@ class PoiButton extends AbstractButton {
     }
 
     @Override
-    protected void renderWidget(final GuiGraphics graphics, final int mouseX, final int mouseY, final float partialTicks) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         float animation = Mth.lerp(partialTicks, lastFocusAnimation, focusAnimation) / HOVER_ANIMATION_LENGTH;
         animation = (float) (1.0 - Math.pow(1.0 - animation, 5.0));
 
-        final int zOffset = animation > 0.0f ? 100 : 0;
+        int zOffset = animation > 0.0f ? 100 : 0;
 
         if (animation > 0.0f) {
-            final int tooltipWidth = Mth.floor((font.width(getMessage()) + BORDER_SIZE * 2) * animation);
+            int tooltipWidth = Mth.floor((font.width(getMessage()) + BORDER_SIZE * 2) * animation);
             final int tooltipHeight = TOOLTIP_HEIGHT;
             setWidth(SIZE + tooltipWidth);
 
@@ -83,8 +83,8 @@ class PoiButton extends AbstractButton {
             graphics.blitSprite(TOOLTIP_LOCATION, getX(), getY(), SIZE, SIZE, BORDER_SIZE, 200, 20, 0, 55);
 
             graphics.enableScissor(getX() + BORDER_SIZE, getY() + BORDER_SIZE, getX() + getWidth() - BORDER_SIZE, getY() + getHeight() - BORDER_SIZE);
-            final int textLeft = getX() + SIZE + BORDER_SIZE - 1;
-            final int textTop = getY() + (getHeight() - font.lineHeight) / 2 + 1;
+            int textLeft = getX() + SIZE + BORDER_SIZE - 1;
+            int textTop = getY() + (getHeight() - font.lineHeight) / 2 + 1;
             graphics.drawString(font, getMessage(), textLeft, textTop, CommonColors.WHITE);
 
             graphics.disableScissor();
@@ -94,17 +94,17 @@ class PoiButton extends AbstractButton {
             setWidth(SIZE);
         }
 
-        final ResourceLocation icon = poi.resourceLocation();
+        ResourceLocation icon = poi.resourceLocation();
         graphics.blit(icon, getX() + BORDER_SIZE, getY() + BORDER_SIZE, zOffset, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
 
-        final List<UUID> faces = poi.faces();
+        List<UUID> faces = poi.faces();
         if (!faces.isEmpty()) {
-            final int faceFactor = faces.size() > 2 ? 2 : 1;
+            int faceFactor = faces.size() > 2 ? 2 : 1;
             graphics.pose().pushPose();
             graphics.pose().translate(0.0f, 0.0f, zOffset);
             for (int i = 0; i < faces.size(); i++) {
-                final UUID uuid = faces.get(i);
-                final ResourceLocation face = ClientMapPoiManager.getFace(uuid);
+                UUID uuid = faces.get(i);
+                ResourceLocation face = ClientMapPoiManager.getFace(uuid);
                 PlayerFaceRenderer.draw(graphics, face, getX() + BORDER_SIZE + i * HALF_ICON_SIZE / faceFactor + i, getY() + ICON_SIZE, HALF_ICON_SIZE / faceFactor);
             }
             graphics.pose().popPose();
@@ -117,7 +117,7 @@ class PoiButton extends AbstractButton {
     }
 
     @Override
-    protected void updateWidgetNarration(final NarrationElementOutput output) {
+    protected void updateWidgetNarration(NarrationElementOutput output) {
         defaultButtonNarrationText(output);
     }
 }

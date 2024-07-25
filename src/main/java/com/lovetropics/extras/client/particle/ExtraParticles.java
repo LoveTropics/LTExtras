@@ -25,8 +25,8 @@ public final class ExtraParticles {
 	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> EMITTED_HEARTS_PARTICLE = REGISTER.register("emitted_hearts_particle", () -> new SimpleParticleType(false));
 
 	@OnlyIn(Dist.CLIENT)
-	public static TextureAtlasSprite getItemSprite(final ClientLevel level, final ItemStack stack) {
-		final BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
+	public static TextureAtlasSprite getItemSprite(ClientLevel level, ItemStack stack) {
+		BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
 		return model.getOverrides().resolve(model, stack, level, null, 0).getParticleIcon(ModelData.EMPTY);
 	}
 }

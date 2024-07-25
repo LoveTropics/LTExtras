@@ -25,8 +25,8 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 public class CollectibleItemBehavior {
     private static final int INVENTORY_CHECK_INTERVAL = SharedConstants.TICKS_PER_SECOND;
 
-    public static boolean onItemToss(final Player player, final ItemEntity item) {
-        final ItemStack stack = item.getItem();
+    public static boolean onItemToss(Player player, ItemEntity item) {
+        ItemStack stack = item.getItem();
         if (Collectible.isCollectible(stack)) {
             player.addItem(stack);
             return true;
@@ -35,36 +35,36 @@ public class CollectibleItemBehavior {
     }
 
     @SubscribeEvent
-    public static void onItemPickup(final ItemEntityPickupEvent.Pre event) {
-        final ItemStack stack = event.getItemEntity().getItem();
-        final Collectible collectible = Collectible.byItem(stack);
+    public static void onItemPickup(ItemEntityPickupEvent.Pre event) {
+        ItemStack stack = event.getItemEntity().getItem();
+        Collectible collectible = Collectible.byItem(stack);
         if (collectible == null) {
             return;
         }
 
-        final Player player = event.getPlayer();
+        Player player = event.getPlayer();
         if (Collectible.isIllegalCollectible(stack, player)) {
             stack.setCount(0);
             event.getItemEntity().discard();
             event.setCanPickup(TriState.FALSE);
         } else {
-            final CollectibleStore store = CollectibleStore.get(player);
+            CollectibleStore store = CollectibleStore.get(player);
             store.give(collectible);
             Collectible.addMarkerTo(player.getUUID(), stack);
         }
     }
 
     @SubscribeEvent
-    public static void onLivingDrops(final LivingDropsEvent event) {
+    public static void onLivingDrops(LivingDropsEvent event) {
         event.getDrops().removeIf(item -> Collectible.isCollectible(item.getItem()));
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(final PlayerTickEvent.Post event) {
-        final Player player = event.getEntity();
-        if (player instanceof final ServerPlayer serverPlayer && serverPlayer.tickCount % INVENTORY_CHECK_INTERVAL == 0) {
-            final Inventory inventory = serverPlayer.getInventory();
-            final int count = inventory.clearOrCountMatchingItems(stack -> Collectible.isIllegalCollectible(stack, serverPlayer), -1, serverPlayer.inventoryMenu.getCraftSlots());
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        Player player = event.getEntity();
+        if (player instanceof ServerPlayer serverPlayer && serverPlayer.tickCount % INVENTORY_CHECK_INTERVAL == 0) {
+            Inventory inventory = serverPlayer.getInventory();
+            int count = inventory.clearOrCountMatchingItems(stack -> Collectible.isIllegalCollectible(stack, serverPlayer), -1, serverPlayer.inventoryMenu.getCraftSlots());
             if (count > 0) {
                 serverPlayer.containerMenu.broadcastChanges();
                 serverPlayer.inventoryMenu.slotsChanged(inventory);
@@ -73,9 +73,9 @@ public class CollectibleItemBehavior {
     }
 
     @SubscribeEvent
-    public static void onDestroyItem(final PlayerDestroyItemEvent event) {
-        if (event.getEntity() instanceof final ServerPlayer player) {
-            final ItemStack item = event.getOriginal();
+    public static void onDestroyItem(PlayerDestroyItemEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            ItemStack item = event.getOriginal();
             if (Collectible.isCollectible(item)) {
                 player.addItem(item);
             }
@@ -83,27 +83,27 @@ public class CollectibleItemBehavior {
     }
 
     @SubscribeEvent
-    public static void onFinishUsingItem(final LivingEntityUseItemEvent.Finish event) {
-        final ItemStack stack = event.getItem();
+    public static void onFinishUsingItem(LivingEntityUseItemEvent.Finish event) {
+        ItemStack stack = event.getItem();
         if (Collectible.isCollectible(stack) && event.getResultStack().isEmpty()) {
             event.setResultStack(stack);
         }
     }
 
-    public static InteractionResultHolder<ItemStack> wrapUse(final ItemStack stack, final Level level, final Player player, final InteractionHand hand) {
+    public static InteractionResultHolder<ItemStack> wrapUse(ItemStack stack, Level level, Player player, InteractionHand hand) {
         if (Collectible.isCollectible(stack)) {
-            final int count = stack.getCount();
-            final InteractionResultHolder<ItemStack> result = stack.getItem().use(level, player, hand);
+            int count = stack.getCount();
+            InteractionResultHolder<ItemStack> result = stack.getItem().use(level, player, hand);
             stack.setCount(count);
             return result;
         }
         return stack.getItem().use(level, player, hand);
     }
 
-    public static InteractionResult wrapUseOn(final ItemStack stack, final UseOnContext context) {
+    public static InteractionResult wrapUseOn(ItemStack stack, UseOnContext context) {
         if (Collectible.isCollectible(stack)) {
-            final int count = stack.getCount();
-            final InteractionResult result = stack.useOn(context);
+            int count = stack.getCount();
+            InteractionResult result = stack.useOn(context);
             stack.setCount(count);
             return result;
         }

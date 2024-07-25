@@ -79,10 +79,10 @@ public class ExtrasConfig {
     public static final ModConfigSpec CLIENT_CONFIG = CLIENT_BUILDER.build();
 
     @SubscribeEvent
-    public static void configLoad(final ModConfigEvent.Loading event) {
+    public static void configLoad(ModConfigEvent.Loading event) {
     }
 
     @SubscribeEvent
-    public static void configReload(final ModConfigEvent.Reloading event) {
+    public static void configReload(ModConfigEvent.Reloading event) {
     }
 }

@@ -28,7 +28,7 @@ public class CheckpointBlock extends Block {
 
 	public CheckpointBlock(Properties properties) {
 		super(properties);
-		this.registerDefaultState(this.defaultBlockState().setValue(STAGE, 1));
+		registerDefaultState(defaultBlockState().setValue(STAGE, 1));
 	}
 
 	@Override
@@ -73,13 +73,13 @@ public class CheckpointBlock extends Block {
 			return;
 		}
 
-		if (this.isHoldingBarrier(player)) {
+		if (isHoldingBarrier(player)) {
 			world.addParticle(ExtraParticles.CHECKPOINT.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
 		}
 	}
 
 	private boolean isHoldingBarrier(Player player) {
-		Item item = this.asItem();
+		Item item = asItem();
 		return player.getMainHandItem().getItem() == item
 				|| player.getOffhandItem().getItem() == item;
 	}

@@ -32,13 +32,13 @@ public class MobControllerBlock extends BaseEntityBlock {
 
 	@Nullable
 	@Override
-	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new MobControllerBlockEntity(ExtraBlocks.MOB_CONTROLLER_BE.get(), pos, state);
 	}
 
 	@Nullable
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(final Level level, final BlockState state, final BlockEntityType<T> type) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
 		return createTickerHelper(type, ExtraBlocks.MOB_CONTROLLER_BE.get(), MobControllerBlockEntity::tick);
 	}
 }

@@ -19,11 +19,11 @@ public record ClientboundSetSkyColorPacket(int color, int fadeLength) implements
 
     public static final Type<ClientboundSetSkyColorPacket> TYPE = new Type<>(LTExtras.location("set_sky_color"));
 
-    public static ClientboundSetSkyColorPacket clear(final int fadeLength) {
+    public static ClientboundSetSkyColorPacket clear(int fadeLength) {
         return new ClientboundSetSkyColorPacket(CLEAR, fadeLength);
     }
 
-    public static void handle(final ClientboundSetSkyColorPacket packet, final IPayloadContext ctx) {
+    public static void handle(ClientboundSetSkyColorPacket packet, IPayloadContext ctx) {
         if (packet.color == CLEAR) {
             SkyColorEffectHandler.clear(packet.fadeLength);
         } else {

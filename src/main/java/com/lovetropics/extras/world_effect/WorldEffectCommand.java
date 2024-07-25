@@ -23,7 +23,7 @@ public class WorldEffectCommand {
             Component.literal("World effect does not exist with id: " + id)
     );
 
-    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(literal("worldeffect")
                 .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(literal("apply")
@@ -42,30 +42,30 @@ public class WorldEffectCommand {
         );
     }
 
-    private static int apply(final CommandContext<CommandSourceStack> context, final WorldEffectHolder effect, final long duration) {
-        final MinecraftServer server = context.getSource().getServer();
-        final long expiresAt = duration == Long.MAX_VALUE ? Long.MAX_VALUE : server.overworld().getGameTime() + duration;
+    private static int apply(CommandContext<CommandSourceStack> context, WorldEffectHolder effect, long duration) {
+        MinecraftServer server = context.getSource().getServer();
+        long expiresAt = duration == Long.MAX_VALUE ? Long.MAX_VALUE : server.overworld().getGameTime() + duration;
         WorldEffectManager.apply(context.getSource().getLevel(), effect, expiresAt);
         context.getSource().sendSuccess(() -> Component.literal("Applied world effect: " + effect.id()), false);
         return 1;
     }
 
-    private static int clear(final CommandContext<CommandSourceStack> context, final WorldEffectHolder effect) {
+    private static int clear(CommandContext<CommandSourceStack> context, WorldEffectHolder effect) {
         WorldEffectManager.clear(context.getSource().getLevel(), effect.id());
         context.getSource().sendSuccess(() -> Component.literal("Cleared world effect: " + effect.id()), false);
         return 1;
     }
 
-    public static RequiredArgumentBuilder<CommandSourceStack, ResourceLocation> effectArgument(final String name) {
+    public static RequiredArgumentBuilder<CommandSourceStack, ResourceLocation> effectArgument(String name) {
         return argument(name, ResourceLocationArgument.id()).suggests((context, builder) -> SharedSuggestionProvider.suggestResource(
                 WorldEffectConfigs.REGISTRY.stream().map(WorldEffectHolder::id),
                 builder
         ));
     }
 
-    private static WorldEffectHolder getEffect(final CommandContext<CommandSourceStack> context, final String name) throws CommandSyntaxException {
-        final ResourceLocation id = ResourceLocationArgument.getId(context, name);
-        final WorldEffectHolder config = WorldEffectConfigs.REGISTRY.get(id);
+    private static WorldEffectHolder getEffect(CommandContext<CommandSourceStack> context, String name) throws CommandSyntaxException {
+        ResourceLocation id = ResourceLocationArgument.getId(context, name);
+        WorldEffectHolder config = WorldEffectConfigs.REGISTRY.get(id);
         if (config == null) {
             throw WORLD_EFFECT_CONFIG_NOT_FOUND.create(id);
         }

@@ -13,13 +13,13 @@ import java.time.ZoneId;
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class TimeZoneSender {
     @SubscribeEvent
-    public static void onLogIn(final ClientPlayerNetworkEvent.LoggingIn event) {
+    public static void onLogIn(ClientPlayerNetworkEvent.LoggingIn event) {
         sendTimeZoneToServer();
     }
 
     // When the server recreates the player, we can't be sure that it kept our time zone - send it again to be sure
     @SubscribeEvent
-    public static void onPlayerClone(final ClientPlayerNetworkEvent.Clone event) {
+    public static void onPlayerClone(ClientPlayerNetworkEvent.Clone event) {
         sendTimeZoneToServer();
     }
 

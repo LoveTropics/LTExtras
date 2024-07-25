@@ -28,14 +28,14 @@ public abstract class CustomBarrierBlock extends BarrierBlock {
 			return;
 		}
 
-		if (this.isHoldingBarrier(player)) {
-			final BlockParticleOption particle = new BlockParticleOption(ParticleTypes.BLOCK_MARKER, Blocks.BARRIER.defaultBlockState());
+		if (isHoldingBarrier(player)) {
+			BlockParticleOption particle = new BlockParticleOption(ParticleTypes.BLOCK_MARKER, Blocks.BARRIER.defaultBlockState());
 			world.addParticle(particle, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
 		}
 	}
 
 	private boolean isHoldingBarrier(Player player) {
-		Item item = this.asItem();
+		Item item = asItem();
 		return player.getMainHandItem().getItem() == item
 				|| player.getOffhandItem().getItem() == item;
 	}

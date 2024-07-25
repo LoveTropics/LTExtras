@@ -37,11 +37,11 @@ public record StreamSchedule(List<Entry> entries) {
     ).apply(i, StreamSchedule::new));
 
     public static CompletableFuture<Optional<StreamSchedule>> fetch() {
-        final String authKey = ExtrasConfig.TECH_STACK.authKey.get();
+        String authKey = ExtrasConfig.TECH_STACK.authKey.get();
         if (authKey.isEmpty()) {
             return CompletableFuture.completedFuture(Optional.empty());
         }
-        final HttpRequest request = HttpRequest.newBuilder(URI.create(ExtrasConfig.TECH_STACK.scheduleUrl.get()))
+        HttpRequest request = HttpRequest.newBuilder(URI.create(ExtrasConfig.TECH_STACK.scheduleUrl.get()))
                 .header("Authorization", "Bearer " + authKey)
                 .header(HttpHeaders.USER_AGENT, "LTExtras 1.0 (lovetropics.org)")
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
@@ -49,7 +49,7 @@ public record StreamSchedule(List<Entry> entries) {
                 .build();
         return HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApplyAsync(response -> {
-                    final JsonElement json = JsonParser.parseString(response.body());
+                    JsonElement json = JsonParser.parseString(response.body());
                     return CODEC.parse(JsonOps.INSTANCE, json).resultOrPartial(Util.prefix("Failed to parse stream schedule: ", LOGGER::error));
                 }, Util.backgroundExecutor())
                 .exceptionally(throwable -> {
@@ -59,8 +59,8 @@ public record StreamSchedule(List<Entry> entries) {
     }
 
     @Nullable
-    public Entry currentAt(final Instant time) {
-        for (final Entry entry : entries) {
+    public Entry currentAt(Instant time) {
+        for (Entry entry : entries) {
             if (!entry.startTime().isAfter(time) && !time.isAfter(entry.endTime())) {
                 return entry;
             }
@@ -69,8 +69,8 @@ public record StreamSchedule(List<Entry> entries) {
     }
 
     @Nullable
-    public Entry nextAfter(final Instant time) {
-        for (final Entry entry : entries) {
+    public Entry nextAfter(Instant time) {
+        for (Entry entry : entries) {
             if (entry.startTime().isAfter(time)) {
                 return entry;
             }

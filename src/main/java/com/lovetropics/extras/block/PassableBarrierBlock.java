@@ -19,6 +19,6 @@ public final class PassableBarrierBlock extends CustomBarrierBlock {
 
 	@Override
 	public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-		return this.getShape(state, world, pos, context);
+		return getShape(state, world, pos, context);
 	}
 }

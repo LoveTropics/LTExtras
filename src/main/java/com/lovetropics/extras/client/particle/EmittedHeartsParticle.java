@@ -17,7 +17,7 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 public class EmittedHeartsParticle extends EmittedRaisingParticle {
 	EmittedHeartsParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
 		super(world, x, y, z, sprites);
-		this.setSize(0.75f, 0.75f);
+		setSize(0.75f, 0.75f);
 	}
 
 	@SubscribeEvent
@@ -34,12 +34,12 @@ public class EmittedHeartsParticle extends EmittedRaisingParticle {
 		private final SpriteSet sprites;
 
 		public Factory(SpriteSet pSprites) {
-			this.sprites = pSprites;
+			sprites = pSprites;
 		}
 
 		@Override
         public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-			return new EmittedHeartsParticle(pLevel, pX, pY, pZ, this.sprites);
+			return new EmittedHeartsParticle(pLevel, pX, pY, pZ, sprites);
 		}
 	}
 }

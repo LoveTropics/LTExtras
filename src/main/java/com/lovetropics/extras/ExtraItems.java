@@ -42,8 +42,8 @@ public class ExtraItems {
 
     public static final ItemEntry<ImageItem> IMAGE = REGISTRATE.item("image", ImageItem::new)
             .tab(LTExtras.TAB_KEY, modifier -> {
-                for (final ImageData preset : ImageItem.PRESETS) {
-                    final ItemStack stack = new ItemStack(ExtraItems.IMAGE.get());
+                for (ImageData preset : ImageItem.PRESETS) {
+                    ItemStack stack = new ItemStack(ExtraItems.IMAGE.get());
                     stack.set(ExtraDataComponents.IMAGE, preset);
                     modifier.accept(stack);
                 }
@@ -52,8 +52,8 @@ public class ExtraItems {
 
     public static final ItemEntry<InviteItem> INVITE = REGISTRATE.item("invite", InviteItem::new)
             .tab(LTExtras.TAB_KEY, modifier -> {
-                for (final ImageData preset : InviteItem.PRESETS) {
-                    final ItemStack stack = new ItemStack(ExtraItems.INVITE.get());
+                for (ImageData preset : InviteItem.PRESETS) {
+                    ItemStack stack = new ItemStack(ExtraItems.INVITE.get());
                     stack.set(ExtraDataComponents.IMAGE, preset);
                     modifier.accept(stack);
                 }

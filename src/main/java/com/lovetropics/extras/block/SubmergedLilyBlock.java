@@ -27,7 +27,7 @@ public class SubmergedLilyBlock extends WaterlilyBlock implements SimpleWaterlog
 
     public SubmergedLilyBlock(Properties pProperties) {
         super(pProperties);
-        registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.WATERLOGGED, true));
+        registerDefaultState(getStateDefinition().any().setValue(BlockStateProperties.WATERLOGGED, true));
     }
 
     @Override

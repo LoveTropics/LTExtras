@@ -2,7 +2,6 @@ package com.lovetropics.extras.schedule;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -18,9 +17,9 @@ public class PlayerTimeZone {
     private ZoneId zoneId = ZoneOffset.UTC;
 
     @SubscribeEvent
-    public static void onPlayerClone(final PlayerEvent.Clone event) {
+    public static void onPlayerClone(PlayerEvent.Clone event) {
         if (event.isWasDeath()) {
-            final Player oldPlayer = event.getOriginal();
+            Player oldPlayer = event.getOriginal();
 
             PlayerTimeZone oldTimeZone = getOrDefault(oldPlayer);
             PlayerTimeZone newTimeZone = getOrDefault(event.getEntity());
@@ -29,18 +28,18 @@ public class PlayerTimeZone {
         }
     }
 
-    public static void set(final ServerPlayer player, final ZoneId zone) {
-        final PlayerTimeZone capability = getOrDefault(player);
+    public static void set(ServerPlayer player, ZoneId zone) {
+        PlayerTimeZone capability = getOrDefault(player);
         capability.zoneId = zone;
     }
 
-    public static ZoneId get(final ServerPlayer player) {
-        final PlayerTimeZone capability = getOrDefault(player);
+    public static ZoneId get(ServerPlayer player) {
+        PlayerTimeZone capability = getOrDefault(player);
         return capability.zoneId;
     }
 
     @NotNull
-    private static PlayerTimeZone getOrDefault(final Player player) {
+    private static PlayerTimeZone getOrDefault(Player player) {
         return player.getData(ExtraAttachments.TIME_ZONE);
     }
 }

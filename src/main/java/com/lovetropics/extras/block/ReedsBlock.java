@@ -33,7 +33,7 @@ public final class ReedsBlock extends Block implements SimpleWaterloggedBlock {
 
 	public ReedsBlock(Properties properties) {
 		super(properties);
-		this.registerDefaultState(this.getStateDefinition().any().setValue(TYPE, Type.SINGLE).setValue(WATERLOGGED, false));
+		registerDefaultState(getStateDefinition().any().setValue(TYPE, Type.SINGLE).setValue(WATERLOGGED, false));
 	}
 
 	@Override
@@ -52,8 +52,8 @@ public final class ReedsBlock extends Block implements SimpleWaterloggedBlock {
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Level world = context.getLevel();
 		FluidState fluid = world.getFluidState(context.getClickedPos());
-		return this.defaultBlockState()
-				.setValue(TYPE, this.getAppropriateTypeAt(world, context.getClickedPos()))
+		return defaultBlockState()
+				.setValue(TYPE, getAppropriateTypeAt(world, context.getClickedPos()))
 				.setValue(WATERLOGGED, fluid.getType() == Fluids.WATER);
 	}
 
@@ -67,7 +67,7 @@ public final class ReedsBlock extends Block implements SimpleWaterloggedBlock {
 			world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
 
-		return state.setValue(TYPE, this.getAppropriateTypeAt(world, currentPos));
+		return state.setValue(TYPE, getAppropriateTypeAt(world, currentPos));
 	}
 
 	private Type getAppropriateTypeAt(LevelAccessor world, BlockPos pos) {
@@ -85,7 +85,7 @@ public final class ReedsBlock extends Block implements SimpleWaterloggedBlock {
 			return true;
 		}
 
-		return growOn.getBlock() == this || this.canGrowOn(growOn);
+		return growOn.getBlock() == this || canGrowOn(growOn);
 	}
 
 	private boolean canGrowOn(BlockState state) {
@@ -118,12 +118,12 @@ public final class ReedsBlock extends Block implements SimpleWaterloggedBlock {
 		}
 
 		public String[] getTextures() {
-			return this.textures;
+			return textures;
 		}
 
 		@Override
 		public String getSerializedName() {
-			return this.key;
+			return key;
 		}
 	}
 }

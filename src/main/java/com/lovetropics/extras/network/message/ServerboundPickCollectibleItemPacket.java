@@ -22,20 +22,20 @@ public record ServerboundPickCollectibleItemPacket(Collectible collectible) impl
 
     public static void handle(ServerboundPickCollectibleItemPacket packet, IPayloadContext ctx) {
         Collectible collectible = packet.collectible;
-        final ServerPlayer player = (ServerPlayer) ctx.player();
+        ServerPlayer player = (ServerPlayer) ctx.player();
 
         if (player.containerMenu != player.inventoryMenu) {
             return;
         }
 
-        final CollectibleStore collectibles = CollectibleStore.get(player);
+        CollectibleStore collectibles = CollectibleStore.get(player);
         if (collectibles.isLocked() || !collectibles.contains(collectible)) {
             player.inventoryMenu.broadcastChanges();
             return;
         }
 
-        final Inventory inventory = player.getInventory();
-        final int index = findCollectibleInInventory(inventory, collectible);
+        Inventory inventory = player.getInventory();
+        int index = findCollectibleInInventory(inventory, collectible);
         if (index == NOT_FOUND) {
             player.inventoryMenu.setCarried(collectible.createItemStack(player.getUUID()));
         } else {
@@ -43,7 +43,7 @@ public record ServerboundPickCollectibleItemPacket(Collectible collectible) impl
         }
     }
 
-    private static int findCollectibleInInventory(final Inventory inventory, final Collectible collectible) {
+    private static int findCollectibleInInventory(Inventory inventory, Collectible collectible) {
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             if (collectible.matches(inventory.getItem(i))) {
                 return i;

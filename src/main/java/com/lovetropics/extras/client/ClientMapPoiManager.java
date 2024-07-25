@@ -23,7 +23,7 @@ import java.util.UUID;
 public class ClientMapPoiManager {
     private static final Map<String, Poi> POIS = new HashMap<>();
 
-    public static void updatePoi(final Poi poi, boolean delete) {
+    public static void updatePoi(Poi poi, boolean delete) {
         if (delete) {
             POIS.remove(poi.name());
         } else {
@@ -35,23 +35,23 @@ public class ClientMapPoiManager {
         return POIS;
     }
 
-    public static void openScreen(final Player player) {
+    public static void openScreen(Player player) {
         Minecraft.getInstance().setScreen(new TropicalMapScreen(Component.translatable("item.ltextras.tropical_map"), player));
     }
 
     @SubscribeEvent
-    public static void onLoggingOut(final ClientPlayerNetworkEvent.LoggingOut event) {
+    public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
         POIS.clear();
     }
 
-    public static ResourceLocation getFace(final UUID uuid) {
+    public static ResourceLocation getFace(UUID uuid) {
         return getPlayerSkinOrDefault(uuid);
     }
 
-    private static ResourceLocation getPlayerSkinOrDefault(final UUID uuid) {
-        final ClientPacketListener connection = Minecraft.getInstance().getConnection();
+    private static ResourceLocation getPlayerSkinOrDefault(UUID uuid) {
+        ClientPacketListener connection = Minecraft.getInstance().getConnection();
 
-        final PlayerInfo playerInfo;
+        PlayerInfo playerInfo;
         if (connection == null || (playerInfo = connection.getPlayerInfo(uuid)) == null) {
             return DefaultPlayerSkin.get(uuid).texture();
         }

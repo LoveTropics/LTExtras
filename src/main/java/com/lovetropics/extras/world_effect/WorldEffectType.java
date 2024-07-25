@@ -15,7 +15,7 @@ public enum WorldEffectType implements StringRepresentable {
     private final String name;
     private final MapCodec<? extends WorldEffect> codec;
 
-    WorldEffectType(final String name, final MapCodec<? extends WorldEffect> codec) {
+    WorldEffectType(String name, MapCodec<? extends WorldEffect> codec) {
         this.name = name;
         this.codec = codec;
     }

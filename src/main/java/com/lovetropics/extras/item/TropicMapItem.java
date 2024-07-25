@@ -15,7 +15,7 @@ public class TropicMapItem extends MapItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(final Level level, final Player player, final InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (level.isClientSide()) {
             ClientMapPoiManager.openScreen(player);
         }

@@ -19,13 +19,13 @@ public record ServerboundReturnCollectibleItemPacket(Collectible collectible) im
     );
 
     public static void handle(ServerboundReturnCollectibleItemPacket packet, IPayloadContext ctx) {
-        final Collectible collectible = packet.collectible;
-        final ServerPlayer player = (ServerPlayer) ctx.player();
+        Collectible collectible = packet.collectible;
+        ServerPlayer player = (ServerPlayer) ctx.player();
         if (player.containerMenu != player.inventoryMenu) {
             return;
         }
 
-        final CollectibleStore collectibles = CollectibleStore.get(player);
+        CollectibleStore collectibles = CollectibleStore.get(player);
 
         if (collectibles.contains(collectible) && collectible.matches(player.inventoryMenu.getCarried())) {
             player.inventoryMenu.setCarried(ItemStack.EMPTY);

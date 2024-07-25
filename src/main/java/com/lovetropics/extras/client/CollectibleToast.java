@@ -27,13 +27,13 @@ public class CollectibleToast implements Toast {
     private final Component name;
     private final Minecraft minecraft = Minecraft.getInstance();
 
-    public CollectibleToast(final Collectible collectible) {
+    public CollectibleToast(Collectible collectible) {
         stack = collectible.createItemStack(Util.NIL_UUID);
         name = Component.empty().withStyle(ChatFormatting.DARK_RED).append(stack.getHoverName());
     }
 
     @Override
-    public Visibility render(final GuiGraphics graphics, final ToastComponent component, final long time) {
+    public Visibility render(GuiGraphics graphics, ToastComponent component, long time) {
         graphics.blitSprite(SPRITE, 0, 0, WIDTH, HEIGHT);
 
         graphics.pose().pushPose();
@@ -42,7 +42,7 @@ public class CollectibleToast implements Toast {
         graphics.pose().popPose();
         graphics.renderFakeItem(stack, 5, 4);
 
-        final Font font = minecraft.font;
+        Font font = minecraft.font;
         final int textLeft = 30;
         graphics.drawString(font, TITLE, textLeft, 7, CommonColors.BLACK, false);
         graphics.drawString(font, Component.translatable("toast.collectible.item", name), textLeft, 18, CommonColors.BLACK, false);

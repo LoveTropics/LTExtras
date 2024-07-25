@@ -21,13 +21,13 @@ public record SkyColorEffect(int red, int green, int blue, int fadeLength) imple
     ).apply(i, SkyColorEffect::new));
 
     @Override
-    public void apply(final ServerPlayer player, final boolean immediate) {
-        final int color = FastColor.ARGB32.color(0, red, green, blue);
+    public void apply(ServerPlayer player, boolean immediate) {
+        int color = FastColor.ARGB32.color(0, red, green, blue);
         PacketDistributor.sendToPlayer(player, new ClientboundSetSkyColorPacket(color, immediate ? 0 : fadeLength));
     }
 
     @Override
-    public void clear(final ServerPlayer player, final boolean immediate) {
+    public void clear(ServerPlayer player, boolean immediate) {
         PacketDistributor.sendToPlayer(player, ClientboundSetSkyColorPacket.clear(fadeLength));
     }
 

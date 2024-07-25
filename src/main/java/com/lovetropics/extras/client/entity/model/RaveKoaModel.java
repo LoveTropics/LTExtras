@@ -18,7 +18,6 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.resources.ResourceLocation;
 
 public class RaveKoaModel<T extends RaveKoaEntity> extends HierarchicalModel<T> {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
@@ -29,8 +28,8 @@ public class RaveKoaModel<T extends RaveKoaEntity> extends HierarchicalModel<T> 
 
     public RaveKoaModel(ModelPart root) {
         this.root = root;
-        this.CenterPivot = root.getChild("CenterPivot");
-        this.booth = root.getChild("booth");
+        CenterPivot = root.getChild("CenterPivot");
+        booth = root.getChild("booth");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -72,13 +71,13 @@ public class RaveKoaModel<T extends RaveKoaEntity> extends HierarchicalModel<T> 
 
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
+        root().getAllParts().forEach(ModelPart::resetPose);
         if (!(entity instanceof RaveKoaEntityDJ)) {
             booth.skipDraw = true;
         }
-        this.animate(entity.raveAnimationStateDJ, RaveKoaAnimation.PLAYER_ELBOWS_DJ_KEYFRAMED, ageInTicks);
-        this.animate(entity.raveAnimationStateDance1, RaveKoaAnimation.PLAYER_ELBOWS_DANCE1_KEYFRAMED, ageInTicks);
-        this.animate(entity.raveAnimationStateDance2, RaveKoaAnimation.PLAYER_ELBOWS_DANCE3_KEYFRAMED, ageInTicks);
+        animate(entity.raveAnimationStateDJ, RaveKoaAnimation.PLAYER_ELBOWS_DJ_KEYFRAMED, ageInTicks);
+        animate(entity.raveAnimationStateDance1, RaveKoaAnimation.PLAYER_ELBOWS_DANCE1_KEYFRAMED, ageInTicks);
+        animate(entity.raveAnimationStateDance2, RaveKoaAnimation.PLAYER_ELBOWS_DANCE3_KEYFRAMED, ageInTicks);
     }
 
     @Override
@@ -89,6 +88,6 @@ public class RaveKoaModel<T extends RaveKoaEntity> extends HierarchicalModel<T> 
 
     @Override
     public ModelPart root() {
-        return this.root;
+        return root;
     }
 }

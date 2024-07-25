@@ -33,20 +33,20 @@ public abstract class CreatureEntityMixin extends Mob implements ExtendedCreatur
 		super.readAdditionalSaveData(nbt);
 
 		if (nbt.contains("TheresNoPlaceLikeHome")) {
-			this.theresNoPlaceLikeHome = nbt.getBoolean("TheresNoPlaceLikeHome");
+			theresNoPlaceLikeHome = nbt.getBoolean("TheresNoPlaceLikeHome");
 
 			if (nbt.contains("HomePos")) {
 				ListTag posTag = nbt.getList("HomePos", Tag.TAG_DOUBLE);
-				this.homePos = new Vec3(posTag.getDouble(0), posTag.getDouble(1), posTag.getDouble(2));
+				homePos = new Vec3(posTag.getDouble(0), posTag.getDouble(1), posTag.getDouble(2));
 			} else {
 				// Spawn egg or no recorded home- just grab the current position to have something to work with
-				this.homePos = this.position();
+				homePos = position();
 			}
 			// In blocks
-			this.homeRange = nbt.contains("HomeRange") ? nbt.getInt("HomeRange") : 20;
+			homeRange = nbt.contains("HomeRange") ? nbt.getInt("HomeRange") : 20;
 
-			if (this.theresNoPlaceLikeHome) {
-				this.goalSelector.addGoal(0, new MoveBackToOriginGoal((PathfinderMob) (Object) this, 1.0, this.homePos, this.homeRange));
+			if (theresNoPlaceLikeHome) {
+				goalSelector.addGoal(0, new MoveBackToOriginGoal((PathfinderMob) (Object) this, 1.0, homePos, homeRange));
 			}
 		}
 	}
@@ -56,15 +56,15 @@ public abstract class CreatureEntityMixin extends Mob implements ExtendedCreatur
 		super.addAdditionalSaveData(nbt);
 
 		// Don't pollute! Only write if it'll be used
-		if (this.theresNoPlaceLikeHome) {
-			nbt.putBoolean("TheresNoPlaceLikeHome", this.theresNoPlaceLikeHome);
-			nbt.putInt("HomeRange", this.homeRange);
+		if (theresNoPlaceLikeHome) {
+			nbt.putBoolean("TheresNoPlaceLikeHome", theresNoPlaceLikeHome);
+			nbt.putInt("HomeRange", homeRange);
 
 			// vec3d -> nbt
 			ListTag pos = new ListTag();
-			pos.add(0, DoubleTag.valueOf(this.homePos.x()));
-			pos.add(1, DoubleTag.valueOf(this.homePos.y()));
-			pos.add(2, DoubleTag.valueOf(this.homePos.z()));
+			pos.add(0, DoubleTag.valueOf(homePos.x()));
+			pos.add(1, DoubleTag.valueOf(homePos.y()));
+			pos.add(2, DoubleTag.valueOf(homePos.z()));
 
 			nbt.put("HomePos", pos);
 		}
@@ -73,8 +73,8 @@ public abstract class CreatureEntityMixin extends Mob implements ExtendedCreatur
 	@Override
 	public void linkToBlockEntity(MobControllerBlockEntity controller) {
 		BlockPos pos = controller.getBlockPos();
-		this.theresNoPlaceLikeHome = true;
-		this.homePos = new Vec3(pos.getX(), pos.getY(), pos.getZ());
-		this.homeRange = 32; // static for now
+		theresNoPlaceLikeHome = true;
+		homePos = new Vec3(pos.getX(), pos.getY(), pos.getZ());
+		homeRange = 32; // static for now
 	}
 }

@@ -18,9 +18,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class RaveKoaEntity extends PathfinderMob {
 
-    public AnimationState raveAnimationStateDJ = new AnimationState();
-    public AnimationState raveAnimationStateDance1 = new AnimationState();
-    public AnimationState raveAnimationStateDance2 = new AnimationState();
+    public final AnimationState raveAnimationStateDJ = new AnimationState();
+    public final AnimationState raveAnimationStateDance1 = new AnimationState();
+    public final AnimationState raveAnimationStateDance2 = new AnimationState();
 
     public RaveKoaEntity(EntityType<? extends RaveKoaEntity> type, Level world) {
         super(type, world);
@@ -28,7 +28,7 @@ public class RaveKoaEntity extends PathfinderMob {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+        goalSelector.addGoal(0, new FloatGoal(this));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class RaveKoaEntity extends PathfinderMob {
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pSpawnType, SpawnGroupData pSpawnGroupData) {
-        this.setPersistenceRequired();
+        setPersistenceRequired();
         return super.finalizeSpawn(pLevel, pDifficulty, pSpawnType, pSpawnGroupData);
     }
 

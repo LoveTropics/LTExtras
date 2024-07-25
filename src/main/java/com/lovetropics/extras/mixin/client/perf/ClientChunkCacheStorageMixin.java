@@ -27,10 +27,10 @@ public class ClientChunkCacheStorageMixin {
 
 	@Inject(method = "<init>", at = @At("RETURN"))
 	private void init(ClientChunkCache chunkProvider, int viewDistance, CallbackInfo ci) {
-		int tableSize = Mth.smallestEncompassingPowerOfTwo(this.viewRange);
-		this.tableMask = tableSize - 1;
-		this.tableShift = Mth.log2(tableSize);
-		this.chunks = new AtomicReferenceArray<>(tableSize * tableSize);
+		int tableSize = Mth.smallestEncompassingPowerOfTwo(viewRange);
+		tableMask = tableSize - 1;
+		tableShift = Mth.log2(tableSize);
+		chunks = new AtomicReferenceArray<>(tableSize * tableSize);
 	}
 
 	/**
@@ -39,8 +39,8 @@ public class ClientChunkCacheStorageMixin {
 	 */
 	@Overwrite
 	int getIndex(int x, int z) {
-		int mask = this.tableMask;
-		int shift = this.tableShift;
+		int mask = tableMask;
+		int shift = tableShift;
 		return (x & mask) << shift | (z & mask);
 	}
 }

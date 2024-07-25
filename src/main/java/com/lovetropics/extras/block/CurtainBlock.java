@@ -15,7 +15,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class CurtainBlock extends StainedGlassPaneBlock {
-    public CurtainBlock(final Properties props) {
+    public CurtainBlock(Properties props) {
         super(DyeColor.BLACK, props);
     }
 

@@ -14,12 +14,12 @@ public class ExtraItemProperties {
 
     public static void register() {
         ItemProperties.register(ExtraItems.COLLECTIBLE_COMPASS.get(), LTExtras.location("angle"), new CompassItemPropertyFunction((level, stack, entity) -> {
-            final CollectibleCompassItem.Target target = stack.get(ExtraDataComponents.COLLECTIBLE_TARGET);
+            CollectibleCompassItem.Target target = stack.get(ExtraDataComponents.COLLECTIBLE_TARGET);
             return target != null ? target.pos() : null;
         }));
 
         ItemProperties.register(ExtraItems.COLLECTIBLE_BASKET.get(), UNSEEN, (ClampedItemPropertyFunction) (stack, level, entity, seed) -> {
-            final ClientCollectiblesList collectibles = ClientCollectiblesList.getOrNull();
+            ClientCollectiblesList collectibles = ClientCollectiblesList.getOrNull();
             if (collectibles != null && collectibles.hasUnseen()) {
                 return 1.0f;
             }

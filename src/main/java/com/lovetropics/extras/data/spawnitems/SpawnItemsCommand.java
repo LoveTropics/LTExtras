@@ -22,9 +22,9 @@ public class SpawnItemsCommand {
                                         SharedSuggestionProvider.suggest(SpawnItemsReloadListener.REGISTRY.entrySet().stream().filter(e -> e.getValue().canBeRestored())
                                                 .map(e -> e.getKey().toString()), builder))
                                 .executes(context -> {
-                                    final var arg = context.getArgument("set", String.class);
-                                    final var set = SpawnItemsReloadListener.REGISTRY.get(ResourceLocation.parse(arg));
-                                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                                    var arg = context.getArgument("set", String.class);
+                                    var set = SpawnItemsReloadListener.REGISTRY.get(ResourceLocation.parse(arg));
+                                    ServerPlayer player = context.getSource().getPlayerOrException();
 
                                     if (set == null) {
                                         context.getSource().sendFailure(Component.translatable("spawnitems.unknown_set", Component.literal(arg).withStyle(ChatFormatting.GOLD)));

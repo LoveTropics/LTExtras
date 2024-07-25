@@ -22,14 +22,14 @@ public record ClientboundSetHologramTextPacket(int entityId, Component text) imp
 
     public static final Type<ClientboundSetHologramTextPacket> TYPE = new Type<>(LTExtras.location("hologram_text"));
 
-    public static void handle(final ClientboundSetHologramTextPacket packet, final IPayloadContext ctx) {
-        final Minecraft minecraft = Minecraft.getInstance();
-        final ClientLevel level = minecraft.level;
+    public static void handle(ClientboundSetHologramTextPacket packet, IPayloadContext ctx) {
+        Minecraft minecraft = Minecraft.getInstance();
+        ClientLevel level = minecraft.level;
         if (level == null) {
             return;
         }
-        final Entity entity = level.getEntity(packet.entityId);
-        if (entity instanceof final HologramEntity hologram) {
+        Entity entity = level.getEntity(packet.entityId);
+        if (entity instanceof HologramEntity hologram) {
             hologram.setDisplayText(packet.text);
         }
     }

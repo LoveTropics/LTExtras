@@ -38,7 +38,7 @@ public class CollectibleEntity extends Entity {
     @Nullable
     private Collectible collectible;
 
-    public CollectibleEntity(final EntityType<?> type, final Level level) {
+    public CollectibleEntity(EntityType<?> type, Level level) {
         super(type, level);
     }
 
@@ -46,7 +46,7 @@ public class CollectibleEntity extends Entity {
         return getEntityData().get(DATA_ITEM);
     }
 
-    public void setCollectible(@Nullable final Collectible collectible) {
+    public void setCollectible(@Nullable Collectible collectible) {
         this.collectible = collectible;
         getEntityData().set(DATA_ITEM, collectible != null ? collectible.createItemStack(Util.NIL_UUID) : ItemStack.EMPTY);
     }
@@ -58,14 +58,14 @@ public class CollectibleEntity extends Entity {
     }
 
     @Override
-    public void playerTouch(final Player player) {
+    public void playerTouch(Player player) {
         if (!level().isClientSide && collectible != null) {
             tryGiveCollectible(player, collectible);
         }
     }
 
     @Override
-    public InteractionResult interact(final Player player, final InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand) {
         if (collectible == null) {
             return super.interact(player, hand);
         }
@@ -78,8 +78,8 @@ public class CollectibleEntity extends Entity {
     }
 
     @Override
-    public boolean skipAttackInteraction(final Entity entity) {
-        if (collectible != null && entity instanceof final Player player) {
+    public boolean skipAttackInteraction(Entity entity) {
+        if (collectible != null && entity instanceof Player player) {
             if (!level().isClientSide) {
                 tryGiveCollectible(player, collectible);
             }
@@ -88,8 +88,8 @@ public class CollectibleEntity extends Entity {
         return false;
     }
 
-    private void tryGiveCollectible(final Player player, final Collectible collectible) {
-        final CollectibleStore collectibles = CollectibleStore.get(player);
+    private void tryGiveCollectible(Player player, Collectible collectible) {
+        CollectibleStore collectibles = CollectibleStore.get(player);
         if (collectibles.give(collectible)) {
             recycleCollectibleCompass(player);
         }
@@ -104,16 +104,16 @@ public class CollectibleEntity extends Entity {
     }
 
     private void tickParticles() {
-        final double x = getX() + random.nextGaussian() * 0.2;
-        final double y = getY() + random.nextGaussian() * 0.1 + 0.1;
-        final double z = getZ() + random.nextGaussian() * 0.2;
-        final double speedX = random.nextGaussian() * 0.005;
-        final double speedY = random.nextGaussian() * 0.005;
-        final double speedZ = random.nextGaussian() * 0.005;
+        double x = getX() + random.nextGaussian() * 0.2;
+        double y = getY() + random.nextGaussian() * 0.1 + 0.1;
+        double z = getZ() + random.nextGaussian() * 0.2;
+        double speedX = random.nextGaussian() * 0.005;
+        double speedY = random.nextGaussian() * 0.005;
+        double speedZ = random.nextGaussian() * 0.005;
         level().addParticle(ParticleTypes.END_ROD, false, x, y, z, speedX, speedY, speedZ);
     }
 
-    private void setShowParticles(final boolean particles) {
+    private void setShowParticles(boolean particles) {
         getEntityData().set(DATA_PARTICLES, particles);
     }
 
@@ -121,16 +121,16 @@ public class CollectibleEntity extends Entity {
         return getEntityData().get(DATA_PARTICLES);
     }
 
-    private void recycleCollectibleCompass(final Player player) {
-        final Inventory inventory = player.getInventory();
+    private void recycleCollectibleCompass(Player player) {
+        Inventory inventory = player.getInventory();
         for (int i = 0; i < inventory.getContainerSize(); i++) {
-            final ItemStack stack = inventory.getItem(i);
-            final CollectibleCompassItem.Target target = stack.get(ExtraDataComponents.COLLECTIBLE_TARGET);
+            ItemStack stack = inventory.getItem(i);
+            CollectibleCompassItem.Target target = stack.get(ExtraDataComponents.COLLECTIBLE_TARGET);
             if (target == null || !target.id().equals(getUUID())) {
                 continue;
             }
             inventory.removeItemNoUpdate(i);
-            final int coinCount = stack.getOrDefault(ExtraDataComponents.COIN_COUNT, 0);
+            int coinCount = stack.getOrDefault(ExtraDataComponents.COIN_COUNT, 0);
             if (coinCount > 0) {
                 inventory.placeItemBackInInventory(new ItemStack(ExtraItems.TROPICOIN.asItem(), coinCount));
             }
@@ -138,7 +138,7 @@ public class CollectibleEntity extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(final CompoundTag tag) {
+    protected void readAdditionalSaveData(CompoundTag tag) {
         if (tag.contains(KEY_COLLECTIBLE)) {
             Collectible.CODEC.parse(NbtOps.INSTANCE, tag.get(KEY_COLLECTIBLE))
                     .resultOrPartial(Util.prefix("Collectible: ", LOGGER::error))
@@ -154,7 +154,7 @@ public class CollectibleEntity extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(final CompoundTag tag) {
+    protected void addAdditionalSaveData(CompoundTag tag) {
         if (collectible != null) {
             tag.put(KEY_COLLECTIBLE, Collectible.CODEC.encodeStart(NbtOps.INSTANCE, collectible).getOrThrow());
         }
@@ -163,7 +163,7 @@ public class CollectibleEntity extends Entity {
 
     @Override
     public Component getDisplayName() {
-        final ItemStack displayedItem = getDisplayedItem();
+        ItemStack displayedItem = getDisplayedItem();
         if (displayedItem != null && !hasCustomName()) {
             return displayedItem.getHoverName();
         }

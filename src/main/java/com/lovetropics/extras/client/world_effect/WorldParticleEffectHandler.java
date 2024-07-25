@@ -20,26 +20,26 @@ public class WorldParticleEffectHandler {
     private static ParticlesEffect effect;
 
     @SubscribeEvent
-    public static void onClientTick(final ClientTickEvent.Pre event) {
-        final Minecraft minecraft = Minecraft.getInstance();
-        final LocalPlayer player = minecraft.player;
+    public static void onClientTick(ClientTickEvent.Pre event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer player = minecraft.player;
         if (player == null) {
             effect = null;
             return;
         }
 
         if (effect != null && !minecraft.isPaused()) {
-            for (final ParticlesEffect.Particle particle : effect.particles()) {
+            for (ParticlesEffect.Particle particle : effect.particles()) {
                 addParticles(player.level(), player.getRandom(), player.blockPosition(), particle);
             }
         }
     }
 
-    private static void addParticles(final Level level, final RandomSource random, final BlockPos playerPosition, final ParticlesEffect.Particle particle) {
-        final int range = particle.range();
-        final BlockPos origin = playerPosition.offset(particle.offset());
+    private static void addParticles(Level level, RandomSource random, BlockPos playerPosition, ParticlesEffect.Particle particle) {
+        int range = particle.range();
+        BlockPos origin = playerPosition.offset(particle.offset());
 
-        final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         for (int i = 0; i < particle.count(); i++) {
             pos.setWithOffset(origin,
                     random.nextInt(range) - random.nextInt(range),
@@ -47,14 +47,14 @@ public class WorldParticleEffectHandler {
                     random.nextInt(range) - random.nextInt(range)
             );
 
-            final BlockState state = level.getBlockState(pos);
+            BlockState state = level.getBlockState(pos);
             if (!state.isCollisionShapeFullBlock(level, pos)) {
                 level.addParticle(particle.particle(), pos.getX() + random.nextFloat(), pos.getY() + random.nextFloat(), pos.getZ() + random.nextFloat(), 0.0, 0.0, 0.0);
             }
         }
     }
 
-    public static void set(@Nullable final ParticlesEffect effect) {
+    public static void set(@Nullable ParticlesEffect effect) {
         WorldParticleEffectHandler.effect = effect;
     }
 }

@@ -16,11 +16,11 @@ public class ExtraTags {
         public static final TagKey<Block> CLIMBABLE_FAST = modTag("climbable_fast");
         public static final TagKey<Block> CLIMBABLE_VERY_FAST = modTag("climbable_very_fast");
 
-        static TagKey<Block> tag(final String modid, final String name) {
+        static TagKey<Block> tag(String modid, String name) {
             return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(modid, name));
         }
 
-        static TagKey<Block> modTag(final String name) {
+        static TagKey<Block> modTag(String name) {
             return tag(LTExtras.MODID, name);
         }
     }
@@ -28,11 +28,11 @@ public class ExtraTags {
     public static class Items extends ExtraTags {
         public static final TagKey<Item> LIME = tag(TROPICRAFT_ID, "lime");
 
-        static TagKey<Item> tag(final String modid, final String name) {
+        static TagKey<Item> tag(String modid, String name) {
             return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(modid, name));
         }
 
-        static TagKey<Item> modTag(final String name) {
+        static TagKey<Item> modTag(String name) {
             return tag(LTExtras.MODID, name);
         }
     }

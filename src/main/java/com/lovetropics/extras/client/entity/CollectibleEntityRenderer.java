@@ -25,7 +25,7 @@ public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity>
 
     private final ItemRenderer itemRenderer;
 
-    public CollectibleEntityRenderer(final EntityRendererProvider.Context context) {
+    public CollectibleEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
         itemRenderer = context.getItemRenderer();
         shadowRadius = 0.3f;
@@ -33,24 +33,24 @@ public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity>
     }
 
     @Override
-    public void render(final CollectibleEntity entity, final float yaw, final float partialTicks, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
-        final ItemStack displayedItem = entity.getDisplayedItem();
+    public void render(CollectibleEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        ItemStack displayedItem = entity.getDisplayedItem();
         if (displayedItem.isEmpty()) {
             return;
         }
 
         poseStack.pushPose();
 
-        final BakedModel model = itemRenderer.getModel(displayedItem, entity.level(), null, entity.getId());
-        final float age = entity.tickCount + partialTicks;
+        BakedModel model = itemRenderer.getModel(displayedItem, entity.level(), null, entity.getId());
+        float age = entity.tickCount + partialTicks;
 
-        final float groundScale = model.getTransforms().getTransform(DISPLAY_CONTEXT).scale.y();
-        final float bob = (Mth.sin(age / 10.0f) + 1.0f) * 0.05f;
+        float groundScale = model.getTransforms().getTransform(DISPLAY_CONTEXT).scale.y();
+        float bob = (Mth.sin(age / 10.0f) + 1.0f) * 0.05f;
         poseStack.translate(0.0f, bob + 0.4f * groundScale, 0.0f);
         poseStack.mulPose(Mth.rotationAroundAxis(Mth.Y_AXIS, entityRenderDispatcher.cameraOrientation(), new Quaternionf()));
         poseStack.mulPose(Axis.YP.rotation(Mth.PI));
 
-        final float scale = model.isGui3d() ? 2.25f : 2.0f;
+        float scale = model.isGui3d() ? 2.25f : 2.0f;
         poseStack.scale(scale, scale, scale);
 
         itemRenderer.render(displayedItem, DISPLAY_CONTEXT, false, poseStack, bufferSource, packedLight, OverlayTexture.NO_OVERLAY, model);
@@ -61,18 +61,18 @@ public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity>
     }
 
     @Override
-    public ResourceLocation getTextureLocation(final CollectibleEntity pEntity) {
+    public ResourceLocation getTextureLocation(CollectibleEntity pEntity) {
         return TextureAtlas.LOCATION_BLOCKS;
     }
 
     @Override
-    protected boolean shouldShowName(final CollectibleEntity entity) {
+    protected boolean shouldShowName(CollectibleEntity entity) {
         return entity.hasCustomName() || entity.shouldShowName() && isEntityPicked(entity);
     }
 
-    private static boolean isEntityPicked(final Entity entity) {
-        final HitResult hitResult = Minecraft.getInstance().hitResult;
-        if (hitResult instanceof final EntityHitResult entityHitResult) {
+    private static boolean isEntityPicked(Entity entity) {
+        HitResult hitResult = Minecraft.getInstance().hitResult;
+        if (hitResult instanceof EntityHitResult entityHitResult) {
             return entityHitResult.getEntity() == entity;
         }
         return false;

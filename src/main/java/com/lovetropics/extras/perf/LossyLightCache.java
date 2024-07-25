@@ -14,34 +14,34 @@ public final class LossyLightCache {
 
 		public Packed(int capacity) {
 			capacity = Mth.smallestEncompassingPowerOfTwo(capacity);
-			this.mask = capacity - 1;
+			mask = capacity - 1;
 
-			this.keys = new long[capacity];
-			this.values = new int[capacity];
+			keys = new long[capacity];
+			values = new int[capacity];
 		}
 
 		public void clear() {
-			Arrays.fill(this.keys, Long.MAX_VALUE);
-			Arrays.fill(this.values, Integer.MAX_VALUE);
+			Arrays.fill(keys, Long.MAX_VALUE);
+			Arrays.fill(values, Integer.MAX_VALUE);
 		}
 
 		public void put(long pos, int packedLight) {
-			int index = this.index(pos);
-			this.keys[index] = pos;
-			this.values[index] = packedLight;
+			int index = index(pos);
+			keys[index] = pos;
+			values[index] = packedLight;
 		}
 
 		public int get(long pos) {
-			int index = this.index(pos);
-			if (this.keys[index] == pos) {
-				return this.values[index];
+			int index = index(pos);
+			if (keys[index] == pos) {
+				return values[index];
 			} else {
 				return Integer.MAX_VALUE;
 			}
 		}
 
 		private int index(long key) {
-			return (int) HashCommon.mix(key) & this.mask;
+			return (int) HashCommon.mix(key) & mask;
 		}
 	}
 
@@ -53,34 +53,34 @@ public final class LossyLightCache {
 
 		public Brightness(int capacity) {
 			capacity = Mth.smallestEncompassingPowerOfTwo(capacity);
-			this.mask = capacity - 1;
+			mask = capacity - 1;
 
-			this.keys = new long[capacity];
-			this.values = new float[capacity];
+			keys = new long[capacity];
+			values = new float[capacity];
 		}
 
 		public void clear() {
-			Arrays.fill(this.keys, Long.MAX_VALUE);
-			Arrays.fill(this.values, Float.NaN);
+			Arrays.fill(keys, Long.MAX_VALUE);
+			Arrays.fill(values, Float.NaN);
 		}
 
 		public void put(long pos, float brightness) {
-			int index = this.index(pos);
-			this.keys[index] = pos;
-			this.values[index] = brightness;
+			int index = index(pos);
+			keys[index] = pos;
+			values[index] = brightness;
 		}
 
 		public float get(long pos) {
-			int index = this.index(pos);
-			if (this.keys[index] == pos) {
-				return this.values[index];
+			int index = index(pos);
+			if (keys[index] == pos) {
+				return values[index];
 			} else {
 				return Float.NaN;
 			}
 		}
 
 		private int index(long key) {
-			return (int) HashCommon.mix(key) & this.mask;
+			return (int) HashCommon.mix(key) & mask;
 		}
 	}
 }

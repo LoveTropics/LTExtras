@@ -51,7 +51,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     private boolean draggingScroller;
     private double dragOffsetY;
 
-    public CollectibleBasketScreen(final Inventory playerInventory) {
+    public CollectibleBasketScreen(Inventory playerInventory) {
         super(new Menu(playerInventory.player, new CollectibleContainer(ClientCollectiblesList.get())), playerInventory, TITLE);
         playerInventory.player.containerMenu = menu;
 
@@ -66,20 +66,20 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     @Override
-    public void render(final GuiGraphics graphics, final int mouseX, final int mouseY, final float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
         renderTooltip(graphics, mouseX, mouseY);
 
-        final ScreenRectangle scroller = scrollerRectangle();
+        ScreenRectangle scroller = scrollerRectangle();
         if (scroller != null) {
             graphics.blit(CREATIVE_TABS_LOCATION, scroller.left(), scroller.top(), draggingScroller ? 244 : 232, 0, scroller.width(), scroller.height());
         }
     }
 
     @Override
-    public boolean mouseClicked(final double mouseX, final double mouseY, final int button) {
-        final ScreenRectangle scroller = scrollerRectangle();
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        ScreenRectangle scroller = scrollerRectangle();
         if (scroller != null && mouseX >= scroller.left() && mouseX <= scroller.right() && mouseY >= scroller.top() && mouseY <= scroller.bottom()) {
             draggingScroller = true;
             dragOffsetY = scroller.top() - mouseY;
@@ -88,16 +88,16 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     @Override
-    public boolean mouseDragged(final double mouseX, final double mouseY, final int button, final double dragX, final double dragY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (draggingScroller) {
-            final float targetScrollerY = (float) (mouseY + dragOffsetY) - SCROLL_BAR_Y - topPos;
+            float targetScrollerY = (float) (mouseY + dragOffsetY) - SCROLL_BAR_Y - topPos;
             scroll = clampScroll(targetScrollerY / (SCROLL_BAR_HEIGHT - SCROLLER_HEIGHT) * maxScroll());
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(final double pMouseX, final double pMouseY, final int pButton) {
+    public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
         draggingScroller = false;
         return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
@@ -112,12 +112,12 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     @Override
-    protected void renderLabels(final GuiGraphics graphics, final int mouseX, final int mouseY) {
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         graphics.drawString(font, title, titleLabelX, titleLabelY, 0x404040, false);
     }
 
     @Override
-    protected void renderBg(final GuiGraphics graphics, final float partialTicks, final int mouseX, final int mouseY) {
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         graphics.blit(BACKGROUND_LOCATION, leftPos, topPos, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
     }
 
@@ -133,7 +133,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         return Math.round(clampScroll(scroll) / maxScroll() * (SCROLL_BAR_HEIGHT - SCROLLER_HEIGHT));
     }
 
-    private float clampScroll(final float scroll) {
+    private float clampScroll(float scroll) {
         return Mth.clamp(scroll, 0.0f, maxScroll());
     }
 
@@ -146,11 +146,11 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     @Override
-    protected void slotClicked(@Nullable final Slot slot, final int slotId, final int mouseButton, final ClickType type) {
-        if (slot instanceof final CollectibleSlot collectibleSlot) {
+    protected void slotClicked(@Nullable Slot slot, int slotId, int mouseButton, ClickType type) {
+        if (slot instanceof CollectibleSlot collectibleSlot) {
             switch (type) {
                 case PICKUP, PICKUP_ALL, QUICK_MOVE -> {
-                    final ItemStack carried = menu.getCarried();
+                    ItemStack carried = menu.getCarried();
                     if (carried.isEmpty()) {
                         tryPickCollectible(slot, collectibleSlot);
                     } else {
@@ -166,16 +166,16 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
     }
 
-    private void tryPickCollectible(final @NotNull Slot slot, final CollectibleSlot collectibleSlot) {
-        final Collectible collectible = collectibleSlot.getCollectible();
+    private void tryPickCollectible(@NotNull Slot slot, CollectibleSlot collectibleSlot) {
+        Collectible collectible = collectibleSlot.getCollectible();
         if (collectible != null) {
             menu.setCarried(slot.getItem().copy());
             PacketDistributor.sendToServer(new ServerboundPickCollectibleItemPacket(collectible));
         }
     }
 
-    private void tryReturnCollectible(final ItemStack carried) {
-        final Collectible carriedCollectible = Collectible.byItem(carried);
+    private void tryReturnCollectible(ItemStack carried) {
+        Collectible carriedCollectible = Collectible.byItem(carried);
         if (carriedCollectible != null) {
             menu.setCarried(ItemStack.EMPTY);
             PacketDistributor.sendToServer(new ServerboundReturnCollectibleItemPacket(carriedCollectible));
@@ -183,12 +183,12 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     // We are the imposter
-    private void simulateInventorySlotClicked(@Nullable final Slot slot, final int slotId, final int mouseButton, final ClickType type) {
-        final LocalPlayer player = minecraft.player;
+    private void simulateInventorySlotClicked(@Nullable Slot slot, int slotId, int mouseButton, ClickType type) {
+        LocalPlayer player = minecraft.player;
         try {
             player.containerMenu = player.inventoryMenu;
-            final Slot mappedSlot = slot != null ? getSlotIn(slot, player.inventoryMenu) : null;
-            final int mappedSlotId = mappedSlot != null ? mappedSlot.index : slotId;
+            Slot mappedSlot = slot != null ? getSlotIn(slot, player.inventoryMenu) : null;
+            int mappedSlotId = mappedSlot != null ? mappedSlot.index : slotId;
             minecraft.gameMode.handleInventoryMouseClick(player.inventoryMenu.containerId, mappedSlotId, mouseButton, type, player);
         } finally {
             player.containerMenu = menu;
@@ -196,8 +196,8 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     @Nullable
-    private static Slot getSlotIn(final Slot slot, final AbstractContainerMenu menu) {
-        for (final Slot otherSlot : menu.slots) {
+    private static Slot getSlotIn(Slot slot, AbstractContainerMenu menu) {
+        for (Slot otherSlot : menu.slots) {
             if (slot.isSameInventory(otherSlot) && slot.getContainerSlot() == otherSlot.getContainerSlot()) {
                 return otherSlot;
             }
@@ -209,15 +209,15 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         private final InventoryMenu inventoryMenu;
         private final CollectibleContainer container;
 
-        protected Menu(final Player player, final CollectibleContainer container) {
+        protected Menu(Player player, CollectibleContainer container) {
             super(null, player.inventoryMenu.containerId);
             this.container = container;
             inventoryMenu = player.inventoryMenu;
-            final Inventory playerInventory = player.getInventory();
+            Inventory playerInventory = player.getInventory();
 
             for (int row = 0; row < ROWS; row++) {
                 for (int column = 0; column < COLUMNS; column++) {
-                    final int index = column + row * COLUMNS;
+                    int index = column + row * COLUMNS;
                     addSlot(new CollectibleSlot(container, index, 9 + column * SLOT_SIZE, 18 + row * SLOT_SIZE));
                 }
             }
@@ -228,12 +228,12 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
 
         @Override
-        public ItemStack quickMoveStack(final Player player, final int pIndex) {
+        public ItemStack quickMoveStack(Player player, int pIndex) {
             return ItemStack.EMPTY;
         }
 
         @Override
-        public boolean stillValid(final Player player) {
+        public boolean stillValid(Player player) {
             return player.isHolding(ExtraItems.COLLECTIBLE_BASKET.get());
         }
 
@@ -243,7 +243,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
 
         @Override
-        public void setCarried(final ItemStack stack) {
+        public void setCarried(ItemStack stack) {
             inventoryMenu.setCarried(stack);
         }
     }
@@ -251,7 +251,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     private static class CollectibleSlot extends Slot {
         private final CollectibleContainer container;
 
-        public CollectibleSlot(final CollectibleContainer container, final int index, final int x, final int y) {
+        public CollectibleSlot(CollectibleContainer container, int index, int x, int y) {
             super(container, index, x, y);
             this.container = container;
         }
@@ -271,11 +271,11 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         private final ClientCollectiblesList list;
         private int scrollRowOffset;
 
-        public CollectibleContainer(final ClientCollectiblesList list) {
+        public CollectibleContainer(ClientCollectiblesList list) {
             this.list = list;
         }
 
-        public void setScrollRowOffset(final int scrollRowOffset) {
+        public void setScrollRowOffset(int scrollRowOffset) {
             this.scrollRowOffset = scrollRowOffset;
         }
 
@@ -290,9 +290,9 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
 
         @Nullable
-        public Collectible getCollectible(final int slot) {
-            final List<Collectible> collectibles = list.collectibles();
-            final int index = getIndexForSlot(slot);
+        public Collectible getCollectible(int slot) {
+            List<Collectible> collectibles = list.collectibles();
+            int index = getIndexForSlot(slot);
             if (index >= 0 && index < collectibles.size()) {
                 return collectibles.get(index);
             }
@@ -300,9 +300,9 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
 
         @Override
-        public ItemStack getItem(final int slot) {
-            final List<ItemStack> stacks = list.itemStacks();
-            final int index = getIndexForSlot(slot);
+        public ItemStack getItem(int slot) {
+            List<ItemStack> stacks = list.itemStacks();
+            int index = getIndexForSlot(slot);
             if (index >= 0 && index < stacks.size()) {
                 return stacks.get(index);
             }
@@ -310,17 +310,17 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
 
         @Override
-        public ItemStack removeItem(final int slot, final int amount) {
+        public ItemStack removeItem(int slot, int amount) {
             return getItem(slot).copy();
         }
 
         @Override
-        public ItemStack removeItemNoUpdate(final int slot) {
+        public ItemStack removeItemNoUpdate(int slot) {
             return getItem(slot).copy();
         }
 
         @Override
-        public void setItem(final int slot, final ItemStack stack) {
+        public void setItem(int slot, ItemStack stack) {
         }
 
         @Override
@@ -328,7 +328,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
 
         @Override
-        public boolean stillValid(final Player player) {
+        public boolean stillValid(Player player) {
             return true;
         }
 
@@ -340,7 +340,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
             return Mth.positiveCeilDiv(list.collectibles().size(), COLUMNS);
         }
 
-        private int getIndexForSlot(final int slot) {
+        private int getIndexForSlot(int slot) {
             return slot + scrollRowOffset * COLUMNS;
         }
     }

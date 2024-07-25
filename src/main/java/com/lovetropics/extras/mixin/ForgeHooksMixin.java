@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class ForgeHooksMixin {
     // The Forge event is entirely not useful for our use-case, so let's hook in to the hook
     @Inject(method = "onPlayerTossEvent", at = @At(value = "INVOKE", target = "Lnet/neoforged/neoforge/event/entity/item/ItemTossEvent;<init>(Lnet/minecraft/world/entity/item/ItemEntity;Lnet/minecraft/world/entity/player/Player;)V"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD, remap = false)
-    private static void onPlayerToss(final Player player, final ItemStack item, final boolean includeName, final CallbackInfoReturnable<ItemEntity> cir, final ItemEntity entity) {
+    private static void onPlayerToss(Player player, ItemStack item, boolean includeName, CallbackInfoReturnable<ItemEntity> cir, ItemEntity entity) {
         // Only if the item actually originated from this player
         if (!includeName) {
             return;

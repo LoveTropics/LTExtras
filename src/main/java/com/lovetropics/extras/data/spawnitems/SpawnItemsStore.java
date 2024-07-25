@@ -36,17 +36,17 @@ public final class SpawnItemsStore implements IAttachmentSerializer<Tag, SpawnIt
     private final Map<ResourceLocation, List<SpawnItems.Stack>> receivedItems = new HashMap<>();
 
     @SubscribeEvent
-    static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof final ServerPlayer player) {
+    static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
             sendItems(player);
         }
     }
 
     private static void sendItems(ServerPlayer player) {
-        final var cap = get(player);
-        final var diff = getDiff(player, cap.receivedItems);
+        var cap = get(player);
+        var diff = getDiff(player, cap.receivedItems);
 
-        for (final var entry : diff.entrySet()) {
+        for (var entry : diff.entrySet()) {
             entry.getValue().forEach(stack -> {
                 if (!player.addItem(stack.build())) {
                     player.level().addFreshEntity(player.drop(stack.build(), true, true));
@@ -60,7 +60,7 @@ public final class SpawnItemsStore implements IAttachmentSerializer<Tag, SpawnIt
     }
 
     @SubscribeEvent
-    static void onReloadResources(final OnDatapackSyncEvent event) {
+    static void onReloadResources(OnDatapackSyncEvent event) {
         if (event.getPlayer() == null) { // We've ran /reload
             LOGGER.debug("Sending spawn items to all players after reload...");
             event.getPlayerList().getPlayers().forEach(SpawnItemsStore::sendItems);
@@ -68,9 +68,9 @@ public final class SpawnItemsStore implements IAttachmentSerializer<Tag, SpawnIt
     }
 
     private static Map<ResourceLocation, List<SpawnItems.Stack>> getDiff(ServerPlayer player, Map<ResourceLocation, List<SpawnItems.Stack>> old) {
-        final Map<ResourceLocation, List<SpawnItems.Stack>> diff = new HashMap<>();
+        Map<ResourceLocation, List<SpawnItems.Stack>> diff = new HashMap<>();
         SpawnItemsReloadListener.REGISTRY.forEach((location, items) -> {
-            final var oldReceived = old.getOrDefault(location, List.of());
+            var oldReceived = old.getOrDefault(location, List.of());
             if (items.canApplyToPlayer(player)) {
                 diff.put(location, items.items().stream()
                         .filter(Predicate.not(oldReceived::contains))
@@ -81,18 +81,18 @@ public final class SpawnItemsStore implements IAttachmentSerializer<Tag, SpawnIt
     }
 
     @SubscribeEvent
-    static void onPlayerClone(final PlayerEvent.Clone event) {
-        final Player oldPlayer = event.getOriginal();
+    static void onPlayerClone(PlayerEvent.Clone event) {
+        Player oldPlayer = event.getOriginal();
         if (event.isWasDeath() && !oldPlayer.level().getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).get()) {
             return;
         }
 
-        final SpawnItemsStore oldStore = get(oldPlayer);
-        final SpawnItemsStore newStore = get(event.getEntity());
+        SpawnItemsStore oldStore = get(oldPlayer);
+        SpawnItemsStore newStore = get(event.getEntity());
         newStore.receivedItems.putAll(oldStore.receivedItems);
     }
 
-    public static SpawnItemsStore get(final Player player) {
+    public static SpawnItemsStore get(Player player) {
         return player.getData(ExtraAttachments.SPAWN_ITEMS_STORE);
     }
 

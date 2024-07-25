@@ -11,15 +11,15 @@ public record CompositeWorldEffect(List<WorldEffect> effects) implements WorldEf
     public static final MapCodec<CompositeWorldEffect> MAP_CODEC = CODEC.fieldOf("effects");
 
     @Override
-    public void apply(final ServerPlayer player, final boolean immediate) {
-        for (final WorldEffect effect : effects) {
+    public void apply(ServerPlayer player, boolean immediate) {
+        for (WorldEffect effect : effects) {
             effect.apply(player, immediate);
         }
     }
 
     @Override
-    public void clear(final ServerPlayer player, final boolean immediate) {
-        for (final WorldEffect effect : effects) {
+    public void clear(ServerPlayer player, boolean immediate) {
+        for (WorldEffect effect : effects) {
             effect.clear(player, immediate);
         }
     }

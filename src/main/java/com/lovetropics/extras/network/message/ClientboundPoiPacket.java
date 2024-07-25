@@ -18,7 +18,7 @@ public record ClientboundPoiPacket(Poi poi, boolean delete) implements CustomPac
 
     public static final Type<ClientboundPoiPacket> TYPE = new Type<>(LTExtras.location("poi"));
 
-    public static void handle(final ClientboundPoiPacket packet, final IPayloadContext context) {
+    public static void handle(ClientboundPoiPacket packet, IPayloadContext context) {
         ClientMapPoiManager.updatePoi(packet.poi(), packet.delete());
     }
 

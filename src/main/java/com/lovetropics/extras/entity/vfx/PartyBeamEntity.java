@@ -30,9 +30,9 @@ public class PartyBeamEntity extends EndCrystal {
     public void tick() {
         super.tick();
 
-        if (!this.level().isClientSide) {
-            if (targetPos != null && this.level().getGameTime() % 100 == 0) {
-                random.setSeed(this.level().getGameTime());
+        if (!level().isClientSide) {
+            if (targetPos != null && level().getGameTime() % 100 == 0) {
+                random.setSeed(level().getGameTime());
 
                 int ax = targetPos.getX() + (random.nextInt(5) - random.nextInt(5));
                 int az = targetPos.getZ() + (random.nextInt(5) - random.nextInt(5));
@@ -42,9 +42,9 @@ public class PartyBeamEntity extends EndCrystal {
                 int g = FastColor.ARGB32.green(packed);
                 int b = FastColor.ARGB32.blue(packed);
 
-                this.setColor(new Vector3f(r / 255.0f, g / 255.0f, b / 255.0f));
+                setColor(new Vector3f(r / 255.0f, g / 255.0f, b / 255.0f));
 
-                this.setBeamTarget(new BlockPos(ax, targetPos.getY(), az));
+                setBeamTarget(new BlockPos(ax, targetPos.getY(), az));
             }
         }
     }
@@ -57,7 +57,7 @@ public class PartyBeamEntity extends EndCrystal {
             tag.put("TargetPos", NbtUtils.writeBlockPos(targetPos));
         }
 
-        if (this.getColor() != null) {
+        if (getColor() != null) {
             ExtraCodecs.VECTOR3F.encodeStart(NbtOps.INSTANCE, getColor()).result().ifPresent(color -> tag.put("TargetColor", color));
         }
     }
@@ -76,11 +76,11 @@ public class PartyBeamEntity extends EndCrystal {
     }
 
     public void setColor(Vector3f color) {
-        this.getEntityData().set(DATA_COLOR, color);
+        getEntityData().set(DATA_COLOR, color);
     }
 
     public Vector3f getColor() {
-        return this.getEntityData().get(DATA_COLOR);
+        return getEntityData().get(DATA_COLOR);
     }
 
     @Override
@@ -92,17 +92,17 @@ public class PartyBeamEntity extends EndCrystal {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if (this.isInvulnerableTo(pSource)) {
+        if (isInvulnerableTo(pSource)) {
             return false;
         } else if (pSource.getEntity() instanceof EnderDragon) {
             return false;
         } else {
-            if (!this.isRemoved() && !this.level().isClientSide) {
-                this.remove(Entity.RemovalReason.KILLED);
+            if (!isRemoved() && !level().isClientSide) {
+                remove(Entity.RemovalReason.KILLED);
 
                 // No explosion
 
-                this.kill();
+                kill();
             }
 
             return true;

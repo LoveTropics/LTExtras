@@ -40,7 +40,7 @@ public class CollectibleCommand {
     private static final SimpleCommandExceptionType GAVE_TO_NO_PLAYERS = new SimpleCommandExceptionType(Component.literal("Did not find any players to give this collectible to"));
     private static final SimpleCommandExceptionType CLEARED_FROM_NO_PLAYERS = new SimpleCommandExceptionType(Component.literal("Did not find any players to remove this collectible from"));
 
-    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher, final CommandBuildContext buildContext) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         dispatcher.register(literal("collectible")
                 .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(literal("give")
@@ -71,13 +71,13 @@ public class CollectibleCommand {
         );
     }
 
-    private static int give(final CommandContext<CommandSourceStack> ctx, final Collection<ServerPlayer> players, final ItemInput item) throws CommandSyntaxException {
-        final ItemStack stack = item.createItemStack(1, true);
-        final Collectible collectible = new Collectible(stack);
+    private static int give(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, ItemInput item) throws CommandSyntaxException {
+        ItemStack stack = item.createItemStack(1, true);
+        Collectible collectible = new Collectible(stack);
 
         int result = 0;
-        for (final ServerPlayer player : players) {
-            final CollectibleStore collectibles = CollectibleStore.get(player);
+        for (ServerPlayer player : players) {
+            CollectibleStore collectibles = CollectibleStore.get(player);
             if (collectibles.give(collectible)) {
                 result++;
             }
@@ -87,18 +87,18 @@ public class CollectibleCommand {
             throw GAVE_TO_NO_PLAYERS.create();
         }
 
-        final int finalResult = result;
+        int finalResult = result;
         ctx.getSource().sendSuccess(() -> Component.translatable("Gave %s to %s players", stack.getDisplayName(), finalResult), false);
 
         return result;
     }
 
-    private static int clear(final CommandContext<CommandSourceStack> ctx, final Collection<ServerPlayer> players, final Predicate<ItemStack> itemPredicate) throws CommandSyntaxException {
-        final Predicate<Collectible> predicate = collectible -> itemPredicate.test(collectible.createItemStack(Util.NIL_UUID));
+    private static int clear(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, Predicate<ItemStack> itemPredicate) throws CommandSyntaxException {
+        Predicate<Collectible> predicate = collectible -> itemPredicate.test(collectible.createItemStack(Util.NIL_UUID));
 
         int count = 0;
-        for (final ServerPlayer player : players) {
-            final CollectibleStore collectibles = CollectibleStore.get(player);
+        for (ServerPlayer player : players) {
+            CollectibleStore collectibles = CollectibleStore.get(player);
             if (collectibles.clear(predicate)) {
                 clearCollectibleItems(player.getInventory(), predicate);
                 count++;
@@ -109,16 +109,16 @@ public class CollectibleCommand {
             throw CLEARED_FROM_NO_PLAYERS.create();
         }
 
-        final int finalCount = count;
+        int finalCount = count;
         ctx.getSource().sendSuccess(() -> Component.translatable("Cleared collectibles from %s players", finalCount), false);
 
         return finalCount;
     }
 
-    private static void clearCollectibleItems(final Inventory inventory, final Predicate<Collectible> predicate) {
+    private static void clearCollectibleItems(Inventory inventory, Predicate<Collectible> predicate) {
         for (int i = 0; i < inventory.getContainerSize(); i++) {
-            final ItemStack stack = inventory.getItem(i);
-            final Collectible collectible = Collectible.byItem(stack);
+            ItemStack stack = inventory.getItem(i);
+            Collectible collectible = Collectible.byItem(stack);
             if (collectible != null && predicate.test(collectible)) {
                 inventory.removeItemNoUpdate(i);
             }
@@ -127,24 +127,24 @@ public class CollectibleCommand {
 
     private static final ResourceKey<Item> DISGUISE = ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("ltminigames", "disguise"));
 
-    private static int countDisguises(final CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        final ServerPlayer player = context.getSource().getPlayerOrException();
-        final CollectibleStore collectibles = CollectibleStore.get(player);
+    private static int countDisguises(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        CollectibleStore collectibles = CollectibleStore.get(player);
         return collectibles.count(collectible ->
                 collectible.item().is(DISGUISE) && !collectible.has(ExtraDataComponents.DONATION_GOAL.value())
         );
     }
 
-    private static int setLocked(final CommandContext<CommandSourceStack> context, final boolean locked) throws CommandSyntaxException {
-        final ServerPlayer player = context.getSource().getPlayerOrException();
-        final CollectibleStore store = CollectibleStore.get(player);
+    private static int setLocked(CommandContext<CommandSourceStack> context, boolean locked) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        CollectibleStore store = CollectibleStore.get(player);
         store.setLocked(locked);
         return 1;
     }
 
-    private static int findCollectibles(final CommandSourceStack source, final Predicate<ItemStack> item) {
-        final MinecraftServer server = source.getServer();
-        final GameProfileCache profileCache = server.getProfileCache();
+    private static int findCollectibles(CommandSourceStack source, Predicate<ItemStack> item) {
+        MinecraftServer server = source.getServer();
+        GameProfileCache profileCache = server.getProfileCache();
         CollectibleLister.listPlayersWithItem(server, item)
                 .thenApplyAsync(
                         profileIds -> profileIds.stream().map(profileCache::get).flatMap(Optional::stream).toList(),
@@ -154,7 +154,7 @@ public class CollectibleCommand {
                     if (profiles.isEmpty()) {
                         source.sendSuccess(() -> Component.literal("Found no players"), false);
                     } else {
-                        final String names = profiles.stream().map(GameProfile::getName).collect(Collectors.joining(", "));
+                        String names = profiles.stream().map(GameProfile::getName).collect(Collectors.joining(", "));
                         source.sendSuccess(() -> Component.literal("Found " + profiles.size() + " players: " + names), false);
                     }
                 }, server);

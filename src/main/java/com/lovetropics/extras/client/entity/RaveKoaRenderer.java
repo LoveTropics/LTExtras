@@ -22,18 +22,13 @@ public class RaveKoaRenderer extends MobRenderer<RaveKoaEntity, RaveKoaModel<Rav
       super(p_234787_, new RaveKoaModel<>(p_234787_.bakeLayer(RaveKoaModel.LAYER_LOCATION)), 0.9F);
    }
 
-   /**
-    * Returns the location of an entity's texture.
-    */
+   @Override
    public ResourceLocation getTextureLocation(RaveKoaEntity entity) {
-      if (entity instanceof RaveKoaEntityDJ) {
-         return TEXTURE_MAN_HUNTER;
-      } else if (entity instanceof RaveKoaEntityDance1) {
-         return TEXTURE_WOMAN_FISHER;
-      } else if (entity instanceof RaveKoaEntityDance2) {
-         return TEXTURE_MAN_FISHER;
-      } else {
-         return TEXTURE_MAN_HUNTER;
-      }
+       return switch (entity) {
+           case RaveKoaEntityDJ ignored -> TEXTURE_MAN_HUNTER;
+           case RaveKoaEntityDance1 ignored -> TEXTURE_WOMAN_FISHER;
+           case RaveKoaEntityDance2 ignored -> TEXTURE_MAN_FISHER;
+           default -> TEXTURE_MAN_HUNTER;
+       };
    }
 }

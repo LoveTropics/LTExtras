@@ -19,7 +19,7 @@ public record ClientboundWorldParticleEffectsPacket(Optional<ParticlesEffect> ef
 
     public static final Type<ClientboundWorldParticleEffectsPacket> TYPE = new Type<>(LTExtras.location("world_particle_effects"));
 
-    public static void handle(final ClientboundWorldParticleEffectsPacket packet, final IPayloadContext ctx) {
+    public static void handle(ClientboundWorldParticleEffectsPacket packet, IPayloadContext ctx) {
         WorldParticleEffectHandler.set(packet.effect.orElse(null));
     }
 

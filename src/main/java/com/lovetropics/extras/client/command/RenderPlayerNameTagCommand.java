@@ -31,17 +31,17 @@ public class RenderPlayerNameTagCommand {
                 ));
     }
 
-    public static int toggleAlwaysRender(final CommandContext<CommandSourceStack> ctx) {
+    public static int toggleAlwaysRender(CommandContext<CommandSourceStack> ctx) {
         setSend(ctx, !alwaysRenderNameTags);
         return Command.SINGLE_SUCCESS;
     }
 
-    public static int setAlwaysRender(final CommandContext<CommandSourceStack> ctx) {
+    public static int setAlwaysRender(CommandContext<CommandSourceStack> ctx) {
         setSend(ctx, BoolArgumentType.getBool(ctx, "state"));
         return Command.SINGLE_SUCCESS;
     }
 
-    private static void setSend(final CommandContext<CommandSourceStack> ctx, final boolean newValue) {
+    private static void setSend(CommandContext<CommandSourceStack> ctx, boolean newValue) {
         alwaysRenderNameTags = newValue;
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.nametag.success", alwaysRenderNameTags), false);
     }
@@ -53,7 +53,7 @@ public class RenderPlayerNameTagCommand {
         }
     }
 
-    public static void addTranslations(final RegistrateLangProvider provider) {
+    public static void addTranslations(RegistrateLangProvider provider) {
         provider.add("commands.nametag.success", "Always render nametags: %s");
     }
 }

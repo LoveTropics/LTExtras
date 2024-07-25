@@ -32,34 +32,34 @@ public final class CustomSugarCaneBlock extends Block implements SimpleWaterlogg
 
     private static final VoxelShape SHAPE = Block.box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
 
-    public CustomSugarCaneBlock(final Properties properties) {
+    public CustomSugarCaneBlock(Properties properties) {
         super(properties);
         registerDefaultState(getStateDefinition().any().setValue(TYPE, Type.TOP).setValue(WATERLOGGED, false));
     }
 
     @Override
-    public VoxelShape getShape(final BlockState state, final BlockGetter level, final BlockPos pos, final CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public void tick(final BlockState state, final ServerLevel level, final BlockPos pos, final RandomSource rand) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
         if (!state.canSurvive(level, pos)) {
             level.destroyBlock(pos, true);
         }
     }
 
     @Override
-    public BlockState getStateForPlacement(final BlockPlaceContext context) {
-        final Level level = context.getLevel();
-        final FluidState fluid = level.getFluidState(context.getClickedPos());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Level level = context.getLevel();
+        FluidState fluid = level.getFluidState(context.getClickedPos());
         return defaultBlockState()
                 .setValue(TYPE, getTypeAt(level, context.getClickedPos()))
                 .setValue(WATERLOGGED, fluid.getType() == Fluids.WATER);
     }
 
     @Override
-    public BlockState updateShape(final BlockState state, final Direction direction, final BlockState neighborState, final LevelAccessor level, final BlockPos pos, final BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         if (!state.canSurvive(level, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
@@ -71,10 +71,10 @@ public final class CustomSugarCaneBlock extends Block implements SimpleWaterlogg
         return state.setValue(TYPE, getTypeAt(level, pos));
     }
 
-    private Type getTypeAt(final LevelAccessor world, final BlockPos pos) {
-        final BlockState aboveState = world.getBlockState(pos.above());
+    private Type getTypeAt(LevelAccessor world, BlockPos pos) {
+        BlockState aboveState = world.getBlockState(pos.above());
         if (aboveState.is(this)) {
-            final BlockState belowState = world.getBlockState(pos.below());
+            BlockState belowState = world.getBlockState(pos.below());
             if (belowState.is(this) || aboveState.getValue(TYPE) == Type.TOP) {
                 return Type.MIDDLE;
             }
@@ -85,27 +85,27 @@ public final class CustomSugarCaneBlock extends Block implements SimpleWaterlogg
     }
 
     @Override
-    public boolean canSurvive(final BlockState state, final LevelReader world, final BlockPos pos) {
-        final BlockPos groundPos = pos.below();
-        final BlockState groundState = world.getBlockState(groundPos);
-        final TriState result = groundState.canSustainPlant(world, groundPos, Direction.UP, defaultBlockState());
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        BlockPos groundPos = pos.below();
+        BlockState groundState = world.getBlockState(groundPos);
+        TriState result = groundState.canSustainPlant(world, groundPos, Direction.UP, defaultBlockState());
         if (result.isDefault()) {
             return groundState.getBlock() == this || canGrowOn(groundState);
         }
         return result.isTrue();
     }
 
-    private boolean canGrowOn(final BlockState state) {
+    private boolean canGrowOn(BlockState state) {
         return state.is(Blocks.GRASS_BLOCK) || state.is(BlockTags.SAND) || state.is(BlockTags.DIRT) || state.is(Tags.Blocks.GRAVELS) || state.is(Blocks.CLAY);
     }
 
     @Override
-    protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(WATERLOGGED, TYPE);
     }
 
     @Override
-    public FluidState getFluidState(final BlockState state) {
+    public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
@@ -117,7 +117,7 @@ public final class CustomSugarCaneBlock extends Block implements SimpleWaterlogg
 
         private final String name;
 
-        Type(final String name) {
+        Type(String name) {
             this.name = name;
         }
 
