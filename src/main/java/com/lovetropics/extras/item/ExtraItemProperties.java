@@ -10,10 +10,10 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 
 public class ExtraItemProperties {
-    public static final ResourceLocation UNSEEN = ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "unseen");
+    public static final ResourceLocation UNSEEN = LTExtras.location("unseen");
 
     public static void register() {
-        ItemProperties.register(ExtraItems.COLLECTIBLE_COMPASS.get(), ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "angle"), new CompassItemPropertyFunction((level, stack, entity) -> {
+        ItemProperties.register(ExtraItems.COLLECTIBLE_COMPASS.get(), LTExtras.location("angle"), new CompassItemPropertyFunction((level, stack, entity) -> {
             final CollectibleCompassItem.Target target = stack.get(ExtraDataComponents.COLLECTIBLE_TARGET);
             return target != null ? target.pos() : null;
         }));

@@ -22,7 +22,7 @@ public enum ExtraLangKeys {
     private final String value;
 
     ExtraLangKeys(final String type, final String key, final String value) {
-        this.key = Util.makeDescriptionId(type, ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, key));
+        this.key = Util.makeDescriptionId(type, LTExtras.location(key));
         this.value = value;
     }
 

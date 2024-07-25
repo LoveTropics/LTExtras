@@ -48,7 +48,7 @@ public class LTExtras {
 
 	public static final String MODID = "ltextras";
 
-    private static final ResourceLocation TAB_ID = ResourceLocation.fromNamespaceAndPath(MODID, "ltextras");
+	private static final ResourceLocation TAB_ID = LTExtras.location("ltextras");
 	public static final ResourceKey<CreativeModeTab> TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, TAB_ID);
 
     private static Registrate REGISTRATE = null;

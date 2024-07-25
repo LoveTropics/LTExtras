@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class CollectibleStore implements IAttachmentSerializer<Tag, CollectibleStore> {
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "collectibles");
+    public static final ResourceLocation ID = LTExtras.location("collectibles");
 
     private static final Logger LOGGER = LogUtils.getLogger();
 

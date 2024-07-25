@@ -1,5 +1,6 @@
 package com.lovetropics.extras.client.screen.map;
 
+import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.ClientMapPoiManager;
 import com.lovetropics.extras.data.poi.MapPoiManager;
 import com.lovetropics.extras.data.poi.Poi;
@@ -19,7 +20,7 @@ import java.util.List;
 public class TropicalMapScreen extends Screen {
     private static final int MAP_PNG_HEIGHT = 256;
     private static final int MAP_PNG_WIDTH = 256;
-    private static final ResourceLocation MAP_LOCATION = ResourceLocation.fromNamespaceAndPath("ltextras", "textures/map.png");
+    private static final ResourceLocation MAP_LOCATION = LTExtras.location("textures/map.png");
     private final Player player;
     private final List<PoiButton> poiButtons = new ArrayList<>();
 

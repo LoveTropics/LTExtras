@@ -48,7 +48,7 @@ public class SchedulePlaceholders {
     }
 
     private static void registerPlaceholder(final String id, final boolean next, final PlaceholderFunction function) {
-        Placeholders.register(ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "schedule/" + id), (ctx, arg) -> {
+        Placeholders.register(LTExtras.location("schedule/" + id), (ctx, arg) -> {
             final StreamSchedule schedule = SchedulePlaceholders.schedule;
             if (schedule == null) {
                 return UNKNOWN;

@@ -14,9 +14,9 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class RaveKoaRenderer extends MobRenderer<RaveKoaEntity, RaveKoaModel<RaveKoaEntity>> {
-   private static final ResourceLocation TEXTURE_MAN_HUNTER = ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "textures/entity/koa_man_hunter.png");
-   private static final ResourceLocation TEXTURE_MAN_FISHER = ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "textures/entity/koa_man_fisher.png");
-   private static final ResourceLocation TEXTURE_WOMAN_FISHER = ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "textures/entity/koa_woman_fisher.png");
+    private static final ResourceLocation TEXTURE_MAN_HUNTER = LTExtras.location("textures/entity/koa_man_hunter.png");
+    private static final ResourceLocation TEXTURE_MAN_FISHER = LTExtras.location("textures/entity/koa_man_fisher.png");
+    private static final ResourceLocation TEXTURE_WOMAN_FISHER = LTExtras.location("textures/entity/koa_woman_fisher.png");
 
    public RaveKoaRenderer(EntityRendererProvider.Context p_234787_) {
       super(p_234787_, new RaveKoaModel<>(p_234787_.bakeLayer(RaveKoaModel.LAYER_LOCATION)), 0.9F);

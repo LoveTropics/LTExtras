@@ -16,7 +16,7 @@ public class InviteItem extends Item {
     public static final List<ImageData> PRESETS = List.of(
             new ImageData(
                     inviteName("1"),
-                    ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "textures/images/ccfucc_invite_1.png"),
+                    LTExtras.location("textures/images/ccfucc_invite_1.png"),
                     371,
                     292,
                     List.of(
@@ -32,7 +32,7 @@ public class InviteItem extends Item {
             ),
             new ImageData(
                     inviteName("2"),
-                    ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "textures/images/ccfucc_invite_2.png"),
+                    LTExtras.location("textures/images/ccfucc_invite_2.png"),
                     371,
                     292,
                     List.of(
