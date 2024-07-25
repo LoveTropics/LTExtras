@@ -217,13 +217,12 @@ public class HologramEntity extends Entity {
     public DisplayInfo display(Function<Component, List<Line>> splitter) {
         DisplayInfo display = displayCache;
         if (display == null) {
-            Vector3f forward = forward();
-            displayCache = display = computeDisplay(splitter, forward);
+            displayCache = display = computeDisplay(splitter, forward());
         }
         return display;
     }
 
-    private DisplayInfo computeDisplay(Function<Component, List<Line>> splitter, Vector3f forward) {
+    private DisplayInfo computeDisplay(Function<Component, List<Line>> splitter, @Nullable Vector3f forward) {
         return new DisplayInfo(
                 forward != null ? new Quaternionf().rotationTo(GLOBAL_FORWARD, forward) : null,
                 splitter.apply(displayText)

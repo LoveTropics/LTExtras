@@ -19,6 +19,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.slf4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -29,12 +30,12 @@ public class CollectibleStore implements IAttachmentSerializer<Tag, CollectibleS
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    @Nullable
     private ServerPlayer player;
 
     private final List<Collectible> collectibles = new ArrayList<>();
     private boolean hasUnseen;
     private boolean locked;
-
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {

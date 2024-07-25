@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class WorldParticleEffectHandler {
+    @Nullable
     private static ParticlesEffect effect;
 
     @SubscribeEvent

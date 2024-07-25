@@ -19,6 +19,7 @@ import java.util.UUID;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class ClientCollectiblesList {
+    @Nullable
     private static ClientCollectiblesList instance;
 
     private List<Collectible> collectibles = List.of();

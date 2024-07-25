@@ -41,6 +41,7 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
+import javax.annotation.Nullable;
 import java.util.regex.Pattern;
 
 @Mod("ltextras")
@@ -51,7 +52,8 @@ public class LTExtras {
 	private static final ResourceLocation TAB_ID = LTExtras.location("ltextras");
 	public static final ResourceKey<CreativeModeTab> TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, TAB_ID);
 
-    private static Registrate REGISTRATE = null;
+	@Nullable
+	private static Registrate REGISTRATE = null;
 
 	public static Registrate registrate() {
 		if (REGISTRATE == null) {

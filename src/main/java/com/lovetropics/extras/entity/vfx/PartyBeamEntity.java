@@ -19,8 +19,11 @@ import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3f;
 
+import javax.annotation.Nullable;
+
 public class PartyBeamEntity extends EndCrystal {
     private static final EntityDataAccessor<Vector3f> DATA_COLOR = SynchedEntityData.defineId(PartyBeamEntity.class, EntityDataSerializers.VECTOR3);
+    @Nullable
     private BlockPos targetPos = null;
     public PartyBeamEntity(EntityType<? extends EndCrystal> type, Level level) {
         super(type, level);
@@ -57,9 +60,7 @@ public class PartyBeamEntity extends EndCrystal {
             tag.put("TargetPos", NbtUtils.writeBlockPos(targetPos));
         }
 
-        if (getColor() != null) {
-            ExtraCodecs.VECTOR3F.encodeStart(NbtOps.INSTANCE, getColor()).result().ifPresent(color -> tag.put("TargetColor", color));
-        }
+        ExtraCodecs.VECTOR3F.encodeStart(NbtOps.INSTANCE, getColor()).result().ifPresent(color -> tag.put("TargetColor", color));
     }
 
     @Override
