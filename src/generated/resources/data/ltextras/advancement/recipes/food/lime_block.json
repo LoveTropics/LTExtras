@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "tropicraft:lime"
+            "items": "#tropicraft:lime"
           }
         ]
       },
@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_lime",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_lime"
     ]
   ],
   "rewards": {
     "recipes": [
       "ltextras:lime_block"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

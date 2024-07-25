@@ -1,8 +1,10 @@
 {
   "type": "minecraft:stonecutting",
-  "count": 2,
   "ingredient": {
     "item": "ltextras:lime_block"
   },
-  "result": "ltextras:sliced_lime"
+  "result": {
+    "count": 2,
+    "id": "ltextras:sliced_lime"
+  }
 }

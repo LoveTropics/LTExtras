@@ -809,7 +809,7 @@ public class ExtraBlocks {
 					return new InteractionResultHolder<>(result, player.getItemInHand(hand));
 				}
 			})
-			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), ResourceLocation.withDefaultNamespace("minecraft:item/generated")).texture("layer0", "minecraft:block/lily_pad"))
+			.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), ResourceLocation.parse("minecraft:item/generated")).texture("layer0", "minecraft:block/lily_pad"))
 			.build()
 			.register();
 

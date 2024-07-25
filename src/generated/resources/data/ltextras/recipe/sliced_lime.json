@@ -12,7 +12,6 @@
   ],
   "result": {
     "count": 6,
-    "item": "ltextras:sliced_lime"
-  },
-  "show_notification": true
+    "id": "ltextras:sliced_lime"
+  }
 }

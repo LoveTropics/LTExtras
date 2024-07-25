@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "ltextras:lime_block"
-            ]
+            "items": "ltextras:lime_block"
           }
         ]
       },
@@ -15,21 +13,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "ltextras:sliced_lime_from_lime_block_stonecutting"
+        "recipe": "ltextras:sliced_lime"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_lime_block",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_lime_block"
     ]
   ],
   "rewards": {
     "recipes": [
-      "ltextras:sliced_lime_from_lime_block_stonecutting"
+      "ltextras:sliced_lime"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }
