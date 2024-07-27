@@ -1,5 +1,6 @@
 package com.lovetropics.extras.collectible;
 
+import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.mixin.MinecraftServerAccessor;
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -9,10 +10,12 @@ import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.PlayerDataStorage;
+import net.neoforged.neoforge.attachment.AttachmentHolder;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -56,13 +59,14 @@ public class CollectibleLister {
         }
 
         PlayerDataStorage playerDataStorage = ((MinecraftServerAccessor) server).getPlayerDataStorage();
+        RegistryOps<Tag> ops = server.registryAccess().createSerializationContext(NbtOps.INSTANCE);
 
         return CompletableFuture.supplyAsync(() -> listSeenPlayers(playerDataStorage), Util.ioPool())
                 .thenCompose(seenPlayers -> {
                     List<CompletableFuture<Entry>> futures = new ArrayList<>();
                     for (UUID profileId : seenPlayers) {
                         if (!seenProfileIds.contains(profileId)) {
-                            futures.add(CompletableFuture.supplyAsync(() -> loadPlayerData(profileId, playerDataStorage), Util.ioPool()));
+                            futures.add(CompletableFuture.supplyAsync(() -> loadPlayerData(profileId, playerDataStorage, ops), Util.ioPool()));
                         }
                     }
                     return Util.sequence(futures);
@@ -97,7 +101,7 @@ public class CollectibleLister {
     }
 
     @Nullable
-    private static Entry loadPlayerData(UUID profileId, PlayerDataStorage playerDataStorage) {
+    private static Entry loadPlayerData(UUID profileId, PlayerDataStorage playerDataStorage, RegistryOps<Tag> ops) {
         CompoundTag tag;
         try {
             Path path = playerDataStorage.getPlayerDir().toPath().resolve(profileId + PLAYER_DATA_SUFFIX);
@@ -106,12 +110,12 @@ public class CollectibleLister {
             LOGGER.error("Failed to load player data for {}", profileId, e);
             return null;
         }
-        CompoundTag forgeCaps = tag.getCompound("ForgeCaps");
-        Tag collectiblesTag = forgeCaps.get(CollectibleStore.ID.toString());
+        CompoundTag attachmentsTag = tag.getCompound(AttachmentHolder.ATTACHMENTS_NBT_KEY);
+        Tag collectiblesTag = attachmentsTag.get(ExtraAttachments.COLLECTIBLE_STORE.getKey().location().toString());
         if (collectiblesTag == null) {
             return null;
         }
-        return CollectibleData.CODEC.parse(NbtOps.INSTANCE, collectiblesTag)
+        return CollectibleData.CODEC.parse(ops, collectiblesTag)
                 .resultOrPartial(Util.prefix("Failed to parse player data for " + profileId, LOGGER::warn))
                 .map(data -> new Entry(profileId, data))
                 .orElse(null);

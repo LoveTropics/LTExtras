@@ -140,7 +140,7 @@ public class CollectibleEntity extends Entity {
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
         if (tag.contains(KEY_COLLECTIBLE)) {
-            Collectible.CODEC.parse(NbtOps.INSTANCE, tag.get(KEY_COLLECTIBLE))
+            Collectible.CODEC.parse(registryAccess().createSerializationContext(NbtOps.INSTANCE), tag.get(KEY_COLLECTIBLE))
                     .resultOrPartial(Util.prefix("Collectible: ", LOGGER::error))
                     .ifPresent(this::setCollectible);
         } else {

@@ -3,21 +3,13 @@ package com.lovetropics.extras.collectible;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
-import com.mojang.logging.LogUtils;
-import net.minecraft.Util;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import com.mojang.serialization.Codec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.attachment.IAttachmentHolder;
-import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -25,10 +17,17 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
-public class CollectibleStore implements IAttachmentSerializer<Tag, CollectibleStore> {
-    public static final ResourceLocation ID = LTExtras.location("collectibles");
-
-    private static final Logger LOGGER = LogUtils.getLogger();
+public class CollectibleStore {
+    public static final Codec<CollectibleStore> CODEC = CollectibleData.CODEC.xmap(
+            data -> {
+                CollectibleStore store = new CollectibleStore();
+                store.collectibles.clear();
+                store.collectibles.addAll(data.collectibles());
+                store.hasUnseen = data.hasUnseen();
+                return store;
+            },
+            CollectibleStore::asData
+    );
 
     @Nullable
     private ServerPlayer player;
@@ -56,7 +55,7 @@ public class CollectibleStore implements IAttachmentSerializer<Tag, CollectibleS
     }
 
     public static CollectibleStore get(Player player) {
-        CollectibleStore data = player.getData(ExtraAttachments.COLLECTABLE_STORE);
+        CollectibleStore data = player.getData(ExtraAttachments.COLLECTIBLE_STORE);
         data.player = (ServerPlayer) player;
         return data;
     }
@@ -113,21 +112,5 @@ public class CollectibleStore implements IAttachmentSerializer<Tag, CollectibleS
         if (player != null) {
             PacketDistributor.sendToPlayer(player, new ClientboundCollectiblesListPacket(collectibles, silent, hasUnseen));
         }
-    }
-
-    @Override
-    public CollectibleStore read(IAttachmentHolder holder, Tag nbt, HolderLookup.Provider provider) {
-        CollectibleData.CODEC.parse(NbtOps.INSTANCE, nbt).resultOrPartial(Util.prefix("Collectibles: ", LOGGER::error)).ifPresent(data -> {
-            collectibles.clear();
-            collectibles.addAll(data.collectibles());
-            hasUnseen = data.hasUnseen();
-        });
-
-        return this;
-    }
-
-    @Override
-    public @org.jetbrains.annotations.Nullable Tag write(CollectibleStore attachment, HolderLookup.Provider provider) {
-        return CollectibleData.CODEC.encodeStart(NbtOps.INSTANCE, attachment.asData()).getOrThrow(IllegalStateException::new);
     }
 }
