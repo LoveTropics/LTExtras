@@ -12,6 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.InteractionHand;
@@ -64,7 +65,7 @@ public class CollectibleCompassItem extends Item {
             if (entity.getTags().contains(ENTITY_TAG_IGNORE)) {
                 return false;
             }
-            Collectible collectible = entity.getCollectible();
+            Holder<Collectible> collectible = entity.getCollectible();
             return collectible != null && !collectibles.contains(collectible);
         });
 

@@ -5,6 +5,7 @@ import com.lovetropics.extras.mixin.MinecraftServerAccessor;
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
@@ -38,8 +39,8 @@ public class CollectibleLister {
         return list(server).thenApplyAsync(entries -> {
             List<UUID> profileIds = new ArrayList<>();
             for (CollectibleLister.Entry entry : entries) {
-                for (Collectible collectible : entry.data().collectibles()) {
-                    ItemStack stack = collectible.createItemStack(entry.profileId());
+                for (Holder<Collectible> collectible : entry.data().collectibles()) {
+                    ItemStack stack = Collectible.createItemStack(collectible, entry.profileId());
                     if (item.test(stack)) {
                         profileIds.add(entry.profileId());
                     }

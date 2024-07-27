@@ -7,6 +7,7 @@ import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.mojang.logging.LogUtils;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -36,7 +37,7 @@ public class CollectibleEntity extends Entity {
     private static final EntityDataAccessor<Boolean> DATA_PARTICLES = SynchedEntityData.defineId(CollectibleEntity.class, EntityDataSerializers.BOOLEAN);
 
     @Nullable
-    private Collectible collectible;
+    private Holder<Collectible> collectible;
 
     public CollectibleEntity(EntityType<?> type, Level level) {
         super(type, level);
@@ -46,9 +47,9 @@ public class CollectibleEntity extends Entity {
         return getEntityData().get(DATA_ITEM);
     }
 
-    public void setCollectible(@Nullable Collectible collectible) {
+    public void setCollectible(@Nullable Holder<Collectible> collectible) {
         this.collectible = collectible;
-        getEntityData().set(DATA_ITEM, collectible != null ? collectible.createItemStack(Util.NIL_UUID) : ItemStack.EMPTY);
+        getEntityData().set(DATA_ITEM, collectible != null ? Collectible.createItemStack(collectible, Util.NIL_UUID) : ItemStack.EMPTY);
     }
 
     @Override
@@ -88,7 +89,7 @@ public class CollectibleEntity extends Entity {
         return false;
     }
 
-    private void tryGiveCollectible(Player player, Collectible collectible) {
+    private void tryGiveCollectible(Player player, Holder<Collectible> collectible) {
         CollectibleStore collectibles = CollectibleStore.get(player);
         if (collectibles.give(collectible)) {
             recycleCollectibleCompass(player);
@@ -156,7 +157,7 @@ public class CollectibleEntity extends Entity {
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         if (collectible != null) {
-            tag.put(KEY_COLLECTIBLE, Collectible.CODEC.encodeStart(NbtOps.INSTANCE, collectible).getOrThrow());
+            tag.put(KEY_COLLECTIBLE, Collectible.CODEC.encodeStart(registryAccess().createSerializationContext(NbtOps.INSTANCE), collectible).getOrThrow());
         }
         tag.putBoolean(KEY_PARTICLES, shouldShowParticles());
     }
@@ -181,7 +182,7 @@ public class CollectibleEntity extends Entity {
     }
 
     @Nullable
-    public Collectible getCollectible() {
+    public Holder<Collectible> getCollectible() {
         return collectible;
     }
 }

@@ -5,6 +5,7 @@ import com.lovetropics.extras.client.screen.container.CollectibleBasketScreen;
 import com.lovetropics.extras.collectible.Collectible;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -22,7 +23,7 @@ public class ClientCollectiblesList {
     @Nullable
     private static ClientCollectiblesList instance;
 
-    private List<Collectible> collectibles = List.of();
+    private List<Holder<Collectible>> collectibles = List.of();
     private List<ItemStack> itemStacks = List.of();
     private boolean hasUnseen;
 
@@ -45,7 +46,7 @@ public class ClientCollectiblesList {
         instance = null;
     }
 
-    public List<Collectible> collectibles() {
+    public List<Holder<Collectible>> collectibles() {
         return collectibles;
     }
 
@@ -53,21 +54,21 @@ public class ClientCollectiblesList {
         return itemStacks;
     }
 
-    public void update(List<Collectible> collectibles, boolean silent, boolean hasUnseen) {
+    public void update(List<Holder<Collectible>> collectibles, boolean silent, boolean hasUnseen) {
         Minecraft minecraft = Minecraft.getInstance();
-        List<Collectible> newCollectibles = collectibles.stream().filter(c -> !this.collectibles.contains(c)).toList();
+        List<Holder<Collectible>> newCollectibles = collectibles.stream().filter(c -> !this.collectibles.contains(c)).toList();
         this.collectibles = List.copyOf(collectibles);
         UUID playerId = minecraft.player.getUUID();
-        itemStacks = collectibles.stream().map(collectible -> collectible.createItemStack(playerId)).toList();
+        itemStacks = collectibles.stream().map(collectible -> Collectible.createItemStack(collectible, playerId)).toList();
         if (!silent && !newCollectibles.isEmpty()) {
             notifyCollections(newCollectibles);
         }
         this.hasUnseen = hasUnseen;
     }
 
-    private static void notifyCollections(List<Collectible> newCollectibles) {
+    private static void notifyCollections(List<Holder<Collectible>> newCollectibles) {
         Minecraft minecraft = Minecraft.getInstance();
-        for (Collectible newCollectible : newCollectibles) {
+        for (Holder<Collectible> newCollectible : newCollectibles) {
             minecraft.getToasts().addToast(new CollectibleToast(newCollectible));
         }
         minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0f));

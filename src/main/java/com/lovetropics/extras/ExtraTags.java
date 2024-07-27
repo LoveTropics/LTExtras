@@ -1,5 +1,7 @@
 package com.lovetropics.extras;
 
+import com.lovetropics.extras.collectible.Collectible;
+import com.lovetropics.extras.registry.ExtraRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -34,6 +36,14 @@ public class ExtraTags {
 
         static TagKey<Item> modTag(String name) {
             return tag(LTExtras.MODID, name);
+        }
+    }
+
+    public static class Collectibles extends ExtraTags {
+        public static final TagKey<Collectible> DONATION_GOAL =  modTag("donation_goal");
+
+        static TagKey<Collectible> modTag(String name) {
+            return TagKey.create(ExtraRegistries.COLLECTIBLE, LTExtras.location(name));
         }
     }
 }

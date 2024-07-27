@@ -15,6 +15,7 @@
     "LivingEntityMixin",
     "MinecraftServerAccessor",
     "PlayerListMixin",
+    "ResourceKeyArgumentAccessor",
     "ScaffoldingBlockMixin",
     "TeamCommandMixin",
     "collectible.ItemStackMixin",

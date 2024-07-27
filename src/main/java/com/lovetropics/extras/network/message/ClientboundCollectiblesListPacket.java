@@ -3,6 +3,7 @@ package com.lovetropics.extras.network.message;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.ClientCollectiblesList;
 import com.lovetropics.extras.collectible.Collectible;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -11,7 +12,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 
-public record ClientboundCollectiblesListPacket(List<Collectible> collectibles, boolean silent, boolean hasUnseen) implements CustomPacketPayload {
+public record ClientboundCollectiblesListPacket(List<Holder<Collectible>> collectibles, boolean silent, boolean hasUnseen) implements CustomPacketPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundCollectiblesListPacket> STREAM_CODEC = StreamCodec.composite(
             Collectible.STREAM_CODEC.apply(ByteBufCodecs.list()), ClientboundCollectiblesListPacket::collectibles,
             ByteBufCodecs.BOOL, ClientboundCollectiblesListPacket::silent,

@@ -4,6 +4,7 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
 import com.mojang.serialization.Codec;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -32,7 +33,7 @@ public class CollectibleStore {
     @Nullable
     private ServerPlayer player;
 
-    private final List<Collectible> collectibles = new ArrayList<>();
+    private final List<Holder<Collectible>> collectibles = new ArrayList<>();
     private boolean hasUnseen;
     private boolean locked;
 
@@ -64,7 +65,7 @@ public class CollectibleStore {
         return new CollectibleData(collectibles, hasUnseen);
     }
 
-    public boolean give(Collectible collectible) {
+    public boolean give(Holder<Collectible> collectible) {
         if (!collectibles.contains(collectible)) {
             collectibles.add(collectible);
             hasUnseen = true;
@@ -74,7 +75,7 @@ public class CollectibleStore {
         return false;
     }
 
-    public boolean clear(Predicate<Collectible> predicate) {
+    public boolean clear(Predicate<Holder<Collectible>> predicate) {
         if (collectibles.removeIf(predicate)) {
             sendToClient(false);
             return true;
@@ -82,13 +83,13 @@ public class CollectibleStore {
         return false;
     }
 
-    public boolean contains(Collectible collectible) {
+    public boolean contains(Holder<Collectible> collectible) {
         return collectibles.contains(collectible);
     }
 
-    public int count(Predicate<Collectible> predicate) {
+    public int count(Predicate<Holder<Collectible>> predicate) {
         int count = 0;
-        for (Collectible collectible : collectibles) {
+        for (Holder<Collectible> collectible : collectibles) {
             if (predicate.test(collectible)) {
                 count++;
             }

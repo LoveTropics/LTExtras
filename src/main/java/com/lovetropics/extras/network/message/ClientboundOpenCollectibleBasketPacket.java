@@ -8,9 +8,10 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ClientboundOpenCollectibleBasketPacket implements CustomPacketPayload {
+    public static final ClientboundOpenCollectibleBasketPacket INSTANCE = new ClientboundOpenCollectibleBasketPacket();
     public static final Type<ClientboundOpenCollectibleBasketPacket> TYPE = new Type<>(LTExtras.location("open_collectible"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundOpenCollectibleBasketPacket> STREAM_CODEC = StreamCodec.unit(new ClientboundOpenCollectibleBasketPacket());
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundOpenCollectibleBasketPacket> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     public static void handle(ClientboundOpenCollectibleBasketPacket packet, IPayloadContext ctx) {
         ClientCollectiblesList.openScreen();

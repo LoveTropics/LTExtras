@@ -24,7 +24,7 @@ public class CollectibleBasketItem extends Item {
             CollectibleStore collectibles = CollectibleStore.get(serverPlayer);
             if (!collectibles.isLocked()) {
                 collectibles.markSeen();
-                PacketDistributor.sendToPlayer(serverPlayer, new ClientboundOpenCollectibleBasketPacket());
+                PacketDistributor.sendToPlayer(serverPlayer, ClientboundOpenCollectibleBasketPacket.INSTANCE);
             } else {
                 serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLES_LOCKED.get().withStyle(ChatFormatting.RED), true);
             }

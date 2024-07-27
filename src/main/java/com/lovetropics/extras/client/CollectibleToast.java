@@ -9,6 +9,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.CommonColors;
@@ -27,8 +28,8 @@ public class CollectibleToast implements Toast {
     private final Component name;
     private final Minecraft minecraft = Minecraft.getInstance();
 
-    public CollectibleToast(Collectible collectible) {
-        stack = collectible.createItemStack(Util.NIL_UUID);
+    public CollectibleToast(Holder<Collectible> collectible) {
+        stack = Collectible.createItemStack(collectible, Util.NIL_UUID);
         name = Component.empty().withStyle(ChatFormatting.DARK_RED).append(stack.getHoverName());
     }
 

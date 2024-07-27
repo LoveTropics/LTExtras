@@ -2,6 +2,7 @@ package com.lovetropics.extras.collectible;
 
 import com.lovetropics.extras.LTExtras;
 import net.minecraft.SharedConstants;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -37,7 +38,7 @@ public class CollectibleItemBehavior {
     @SubscribeEvent
     public static void onItemPickup(ItemEntityPickupEvent.Pre event) {
         ItemStack stack = event.getItemEntity().getItem();
-        Collectible collectible = Collectible.byItem(stack);
+        Holder<Collectible> collectible = Collectible.byItem(stack);
         if (collectible == null) {
             return;
         }
@@ -50,7 +51,7 @@ public class CollectibleItemBehavior {
         } else {
             CollectibleStore store = CollectibleStore.get(player);
             store.give(collectible);
-            Collectible.addMarkerTo(player.getUUID(), stack);
+            Collectible.addMarkerTo(player.getUUID(), collectible, stack);
         }
     }
 

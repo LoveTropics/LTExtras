@@ -1,5 +1,6 @@
 package com.lovetropics.extras;
 
+import com.lovetropics.extras.collectible.CollectibleMarker;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.ImageData;
 import com.mojang.serialization.Codec;
@@ -18,9 +19,9 @@ public class ExtraDataComponents {
     public static final DeferredRegister.DataComponents REGISTER = DeferredRegister.createDataComponents(LTExtras.MODID);
 
     // Components for specific items
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<UUID>> COLLECTIBLE_OWNER = REGISTER.registerComponentType(
-            "collectible_owner",
-            builder -> builder.persistent(UUIDUtil.CODEC).networkSynchronized(UUIDUtil.STREAM_CODEC)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleMarker>> COLLECTIBLE = REGISTER.registerComponentType(
+            "collectible",
+            builder -> builder.persistent(CollectibleMarker.CODEC).networkSynchronized(CollectibleMarker.STREAM_CODEC)
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleCompassItem.Target>> COLLECTIBLE_TARGET = REGISTER.registerComponentType(
             "collectible_target",
@@ -47,11 +48,5 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ImageData>> IMAGE = REGISTER.registerComponentType(
             "image",
             builder -> builder.persistent(ImageData.CODEC)
-    );
-
-    // Markers
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> DONATION_GOAL = REGISTER.registerComponentType(
-            "donation_goal",
-            builder -> builder.persistent(Codec.unit(Unit.INSTANCE)).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
     );
 }

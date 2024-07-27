@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -166,8 +167,8 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
     }
 
-    private void tryPickCollectible(@NotNull Slot slot, CollectibleSlot collectibleSlot) {
-        Collectible collectible = collectibleSlot.getCollectible();
+    private void tryPickCollectible(Slot slot, CollectibleSlot collectibleSlot) {
+        Holder<Collectible> collectible = collectibleSlot.getCollectible();
         if (collectible != null) {
             menu.setCarried(slot.getItem().copy());
             PacketDistributor.sendToServer(new ServerboundPickCollectibleItemPacket(collectible));
@@ -175,7 +176,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     private void tryReturnCollectible(ItemStack carried) {
-        Collectible carriedCollectible = Collectible.byItem(carried);
+        Holder<Collectible> carriedCollectible = Collectible.byItem(carried);
         if (carriedCollectible != null) {
             menu.setCarried(ItemStack.EMPTY);
             PacketDistributor.sendToServer(new ServerboundReturnCollectibleItemPacket(carriedCollectible));
@@ -262,7 +263,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
 
         @Nullable
-        public Collectible getCollectible() {
+        public Holder<Collectible> getCollectible() {
             return container.getCollectible(index);
         }
     }
@@ -290,8 +291,8 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
 
         @Nullable
-        public Collectible getCollectible(int slot) {
-            List<Collectible> collectibles = list.collectibles();
+        public Holder<Collectible> getCollectible(int slot) {
+            List<Holder<Collectible>> collectibles = list.collectibles();
             int index = getIndexForSlot(slot);
             if (index >= 0 && index < collectibles.size()) {
                 return collectibles.get(index);

@@ -2,6 +2,7 @@ package com.lovetropics.extras.mixin.collectible;
 
 import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.collectible.CollectibleStore;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MerchantResultSlot;
 import net.minecraft.world.item.ItemStack;
@@ -20,12 +21,12 @@ public class MerchantResultSlotMixin {
 
     @Inject(method = "checkTakeAchievements", at = @At("HEAD"))
     private void onTake(ItemStack stack, CallbackInfo ci) {
-        Collectible collectible = Collectible.byItem(stack);
+        Holder<Collectible> collectible = Collectible.byItem(stack);
         if (collectible == null) {
             return;
         }
         CollectibleStore store = CollectibleStore.get(player);
         store.give(collectible);
-        Collectible.addMarkerTo(player.getUUID(), stack);
+        Collectible.addMarkerTo(player.getUUID(), collectible, stack);
     }
 }
