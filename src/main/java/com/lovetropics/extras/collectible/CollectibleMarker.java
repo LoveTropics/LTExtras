@@ -13,16 +13,16 @@ import java.util.UUID;
 
 public record CollectibleMarker(
         Optional<Holder<Collectible>> collectible,
-        UUID ownerId
+        Optional<UUID> ownerId
 ) {
     public static final Codec<CollectibleMarker> CODEC = RecordCodecBuilder.create(i -> i.group(
             Collectible.CODEC.optionalFieldOf("id").forGetter(CollectibleMarker::collectible),
-            UUIDUtil.CODEC.fieldOf("owner").forGetter(CollectibleMarker::ownerId)
+            UUIDUtil.CODEC.optionalFieldOf("owner").forGetter(CollectibleMarker::ownerId)
     ).apply(i, CollectibleMarker::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CollectibleMarker> STREAM_CODEC = StreamCodec.composite(
             Collectible.STREAM_CODEC.apply(ByteBufCodecs::optional), CollectibleMarker::collectible,
-            UUIDUtil.STREAM_CODEC, CollectibleMarker::ownerId,
+            UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs::optional), CollectibleMarker::ownerId,
             CollectibleMarker::new
     );
 }

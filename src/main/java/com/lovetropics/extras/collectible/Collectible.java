@@ -66,7 +66,10 @@ public class Collectible implements DataComponentHolder {
 
     public static boolean isIllegalCollectible(ItemStack stack, Player player) {
         CollectibleMarker marker = stack.get(ExtraDataComponents.COLLECTIBLE);
-        return marker != null && !player.getUUID().equals(marker.ownerId());
+        if (marker == null) {
+            return false;
+        }
+        return marker.ownerId().isPresent() && !player.getUUID().equals(marker.ownerId().get());
     }
 
     public static ItemStack createItemStack(Holder<Collectible> collectible, UUID player) {
@@ -79,7 +82,7 @@ public class Collectible implements DataComponentHolder {
     public static void addMarkerTo(UUID player, Holder<Collectible> collectible, ItemStack stack) {
         stack.set(ExtraDataComponents.COLLECTIBLE, new CollectibleMarker(
                 collectible.kind() == Holder.Kind.REFERENCE ? Optional.of(collectible) : Optional.empty(),
-                player
+                Optional.of(player)
         ));
     }
 
