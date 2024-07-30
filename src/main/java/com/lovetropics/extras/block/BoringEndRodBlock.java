@@ -13,11 +13,6 @@ public class BoringEndRodBlock extends EndRodBlock {
     }
 
     @Override
-    public MapCodec<EndRodBlock> codec() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
         //It's boring, so don't animate!
     }
