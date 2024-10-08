@@ -1,10 +1,8 @@
 package com.lovetropics.extras.entity;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.client.entity.CollectibleEntityRenderer;
-import com.lovetropics.extras.client.entity.HologramEntityRenderer;
-import com.lovetropics.extras.client.entity.PartyBeamRenderer;
-import com.lovetropics.extras.client.entity.RaveKoaRenderer;
+import com.lovetropics.extras.block.entity.SeatEntity;
+import com.lovetropics.extras.client.entity.*;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntity;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDJ;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDance1;
@@ -79,6 +77,16 @@ public class ExtraEntities {
 			.attributes(RaveKoaEntity::createAttributes)
 			.renderer(() -> RaveKoaRenderer::new)
 			.register();
+
+    public static final EntityEntry<SeatEntity> SEAT = REGISTRATE.entity("seat", SeatEntity::new, MobCategory.MISC)
+            .defaultLang()
+            .properties(builder -> builder
+                    .sized(0.50f, 0.50f)
+                    .clientTrackingRange(2)
+                    .updateInterval(SharedConstants.TICKS_PER_MINUTE)
+            )
+            .renderer(() -> SeatRenderer::new)
+            .register();
 
 	public static void init() {
 	}

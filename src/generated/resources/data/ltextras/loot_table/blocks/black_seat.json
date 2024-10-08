@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "ltextras:black_seat"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "ltextras:blocks/black_seat"
+}

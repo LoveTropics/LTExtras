@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ltextras:imposter_horn_coral"
+          "name": "ltextras:gray_seat"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "ltextras:blocks/imposter_horn_coral"
+  "random_sequence": "ltextras:blocks/gray_seat"
 }

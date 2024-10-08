@@ -1,28 +1,6 @@
 package com.lovetropics.extras;
 
-import com.lovetropics.extras.block.BoringEndRodBlock;
-import com.lovetropics.extras.block.CheckpointBlock;
-import com.lovetropics.extras.block.CurtainBlock;
-import com.lovetropics.extras.block.CustomSeagrassBlock;
-import com.lovetropics.extras.block.CustomSugarCaneBlock;
-import com.lovetropics.extras.block.CustomTallSeagrassBlock;
-import com.lovetropics.extras.block.FakeWaterBlock;
-import com.lovetropics.extras.block.GirderBlock;
-import com.lovetropics.extras.block.GlowSticksBlock;
-import com.lovetropics.extras.block.ImposterCoralBlock;
-import com.lovetropics.extras.block.LightweightBarrierBlock;
-import com.lovetropics.extras.block.MobControllerBlock;
-import com.lovetropics.extras.block.PanelBlock;
-import com.lovetropics.extras.block.ParticleEmitterBlock;
-import com.lovetropics.extras.block.PassableBarrierBlock;
-import com.lovetropics.extras.block.PianguasBlock;
-import com.lovetropics.extras.block.ReedsBlock;
-import com.lovetropics.extras.block.RopeBlock;
-import com.lovetropics.extras.block.ScientificNameBlock;
-import com.lovetropics.extras.block.SpeedyBlock;
-import com.lovetropics.extras.block.SubmergedLilyBlock;
-import com.lovetropics.extras.block.ThornStemBlock;
-import com.lovetropics.extras.block.WaterBarrierBlock;
+import com.lovetropics.extras.block.*;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
@@ -55,11 +33,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PlaceOnWaterBlockItem;
-import net.minecraft.world.item.ScaffoldingBlockItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
@@ -104,10 +78,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.lovetropics.extras.data.ModelGenUtil.*;
 
@@ -865,6 +841,30 @@ public class ExtraBlocks {
             .model((ctx, prov) -> prov.blockSprite(ctx))
             .build()
             .register();
+
+    public static final Set<BlockEntry<SeatBlock>> SEAT_BLOCKS = Stream.of(DyeColor.values())
+            .map(ExtraBlocks::seat)
+            .collect(Collectors.toSet());
+
+	private static BlockEntry<SeatBlock> seat(DyeColor dyeColor) {
+		final String color = dyeColor.getName();
+		return REGISTRATE.block(dyeColor.getName() + "_seat", SeatBlock::new)
+				.initialProperties(() -> Blocks.OAK_SLAB)
+				.blockstate((ctx, prov) -> {
+					BlockModelBuilder model = prov.models().withExistingParent(color + "_seat", prov.modLoc("block/seat"))
+							.texture("side", prov.modLoc("block/seat/side_" + color))
+							.texture("top", prov.modLoc("block/seat/top_" + color));
+					prov.simpleBlock(ctx.get(), ConfiguredModel.allYRotations(model, 0, false));
+				})
+				.color(() -> () -> (state, level, pos, index) -> dyeColor.getTextColor())
+				.addLayer(() -> RenderType::cutout)
+				.item()
+				.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/seat"))
+						.texture("side", prov.modLoc("block/seat/side_" + color))
+						.texture("top", prov.modLoc("block/seat/top_" + color)))
+				.build()
+				.register();
+	}
 
 	private static BlockEntry<Block> seagrassBlock(String name) {
 		String scientificName = RegistrateLangProvider.toEnglishName(name);
