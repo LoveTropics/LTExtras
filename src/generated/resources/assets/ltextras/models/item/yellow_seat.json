@@ -1,7 +1,3 @@
 {
-  "parent": "ltextras:block/seat",
-  "textures": {
-    "side": "ltextras:block/seat/side_yellow",
-    "top": "ltextras:block/seat/top_yellow"
-  }
+  "parent": "ltextras:block/yellow_seat"
 }

@@ -850,19 +850,16 @@ public class ExtraBlocks {
 		final String color = dyeColor.getName();
 		return REGISTRATE.block(dyeColor.getName() + "_seat", SeatBlock::new)
 				.initialProperties(() -> Blocks.OAK_SLAB)
+				.properties(p -> p.sound(SoundType.WOOL))
 				.blockstate((ctx, prov) -> {
-					BlockModelBuilder model = prov.models().withExistingParent(color + "_seat", prov.modLoc("block/seat"))
+					BlockModelBuilder model = prov.models().withExistingParent(color + "_seat", prov.mcLoc("block/oak_slab"))
 							.texture("side", prov.modLoc("block/seat/side_" + color))
 							.texture("top", prov.modLoc("block/seat/top_" + color));
 					prov.simpleBlock(ctx.get(), ConfiguredModel.allYRotations(model, 0, false));
 				})
 				.color(() -> () -> (state, level, pos, index) -> dyeColor.getTextColor())
 				.addLayer(() -> RenderType::cutout)
-				.item()
-				.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/seat"))
-						.texture("side", prov.modLoc("block/seat/side_" + color))
-						.texture("top", prov.modLoc("block/seat/top_" + color)))
-				.build()
+				.simpleItem()
 				.register();
 	}
 
