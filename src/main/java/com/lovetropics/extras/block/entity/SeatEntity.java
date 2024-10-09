@@ -15,6 +15,12 @@ public class SeatEntity extends Entity implements PlayerRideable {
     }
 
     @Override
+    protected void removePassenger(final Entity passenger) {
+        super.removePassenger(passenger);
+        remove(RemovalReason.DISCARDED);
+    }
+
+    @Override
     protected void defineSynchedData(final SynchedEntityData.Builder builder) {
 
     }
