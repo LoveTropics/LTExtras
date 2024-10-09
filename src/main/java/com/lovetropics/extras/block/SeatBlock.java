@@ -16,9 +16,12 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SeatBlock extends SlabBlock {
 
@@ -34,13 +37,20 @@ public class SeatBlock extends SlabBlock {
             return InteractionResult.PASS;
         }
 
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
+
+        final List<SeatEntity> foundSeats = level.getEntitiesOfClass(SeatEntity.class, new AABB(pos));
+
+        if (!foundSeats.isEmpty() && !foundSeats.stream().allMatch(seat -> seat.getPassengers().isEmpty())) {
+            return InteractionResult.FAIL;
+        }
+
         final SeatEntity seatEntity = new SeatEntity(ExtraEntities.SEAT.get(), level);
         seatEntity.setPos(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
         level.addFreshEntity(seatEntity);
         player.startRiding(seatEntity);
-
-        System.out.println("sitter");
-
 
         return InteractionResult.SUCCESS;
     }
