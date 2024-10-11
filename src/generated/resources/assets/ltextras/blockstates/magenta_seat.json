@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "ltextras:block/magenta_seat"
+      },
+      {
+        "model": "ltextras:block/magenta_seat",
+        "y": 90
+      },
+      {
+        "model": "ltextras:block/magenta_seat",
+        "y": 180
+      },
+      {
+        "model": "ltextras:block/magenta_seat",
+        "y": 270
+      }
+    ]
+  }
+}

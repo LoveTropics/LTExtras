@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/oak_slab",
+  "textures": {
+    "side": "ltextras:block/seat/side_gray",
+    "top": "ltextras:block/seat/top_gray"
+  }
+}

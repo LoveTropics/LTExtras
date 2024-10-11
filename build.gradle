@@ -37,7 +37,7 @@ neoForge {
     runs {
         client {
             client()
-            programArguments.addAll '--username', 'Dev###'
+            programArguments.addAll '--username', 'Dev' + new Random().nextInt(999)
         }
 
         server {
