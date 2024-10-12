@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
 
-@Mixin({ServerAdvancementManager.class, RecipeManager.class})
-public class DropVanillaAdvancementsAndRecipesMixin {
+@Mixin({ServerAdvancementManager.class})
+public class DropVanillaAdvancementsMixin {
     @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("HEAD"))
     private void load(Map<ResourceLocation, JsonElement> json, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
         json.keySet().removeIf(path -> path.getNamespace().equals("minecraft") && !isAllowed(path));

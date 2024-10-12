@@ -22,7 +22,7 @@
     "collectible.MerchantResultSlotMixin",
     "collectible.ServerPlayerGameModeMixin",
     "collectible.SlotMixin",
-    "no_vanilla.DropVanillaAdvancementsAndRecipesMixin",
+    "no_vanilla.DropVanillaAdvancementsMixin",
     "perf.BiomeManagerMixin"
   ],
   "client": [
