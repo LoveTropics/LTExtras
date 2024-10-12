@@ -1,14 +1,14 @@
 {
   "values": [
-    "ltextras:black_concrete_powder_stairs",
     "ltextras:moss_block_stairs",
+    "ltextras:rusty_painted_metal_stairs",
+    "ltextras:black_concrete_powder_stairs",
     "ltextras:cracked_stone_bricks_stairs",
     "ltextras:gold_block_stairs",
-    "ltextras:rusty_painted_metal_stairs",
-    "ltextras:black_concrete_powder_slab",
     "ltextras:moss_block_slab",
+    "ltextras:rusty_painted_metal_slab",
+    "ltextras:black_concrete_powder_slab",
     "ltextras:cracked_stone_bricks_slab",
-    "ltextras:gold_block_slab",
-    "ltextras:rusty_painted_metal_slab"
+    "ltextras:gold_block_slab"
   ]
 }

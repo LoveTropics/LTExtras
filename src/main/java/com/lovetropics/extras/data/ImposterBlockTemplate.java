@@ -37,7 +37,7 @@ public final class ImposterBlockTemplate {
                 case CUBE -> block.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(id)))
                         .simpleItem();
                 case CROSS -> {
-                    ResourceLocation texture = id.withPath("block/");
+                    ResourceLocation texture = id.withPath("block/" + id.getPath());
                     yield block.blockstate((ctx, prov) -> {
                                 prov.simpleBlock(ctx.getEntry(), prov.models().cross(ctx.getName(), texture));
                             })
