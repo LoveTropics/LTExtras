@@ -858,7 +858,6 @@ public class ExtraBlocks {
 						.texture("top", prov.modLoc("block/launchpad_top_nohoriz"))
 						.texture("particle", prov.modLoc("block/launchpad_side"));
 
-
 				//This creates many models. Is there a better way to do this? In BlockModelGenerators I think you can use some sort of selector on the properties...
 				prov.getVariantBuilder(ctx.get()).forAllStatesExcept(state -> {
 					Direction direction = state.getValue(LaunchpadBlock.FACING);
