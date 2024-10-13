@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "ltextras:block/green_wool_ceiling_carpet"
+      }
+    }
+  ]
+}

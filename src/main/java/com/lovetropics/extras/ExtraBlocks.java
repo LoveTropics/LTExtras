@@ -16,9 +16,7 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -863,6 +861,37 @@ public class ExtraBlocks {
             .model((ctx, prov) -> prov.blockSprite(ctx))
             .build()
             .register();
+
+
+	private static final TemplateBuilder<CeilingCarpetBlock, BlockFactory<CeilingCarpetBlock>> CEILING_CARPET_TEMPLATES = new TemplateBuilder<CeilingCarpetBlock, BlockFactory<CeilingCarpetBlock>>()
+			.add(Blocks.SAND, CeilingCarpetBlock::new)
+			.add(Blocks.GREEN_WOOL, CeilingCarpetBlock::new)
+			.add(Blocks.MOSS_BLOCK, CeilingCarpetBlock::new);
+
+	public static final Map<Holder<Block>, BlockEntry<? extends CeilingCarpetBlock>> CEILING_CARPET_BLOCKS = CEILING_CARPET_TEMPLATES
+			.build((object, factory) -> REGISTRATE.block(getName(object) + "_ceiling_carpet", CeilingCarpetBlock::new)
+					.initialProperties(() -> Blocks.WHITE_CARPET)
+					.blockstate((ctx, prov) -> {
+						final MultiPartBlockStateBuilder builder = prov.getMultipartBuilder(ctx.getEntry());
+						final BlockModelBuilder end = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/thin_block"))
+								.texture("particle", prov.blockTexture(object.value()))
+								.element()
+								.from(0, 15, 0)
+								.to(16, 16, 16)
+								.face(Direction.DOWN).texture("#particle").uvs(0, 0, 16, 16).cullface(Direction.DOWN).tintindex(0).end()
+								.face(Direction.UP).texture("#particle").uvs(0, 0, 16, 16).cullface(Direction.UP).tintindex(0).end()
+								.face(Direction.NORTH).texture("#particle").uvs(0, 15, 16, 16).cullface(Direction.NORTH).tintindex(0).end()
+								.face(Direction.SOUTH).texture("#particle").uvs(0, 15, 16, 16).cullface(Direction.SOUTH).tintindex(0).end()
+								.face(Direction.WEST).texture("#particle").uvs(0, 15, 16, 16).cullface(Direction.WEST).tintindex(0).end()
+								.face(Direction.EAST).texture("#particle").uvs(0, 15, 16, 16).cullface(Direction.EAST).tintindex(0).end()
+								.end();
+						builder.part()
+								.modelFile(end).addModel()
+								.end();
+					})
+					.simpleItem()
+					.register()
+			);
 
     public static final Set<BlockEntry<SeatBlock>> SEAT_BLOCKS = Stream.of(DyeColor.values())
             .map(ExtraBlocks::seat)

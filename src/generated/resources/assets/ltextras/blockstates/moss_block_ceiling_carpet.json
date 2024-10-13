@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "ltextras:block/moss_block_ceiling_carpet"
+      }
+    }
+  ]
+}
