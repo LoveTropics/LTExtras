@@ -544,11 +544,31 @@ public class ExtraBlocks {
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent(ctx.getName(), "block/crying_obsidian")))
 			.register();
 
+	private static final List<Block> CONCRETE_POWDERS = List.of(
+			Blocks.WHITE_CONCRETE_POWDER,
+			Blocks.ORANGE_CONCRETE_POWDER,
+			Blocks.MAGENTA_CONCRETE_POWDER,
+			Blocks.LIGHT_BLUE_CONCRETE_POWDER,
+			Blocks.YELLOW_CONCRETE_POWDER,
+			Blocks.LIME_CONCRETE_POWDER,
+			Blocks.PINK_CONCRETE_POWDER,
+			Blocks.GRAY_CONCRETE_POWDER,
+			Blocks.LIGHT_GRAY_CONCRETE_POWDER,
+			Blocks.CYAN_CONCRETE_POWDER,
+			Blocks.PURPLE_CONCRETE_POWDER,
+			Blocks.BLUE_CONCRETE_POWDER,
+			Blocks.BROWN_CONCRETE_POWDER,
+			Blocks.GREEN_CONCRETE_POWDER,
+			Blocks.RED_CONCRETE_POWDER,
+			Blocks.BLACK_CONCRETE_POWDER
+	);
+
 	private static final TemplateBuilder<Block, ImposterBlockTemplate> IMPOSTER_BLOCK_TEMPLATES = new TemplateBuilder<Block, ImposterBlockTemplate>()
 			.add(Blocks.BRAIN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.BUBBLE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.HORN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.TUBE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
+			.add(CONCRETE_POWDERS, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.BRAIN_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
 			.add(Blocks.BUBBLE_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
 			.add(Blocks.HORN_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
@@ -568,14 +588,14 @@ public class ExtraBlocks {
 	private static final TemplateBuilder<StairBlock, TextureType> STAIR_TEMPLATES = new TemplateBuilder<StairBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
-			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.normal())
+			.add(CONCRETE_POWDERS, TextureType.normal())
 			.add(RUSTY_PAINTED_METAL, TextureType.normal())
 			.add(Blocks.MOSS_BLOCK, TextureType.normal());
 
 	private static final TemplateBuilder<SlabBlock, TextureType> SLAB_TEMPLATES = new TemplateBuilder<SlabBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
-			.add(Blocks.BLACK_CONCRETE_POWDER, TextureType.normal())
+			.add(CONCRETE_POWDERS, TextureType.normal())
 			.add(RUSTY_PAINTED_METAL, TextureType.normal())
 			.add(Blocks.MOSS_BLOCK, TextureType.normal());
 
@@ -904,6 +924,13 @@ public class ExtraBlocks {
 
 		public TemplateBuilder<T, P> add(Block block, P parameter) {
 			return add(block.builtInRegistryHolder(), parameter);
+		}
+
+		public TemplateBuilder<T, P> add(List<Block> blocks, P parameter) {
+			for (Block block : blocks) {
+				add(block, parameter);
+			}
+			return this;
 		}
 
 		public TemplateBuilder<T, P> add(ResourceLocation id, P parameter) {

@@ -1,12 +1,12 @@
 {
   "values": [
     "ltextras:rusty_painted_metal_wall",
-    "ltextras:polished_andesite_wall",
-    "ltextras:quartz_block_wall",
-    "ltextras:gold_block_wall",
-    "ltextras:cracked_stone_bricks_wall",
-    "ltextras:polished_granite_wall",
     "ltextras:polished_diorite_wall",
-    "ltextras:stone_wall"
+    "ltextras:polished_granite_wall",
+    "ltextras:quartz_block_wall",
+    "ltextras:polished_andesite_wall",
+    "ltextras:stone_wall",
+    "ltextras:cracked_stone_bricks_wall",
+    "ltextras:gold_block_wall"
   ]
 }
