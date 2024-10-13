@@ -16,6 +16,8 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
@@ -920,7 +922,7 @@ public class ExtraBlocks {
 	}
 
 	public static final class TemplateBuilder<T extends Block, P> {
-		private final Map<Holder<Block>, P> templates = new Object2ObjectOpenHashMap<>();
+		private final Map<Holder<Block>, P> templates = new Object2ObjectLinkedOpenHashMap<>();
 
 		public TemplateBuilder<T, P> add(Block block, P parameter) {
 			return add(block.builtInRegistryHolder(), parameter);
