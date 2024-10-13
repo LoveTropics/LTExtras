@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "ltextras:block/launchpad_top",
+    "particle": "ltextras:block/launchpad_side",
+    "side": "ltextras:block/launchpad_side",
+    "top": "ltextras:block/launchpad_top"
+  }
+}

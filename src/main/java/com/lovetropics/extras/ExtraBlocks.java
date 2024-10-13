@@ -17,6 +17,7 @@ import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -841,6 +842,39 @@ public class ExtraBlocks {
             .model((ctx, prov) -> prov.blockSprite(ctx))
             .build()
             .register();
+
+	private static BlockEntry<LaunchpadBlock> LAUNCHPAD = REGISTRATE.block("launchpad", LaunchpadBlock::new)
+			.initialProperties(() -> Blocks.GRASS_BLOCK)
+			.blockstate((ctx, prov) -> {
+				BlockModelBuilder model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/slab"))
+						.texture("bottom", prov.modLoc("block/launchpad_top"))
+						.texture("side", prov.modLoc("block/launchpad_side"))
+						.texture("top", prov.modLoc("block/launchpad_top"))
+						.texture("particle", prov.modLoc("block/launchpad_side"));
+
+				BlockModelBuilder noHorizontalPowerModel = prov.models().withExistingParent(ctx.getName() + "_nohoriz", prov.mcLoc("block/slab"))
+						.texture("bottom", prov.modLoc("block/launchpad_bottom"))
+						.texture("side", prov.modLoc("block/launchpad_side"))
+						.texture("top", prov.modLoc("block/launchpad_top_nohoriz"))
+						.texture("particle", prov.modLoc("block/launchpad_side"));
+
+
+				//This creates many models. Is there a better way to do this? In BlockModelGenerators I think you can use some sort of selector on the properties...
+				prov.getVariantBuilder(ctx.get()).forAllStatesExcept(state -> {
+					Direction direction = state.getValue(LaunchpadBlock.FACING);
+					boolean noHorizontalPower = state.getValue(LaunchpadBlock.HORIZONTAL_POWER) < 1;
+					BlockModelBuilder selectedModel = noHorizontalPower ? noHorizontalPowerModel : model;
+					int rotationY = ((int) direction.toYRot() + 180) % 360;
+					return ConfiguredModel.builder()
+							.modelFile(selectedModel)
+							.rotationY(rotationY)
+							.build();
+				}, LaunchpadBlock.VERTICAL_POWER);
+
+			})
+			.addLayer(() -> RenderType::solid)
+			.simpleItem()
+			.register();
 
     public static final Set<BlockEntry<SeatBlock>> SEAT_BLOCKS = Stream.of(DyeColor.values())
             .map(ExtraBlocks::seat)
