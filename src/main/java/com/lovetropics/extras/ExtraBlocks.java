@@ -563,6 +563,42 @@ public class ExtraBlocks {
 			Blocks.BLACK_CONCRETE_POWDER
 	);
 
+	private static final List<Block> TERRACOTTA_BLOCKS = List.of(
+			Blocks.TERRACOTTA,
+			Blocks.WHITE_TERRACOTTA,
+			Blocks.ORANGE_TERRACOTTA,
+			Blocks.MAGENTA_TERRACOTTA,
+			Blocks.LIGHT_BLUE_TERRACOTTA,
+			Blocks.YELLOW_TERRACOTTA,
+			Blocks.LIME_TERRACOTTA,
+			Blocks.PINK_TERRACOTTA,
+			Blocks.GRAY_TERRACOTTA,
+			Blocks.LIGHT_GRAY_TERRACOTTA,
+			Blocks.CYAN_TERRACOTTA,
+			Blocks.PURPLE_TERRACOTTA,
+			Blocks.BLUE_TERRACOTTA,
+			Blocks.BROWN_TERRACOTTA,
+			Blocks.GREEN_TERRACOTTA,
+			Blocks.RED_TERRACOTTA,
+			Blocks.BLACK_TERRACOTTA,
+			Blocks.WHITE_GLAZED_TERRACOTTA,
+			Blocks.ORANGE_GLAZED_TERRACOTTA,
+			Blocks.MAGENTA_GLAZED_TERRACOTTA,
+			Blocks.LIGHT_BLUE_GLAZED_TERRACOTTA,
+			Blocks.YELLOW_GLAZED_TERRACOTTA,
+			Blocks.LIME_GLAZED_TERRACOTTA,
+			Blocks.PINK_GLAZED_TERRACOTTA,
+			Blocks.GRAY_GLAZED_TERRACOTTA,
+			Blocks.LIGHT_GRAY_GLAZED_TERRACOTTA,
+			Blocks.CYAN_GLAZED_TERRACOTTA,
+			Blocks.PURPLE_GLAZED_TERRACOTTA,
+			Blocks.BLUE_GLAZED_TERRACOTTA,
+			Blocks.BROWN_GLAZED_TERRACOTTA,
+			Blocks.GREEN_GLAZED_TERRACOTTA,
+			Blocks.RED_GLAZED_TERRACOTTA,
+			Blocks.BLACK_GLAZED_TERRACOTTA
+	);
+
 	private static final TemplateBuilder<Block, ImposterBlockTemplate> IMPOSTER_BLOCK_TEMPLATES = new TemplateBuilder<Block, ImposterBlockTemplate>()
 			.add(Blocks.BRAIN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.BUBBLE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
@@ -590,14 +626,16 @@ public class ExtraBlocks {
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
 			.add(CONCRETE_POWDERS, TextureType.normal())
 			.add(RUSTY_PAINTED_METAL, TextureType.normal())
-			.add(Blocks.MOSS_BLOCK, TextureType.normal());
+			.add(Blocks.MOSS_BLOCK, TextureType.normal())
+			.add(TERRACOTTA_BLOCKS, TextureType.normal());
 
 	private static final TemplateBuilder<SlabBlock, TextureType> SLAB_TEMPLATES = new TemplateBuilder<SlabBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
 			.add(CONCRETE_POWDERS, TextureType.normal())
 			.add(RUSTY_PAINTED_METAL, TextureType.normal())
-			.add(Blocks.MOSS_BLOCK, TextureType.normal());
+			.add(Blocks.MOSS_BLOCK, TextureType.normal())
+			.add(TERRACOTTA_BLOCKS, TextureType.normal());
 
 	private static final TemplateBuilder<FenceBlock, TextureType> FENCE_TEMPLATES = new TemplateBuilder<FenceBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
@@ -615,7 +653,8 @@ public class ExtraBlocks {
 			.add(Blocks.POLISHED_ANDESITE, TextureType.normal())
 			.add(Blocks.POLISHED_GRANITE, TextureType.normal())
 			.add(Blocks.POLISHED_DIORITE, TextureType.normal())
-			.add(RUSTY_PAINTED_METAL, TextureType.normal());
+			.add(RUSTY_PAINTED_METAL, TextureType.normal())
+			.add(TERRACOTTA_BLOCKS, TextureType.normal());
 
 	public static final Map<Holder<Block>, BlockEntry<? extends StairBlock>> STAIRS = STAIR_TEMPLATES
 			.build((object, textureType) -> REGISTRATE
