@@ -47,7 +47,7 @@ neoForge {
 
         data {
             data()
-            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath(), '--existing-mod', 'tropicraft'
         }
 
         configureEach {
@@ -70,11 +70,13 @@ sourceSets.main.resources {
 repositories {
     maven { url = "https://maven.ithundxr.dev/snapshots/" }
     maven { url = "https://maven.tterrag.com/" }
+    maven { url = "https://api.modrinth.com/maven" }
     mavenLocal()
 }
 
 dependencies {
-    jarJar(implementation("com.tterrag.registrate:Registrate:MC1.21-${registrate_version}")) {
+    // TODO: HACK - We get Registrate at runtime through JarJar from Tropicraft. We should rather prefer to depend on the slim jar.
+    jarJar(compileOnly("com.tterrag.registrate:Registrate:MC1.21-${registrate_version}")) {
         version {
             strictly "[MC1.21-${registrate_version},MC1.22)"
             prefer "MC1.21-${registrate_version}"
@@ -83,6 +85,8 @@ dependencies {
 
     jarJar(implementation("com.lovetropics.lib:LTLib:$ltlib_version"))
     jarJar(implementation("eu.pb4:placeholder-api-lt:$placeholder_api_version"))
+
+    runtimeOnly 'maven.modrinth:tropicraft:9.7.3-1.21'
 
 //    runtimeOnly fg.deobf('com.jozufozu.flywheel:Flywheel-Forge:1.18-0.7.0.70')
 //    runtimeOnly fg.deobf('com.simibubi.create:Create:mc1.18.2_v0.4.1+113')
