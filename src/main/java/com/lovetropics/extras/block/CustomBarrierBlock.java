@@ -34,7 +34,7 @@ public abstract class CustomBarrierBlock extends BarrierBlock {
 		}
 	}
 
-	private boolean isHoldingBarrier(Player player) {
+	protected boolean isHoldingBarrier(Player player) {
 		Item item = asItem();
 		return player.getMainHandItem().getItem() == item
 				|| player.getOffhandItem().getItem() == item;

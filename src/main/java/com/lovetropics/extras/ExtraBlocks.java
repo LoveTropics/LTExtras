@@ -123,6 +123,16 @@ public class ExtraBlocks {
 			.build()
 			.register();
 
+	public static final BlockEntry<PassableNoPlaceBarrierBlock> PASSABLE_NO_PLACE_BARRIER = REGISTRATE.block("passable_no_place_barrier", PassableNoPlaceBarrierBlock::new)
+			.initialProperties(() -> Blocks.BARRIER)
+			.properties(p -> p.noLootTable())
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
+					prov.models().getBuilder(ctx.getName()).texture("particle", ResourceLocation.withDefaultNamespace("item/barrier"))))
+			.item()
+			.model((ctx, prov) -> prov.generated(ctx::getEntry, ResourceLocation.withDefaultNamespace("item/barrier")))
+			.build()
+			.register();
+
 	public static final BlockEntry<FakeWaterBlock> FAKE_WATER = REGISTRATE.block("fake_water", FakeWaterBlock::new)
 			.initialProperties(() -> Blocks.BARRIER)
 			.properties(p -> p.noLootTable())
