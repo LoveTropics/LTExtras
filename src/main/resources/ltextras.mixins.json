@@ -7,6 +7,7 @@
   "mixins": [
     "BlockMixin",
     "BlockPropertiesMixin",
+    "BlockStateExtensionMixin",
     "CreatureEntityMixin",
     "DedicatedServerMixin",
     "FluidStateMixin",

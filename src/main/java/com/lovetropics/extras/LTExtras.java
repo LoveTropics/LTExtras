@@ -20,9 +20,13 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,6 +44,7 @@ import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 
 import javax.annotation.Nullable;
 import java.util.regex.Pattern;
@@ -63,6 +68,12 @@ public class LTExtras {
 		return REGISTRATE;
 	}
 
+	public static final Holder<Attribute> FRICTION = registrate().simple(
+			"friction",
+			Registries.ATTRIBUTE,
+			() -> new RangedAttribute("ltextras.friction", 1D, 0D, 1024D).setSyncable(true)
+	);
+
 	public LTExtras(IEventBus modBus, ModContainer container) {
 		ExtraBlocks.init();
 		ExtraItems.init();
@@ -75,6 +86,7 @@ public class LTExtras {
 
 		NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
 		NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
+		modBus.addListener(this::onModifyAttributes);
 
 		ExtraLangKeys.init(registrate());
 		registrate()
@@ -86,6 +98,8 @@ public class LTExtras {
 					p.add("spawnitems.set_not_restorable", "The spawn item set %s cannot be restored!");
 					p.add("spawnitems.unknown_set", "Unknown spawn item set: %s");
 					p.add("spawnitems.restored_successfully", "Items restored!");
+
+					p.add("ltextras.friction", "Friction");
 
 					TpCommand.addTranslations(p);
 					WarpCommand.addTranslations(p);
@@ -125,6 +139,10 @@ public class LTExtras {
 	private void onRegisterClientCommands(RegisterClientCommandsEvent event) {
 		CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
 		RenderPlayerNameTagCommand.register(dispatcher);
+	}
+
+	private void onModifyAttributes(EntityAttributeModificationEvent event) {
+		event.add(EntityType.PLAYER, FRICTION);
 	}
 
 	public static ResourceLocation location(String path) {
