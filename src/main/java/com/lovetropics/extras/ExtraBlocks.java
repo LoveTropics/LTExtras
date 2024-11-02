@@ -537,7 +537,7 @@ public class ExtraBlocks {
 			.add(Blocks.SPRUCE_SLAB, SpeedyBlock::slab)
 			.add(Blocks.PACKED_MUD, SpeedyBlock::opaque)
 			.add(Blocks.MUD_BRICKS, SpeedyBlock::opaque)
-			.add(Blocks.MUD_BRICK_SLAB, SpeedyBlock::opaque)
+			.add(Blocks.MUD_BRICK_SLAB, SpeedyBlock::slab)
 			.add(ResourceLocation.fromNamespaceAndPath("tropicraft", "chunk"), SpeedyBlock::opaque);
 
 	public static final Map<Holder<Block>, BlockEntry<? extends SpeedyBlock>> SPEEDY_BLOCKS = SPEEDY_BLOCK_TEMPLATES
