@@ -284,6 +284,7 @@ public class ExtraBlocks {
 
 	public static final BlockEntry<Block> BLACK_CONCRETE_POWDER_FAKE = REGISTRATE.block("black_concrete_powder_fake", Block::new)
 			.initialProperties(() -> Blocks.DIRT)
+			.properties(p -> p.sound(SoundType.SAND))
 			.item()
 				.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), ResourceLocation.withDefaultNamespace("block/black_concrete_powder")))
 				.build()
