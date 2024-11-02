@@ -41,17 +41,18 @@ public class ItemExtensions {
     }
 
     public static void onItemUsedOn(ServerPlayer player, ItemStack stack, UseOnContext context) {
-        applyCooldownOverride(player, stack);
-    }
+		if (!player.isUsingItem()) {
+			applyCooldownOverride(player, stack);
+		}
+	}
 
     public static void onItemUsed(ServerPlayer player, ItemStack stack) {
-        applyCooldownOverride(player, stack);
-    }
+		if (!player.isUsingItem()) {
+			applyCooldownOverride(player, stack);
+		}
+	}
 
     private static void applyCooldownOverride(ServerPlayer player, ItemStack stack) {
-        if (player.isUsingItem()) {
-            return;
-        }
         int cooldown = stack.getOrDefault(ExtraDataComponents.COOLDOWN_OVERRIDE, 0);
         if (cooldown != 0) {
             player.getCooldowns().addCooldown(stack.getItem(), cooldown);
@@ -62,10 +63,15 @@ public class ItemExtensions {
     public static void onItemFinishedUsing(LivingEntityUseItemEvent.Finish event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             ItemStack stack = event.getItem();
-            int cooldown = stack.getOrDefault(ExtraDataComponents.COOLDOWN_OVERRIDE, 0);
-            if (cooldown != 0) {
-                player.getCooldowns().addCooldown(event.getItem().getItem(), cooldown);
-            }
+            applyCooldownOverride(player, stack);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onItemStoppedUsing(LivingEntityUseItemEvent.Stop event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            ItemStack stack = event.getItem();
+            applyCooldownOverride(player, stack);
         }
     }
 }
