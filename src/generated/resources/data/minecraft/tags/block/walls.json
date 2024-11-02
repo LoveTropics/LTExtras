@@ -44,6 +44,22 @@
     "ltextras:brown_glazed_terracotta_wall",
     "ltextras:green_glazed_terracotta_wall",
     "ltextras:red_glazed_terracotta_wall",
-    "ltextras:black_glazed_terracotta_wall"
+    "ltextras:black_glazed_terracotta_wall",
+    "ltextras:white_concrete_wall",
+    "ltextras:orange_concrete_wall",
+    "ltextras:magenta_concrete_wall",
+    "ltextras:light_blue_concrete_wall",
+    "ltextras:yellow_concrete_wall",
+    "ltextras:lime_concrete_wall",
+    "ltextras:pink_concrete_wall",
+    "ltextras:gray_concrete_wall",
+    "ltextras:light_gray_concrete_wall",
+    "ltextras:cyan_concrete_wall",
+    "ltextras:purple_concrete_wall",
+    "ltextras:blue_concrete_wall",
+    "ltextras:brown_concrete_wall",
+    "ltextras:green_concrete_wall",
+    "ltextras:red_concrete_wall",
+    "ltextras:black_concrete_wall"
   ]
 }

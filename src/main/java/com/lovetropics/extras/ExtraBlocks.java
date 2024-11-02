@@ -577,6 +577,25 @@ public class ExtraBlocks {
 			Blocks.BLACK_CONCRETE_POWDER
 	);
 
+	private static final List<Block> CONCRETES = List.of(
+			Blocks.WHITE_CONCRETE,
+			Blocks.ORANGE_CONCRETE,
+			Blocks.MAGENTA_CONCRETE,
+			Blocks.LIGHT_BLUE_CONCRETE,
+			Blocks.YELLOW_CONCRETE,
+			Blocks.LIME_CONCRETE,
+			Blocks.PINK_CONCRETE,
+			Blocks.GRAY_CONCRETE,
+			Blocks.LIGHT_GRAY_CONCRETE,
+			Blocks.CYAN_CONCRETE,
+			Blocks.PURPLE_CONCRETE,
+			Blocks.BLUE_CONCRETE,
+			Blocks.BROWN_CONCRETE,
+			Blocks.GREEN_CONCRETE,
+			Blocks.RED_CONCRETE,
+			Blocks.BLACK_CONCRETE
+	);
+
 	private static final List<Block> TERRACOTTA_BLOCKS = List.of(
 			Blocks.TERRACOTTA,
 			Blocks.WHITE_TERRACOTTA,
@@ -639,6 +658,7 @@ public class ExtraBlocks {
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
 			.add(CONCRETE_POWDERS, TextureType.normal())
+			.add(CONCRETES, TextureType.normal())
 			.add(RUSTY_PAINTED_METAL, TextureType.normal())
 			.add(Blocks.MOSS_BLOCK, TextureType.normal())
 			.add(TERRACOTTA_BLOCKS, TextureType.normal())
@@ -650,6 +670,7 @@ public class ExtraBlocks {
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
 			.add(Blocks.CRACKED_STONE_BRICKS, TextureType.normal())
 			.add(CONCRETE_POWDERS, TextureType.normal())
+			.add(CONCRETES, TextureType.normal())
 			.add(RUSTY_PAINTED_METAL, TextureType.normal())
 			.add(Blocks.MOSS_BLOCK, TextureType.normal())
 			.add(TERRACOTTA_BLOCKS, TextureType.normal())
@@ -678,7 +699,8 @@ public class ExtraBlocks {
 			.add(Blocks.TUFF, TextureType.normal())
 			.add(Blocks.SMOOTH_QUARTZ, TextureType.allWithSuffix(Blocks.QUARTZ_BLOCK, "bottom"))
 			.add(RUSTY_PAINTED_METAL, TextureType.normal())
-			.add(TERRACOTTA_BLOCKS, TextureType.normal());
+			.add(TERRACOTTA_BLOCKS, TextureType.normal())
+			.add(CONCRETES, TextureType.normal());
 
 	public static final Map<Holder<Block>, BlockEntry<? extends StairBlock>> STAIRS = STAIR_TEMPLATES
 			.build((object, textureType) -> REGISTRATE
