@@ -53,6 +53,9 @@
     "ltextras:green_glazed_terracotta_stairs",
     "ltextras:red_glazed_terracotta_stairs",
     "ltextras:black_glazed_terracotta_stairs",
+    "ltextras:calcite_stairs",
+    "ltextras:soul_soil_stairs",
+    "ltextras:tuff_stairs",
     "ltextras:gold_block_slab",
     "ltextras:cracked_stone_bricks_slab",
     "ltextras:white_concrete_powder_slab",
@@ -105,6 +108,9 @@
     "ltextras:brown_glazed_terracotta_slab",
     "ltextras:green_glazed_terracotta_slab",
     "ltextras:red_glazed_terracotta_slab",
-    "ltextras:black_glazed_terracotta_slab"
+    "ltextras:black_glazed_terracotta_slab",
+    "ltextras:calcite_slab",
+    "ltextras:soul_soil_slab",
+    "ltextras:tuff_slab"
   ]
 }

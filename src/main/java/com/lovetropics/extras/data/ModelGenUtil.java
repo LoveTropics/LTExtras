@@ -199,6 +199,10 @@ public class ModelGenUtil {
 			return TextureType.allTexture(ModelGenUtil::blockTexture);
 		}
 
+		static TextureType allWithSuffix(Block donor, String suffix) {
+			return TextureType.allTexture(ignored -> blockTexture(donor.builtInRegistryHolder(), suffix));
+		}
+
 		static TextureType sideTopSuffix() {
 			return new TextureType() {
 				@Override

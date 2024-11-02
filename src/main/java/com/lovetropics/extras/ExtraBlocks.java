@@ -641,7 +641,10 @@ public class ExtraBlocks {
 			.add(CONCRETE_POWDERS, TextureType.normal())
 			.add(RUSTY_PAINTED_METAL, TextureType.normal())
 			.add(Blocks.MOSS_BLOCK, TextureType.normal())
-			.add(TERRACOTTA_BLOCKS, TextureType.normal());
+			.add(TERRACOTTA_BLOCKS, TextureType.normal())
+			.add(Blocks.CALCITE,  TextureType.normal())
+			.add(Blocks.SOUL_SOIL, TextureType.normal())
+			.add(Blocks.TUFF, TextureType.normal());
 
 	private static final TemplateBuilder<SlabBlock, TextureType> SLAB_TEMPLATES = new TemplateBuilder<SlabBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
@@ -649,7 +652,10 @@ public class ExtraBlocks {
 			.add(CONCRETE_POWDERS, TextureType.normal())
 			.add(RUSTY_PAINTED_METAL, TextureType.normal())
 			.add(Blocks.MOSS_BLOCK, TextureType.normal())
-			.add(TERRACOTTA_BLOCKS, TextureType.normal());
+			.add(TERRACOTTA_BLOCKS, TextureType.normal())
+			.add(Blocks.CALCITE, TextureType.normal())
+			.add(Blocks.SOUL_SOIL, TextureType.normal())
+			.add(Blocks.TUFF, TextureType.normal());
 
 	private static final TemplateBuilder<FenceBlock, TextureType> FENCE_TEMPLATES = new TemplateBuilder<FenceBlock, TextureType>()
 			.add(Blocks.GOLD_BLOCK, TextureType.normal())
@@ -667,6 +673,10 @@ public class ExtraBlocks {
 			.add(Blocks.POLISHED_ANDESITE, TextureType.normal())
 			.add(Blocks.POLISHED_GRANITE, TextureType.normal())
 			.add(Blocks.POLISHED_DIORITE, TextureType.normal())
+			.add(Blocks.CALCITE,  TextureType.normal())
+			.add(Blocks.SOUL_SOIL, TextureType.normal())
+			.add(Blocks.TUFF, TextureType.normal())
+			.add(Blocks.SMOOTH_QUARTZ, TextureType.allWithSuffix(Blocks.QUARTZ_BLOCK, "bottom"))
 			.add(RUSTY_PAINTED_METAL, TextureType.normal())
 			.add(TERRACOTTA_BLOCKS, TextureType.normal());
 
