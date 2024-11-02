@@ -198,7 +198,7 @@ public class ExtraBlocks {
 
 	public static final BlockEntry<CheckpointBlock> CHECKPOINT = REGISTRATE.block("checkpoint", CheckpointBlock::new)
 			.initialProperties(() -> Blocks.BEDROCK)
-			.properties(p -> p.noLootTable())
+			.properties(p -> p.noLootTable().noOcclusion())
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
 				.getBuilder(ctx.getName()).texture("particle", prov.mcLoc("item/structure_void"))))
 			.item()
