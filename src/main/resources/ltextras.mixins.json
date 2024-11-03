@@ -24,7 +24,10 @@
     "collectible.ServerPlayerGameModeMixin",
     "collectible.SlotMixin",
     "no_vanilla.DropVanillaAdvancementsMixin",
-    "perf.BiomeManagerMixin"
+    "perf.BiomeManagerMixin",
+    "placeholder.TextDisplayAccessor",
+    "placeholder.TextDisplayMixin",
+    "placeholder.TransformationMixin"
   ],
   "client": [
     "client.LocalPlayerMixin",

@@ -35,16 +35,6 @@ public class ExtraEntities {
 			.renderer(() -> CollectibleEntityRenderer::new)
 			.register();
 
-	public static final EntityEntry<HologramEntity> HOLOGRAM = REGISTRATE.entity("hologram", HologramEntity::new, MobCategory.MISC)
-			.defaultLang()
-			.properties(builder -> builder
-					.sized(0.8f, 0.8f)
-					.clientTrackingRange(8)
-					.updateInterval(SharedConstants.TICKS_PER_SECOND)
-			)
-			.renderer(() -> HologramEntityRenderer::new)
-			.register();
-
 	public static final EntityEntry<RaveKoaEntityDJ> RAVEKOADJ = REGISTRATE.entity("ravekoa_dj", RaveKoaEntityDJ::new, MobCategory.MISC)
 			.defaultLang()
 			.properties(builder -> builder
