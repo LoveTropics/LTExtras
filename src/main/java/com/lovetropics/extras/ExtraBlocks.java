@@ -46,6 +46,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.PipeBlock;
@@ -639,6 +640,7 @@ public class ExtraBlocks {
 			.add(Blocks.HORN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.TUBE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(CONCRETE_POWDERS, ImposterBlockTemplate.simpleCube())
+			.add(Blocks.ICE, ImposterBlockTemplate.halfTransparentCube())
 			.add(Blocks.BRAIN_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
 			.add(Blocks.BUBBLE_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
 			.add(Blocks.HORN_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
