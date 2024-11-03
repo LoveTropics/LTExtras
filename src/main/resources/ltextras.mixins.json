@@ -38,6 +38,7 @@
     "client.perf.ClientWorldMixin",
     "client.perf.ViewFrustumAccess",
     "client.perf.WorldRendererAccess",
+    "client.translation.MinecraftMixin",
     "client.world_effect.ClientLevelMixin"
   ],
   "injectors": {

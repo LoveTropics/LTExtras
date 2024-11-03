@@ -28,20 +28,10 @@ public class ExtrasConfig {
     }
 
     public static final class CategoryTranslation {
-        public final ModConfigSpec.ConfigValue<Boolean> translateOutgoing;
-        public final ModConfigSpec.ConfigValue<Boolean> translateIncoming;
         public final ModConfigSpec.ConfigValue<Boolean> prompted;
 
         private CategoryTranslation() {
             CLIENT_BUILDER.comment("Translation").push("translation");
-
-            translateOutgoing = CLIENT_BUILDER
-                    .comment("True if messages that you send should be translated for other players")
-                    .define("translateOutgoing", true);
-
-            translateIncoming = CLIENT_BUILDER
-                    .comment("True if messages that others send should be translated for you")
-                    .define("translateIncoming", true);
 
             prompted = CLIENT_BUILDER
                     .comment("True if the player has been prompted to select translation options yet")

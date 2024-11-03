@@ -387,6 +387,8 @@
   "item.ltextras.tropicoin": "TropiCoin",
   "itemGroup.ltextras.ltextras": "LTExtras",
   "ltextras.friction": "Friction",
+  "screen.ltextras.translation_prompt.message": "Love Tropics is multi-lingual! We will try our best to translate chat for you - but to do this, we need to know what language you will be speaking and would like to see.\n\nIn-game content is translated for English, Spanish, and French.",
+  "screen.ltextras.translation_prompt.title": "Chat Translation",
   "spawnitems.restored_successfully": "Items restored!",
   "spawnitems.set_not_restorable": "The spawn item set %s cannot be restored!",
   "spawnitems.unknown_set": "Unknown spawn item set: %s",
