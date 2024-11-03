@@ -638,12 +638,14 @@ public class ExtraBlocks {
 			.add(Blocks.BRAIN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.BUBBLE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.HORN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
+			.add(Blocks.FIRE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.TUBE_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
 			.add(CONCRETE_POWDERS, ImposterBlockTemplate.simpleCube())
 			.add(Blocks.ICE, ImposterBlockTemplate.halfTransparentCube())
 			.add(Blocks.BRAIN_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
 			.add(Blocks.BUBBLE_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
 			.add(Blocks.HORN_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
+			.add(Blocks.FIRE_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
 			.add(Blocks.TUBE_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new));
 
 	public static final Map<Holder<Block>, BlockEntry<? extends Block>> IMPOSTER_BLOCKS = IMPOSTER_BLOCK_TEMPLATES
