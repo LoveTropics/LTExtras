@@ -58,6 +58,7 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.TallSeagrassBlock;
 import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -836,6 +837,42 @@ public class ExtraBlocks {
 	public static final BlockEntry<CustomTallSeagrassBlock> TALL_THALASSODENDRON_CILIATUM = CustomTallSeagrassBlock.dropping(THALASSODENDRON_CILIATUM).register();
 	public static final BlockEntry<Block> MATTED_THALASSODENDRON_CILIATUM = mattedSeagrassBlock("thalassodendron_ciliatum");
 	public static final BlockEntry<Block> THALASSODENDRON_CILIATUM_BLOCk = seagrassBlock("thalassodendron_ciliatum");
+
+	public static final BlockEntry<PapyrusStemBlock> PAPYRUS_STEM = REGISTRATE.block("papyrus_stem", PapyrusStemBlock::new)
+			.initialProperties(() -> Blocks.SUGAR_CANE)
+			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry()).forAllStates(state -> {
+							final String type = state.getValue(PapyrusStemBlock.TYPE).getSerializedName();
+							final String modelName = type + "_" + ctx.getName();
+							final ResourceLocation texture = prov.modLoc("block/papyrus/" + modelName);
+
+							return ConfiguredModel.builder().modelFile(prov.models()
+											.withExistingParent(modelName, prov.modLoc("block/papyrus_stem"))
+											.texture("all", texture))
+											.build();
+			}))
+			.addLayer(() -> RenderType::cutout)
+			.item()
+			.model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/papyrus/plain_papyrus_stem")))
+			.build()
+			.register();
+
+	public static final BlockEntry<PapyrusUmbelBlock> PAPYRUS_UMBEL = REGISTRATE.block("papyrus_umbel", PapyrusUmbelBlock::new)
+			.initialProperties(() -> Blocks.SUGAR_CANE)
+			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry()).forAllStates(state -> {
+				final String type = state.getValue(PapyrusStemBlock.TYPE).getSerializedName();
+				final String modelName = type + "_" + ctx.getName();
+				final ResourceLocation texture = prov.modLoc("block/papyrus/" + modelName);
+
+				return ConfiguredModel.builder().modelFile(prov.models()
+								.withExistingParent(modelName, prov.mcLoc("block/sugar_cane"))
+								.texture("cross", texture))
+						.build();
+			}))
+			.addLayer(() -> RenderType::cutout)
+			.item()
+			.model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/papyrus/plain_papyrus_umbel")))
+			.build()
+			.register();
 
 	public static final BlockEntry<SubmergedLilyBlock> SUBMERGED_LILY_PAD = REGISTRATE.block("submerged_lily_pad", SubmergedLilyBlock::new)
 			.lang("Submerged Lily Pad")

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=dead": {
+      "model": "ltextras:block/dead_papyrus_umbel"
+    },
+    "type=dry": {
+      "model": "ltextras:block/dry_papyrus_umbel"
+    },
+    "type=plain": {
+      "model": "ltextras:block/plain_papyrus_umbel"
+    }
+  }
+}
