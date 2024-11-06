@@ -13,19 +13,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import java.util.Set;
 
 public final class PapyrusStemBlock extends Block implements BonemealableBlock {
 
@@ -58,59 +51,40 @@ public final class PapyrusStemBlock extends Block implements BonemealableBlock {
 
     @Override
     protected void randomTick(final BlockState state, final ServerLevel level, final BlockPos pos, final RandomSource random) {
-
-        //if block below is stem, and above is air, grow umbel on top
-        final BlockState stateBelow = level.getBlockState(pos.below());
-        final BlockState stateAbove = level.getBlockState(pos.above());
-
-        boolean aboveIsStem = stateAbove.is(this);
-        boolean aboveIsUmbel = stateAbove.is(ExtraBlocks.PAPYRUS_UMBEL.get());
-        boolean aboveIsAir = level.isEmptyBlock(pos.above());
-        boolean hasReachedMaxHeight = hasStemHeight(level, pos, MAX_HEIGHT);
-        boolean enoughHeightForFlower = hasStemHeight(level, pos, MIN_HEIGHT_FOR_FLOWERS);
-
-        //if above is stem, do nothing
-        if (aboveIsStem || aboveIsUmbel) {
+        if (!canGrow(level, pos)) {
             return;
         }
 
-        //if not reached max height and above is air, 50% to grow taller
-        if (!hasReachedMaxHeight && aboveIsAir && random.nextBoolean()) {
+        //50% to grow taller
+        if (random.nextBoolean()) {
             level.setBlockAndUpdate(pos.above(), defaultBlockState().setValue(TYPE, state.getValue(TYPE)));
             return;
         }
 
-        //if height between 2 and 4, 50% to grow flower
+        //if taller than MIN_HEIGHT_FOR_FLOWERS(2), 50% to grow flower
+        boolean enoughHeightForFlower = hasStemHeightInclusive(level, pos, MIN_HEIGHT_FOR_FLOWERS);
         if (enoughHeightForFlower && random.nextBoolean()) {
+            final BlockState stateBelow = level.getBlockState(pos.below());
             level.setBlockAndUpdate(pos.above(), ExtraBlocks.PAPYRUS_UMBEL.get().defaultBlockState().setValue(PapyrusUmbelBlock.TYPE, stateBelow.getValue(TYPE)));
-            return;
         }
 
         //some chance to stop growing? only if has flower?
     }
 
-    private boolean hasStemHeight(final ServerLevel level, final BlockPos pos, final int height) {
+    private boolean canGrow(final ServerLevel level, final BlockPos pos) {
+        boolean aboveIsEmpty = level.isEmptyBlock(pos.above());
+        boolean hasReachedMaxHeight = hasStemHeightInclusive(level, pos, MAX_HEIGHT);
+
+        return aboveIsEmpty && !hasReachedMaxHeight;
+    }
+
+    private boolean hasStemHeightInclusive(final ServerLevel level, final BlockPos pos, final int height) {
         for (int i = 1; i < height; i++) {
             if (!level.getBlockState(pos.below(i)).is(this)) {
                 return false;
             }
         }
         return true;
-    }
-
-    @Override
-    public boolean isValidBonemealTarget(final LevelReader levelReader, final BlockPos blockPos, final BlockState blockState) {
-        return false;
-    }
-
-    @Override
-    public boolean isBonemealSuccess(final Level level, final RandomSource randomSource, final BlockPos blockPos, final BlockState blockState) {
-        return false;
-    }
-
-    @Override
-    public void performBonemeal(final ServerLevel serverLevel, final RandomSource randomSource, final BlockPos blockPos, final BlockState blockState) {
-
     }
 
     @Override
@@ -138,6 +112,24 @@ public final class PapyrusStemBlock extends Block implements BonemealableBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(TYPE);
+    }
+
+    @Override
+    public void performBonemeal(final ServerLevel serverLevel, final RandomSource randomSource, final BlockPos blockPos, final BlockState blockState) {
+        blockState.randomTick(serverLevel, blockPos, randomSource);
+    }
+
+    @Override
+    public boolean isValidBonemealTarget(final LevelReader levelReader, final BlockPos blockPos, final BlockState blockState) {
+        if (levelReader instanceof final ServerLevel serverLevel) {
+            return canGrow(serverLevel, blockPos);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isBonemealSuccess(final Level level, final RandomSource randomSource, final BlockPos blockPos, final BlockState blockState) {
+        return true;
     }
 
     public enum Type implements StringRepresentable {
