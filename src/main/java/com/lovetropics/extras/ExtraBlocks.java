@@ -840,6 +840,7 @@ public class ExtraBlocks {
 
 	public static final BlockEntry<PapyrusStemBlock> PAPYRUS_STEM = REGISTRATE.block("papyrus_stem", PapyrusStemBlock::new)
 			.initialProperties(() -> Blocks.SUGAR_CANE)
+			.properties(p -> p.sound(SoundType.WOOD))
 			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry()).forAllStates(state -> {
 							final String type = state.getValue(PapyrusStemBlock.TYPE).getSerializedName();
 							final String modelName = type + "_" + ctx.getName();
@@ -858,6 +859,7 @@ public class ExtraBlocks {
 
 	public static final BlockEntry<PapyrusUmbelBlock> PAPYRUS_UMBEL = REGISTRATE.block("papyrus_umbel", PapyrusUmbelBlock::new)
 			.initialProperties(() -> Blocks.SUGAR_CANE)
+			.properties(p -> p.sound(SoundType.FLOWERING_AZALEA))
 			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry()).forAllStates(state -> {
 				final String type = state.getValue(PapyrusStemBlock.TYPE).getSerializedName();
 				final String modelName = type + "_" + ctx.getName();
