@@ -2,10 +2,13 @@ package com.lovetropics.extras.block;
 
 import com.lovetropics.extras.ExtraBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -38,7 +41,7 @@ public final class PapyrusUmbelBlock extends Block {
         }
 
         //10% chance to age
-        if (state.getValue(AGEING) && random.nextInt(10) == 0) {
+        if (random.nextInt(10) == 0) {
             PapyrusStemBlock.Type type = state.getValue(TYPE);
             if (type == PapyrusStemBlock.Type.PLAIN) {
                 ageSelfAndStem(PapyrusStemBlock.Type.DRY, level, pos);
@@ -67,6 +70,28 @@ public final class PapyrusUmbelBlock extends Block {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
+    }
+
+    @Override
+    protected boolean canSurvive(final BlockState state, final LevelReader level, final BlockPos pos) {
+        final BlockState stateBelow = level.getBlockState(pos.below());
+
+        return stateBelow.is(ExtraBlocks.PAPYRUS_STEM.get());
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        if (!state.canSurvive(level, pos)) {
+            level.scheduleTick(pos, this, 1);
+        }
+        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!state.canSurvive(level, pos)) {
+            level.destroyBlock(pos, true);
+        }
     }
 
     @Override
