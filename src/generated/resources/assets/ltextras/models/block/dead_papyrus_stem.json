@@ -1,0 +1,6 @@
+{
+  "parent": "ltextras:block/papyrus_stem",
+  "textures": {
+    "all": "ltextras:block/papyrus/dead_papyrus_stem"
+  }
+}

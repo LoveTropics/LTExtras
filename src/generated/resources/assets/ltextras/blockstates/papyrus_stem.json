@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=dead": {
+      "model": "ltextras:block/dead_papyrus_stem"
+    },
+    "type=dry": {
+      "model": "ltextras:block/dry_papyrus_stem"
+    },
+    "type=plain": {
+      "model": "ltextras:block/plain_papyrus_stem"
+    }
+  }
+}
