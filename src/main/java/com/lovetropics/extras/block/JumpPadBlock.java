@@ -10,6 +10,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -105,6 +107,7 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
             if (velocity.lengthSqr() < 0.01) {
                 return;
             }
+            level.playSound(null, entity, SoundEvents.BREEZE_JUMP, SoundSource.BLOCKS, 1.0f, 1.0f);
             entity.setDeltaMovement(velocity);
 			if (entity instanceof ServerPlayer serverPlayer) {
 				serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
