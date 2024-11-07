@@ -1,0 +1,769 @@
+{
+  "variants": {
+    "facing=east,horizontal_power=0": {
+      "model": "ltextras:block/launchpad_nohoriz",
+      "y": 90
+    },
+    "facing=east,horizontal_power=1": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=10": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=11": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=12": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=13": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=14": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=15": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=16": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=17": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=18": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=19": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=2": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=20": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=21": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=22": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=23": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=24": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=25": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=26": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=27": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=28": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=29": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=3": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=30": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=31": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=32": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=33": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=34": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=35": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=36": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=37": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=38": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=39": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=4": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=40": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=41": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=42": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=43": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=44": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=45": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=46": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=47": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=48": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=49": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=5": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=50": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=6": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=7": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=8": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=east,horizontal_power=9": {
+      "model": "ltextras:block/launchpad",
+      "y": 90
+    },
+    "facing=north,horizontal_power=0": {
+      "model": "ltextras:block/launchpad_nohoriz"
+    },
+    "facing=north,horizontal_power=1": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=10": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=11": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=12": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=13": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=14": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=15": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=16": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=17": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=18": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=19": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=2": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=20": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=21": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=22": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=23": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=24": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=25": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=26": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=27": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=28": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=29": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=3": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=30": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=31": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=32": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=33": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=34": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=35": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=36": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=37": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=38": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=39": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=4": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=40": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=41": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=42": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=43": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=44": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=45": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=46": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=47": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=48": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=49": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=5": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=50": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=6": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=7": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=8": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=north,horizontal_power=9": {
+      "model": "ltextras:block/launchpad"
+    },
+    "facing=south,horizontal_power=0": {
+      "model": "ltextras:block/launchpad_nohoriz",
+      "y": 180
+    },
+    "facing=south,horizontal_power=1": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=10": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=11": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=12": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=13": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=14": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=15": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=16": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=17": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=18": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=19": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=2": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=20": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=21": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=22": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=23": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=24": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=25": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=26": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=27": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=28": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=29": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=3": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=30": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=31": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=32": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=33": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=34": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=35": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=36": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=37": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=38": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=39": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=4": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=40": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=41": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=42": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=43": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=44": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=45": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=46": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=47": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=48": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=49": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=5": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=50": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=6": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=7": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=8": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=south,horizontal_power=9": {
+      "model": "ltextras:block/launchpad",
+      "y": 180
+    },
+    "facing=west,horizontal_power=0": {
+      "model": "ltextras:block/launchpad_nohoriz",
+      "y": 270
+    },
+    "facing=west,horizontal_power=1": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=10": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=11": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=12": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=13": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=14": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=15": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=16": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=17": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=18": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=19": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=2": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=20": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=21": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=22": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=23": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=24": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=25": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=26": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=27": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=28": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=29": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=3": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=30": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=31": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=32": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=33": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=34": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=35": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=36": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=37": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=38": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=39": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=4": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=40": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=41": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=42": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=43": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=44": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=45": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=46": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=47": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=48": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=49": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=5": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=50": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=6": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=7": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=8": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    },
+    "facing=west,horizontal_power=9": {
+      "model": "ltextras:block/launchpad",
+      "y": 270
+    }
+  }
+}
