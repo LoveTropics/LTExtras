@@ -17,7 +17,6 @@ import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -47,7 +46,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
-import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.PipeBlock;
@@ -953,31 +951,32 @@ public class ExtraBlocks {
             .build()
             .register();
 
-	private static BlockEntry<LaunchpadBlock> LAUNCHPAD = REGISTRATE.block("launchpad", LaunchpadBlock::new)
+	private static BlockEntry<JumppadBlock> JUMPPAD = REGISTRATE.block("jumppad", JumppadBlock::new)
+			.lang("Jump Pad")
 			.initialProperties(() -> Blocks.GRASS_BLOCK)
 			.blockstate((ctx, prov) -> {
 				BlockModelBuilder model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/slab"))
-						.texture("bottom", prov.modLoc("block/launchpad_bottom"))
-						.texture("side", prov.modLoc("block/launchpad_side"))
-						.texture("top", prov.modLoc("block/launchpad_top"))
-						.texture("particle", prov.modLoc("block/launchpad_side"));
+						.texture("bottom", prov.modLoc("block/jumppad_bottom"))
+						.texture("side", prov.modLoc("block/jumppad_side"))
+						.texture("top", prov.modLoc("block/jumppad_top"))
+						.texture("particle", prov.modLoc("block/jumppad_side"));
 
 				BlockModelBuilder noHorizontalPowerModel = prov.models().withExistingParent(ctx.getName() + "_nohoriz", prov.mcLoc("block/slab"))
-						.texture("bottom", prov.modLoc("block/launchpad_bottom"))
-						.texture("side", prov.modLoc("block/launchpad_side"))
-						.texture("top", prov.modLoc("block/launchpad_top_nohoriz"))
-						.texture("particle", prov.modLoc("block/launchpad_side"));
+						.texture("bottom", prov.modLoc("block/jumppad_bottom"))
+						.texture("side", prov.modLoc("block/jumppad_side"))
+						.texture("top", prov.modLoc("block/jumppad_top_nohoriz"))
+						.texture("particle", prov.modLoc("block/jumppad_side"));
 
 				prov.getVariantBuilder(ctx.get()).forAllStatesExcept(state -> {
-					Direction direction = state.getValue(LaunchpadBlock.FACING);
-					boolean noHorizontalPower = state.getValue(LaunchpadBlock.HORIZONTAL_POWER) < 1;
+					Direction direction = state.getValue(JumppadBlock.FACING);
+					boolean noHorizontalPower = state.getValue(JumppadBlock.HORIZONTAL_POWER) < 1;
 					BlockModelBuilder selectedModel = noHorizontalPower ? noHorizontalPowerModel : model;
 					int rotationY = ((int) direction.toYRot() + 180) % 360;
 					return ConfiguredModel.builder()
 							.modelFile(selectedModel)
 							.rotationY(rotationY)
 							.build();
-				}, LaunchpadBlock.VERTICAL_POWER);
+				}, JumppadBlock.VERTICAL_POWER);
 
 			})
 			.addLayer(() -> RenderType::solid)

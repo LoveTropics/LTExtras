@@ -3,7 +3,6 @@ package com.lovetropics.extras.block;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -17,15 +16,15 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class LaunchpadBlock extends HorizontalDirectionalBlock {
+public class JumppadBlock extends HorizontalDirectionalBlock {
 
-    public static final MapCodec<LaunchpadBlock> CODEC = simpleCodec(LaunchpadBlock::new);
+    public static final MapCodec<JumppadBlock> CODEC = simpleCodec(JumppadBlock::new);
     private static final VoxelShape AABB = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
     //Power is divided by 10 since there is no FloatProperty
     public static final IntegerProperty VERTICAL_POWER = IntegerProperty.create("vertical_power", 0, 50);
     public static final IntegerProperty HORIZONTAL_POWER = IntegerProperty.create("horizontal_power", 0, 50);
 
-    public LaunchpadBlock(final Properties properties) {
+    public JumppadBlock(final Properties properties) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(VERTICAL_POWER, 10).setValue(HORIZONTAL_POWER, 10));
     }

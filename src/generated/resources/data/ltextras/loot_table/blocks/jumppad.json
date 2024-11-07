@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ltextras:launchpad"
+          "name": "ltextras:jumppad"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "ltextras:blocks/launchpad"
+  "random_sequence": "ltextras:blocks/jumppad"
 }
