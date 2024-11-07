@@ -10,6 +10,8 @@ import com.lovetropics.extras.mixin.BlockPropertiesMixin;
 import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.providers.DataGenContext;
+import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
@@ -58,9 +60,9 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.TallSeagrassBlock;
 import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.WallBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
@@ -995,17 +997,22 @@ public class ExtraBlocks {
 			.lang("Jump Pad")
 			.initialProperties(() -> Blocks.STONE_SLAB)
 			.blockstate((ctx, prov) -> {
-				BlockModelBuilder model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/slab"))
-						.texture("bottom", prov.modLoc("block/jump_pad_bottom"))
-						.texture("side", prov.modLoc("block/jump_pad_side"))
-						.texture("top", prov.modLoc("block/jump_pad_top"))
-						.texture("particle", prov.modLoc("block/jump_pad_side"));
-				BlockModelBuilder verticalModel = prov.models().withExistingParent(ctx.getName() + "_vertical", model.getLocation())
+				BlockModelBuilder modelBottom = createJumpPadModel(ctx, prov, false);
+				BlockModelBuilder modelTop = createJumpPadModel(ctx, prov, true);
+				BlockModelBuilder verticalModelBottom = prov.models().withExistingParent(ctx.getName() + "_vertical", modelBottom.getLocation())
+						.texture("top", prov.modLoc("block/jump_pad_top_vertical"));
+				BlockModelBuilder verticalModelTop = prov.models().withExistingParent(ctx.getName() + "_top_vertical", modelTop.getLocation())
 						.texture("top", prov.modLoc("block/jump_pad_top_vertical"));
 
 				prov.getVariantBuilder(ctx.get()).forAllStates(state -> {
+					Half half = state.getValue(JumpPadBlock.HALF);
 					Direction direction = state.getValue(JumpPadBlock.FACING);
-					BlockModelBuilder selectedModel = direction == Direction.UP ? verticalModel : model;
+					BlockModelBuilder selectedModel;
+					if (half == Half.TOP) {
+						selectedModel = direction == Direction.UP ? verticalModelTop : modelTop;
+					} else {
+						selectedModel = direction == Direction.UP ? verticalModelBottom : modelBottom;
+					}
 					return ConfiguredModel.builder()
 							.modelFile(selectedModel)
 							.rotationY(((int) direction.toYRot() + 180) % 360)
@@ -1016,6 +1023,14 @@ public class ExtraBlocks {
 			.build()
 			.simpleItem()
 			.register();
+
+	private static BlockModelBuilder createJumpPadModel(DataGenContext<Block, JumpPadBlock> ctx, RegistrateBlockstateProvider prov, boolean top) {
+		return prov.models().withExistingParent(top ? ctx.getName() + "_top" : ctx.getName(), prov.mcLoc(top ? "block/slab_top" : "block/slab"))
+				.texture("bottom", prov.modLoc("block/jump_pad_bottom"))
+				.texture("side", prov.modLoc("block/jump_pad_side"))
+				.texture("top", prov.modLoc("block/jump_pad_top"))
+				.texture("particle", prov.modLoc("block/jump_pad_side"));
+	}
 
 	public static final BlockEntityEntry<JumpPadBlockEntity> JUMP_PAD_ENTITY = BlockEntityEntry.cast(JUMP_PAD.getSibling(Registries.BLOCK_ENTITY_TYPE));
 

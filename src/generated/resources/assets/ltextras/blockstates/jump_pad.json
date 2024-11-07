@@ -1,22 +1,41 @@
 {
   "variants": {
-    "facing=east": {
+    "facing=east,half=bottom": {
       "model": "ltextras:block/jump_pad",
       "y": 90
     },
-    "facing=north": {
+    "facing=east,half=top": {
+      "model": "ltextras:block/jump_pad_top",
+      "y": 90
+    },
+    "facing=north,half=bottom": {
       "model": "ltextras:block/jump_pad"
     },
-    "facing=south": {
+    "facing=north,half=top": {
+      "model": "ltextras:block/jump_pad_top"
+    },
+    "facing=south,half=bottom": {
       "model": "ltextras:block/jump_pad",
       "y": 180
     },
-    "facing=up": {
+    "facing=south,half=top": {
+      "model": "ltextras:block/jump_pad_top",
+      "y": 180
+    },
+    "facing=up,half=bottom": {
       "model": "ltextras:block/jump_pad_vertical",
       "y": 90
     },
-    "facing=west": {
+    "facing=up,half=top": {
+      "model": "ltextras:block/jump_pad_top_vertical",
+      "y": 90
+    },
+    "facing=west,half=bottom": {
       "model": "ltextras:block/jump_pad",
+      "y": 270
+    },
+    "facing=west,half=top": {
+      "model": "ltextras:block/jump_pad_top",
       "y": 270
     }
   }

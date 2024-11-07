@@ -12,6 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
@@ -68,6 +69,9 @@ public class JumpPadBlockEntity extends BlockEntity {
 			return Vec3.ZERO;
 		}
 		Vec3 origin = Vec3.atCenterOf(getBlockPos());
+		if (getBlockState().getValue(JumpPadBlock.HALF) == Half.TOP) {
+			origin = origin.add(0.0, 0.5, 0.0);
+		}
 		return TrajectorySolver.STANDARD.solveVelocity(origin, targetPos, angle * Mth.DEG_TO_RAD, true, maxVelocity);
 	}
 

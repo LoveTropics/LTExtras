@@ -29,6 +29,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -43,12 +45,14 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
     public static final MapCodec<JumpPadBlock> CODEC = simpleCodec(JumpPadBlock::new);
 
     public static final DirectionProperty FACING = DirectionProperty.create("facing", direction -> direction != Direction.DOWN);
+    public static final EnumProperty<Half> HALF = EnumProperty.create("half", Half.class);
 
-    private static final VoxelShape SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
+    private static final VoxelShape BOTTOM_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
+    private static final VoxelShape TOP_SHAPE = Block.box(0.0, 8.0, 0.0, 16.0, 16.0, 16.0);
 
     public JumpPadBlock(Properties properties) {
         super(properties);
-        registerDefaultState(defaultBlockState().setValue(FACING, Direction.UP));
+        registerDefaultState(defaultBlockState().setValue(FACING, Direction.UP).setValue(HALF, Half.BOTTOM));
     }
 
     @Override
@@ -117,12 +121,18 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState();
+        BlockPos pos = context.getClickedPos();
+		Direction clickedFace = context.getClickedFace();
+		boolean onTopHalf = context.getClickLocation().y - pos.getY() > 0.5;
+		return defaultBlockState().setValue(HALF, clickedFace == Direction.DOWN || (clickedFace != Direction.UP && onTopHalf) ? Half.TOP : Half.BOTTOM);
     }
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
+        return switch (state.getValue(HALF)) {
+            case BOTTOM -> BOTTOM_SHAPE;
+            case TOP -> TOP_SHAPE;
+		};
     }
 
     @Override
@@ -132,7 +142,7 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, HALF);
     }
 
     @Override
