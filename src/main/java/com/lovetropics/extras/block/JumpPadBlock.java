@@ -71,7 +71,7 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
         }
         Level level = event.getLevel();
         if (!level.isClientSide() && level.getBlockEntity(jumpPadPos) instanceof JumpPadBlockEntity jumpPad) {
-			jumpPad.setTarget(event.getHitVec().getLocation());
+			jumpPad.updateTarget(event.getHitVec().getLocation());
             event.getEntity().sendSystemMessage(Component.literal("Set jump target"));
         }
         event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide()));
@@ -85,7 +85,7 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
         }
         Level level = event.getLevel();
         if (!level.isClientSide() && level.getBlockEntity(jumpPadPos) instanceof JumpPadBlockEntity jumpPad) {
-            jumpPad.setTarget(event.getEntity().position());
+            jumpPad.updateTarget(event.getEntity().position());
             event.getEntity().sendSystemMessage(Component.literal("Set jump target"));
         }
         event.setCancellationResult(InteractionResult.sidedSuccess(event.getSide().isClient()));
@@ -103,7 +103,7 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
         }
 
 		if (level.getBlockEntity(pos) instanceof JumpPadBlockEntity jumpPad) {
-            Vec3 velocity = jumpPad.computeLaunchVelocity(entity);
+            Vec3 velocity = jumpPad.getLaunchVelocity();
             if (velocity.lengthSqr() < 0.01) {
                 return;
             }

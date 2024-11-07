@@ -9,7 +9,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,20 +29,24 @@ public class JumpPadBlockEntity extends BlockEntity {
 	private float angle = DEFAULT_ANGLE;
 	private float maxVelocity = DEFAULT_MAX_VELOCITY;
 
+	@Nullable
+	private Vec3 launchVelocity;
+
 	public JumpPadBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
 		super(type, pos, blockState);
 	}
 
-	public void setTarget(Vec3 targetPos) {
+	public void updateTarget(Vec3 targetPos) {
 		this.targetPos = targetPos;
+		launchVelocity = null;
 		BlockPos blockPos = getBlockPos();
 		getLevel().setBlockAndUpdate(blockPos, getBlockState().setValue(JumpPadBlock.FACING, getDirectionToTarget(targetPos, blockPos)));
 	}
 
 	private static Direction getDirectionToTarget(Vec3 targetPos, BlockPos blockPos) {
-		double deltaX = targetPos.x - blockPos.getX() + 0.5;
-		double deltaZ = targetPos.z - blockPos.getZ() + 0.5;
-		if (Mth.equal(deltaX, 0.0) && Mth.equal(deltaZ, 0.0)) {
+		double deltaX = targetPos.x - blockPos.getX() - 0.5;
+		double deltaZ = targetPos.z - blockPos.getZ() - 0.5;
+		if (Math.abs(deltaX) < 0.5 && Math.abs(deltaZ) < 0.5) {
 			return Direction.UP;
 		}
 		if (Math.abs(deltaX) > Math.abs(deltaZ)) {
@@ -53,11 +56,19 @@ public class JumpPadBlockEntity extends BlockEntity {
 		}
 	}
 
-	public Vec3 computeLaunchVelocity(Entity entity) {
+	public Vec3 getLaunchVelocity() {
+		if (launchVelocity == null) {
+			launchVelocity = computeLaunchVelocity();
+		}
+		return launchVelocity;
+	}
+
+	private Vec3 computeLaunchVelocity() {
 		if (targetPos == null) {
 			return Vec3.ZERO;
 		}
-		return TrajectorySolver.STANDARD.solveVelocity(entity.position(), targetPos, angle * Mth.DEG_TO_RAD, true, maxVelocity);
+		Vec3 origin = Vec3.atCenterOf(getBlockPos());
+		return TrajectorySolver.STANDARD.solveVelocity(origin, targetPos, angle * Mth.DEG_TO_RAD, true, maxVelocity);
 	}
 
 	@Override
@@ -70,6 +81,7 @@ public class JumpPadBlockEntity extends BlockEntity {
 		}
 		angle = tag.contains(TAG_ANGLE, Tag.TAG_FLOAT) ? tag.getFloat(TAG_ANGLE) : DEFAULT_ANGLE;
 		maxVelocity = tag.contains(TAG_MAX_VELOCITY, Tag.TAG_FLOAT) ? tag.getFloat(TAG_MAX_VELOCITY) : DEFAULT_MAX_VELOCITY;
+		launchVelocity = null;
 	}
 
 	@Override
