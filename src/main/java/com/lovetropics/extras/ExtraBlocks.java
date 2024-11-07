@@ -843,7 +843,7 @@ public class ExtraBlocks {
 	public static final BlockEntry<PapyrusStemBlock> PAPYRUS_STEM = REGISTRATE.block("papyrus_stem", PapyrusStemBlock::new)
 			.initialProperties(() -> Blocks.SUGAR_CANE)
 			.properties(p -> p.sound(SoundType.WOOD))
-			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry()).forAllStates(state -> {
+			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry()).forAllStatesExcept(state -> {
 							final String type = state.getValue(PapyrusStemBlock.TYPE).getSerializedName();
 							final String modelName = type + "_" + ctx.getName();
 							final ResourceLocation texture = prov.modLoc("block/papyrus/" + modelName);
@@ -852,7 +852,7 @@ public class ExtraBlocks {
 											.withExistingParent(modelName, prov.modLoc("block/papyrus_stem"))
 											.texture("all", texture))
 											.build();
-			}))
+			}, PapyrusStemBlock.WATERLOGGED))
 			.addLayer(() -> RenderType::cutout)
 			.item()
 			.model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/papyrus/plain_papyrus_stem")))
@@ -862,7 +862,7 @@ public class ExtraBlocks {
 	public static final BlockEntry<PapyrusUmbelBlock> PAPYRUS_UMBEL = REGISTRATE.block("papyrus_umbel", PapyrusUmbelBlock::new)
 			.initialProperties(() -> Blocks.SUGAR_CANE)
 			.properties(p -> p.sound(SoundType.FLOWERING_AZALEA))
-			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry()).forAllStates(state -> {
+			.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry()).forAllStatesExcept(state -> {
 				final String type = state.getValue(PapyrusStemBlock.TYPE).getSerializedName();
 				final String modelName = type + "_" + ctx.getName();
 				final ResourceLocation texture = prov.modLoc("block/papyrus/" + modelName);
@@ -871,7 +871,7 @@ public class ExtraBlocks {
 								.withExistingParent(modelName, prov.mcLoc("block/sugar_cane"))
 								.texture("cross", texture))
 						.build();
-			}))
+			}, PapyrusUmbelBlock.AGEING))
 			.addLayer(() -> RenderType::cutout)
 			.item()
 			.model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/papyrus/plain_papyrus_umbel")))
