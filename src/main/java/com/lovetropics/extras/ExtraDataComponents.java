@@ -4,6 +4,7 @@ import com.lovetropics.extras.collectible.CollectibleMarker;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.ImageData;
 import com.mojang.serialization.Codec;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -34,6 +35,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<UUID>> TARGETED_ENTITY = REGISTER.registerComponentType(
             "targeted_entity",
             builder -> builder.persistent(UUIDUtil.CODEC)
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> JUMP_PAD = REGISTER.registerComponentType(
+            "jump_pad",
+            builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC)
     );
 
     // General extensions

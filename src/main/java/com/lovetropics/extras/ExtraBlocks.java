@@ -1,6 +1,7 @@
 package com.lovetropics.extras;
 
 import com.lovetropics.extras.block.*;
+import com.lovetropics.extras.block.entity.JumpPadBlockEntity;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
@@ -46,7 +47,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
-import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.PipeBlock;
@@ -991,6 +991,33 @@ public class ExtraBlocks {
             .build()
             .register();
 
+	public static final BlockEntry<JumpPadBlock> JUMP_PAD = REGISTRATE.block("jump_pad", JumpPadBlock::new)
+			.lang("Jump Pad")
+			.initialProperties(() -> Blocks.STONE_SLAB)
+			.blockstate((ctx, prov) -> {
+				BlockModelBuilder model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/slab"))
+						.texture("bottom", prov.modLoc("block/jump_pad_bottom"))
+						.texture("side", prov.modLoc("block/jump_pad_side"))
+						.texture("top", prov.modLoc("block/jump_pad_top"))
+						.texture("particle", prov.modLoc("block/jump_pad_side"));
+				BlockModelBuilder verticalModel = prov.models().withExistingParent(ctx.getName() + "_vertical", model.getLocation())
+						.texture("top", prov.modLoc("block/jump_pad_top_vertical"));
+
+				prov.getVariantBuilder(ctx.get()).forAllStates(state -> {
+					Direction direction = state.getValue(JumpPadBlock.FACING);
+					BlockModelBuilder selectedModel = direction == Direction.UP ? verticalModel : model;
+					return ConfiguredModel.builder()
+							.modelFile(selectedModel)
+							.rotationY(((int) direction.toYRot() + 180) % 360)
+							.build();
+				});
+			})
+			.blockEntity(JumpPadBlockEntity::new)
+			.build()
+			.simpleItem()
+			.register();
+
+	public static final BlockEntityEntry<JumpPadBlockEntity> JUMP_PAD_ENTITY = BlockEntityEntry.cast(JUMP_PAD.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
 	private static final TemplateBuilder<CeilingCarpetBlock, BlockFactory<CeilingCarpetBlock>> CEILING_CARPET_TEMPLATES = new TemplateBuilder<CeilingCarpetBlock, BlockFactory<CeilingCarpetBlock>>()
 			.add(Blocks.SAND, CeilingCarpetBlock::new)

@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "ltextras:block/jump_pad",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "ltextras:block/jump_pad"
+    },
+    "facing=south": {
+      "model": "ltextras:block/jump_pad",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "ltextras:block/jump_pad_vertical",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "ltextras:block/jump_pad",
+      "y": 270
+    }
+  }
+}

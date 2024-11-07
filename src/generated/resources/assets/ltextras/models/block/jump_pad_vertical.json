@@ -1,0 +1,6 @@
+{
+  "parent": "ltextras:block/jump_pad",
+  "textures": {
+    "top": "ltextras:block/jump_pad_top_vertical"
+  }
+}
