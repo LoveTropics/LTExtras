@@ -302,6 +302,24 @@ public class ExtraBlocks {
 			.simpleItem()
 			.register();
 
+	public static final Set<BlockEntry<StainedGlassBlock>> EDGELESS_GLASS_BLOCKS = Stream.of(DyeColor.values())
+			.map(ExtraBlocks::edgelessGlass)
+			.collect(Collectors.toSet());
+
+	private static BlockEntry<StainedGlassBlock> edgelessGlass(DyeColor dyeColor) {
+		final String color = dyeColor.getName();
+		return REGISTRATE.block("edgeless_" + color + "_stained_glass", p -> new StainedGlassBlock(dyeColor, p))
+				.initialProperties(() -> Blocks.GLASS)
+				.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
+						.withExistingParent(ctx.getName(), prov.mcLoc("block/black_stained_glass"))
+						.texture("all", prov.modLoc("block/edgeless/edgeless_" + color + "_stained_glass"))))
+				.addLayer(() -> RenderType::translucent)
+				.item()
+					.model((ctx, prov) -> prov.cubeAll(ctx.getName(), prov.modLoc("block/edgeless/edgeless_" + color + "_stained_glass")))
+					.build()
+				.register();
+	}
+
 	public static final BlockEntry<ReedsBlock> REEDS = REGISTRATE.block("reeds", ReedsBlock::new)
 			.initialProperties(() -> Blocks.SUGAR_CANE)
 			.properties(p -> p.noLootTable())

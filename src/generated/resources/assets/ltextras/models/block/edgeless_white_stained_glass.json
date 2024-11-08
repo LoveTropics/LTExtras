@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/black_stained_glass",
+  "textures": {
+    "all": "ltextras:block/edgeless/edgeless_white_stained_glass"
+  }
+}
