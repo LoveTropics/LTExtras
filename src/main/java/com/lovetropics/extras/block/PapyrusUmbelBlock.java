@@ -54,16 +54,15 @@ public final class PapyrusUmbelBlock extends Block {
     private void ageSelfAndStem(PapyrusStemBlock.Type type, ServerLevel level, BlockPos pos) {
         level.setBlockAndUpdate(pos, defaultBlockState().setValue(TYPE, type));
 
-        BlockPos currentPos = pos;
+        BlockPos.MutableBlockPos mutablePos = pos.mutable();
         for (int i = 0; i < PapyrusStemBlock.MAX_HEIGHT; i++) {
-            BlockPos belowPos = currentPos.below();
-            BlockState belowState = level.getBlockState(belowPos);
+            mutablePos.move(Direction.DOWN);
+            BlockState belowState = level.getBlockState(mutablePos);
             if (belowState.is(ExtraBlocks.PAPYRUS_STEM.get())) {
-                level.setBlockAndUpdate(belowPos, belowState.setValue(PapyrusStemBlock.TYPE, type));
+                level.setBlockAndUpdate(mutablePos, belowState.setValue(PapyrusStemBlock.TYPE, type));
             } else {
                 break;
             }
-            currentPos = belowPos;
         }
     }
 

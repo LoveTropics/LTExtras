@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -32,7 +33,7 @@ public final class PapyrusStemBlock extends Block implements SimpleWaterloggedBl
     protected static final int MAX_HEIGHT = 4;
     private static final int MIN_HEIGHT_FOR_FLOWERS = 2;
 
-    public PapyrusStemBlock(final Properties properties) {
+    public PapyrusStemBlock(Properties properties) {
         super(properties.randomTicks());
         registerDefaultState(getStateDefinition().any().setValue(TYPE, Type.PLAIN).setValue(WATERLOGGED, false));
     }
@@ -49,7 +50,7 @@ public final class PapyrusStemBlock extends Block implements SimpleWaterloggedBl
     }
 
     @Override
-    protected void randomTick(final BlockState state, final ServerLevel level, final BlockPos pos, final RandomSource random) {
+    protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (!canGrow(level, pos)) {
             return;
         }
@@ -61,26 +62,24 @@ public final class PapyrusStemBlock extends Block implements SimpleWaterloggedBl
         }
 
         //if taller than MIN_HEIGHT_FOR_FLOWERS(2), 50% to grow flower
-        boolean enoughHeightForFlower = hasStemHeightInclusive(level, pos, MIN_HEIGHT_FOR_FLOWERS);
-        if (enoughHeightForFlower && random.nextBoolean()) {
-            final BlockState stateBelow = level.getBlockState(pos.below());
-            level.setBlockAndUpdate(pos.above(), ExtraBlocks.PAPYRUS_UMBEL.get().defaultBlockState().setValue(PapyrusUmbelBlock.TYPE, stateBelow.getValue(TYPE)));
+        if (random.nextBoolean() && hasStemHeightInclusive(level, pos, MIN_HEIGHT_FOR_FLOWERS)) {
+            level.setBlockAndUpdate(pos.above(), ExtraBlocks.PAPYRUS_UMBEL.getDefaultState().setValue(PapyrusUmbelBlock.TYPE, state.getValue(TYPE)));
         }
 
         //some chance to stop growing? only if has flower?
     }
 
-    private boolean canGrow(final ServerLevel level, final BlockPos pos) {
+    private boolean canGrow(ServerLevel level, BlockPos pos) {
         // Don't grow naturally if there is water above us
         boolean aboveIsEmpty = level.isEmptyBlock(pos.above());
-        boolean hasReachedMaxHeight = hasStemHeightInclusive(level, pos, MAX_HEIGHT);
-
-        return aboveIsEmpty && !hasReachedMaxHeight;
+		return aboveIsEmpty && !hasStemHeightInclusive(level, pos, MAX_HEIGHT);
     }
 
-    private boolean hasStemHeightInclusive(final ServerLevel level, final BlockPos pos, final int height) {
-        for (int i = 1; i < height; i++) {
-            if (!level.getBlockState(pos.below(i)).is(this)) {
+    private boolean hasStemHeightInclusive(ServerLevel level, BlockPos pos, int height) {
+        BlockPos.MutableBlockPos mutablePos = pos.mutable();
+        for (int i = 0; i <= height; i++) {
+            mutablePos.move(Direction.DOWN);
+            if (!level.getBlockState(mutablePos).is(this)) {
                 return false;
             }
         }
@@ -88,8 +87,8 @@ public final class PapyrusStemBlock extends Block implements SimpleWaterloggedBl
     }
 
     @Override
-    protected boolean canSurvive(final BlockState state, final LevelReader level, final BlockPos pos) {
-        final BlockState stateBelow = level.getBlockState(pos.below());
+    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        BlockState stateBelow = level.getBlockState(pos.below());
 
         return stateBelow.is(BlockTags.DIRT) || stateBelow.is(this);
     }
@@ -118,26 +117,41 @@ public final class PapyrusStemBlock extends Block implements SimpleWaterloggedBl
     }
 
     @Override
-    public void performBonemeal(final ServerLevel serverLevel, final RandomSource randomSource, final BlockPos blockPos, final BlockState blockState) {
+    public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
         blockState.randomTick(serverLevel, blockPos, randomSource);
     }
 
     @Override
-    public boolean isValidBonemealTarget(final LevelReader levelReader, final BlockPos blockPos, final BlockState blockState) {
-        if (levelReader instanceof final ServerLevel serverLevel) {
+    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+        if (levelReader instanceof ServerLevel serverLevel) {
             return canGrow(serverLevel, blockPos);
         }
         return false;
     }
 
     @Override
-    public boolean isBonemealSuccess(final Level level, final RandomSource randomSource, final BlockPos blockPos, final BlockState blockState) {
+    public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
         return true;
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
+    }
+
+    @Override
+    protected boolean skipRendering(BlockState state, BlockState adjacentState, Direction direction) {
+        return direction.getAxis() == Direction.Axis.Y && adjacentState.is(this);
     }
 
     public enum Type implements StringRepresentable {
