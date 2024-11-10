@@ -110,7 +110,9 @@ public abstract class TextDisplayMixin extends Display {
 	@Unique
 	private void ltextras$setTemplateText(@Nullable String templateText) {
 		ltextras$templateText = templateText;
-		ltextras$parsedTemplate = TEXT_PARSER.parseNode(templateText);
+		if (templateText != null) {
+			ltextras$parsedTemplate = TEXT_PARSER.parseNode(templateText);
+		}
 	}
 
 	@Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
