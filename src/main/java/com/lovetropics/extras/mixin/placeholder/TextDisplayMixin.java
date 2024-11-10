@@ -112,6 +112,8 @@ public abstract class TextDisplayMixin extends Display {
 		ltextras$templateText = templateText;
 		if (templateText != null) {
 			ltextras$parsedTemplate = TEXT_PARSER.parseNode(templateText);
+		} else {
+			ltextras$parsedTemplate = null;
 		}
 	}
 
