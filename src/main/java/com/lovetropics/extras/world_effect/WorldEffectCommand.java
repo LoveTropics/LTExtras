@@ -38,6 +38,7 @@ public class WorldEffectCommand {
                         .then(effectArgument("effect")
                                 .executes(context -> clear(context, getEffect(context, "effect")))
                         )
+                        .executes(WorldEffectCommand::clearAll)
                 )
         );
     }
@@ -53,6 +54,12 @@ public class WorldEffectCommand {
     private static int clear(CommandContext<CommandSourceStack> context, WorldEffectHolder effect) {
         WorldEffectManager.clear(context.getSource().getLevel(), effect.id());
         context.getSource().sendSuccess(() -> Component.literal("Cleared world effect: " + effect.id()), false);
+        return 1;
+    }
+
+    private static int clearAll(CommandContext<CommandSourceStack> context) {
+        WorldEffectManager.clearAll(context.getSource().getLevel());
+        context.getSource().sendSuccess(() -> Component.literal("Cleared all world effects"), false);
         return 1;
     }
 

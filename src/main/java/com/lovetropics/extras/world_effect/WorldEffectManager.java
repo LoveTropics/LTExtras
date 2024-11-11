@@ -56,6 +56,16 @@ public class WorldEffectManager {
         }
     }
 
+    public static void clearAll(ServerLevel level) {
+        Map<ResourceLocation, Entry> effects = EFFECTS_BY_DIMENSION.remove(level.dimension());
+        if (effects == null) {
+            return;
+        }
+        for (Entry entry : effects.values()) {
+            clear(level, entry.effect(), false);
+        }
+    }
+
     public static void reload(MinecraftServer server) {
         EFFECTS_BY_DIMENSION.forEach((dimension, effects) -> {
             ServerLevel level = server.getLevel(dimension);
