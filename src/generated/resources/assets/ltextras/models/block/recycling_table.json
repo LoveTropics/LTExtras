@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_top",
+  "textures": {
+    "side": "ltextras:block/recycling_table_side",
+    "top": "ltextras:block/recycling_table_top"
+  }
+}

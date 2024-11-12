@@ -509,6 +509,14 @@ public class ExtraBlocks {
 			.build()
             .register();
 
+	public static final BlockEntry<Block> RECYCLING_TABLE = REGISTRATE.block("recycling_table", Block::new)
+			.initialProperties(() -> Blocks.CRAFTING_TABLE)
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().cubeTop(ctx.getName(), prov.modLoc("block/recycling_table_side"), prov.modLoc("block/recycling_table_top"))))
+			.simpleItem()
+			.lang("Recycling Table")
+			.defaultLoot()
+			.register();
+
 	public static final BlockEntry<Block> LIME_BLOCK = REGISTRATE.block("lime_block", Block::new)
 			.initialProperties(() -> Blocks.MELON)
 			.properties(p -> p.sound(SoundType.SLIME_BLOCK))
