@@ -580,6 +580,12 @@ public class ExtraBlocks {
 					.register()
 			);
 
+	public static final BlockEntry<SpeedyZone> SPEEDY_ZONE = REGISTRATE.block("speedy_zone", SpeedyZone::new)
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.modLoc("block/speedy_zone"))))
+			.properties(p -> p.noOcclusion().noCollission().strength(-1.0F, 3600000.0F))
+			.simpleItem()
+			.register();
+
 	// Imposter blocks
 
 	public static final BlockEntry<Block> DELIGHTED_OBSIDIAN = REGISTRATE.block("delighted_obsidian", Block::new)
