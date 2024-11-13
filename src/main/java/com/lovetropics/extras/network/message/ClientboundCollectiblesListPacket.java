@@ -22,6 +22,10 @@ public record ClientboundCollectiblesListPacket(List<Holder<Collectible>> collec
 
     public static final Type<ClientboundCollectiblesListPacket> TYPE = new Type<>(LTExtras.location("collectibles_list"));
 
+    public ClientboundCollectiblesListPacket {
+        collectibles = List.copyOf(collectibles);
+    }
+
     public static void handle(ClientboundCollectiblesListPacket packet, IPayloadContext context) {
         ClientCollectiblesList.get().update(packet.collectibles, packet.silent, packet.hasUnseen);
     }
