@@ -129,7 +129,7 @@ public class ExtraBlocks {
 
 	public static final BlockEntry<PassableNoPlaceBarrierBlock> PASSABLE_NO_PLACE_BARRIER = REGISTRATE.block("passable_no_place_barrier", PassableNoPlaceBarrierBlock::new)
 			.initialProperties(() -> Blocks.BARRIER)
-			.properties(p -> p.noLootTable())
+			.properties(p -> p.noLootTable().explosionResistance(0.0f))
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(),
 					prov.models().getBuilder(ctx.getName()).texture("particle", ResourceLocation.withDefaultNamespace("item/barrier"))))
 			.item()
