@@ -65,6 +65,10 @@ public class ExtrasConfig {
         }
     }
 
+	public static final ModConfigSpec.ConfigValue<Boolean> CLIENT_AUTO_REJOIN = COMMON_BUILDER
+			.comment("If true, clients will automatically try to reconnect when the server closes.")
+			.define("clientAutoRejoin", false);
+
     public static final ModConfigSpec COMMON_CONFIG = COMMON_BUILDER.build();
     public static final ModConfigSpec CLIENT_CONFIG = CLIENT_BUILDER.build();
 

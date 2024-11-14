@@ -27,7 +27,9 @@
     "perf.BiomeManagerMixin",
     "placeholder.TextDisplayAccessor",
     "placeholder.TextDisplayMixin",
-    "placeholder.TransformationMixin"
+    "placeholder.TransformationMixin",
+    "rejoiner.ClientCommonPacketListenerImplMixin",
+    "rejoiner.StopCommandMixin"
   ],
   "client": [
     "client.LocalPlayerMixin",

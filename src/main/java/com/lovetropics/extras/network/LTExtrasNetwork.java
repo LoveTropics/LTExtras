@@ -4,6 +4,7 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
 import com.lovetropics.extras.network.message.ClientboundOpenCollectibleBasketPacket;
 import com.lovetropics.extras.network.message.ClientboundPoiPacket;
+import com.lovetropics.extras.network.message.ClientboundSetAutoRejoinIntent;
 import com.lovetropics.extras.network.message.ClientboundSetDisplayTextPacket;
 import com.lovetropics.extras.network.message.ClientboundSetSkyColorPacket;
 import com.lovetropics.extras.network.message.ClientboundWorldParticleEffectsPacket;
@@ -28,6 +29,7 @@ public class LTExtrasNetwork {
         registrar.playToClient(ClientboundSetDisplayTextPacket.TYPE, ClientboundSetDisplayTextPacket.STREAM_CODEC, ClientboundSetDisplayTextPacket::handle);
         registrar.playToClient(ClientboundSetSkyColorPacket.TYPE, ClientboundSetSkyColorPacket.STREAM_CODEC, ClientboundSetSkyColorPacket::handle);
         registrar.playToClient(ClientboundWorldParticleEffectsPacket.TYPE, ClientboundWorldParticleEffectsPacket.STREAM_CODEC, ClientboundWorldParticleEffectsPacket::handle);
+        registrar.playToClient(ClientboundSetAutoRejoinIntent.TYPE, ClientboundSetAutoRejoinIntent.STREAM_CODEC, ClientboundSetAutoRejoinIntent::handle);
         registrar.playToClient(ClientboundPoiPacket.TYPE, ClientboundPoiPacket.STREAM_CODEC, ClientboundPoiPacket::handle);
         registrar.playToClient(ClientboundOpenCollectibleBasketPacket.TYPE, ClientboundOpenCollectibleBasketPacket.STREAM_CODEC, ClientboundOpenCollectibleBasketPacket::handle);
     }
