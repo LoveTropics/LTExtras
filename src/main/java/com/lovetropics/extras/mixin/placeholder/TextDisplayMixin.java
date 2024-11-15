@@ -2,11 +2,8 @@ package com.lovetropics.extras.mixin.placeholder;
 
 import com.lovetropics.extras.network.message.ClientboundSetDisplayTextPacket;
 import eu.pb4.placeholders.api.PlaceholderContext;
-import eu.pb4.placeholders.api.Placeholders;
 import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
-import eu.pb4.placeholders.api.parsers.StaticPreParser;
-import eu.pb4.placeholders.api.parsers.TextParserV1;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
@@ -35,7 +32,12 @@ public abstract class TextDisplayMixin extends Display {
 	private static final int UPDATE_INTERVAL = SharedConstants.TICKS_PER_SECOND;
 
 	@Unique
-	private static final NodeParser TEXT_PARSER = NodeParser.merge(TextParserV1.DEFAULT, Placeholders.DEFAULT_PLACEHOLDER_PARSER, StaticPreParser.INSTANCE);
+	private static final NodeParser TEXT_PARSER = NodeParser.builder()
+			.simplifiedTextFormat()
+			.quickText()
+			.globalPlaceholders()
+			.staticPreParsing()
+			.build();
 
 	@Unique
 	@Nullable
