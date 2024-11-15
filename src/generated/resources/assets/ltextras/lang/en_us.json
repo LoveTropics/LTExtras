@@ -408,6 +408,8 @@
   "item.ltextras.tropicoin": "TropiCoin",
   "itemGroup.ltextras.ltextras": "LTExtras",
   "ltextras.friction": "Friction",
+  "screen.ltextras.menu_connect": "Connect to Love Tropics",
+  "screen.ltextras.menu_donate": "Donate to Women's Earth Alliance",
   "screen.ltextras.server_closed.auto_join": "As soon as the server is back online, you will be joined back automatically.",
   "screen.ltextras.server_closed.client_restart": "We are making some upgrades to our systems: to rejoin, please restart your game to get the needed updates.\n\nApologies for the inconvenience!",
   "screen.ltextras.server_closed.permanent": "Love Tropics '24 has unfortunately now come to a close.\nThank you so much for your time and donation - we hope to see you again next year!",

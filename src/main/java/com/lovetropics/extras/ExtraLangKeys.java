@@ -26,6 +26,9 @@ public enum ExtraLangKeys {
     SERVER_CLOSED_CLIENT_RESTART("screen", "server_closed.client_restart", "We are making some upgrades to our systems: to rejoin, please restart your game to get the needed updates.\n\nApologies for the inconvenience!"),
     SERVER_CLOSED_PERMANENT("screen", "server_closed.permanent", "Love Tropics '24 has unfortunately now come to a close.\nThank you so much for your time and donation - we hope to see you again next year!"),
     SERVER_CLOSED_AUTO_JOIN("screen", "server_closed.auto_join", "As soon as the server is back online, you will be joined back automatically."),
+
+    MENU_CONNECT("screen", "menu_connect", "Connect to Love Tropics"),
+    MENU_DONATE("screen", "menu_donate", "Donate to Women's Earth Alliance"),
     ;
 
     private final String key;

@@ -69,6 +69,14 @@ public class ExtrasConfig {
 			.comment("If true, clients will automatically try to reconnect when the server closes.")
 			.define("clientAutoRejoin", false);
 
+    public static final ModConfigSpec.ConfigValue<String> SERVER_ADDRESS = COMMON_BUILDER
+            .comment("The IP address for the Love Tropics event server")
+            .define("serverAddress", "volcano.lovetropics.org");
+
+    public static final ModConfigSpec.ConfigValue<String> DONATE_URL = COMMON_BUILDER
+            .comment("The URL that players should be directed to for donating.")
+            .define("donateUrl", "https://lovetropics.org/donate");
+
     public static final ModConfigSpec COMMON_CONFIG = COMMON_BUILDER.build();
     public static final ModConfigSpec CLIENT_CONFIG = CLIENT_BUILDER.build();
 
