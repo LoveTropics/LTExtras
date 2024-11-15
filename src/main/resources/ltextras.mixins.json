@@ -36,6 +36,7 @@
     "client.LocalPlayerMixin",
     "client.collectible.MultiPlayerGameModeMixin",
     "client.menu.LogoRendererMixin",
+    "client.menu.TitleScreenMixin",
     "client.perf.BlockModelRendererCacheMixin",
     "client.perf.ChunkRenderMixin",
     "client.perf.ClientChunkCacheStorageMixin",
