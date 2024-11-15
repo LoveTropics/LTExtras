@@ -32,6 +32,7 @@
     "rejoiner.StopCommandMixin"
   ],
   "client": [
+    "client.IconSetMixin",
     "client.LocalPlayerMixin",
     "client.collectible.MultiPlayerGameModeMixin",
     "client.menu.LogoRendererMixin",
