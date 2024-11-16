@@ -45,7 +45,7 @@ public class ClientMapManager {
 
 	public static void openScreen(Player player, Holder<MapConfig> map) {
 		List<ClientPoi> pois = POIS.values().stream().filter(poi -> poi.map().equals(map)).toList();
-		Minecraft.getInstance().setScreen(new TropicalMapScreen(Component.translatable("item.ltextras.tropical_map"), player, map.value(), pois));
+		Minecraft.getInstance().setScreen(new TropicalMapScreen(player, map.value(), pois));
 	}
 
 	@SubscribeEvent

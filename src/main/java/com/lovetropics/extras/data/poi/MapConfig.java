@@ -6,6 +6,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
@@ -14,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 public record MapConfig(
+		Component description,
 		ResourceKey<Level> dimension,
 		int minX,
 		int minZ,
@@ -22,6 +25,7 @@ public record MapConfig(
 		ResourceLocation texture
 ) {
 	public static final Codec<MapConfig> DIRECT_CODEC = RecordCodecBuilder.create(i -> i.group(
+			ComponentSerialization.CODEC.fieldOf("description").forGetter(MapConfig::description),
 			Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(MapConfig::dimension),
 			Codec.INT.fieldOf("min_x").forGetter(MapConfig::minX),
 			Codec.INT.fieldOf("min_z").forGetter(MapConfig::minZ),

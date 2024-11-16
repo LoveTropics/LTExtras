@@ -1,5 +1,6 @@
 package com.lovetropics.extras;
 
+import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleBasketItem;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.EntityWandItem;
@@ -8,8 +9,10 @@ import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
 import com.lovetropics.extras.item.TropicMapItem;
+import com.lovetropics.extras.registry.ExtraRegistries;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -62,6 +65,14 @@ public class ExtraItems {
 
     public static final ItemEntry<TropicMapItem> TROPICAL_MAP = REGISTRATE.item("tropical_map", TropicMapItem::new)
             .initialProperties(() -> new Item.Properties().stacksTo(1))
+            .tab(LTExtras.TAB_KEY, modifier -> {
+                HolderLookup<MapConfig> maps = modifier.getParameters().holders().lookupOrThrow(ExtraRegistries.MAP);
+                maps.listElements().forEach(map -> {
+                    ItemStack stack = new ItemStack(ExtraItems.TROPICAL_MAP.get());
+                    stack.set(ExtraDataComponents.MAP, map);
+                    modifier.accept(stack);
+                });
+            })
             .defaultModel()
             .register();
 

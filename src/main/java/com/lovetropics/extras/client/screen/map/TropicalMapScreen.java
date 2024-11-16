@@ -20,8 +20,8 @@ public class TropicalMapScreen extends Screen {
     private final MapConfig map;
     private final List<ClientPoi> pois;
 
-    public TropicalMapScreen(Component title, Player player, MapConfig map, List<ClientPoi> pois) {
-        super(title);
+    public TropicalMapScreen(Player player, MapConfig map, List<ClientPoi> pois) {
+        super(map.description());
         this.player = player;
 		this.map = map;
 		this.pois = pois;
