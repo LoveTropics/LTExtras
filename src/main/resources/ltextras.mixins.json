@@ -10,6 +10,7 @@
     "BlockStateExtensionMixin",
     "CreatureEntityMixin",
     "DedicatedServerMixin",
+    "EntityMixin",
     "FluidStateMixin",
     "ForgeHooksMixin",
     "ItemFrameMixin",
