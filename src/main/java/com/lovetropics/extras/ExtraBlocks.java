@@ -565,10 +565,8 @@ public class ExtraBlocks {
 			.add(Blocks.GRAVEL, SpeedyBlock::opaque)
 			.add(Blocks.DIRT_PATH, p -> SpeedyBlock.transparent(PATH_SHAPE, p))
 			.add(Blocks.BLACK_CONCRETE_POWDER, SpeedyBlock::opaque)
-			.add(Blocks.SPRUCE_SLAB, SpeedyBlock::slab)
 			.add(Blocks.PACKED_MUD, SpeedyBlock::opaque)
 			.add(Blocks.MUD_BRICKS, SpeedyBlock::opaque)
-			.add(Blocks.MUD_BRICK_SLAB, SpeedyBlock::slab)
 			.add(ResourceLocation.fromNamespaceAndPath("tropicraft", "chunk"), SpeedyBlock::opaque);
 
 	public static final Map<Holder<Block>, BlockEntry<? extends SpeedyBlock>> SPEEDY_BLOCKS = SPEEDY_BLOCK_TEMPLATES
@@ -579,6 +577,30 @@ public class ExtraBlocks {
 					.simpleItem()
 					.register()
 			);
+
+	public static final BlockEntry<SpeedySlabBlock> SPEEDY_SPRUCE_SLAB = speedySlab(Blocks.SPRUCE_SLAB, Blocks.SPRUCE_PLANKS);
+	public static final BlockEntry<SpeedySlabBlock> SPEEDY_MUD_BRICKS_SLAB = speedySlab(Blocks.MUD_BRICK_SLAB, Blocks.MUD_BRICKS);
+
+	private static BlockEntry<SpeedySlabBlock> speedySlab(Block slab, Block fullBlock) {
+		return REGISTRATE
+				.block("speedy_" + getName(slab.builtInRegistryHolder()), SpeedySlabBlock::new)
+				.initialProperties(() -> slab)
+				.blockstate((ctx, prov) -> {
+					ResourceLocation donorId = getId(slab.builtInRegistryHolder());
+					prov.slabBlock(ctx.getEntry(),
+							prov.models().getExistingFile(donorId),
+							prov.models().getExistingFile(donorId.withSuffix("_top")),
+							prov.models().getExistingFile(getId(fullBlock.builtInRegistryHolder()))
+					);
+				})
+				.item()
+				.model((ctx, prov) -> {
+					ResourceLocation donorId = getId(slab.builtInRegistryHolder());
+					prov.withExistingParent(ctx.getName(), donorId.withPrefix("block/"));
+				})
+				.build()
+				.register();
+	}
 
 	public static final BlockEntry<SpeedyZone> SPEEDY_ZONE = REGISTRATE.block("speedy_zone", SpeedyZone::new)
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/air"))))
