@@ -48,7 +48,6 @@ public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity>
         float bob = (Mth.sin(age / 10.0f) + 1.0f) * 0.05f;
         poseStack.translate(0.0f, bob + 0.4f * groundScale, 0.0f);
         poseStack.mulPose(Mth.rotationAroundAxis(Mth.Y_AXIS, entityRenderDispatcher.cameraOrientation(), new Quaternionf()));
-        poseStack.mulPose(Axis.YP.rotation(Mth.PI));
 
         float scale = model.isGui3d() ? 2.25f : 2.0f;
         poseStack.scale(scale, scale, scale);
