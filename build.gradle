@@ -3,7 +3,7 @@ plugins {
     id 'idea'
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '1.0.0'
+    id 'net.neoforged.moddev' version '2.0.36-beta'
 }
 
 group = 'com.lovetropics.extras'
@@ -93,16 +93,18 @@ dependencies {
 //    runtimeOnly fg.deobf('com.simibubi.create:Create:mc1.18.2_v0.4.1+113')
 }
 
-tasks.withType(ProcessResources).configureEach {
+var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
     var replaceProperties = [
             mod_version: mod_version,
     ]
     inputs.properties replaceProperties
-
-    filesMatching(['META-INF/neoforge.mods.toml']) {
-        expand replaceProperties
-    }
+    expand replaceProperties
+    from 'src/main/templates'
+    into 'build/generated/sources/modMetadata'
 }
+sourceSets.main.resources.srcDir generateModMetadata
+
+neoForge.ideSyncTask generateModMetadata
 
 idea {
     module {
