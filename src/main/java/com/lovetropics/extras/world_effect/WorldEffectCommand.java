@@ -1,5 +1,6 @@
 package com.lovetropics.extras.world_effect;
 
+import com.lovetropics.extras.data.Named;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
@@ -43,7 +44,7 @@ public class WorldEffectCommand {
         );
     }
 
-    private static int apply(CommandContext<CommandSourceStack> context, WorldEffectHolder effect, long duration) {
+    private static int apply(CommandContext<CommandSourceStack> context, Named<WorldEffect> effect, long duration) {
         MinecraftServer server = context.getSource().getServer();
         long expiresAt = duration == Long.MAX_VALUE ? Long.MAX_VALUE : server.overworld().getGameTime() + duration;
         WorldEffectManager.apply(context.getSource().getLevel(), effect, expiresAt);
@@ -51,7 +52,7 @@ public class WorldEffectCommand {
         return 1;
     }
 
-    private static int clear(CommandContext<CommandSourceStack> context, WorldEffectHolder effect) {
+    private static int clear(CommandContext<CommandSourceStack> context, Named<WorldEffect> effect) {
         WorldEffectManager.clear(context.getSource().getLevel(), effect.id());
         context.getSource().sendSuccess(() -> Component.literal("Cleared world effect: " + effect.id()), false);
         return 1;
@@ -65,14 +66,14 @@ public class WorldEffectCommand {
 
     public static RequiredArgumentBuilder<CommandSourceStack, ResourceLocation> effectArgument(String name) {
         return argument(name, ResourceLocationArgument.id()).suggests((context, builder) -> SharedSuggestionProvider.suggestResource(
-                WorldEffectConfigs.REGISTRY.stream().map(WorldEffectHolder::id),
+                WorldEffectConfigs.REGISTRY.stream().map(Named::id),
                 builder
         ));
     }
 
-    private static WorldEffectHolder getEffect(CommandContext<CommandSourceStack> context, String name) throws CommandSyntaxException {
+    private static Named<WorldEffect> getEffect(CommandContext<CommandSourceStack> context, String name) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocationArgument.getId(context, name);
-        WorldEffectHolder config = WorldEffectConfigs.REGISTRY.get(id);
+        Named<WorldEffect> config = WorldEffectConfigs.REGISTRY.get(id);
         if (config == null) {
             throw WORLD_EFFECT_CONFIG_NOT_FOUND.create(id);
         }

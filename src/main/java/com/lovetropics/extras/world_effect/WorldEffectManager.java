@@ -1,6 +1,7 @@
 package com.lovetropics.extras.world_effect;
 
 import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.data.Named;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 public class WorldEffectManager {
     private static final Map<ResourceKey<Level>, Map<ResourceLocation, Entry>> EFFECTS_BY_DIMENSION = new Reference2ObjectOpenHashMap<>();
 
-    public static void apply(ServerLevel level, WorldEffectHolder effect, long expiresAt) {
+    public static void apply(ServerLevel level, Named<WorldEffect> effect, long expiresAt) {
         Map<ResourceLocation, Entry> effects = EFFECTS_BY_DIMENSION.computeIfAbsent(level.dimension(), k -> new Object2ObjectOpenHashMap<>());
         Entry entry = new Entry(effect.value(), expiresAt);
         if (effects.put(effect.id(), entry) == null) {
@@ -83,7 +84,7 @@ public class WorldEffectManager {
         }
         Map<ResourceLocation, Entry> newEffects = effects.entrySet().stream()
                 .map(entry -> {
-                    WorldEffectHolder newEffect = WorldEffectConfigs.REGISTRY.get(entry.getKey());
+                    Named<WorldEffect> newEffect = WorldEffectConfigs.REGISTRY.get(entry.getKey());
                     if (newEffect != null) {
                         return Pair.of(entry.getKey(), entry.getValue().rebind(newEffect.value()));
                     }
