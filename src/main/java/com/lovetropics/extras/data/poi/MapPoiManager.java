@@ -38,7 +38,7 @@ public class MapPoiManager extends SavedData {
     //This is used to calculate where to draw POIs on the map item itself. Update when map.png is updated.
     //What I did: Set BlueMap to Flat perspective, disable markers&areas. Move mouse to top left corner of desired map, note coordinates.
     //Make a _square_ screenshot (I used Greenshot), note coordinates of where the screenshot ends. Resize to 256x256 and done.
-    public static final BoundingBox MAP_BB = new BoundingBox(2013, 0, 1883, 2910, 0, 2799);
+    public static final BoundingBox MAP_BB = new BoundingBox(-864, 0, -468, 348, 0, 729);
     private static final Codec<Map<String, Poi>> CODEC = Codec.unboundedMap(Codec.STRING, Poi.CODEC);
     private static final String STORAGE_ID = LTExtras.MODID + "_map_poi";
     private final Map<String, Poi> pois;
