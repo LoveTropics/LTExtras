@@ -1,6 +1,8 @@
 package com.lovetropics.extras.collectible;
 
 import com.lovetropics.extras.ExtraTags;
+import com.lovetropics.extras.entity.CollectibleEntity;
+import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.mixin.ResourceKeyArgumentAccessor;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.mojang.authlib.GameProfile;
@@ -21,6 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.entity.player.Inventory;
@@ -78,6 +81,10 @@ public class CollectibleCommand {
                 )
                 .then(literal("lock").then(argument("target", players()).executes(context -> setLocked(context, true))))
                 .then(literal("unlock").then(argument("target", players()).executes(context -> setLocked(context, false))))
+                .then(literal("summon").then(argument("collectible", key(ExtraRegistries.COLLECTIBLE))
+                                .executes(c -> summonCollectible(c, getCollectible(c, "collectible")))
+                        )
+                )
                 // Very hacky
                 .then(literal("countdisguises").executes(CollectibleCommand::countDisguises))
                 .then(literal("find")
@@ -118,6 +125,20 @@ public class CollectibleCommand {
         ctx.getSource().sendSuccess(() -> Component.translatable("Gave %s to %s players", stack.getDisplayName(), finalResult), false);
 
         return result;
+    }
+
+    private static int summonCollectible(CommandContext<CommandSourceStack> ctx, Holder<Collectible> collectible) {
+        ServerLevel level = ctx.getSource().getLevel();
+        CollectibleEntity entity = new CollectibleEntity(ExtraEntities.COLLECTIBLE.get(), level);
+        entity.moveTo(ctx.getSource().getPosition());
+
+        entity.setCollectible(collectible);
+
+        level.addFreshEntity(entity);
+
+        ctx.getSource().sendSuccess(() -> Component.translatable("Summoned '%s' Collectible", entity.getDisplayName()), false);
+
+        return 1;
     }
 
     private static Predicate<Holder<Collectible>> itemToCollectiblePredicate(Predicate<ItemStack> itemPredicate) {
