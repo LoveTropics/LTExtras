@@ -4,14 +4,14 @@ import com.lovetropics.extras.client.ClientMapPoiManager;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
 
-public class TropicMapItem extends MapItem {
-
-    public TropicMapItem(Properties pProperties) {
-        super(pProperties);
+public class TropicMapItem extends Item {
+    public TropicMapItem(Properties properties) {
+        super(properties);
     }
 
     @Override
