@@ -51,7 +51,6 @@ public class CustomTitleScreen {
 			// Screen has been changed in some way we didn't expect - player might have installed another mod that changes it, let that apply
 			return;
 		}
-		event.removeListener(multiplayer);
 		event.removeListener(realms);
 		event.removeListener(mods);
 
@@ -67,7 +66,11 @@ public class CustomTitleScreen {
 				.width(multiplayer.getWidth())
 				.build());
 
-		singleplayer.setPosition(mods.getX(), mods.getY() + 5);
+		singleplayer.setPosition(options.getX(), mods.getY() + 5);
+		singleplayer.setWidth(options.getWidth());
+
+		multiplayer.setPosition(quit.getX(), singleplayer.getY());
+		multiplayer.setWidth(quit.getWidth());
 
 		int bottomRowY = singleplayer.getY() + singleplayer.getHeight() + 4;
 		options.setY(bottomRowY);
