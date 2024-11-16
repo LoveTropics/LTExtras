@@ -14,7 +14,8 @@ public class ImageItem extends Item {
     public static final List<ImageData> PRESETS = List.of(
             new ImageData(Component.literal("[Redacted]"), LTExtras.location("textures/images/ccfucc_banner.png"), 3.0f, 5.0f),
             new ImageData(Component.literal("Plantain Ent"), LTExtras.location("textures/images/plantain_ent.png"), 2.5f, 3.0f),
-            new ImageData(Component.literal("Manatee"), LTExtras.location("textures/images/manatee.png"), 2.5f, 3.0f)
+            new ImageData(Component.literal("Manatee"), LTExtras.location("textures/images/manatee.png"), 2.5f, 3.0f),
+            new ImageData(Component.literal("Shoebill"), LTExtras.location("textures/images/shoebill.png"), 2.5f, 3.0f)
     );
 
     public ImageItem(Properties properties) {
