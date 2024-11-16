@@ -581,9 +581,11 @@ public class ExtraBlocks {
 			);
 
 	public static final BlockEntry<SpeedyZone> SPEEDY_ZONE = REGISTRATE.block("speedy_zone", SpeedyZone::new)
-			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.modLoc("block/speedy_zone"))))
+			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/air"))))
 			.properties(p -> p.noOcclusion().noCollission().strength(-1.0F, 3600000.0F))
-			.simpleItem()
+			.item()
+			.model((ctx, prov) -> prov.generated(ctx, prov.mcLoc("item/sugar")))
+			.build()
 			.register();
 
 	// Imposter blocks
