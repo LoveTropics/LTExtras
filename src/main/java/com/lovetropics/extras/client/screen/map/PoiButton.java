@@ -30,6 +30,8 @@ class PoiButton extends AbstractButton {
     private static final ResourceLocation TOOLTIP_SPRITE = LTExtras.location("widget/poi_tooltip");
     private static final ResourceLocation TITLE_BOX_SPRITE = ResourceLocation.withDefaultNamespace("advancements/title_box");
 
+    private static final int SELECTED_Z_OFFSET = 250;
+
     private final ClientPoi poi;
     private final Font font;
     private final Runnable action;
@@ -65,15 +67,13 @@ class PoiButton extends AbstractButton {
         float animation = Mth.lerp(partialTicks, lastFocusAnimation, focusAnimation) / HOVER_ANIMATION_LENGTH;
         animation = (float) (1.0 - Math.pow(1.0 - animation, 5.0));
 
-        int zOffset = animation > 0.0f ? 100 : 0;
+		graphics.pose().pushPose();
+        graphics.pose().translate(0.0f, 0.0f, animation > 0.0f ? SELECTED_Z_OFFSET : 0);
 
         if (animation > 0.0f) {
             int tooltipWidth = Mth.floor((font.width(getMessage()) + BORDER_SIZE * 2) * animation);
             final int tooltipHeight = TOOLTIP_HEIGHT;
             setWidth(SIZE + tooltipWidth);
-
-            graphics.pose().pushPose();
-            graphics.pose().translate(0.0f, 0.0f, zOffset);
 
             graphics.blitSprite(TOOLTIP_SPRITE, getX(), getY() + (getHeight() - tooltipHeight) / 2, getWidth(), tooltipHeight);
             graphics.blitSprite(TITLE_BOX_SPRITE, getX(), getY() - BORDER_SIZE, SIZE, SIZE + BORDER_SIZE * 2);
@@ -84,8 +84,6 @@ class PoiButton extends AbstractButton {
             graphics.drawString(font, getMessage(), textLeft, textTop, CommonColors.WHITE);
 
             graphics.disableScissor();
-
-            graphics.pose().popPose();
         } else {
             setWidth(SIZE);
         }
@@ -94,20 +92,19 @@ class PoiButton extends AbstractButton {
         int iconY = getY() + BORDER_SIZE;
         switch (poi.icon()) {
             case PoiConfig.ItemIcon(ItemStack item) -> graphics.renderFakeItem(item, iconX, iconY);
-            case PoiConfig.TextureIcon(ResourceLocation texture) -> graphics.blit(texture, iconX, iconY, zOffset, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+            case PoiConfig.TextureIcon(ResourceLocation texture) -> graphics.blit(texture, iconX, iconY, 0, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
         }
 
         List<UUID> faces = poi.faces();
         if (!faces.isEmpty()) {
             int faceFactor = faces.size() > 2 ? 2 : 1;
-            graphics.pose().pushPose();
-            graphics.pose().translate(0.0f, 0.0f, zOffset);
             for (int i = 0; i < faces.size(); i++) {
 				ResourceLocation face = ClientMapManager.getFace(faces.get(i));
                 PlayerFaceRenderer.draw(graphics, face, getX() + BORDER_SIZE + i * HALF_ICON_SIZE / faceFactor + i, getY() + ICON_SIZE, HALF_ICON_SIZE / faceFactor);
             }
-            graphics.pose().popPose();
         }
+
+        graphics.pose().popPose();
     }
 
     @Override
