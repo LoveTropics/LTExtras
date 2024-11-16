@@ -4,6 +4,7 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.map.ClientMapManager;
 import com.lovetropics.extras.client.map.ClientPoi;
 import com.lovetropics.extras.data.poi.PoiConfig;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -28,6 +29,7 @@ class PoiButton extends AbstractButton {
     private static final int HOVER_ANIMATION_LENGTH = 8;
 
     private static final ResourceLocation TOOLTIP_SPRITE = LTExtras.location("widget/poi_tooltip");
+    private static final ResourceLocation BACKGROUND_SPRITE = LTExtras.location("widget/poi_background");
     private static final ResourceLocation TITLE_BOX_SPRITE = ResourceLocation.withDefaultNamespace("advancements/title_box");
 
     private static final int SELECTED_Z_OFFSET = 250;
@@ -90,6 +92,13 @@ class PoiButton extends AbstractButton {
 
         int iconX = getX() + BORDER_SIZE;
         int iconY = getY() + BORDER_SIZE;
+
+        if (animation == 0.0f) {
+            RenderSystem.enableBlend();
+            graphics.blitSprite(BACKGROUND_SPRITE, iconX - 1, iconY - 1, ICON_SIZE + 2, ICON_SIZE + 2);
+            RenderSystem.disableBlend();
+        }
+
         switch (poi.icon()) {
             case PoiConfig.ItemIcon(ItemStack item) -> graphics.renderFakeItem(item, iconX, iconY);
             case PoiConfig.TextureIcon(ResourceLocation texture) -> graphics.blit(texture, iconX, iconY, 0, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
