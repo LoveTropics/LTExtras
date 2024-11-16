@@ -1,6 +1,7 @@
 package com.lovetropics.extras.client;
 
 import com.lovetropics.extras.ExtraDataComponents;
+import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.item.ImageData;
 import net.minecraft.client.Minecraft;
@@ -10,6 +11,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -30,8 +32,9 @@ public class InviteOverlay {
             if (player == null) {
                 return;
             }
-            ImageData image = player.getMainHandItem().get(ExtraDataComponents.IMAGE);
-            if (image != null) {
+            ItemStack item = player.getMainHandItem();
+            ImageData image = item.get(ExtraDataComponents.IMAGE);
+            if (item.is(ExtraItems.INVITE) && image != null) {
                 drawImage(graphics, image);
             }
         });
