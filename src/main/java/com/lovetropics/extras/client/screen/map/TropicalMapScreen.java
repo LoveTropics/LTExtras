@@ -1,64 +1,48 @@
 package com.lovetropics.extras.client.screen.map;
 
-import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.client.ClientMapPoiManager;
-import com.lovetropics.extras.data.poi.MapPoiManager;
-import com.lovetropics.extras.data.poi.Poi;
+import com.lovetropics.extras.client.map.ClientPoi;
+import com.lovetropics.extras.data.poi.MapConfig;
+import com.lovetropics.extras.data.poi.MapManager;
+import com.lovetropics.extras.data.poi.PoiConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.commands.Commands;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TropicalMapScreen extends Screen {
-    private static final int MAP_PNG_HEIGHT = 256;
-    private static final int MAP_PNG_WIDTH = 256;
-    private static final ResourceLocation MAP_LOCATION = LTExtras.location("textures/map.png");
     private final Player player;
     private final List<PoiButton> poiButtons = new ArrayList<>();
+    private final MapConfig map;
+    private final List<ClientPoi> pois;
 
-    public TropicalMapScreen(Component title, Player player) {
+    public TropicalMapScreen(Component title, Player player, MapConfig map, List<ClientPoi> pois) {
         super(title);
         this.player = player;
-    }
+		this.map = map;
+		this.pois = pois;
+	}
 
     @Override
     protected void init() {
         super.init();
 
         poiButtons.clear();
-        int xOffset = (width / 2) - (MAP_PNG_WIDTH / 2);
-        int yOffset = (height / 2) - (MAP_PNG_HEIGHT / 2);
+        int xOffset = (width / 2) - (MapManager.MAP_SIZE / 2);
+        int yOffset = (height / 2) - (MapManager.MAP_SIZE / 2);
 
-        for (Poi mapPoi : ClientMapPoiManager.getPois().values()) {
-            if (!mapPoi.enabled() && !player.hasPermissions(Commands.LEVEL_GAMEMASTERS)) {
-                continue;
-            }
+        for (ClientPoi poi : pois) {
+            int screenX = poi.markerX() + xOffset;
+            int screenY = poi.markerY() + yOffset;
 
-            BlockPos pos = mapPoi.globalPos().pos();
-            Pair<Integer, Integer> poiPos = getPoiPos(pos);
-            int screenX = poiPos.getLeft() + xOffset;
-            int screenY = poiPos.getRight() + yOffset;
-
-            PoiButton button = PoiButton.create(font, screenX, screenY, mapPoi, this::doWarp);
+            PoiButton button = PoiButton.create(font, screenX, screenY, poi, () -> doWarp(poi.id()));
             addRenderableWidget(button);
             poiButtons.add(button);
         }
-    }
-
-    private Pair<Integer, Integer> getPoiPos(BlockPos blockPos) {
-        int mapWidth = MapPoiManager.MAP_BB.maxX() - MapPoiManager.MAP_BB.minX();
-        int mapHeight = MapPoiManager.MAP_BB.maxZ() - MapPoiManager.MAP_BB.minZ();
-        int screenX = (blockPos.getX() - MapPoiManager.MAP_BB.minX()) * MAP_PNG_WIDTH / mapWidth;
-        int screenY = (blockPos.getZ() - MapPoiManager.MAP_BB.minZ()) * MAP_PNG_HEIGHT / mapHeight;
-        return Pair.of(screenX, screenY);
     }
 
     @Override
@@ -79,15 +63,15 @@ public class TropicalMapScreen extends Screen {
     public void renderBackground(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
 
-        int h = (height - MAP_PNG_HEIGHT) / 2;
-        int w = (width - MAP_PNG_WIDTH) / 2;
+        int h = (height - MapManager.MAP_SIZE) / 2;
+        int w = (width - MapManager.MAP_SIZE) / 2;
 
-        graphics.blit(MAP_LOCATION, w, h, 0, 0.0F, 0.0F, MAP_PNG_WIDTH, MAP_PNG_HEIGHT, MAP_PNG_WIDTH, MAP_PNG_HEIGHT);
+        graphics.blit(map.texture(), w, h, 0, 0.0F, 0.0F, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE);
     }
 
-    private void doWarp(Poi mapPoi) {
+    private void doWarp(ResourceKey<PoiConfig> id) {
         if (player instanceof LocalPlayer localPlayer) {
-            localPlayer.connection.sendUnsignedCommand("warp " + mapPoi.name());
+            localPlayer.connection.sendUnsignedCommand("warp " + id.location());
             onClose();
         }
     }

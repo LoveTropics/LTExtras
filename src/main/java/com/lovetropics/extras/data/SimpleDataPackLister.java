@@ -8,9 +8,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.Util;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -25,7 +27,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
 
-public record SimpleDataPackLister<T>(String root, Codec<T> codec) {
+public record SimpleDataPackLister<T>(String root, ResourceKey<Registry<T>> registryKey, Codec<T> codec) {
 	private static final Logger LOGGER = LogUtils.getLogger();
 
 	public FileToIdConverter fileToIdConverter() {
@@ -45,7 +47,7 @@ public record SimpleDataPackLister<T>(String root, Codec<T> codec) {
 					ResourceLocation id = lister.fileToId(path);
 					return CompletableFuture.supplyAsync(() -> {
 						T entry = loadEntry(ops, path, resource.getValue());
-						return entry != null ? new Named<>(id, entry) : null;
+						return entry != null ? new Named<>(ResourceKey.create(registryKey, id), entry) : null;
 					}, executor);
 				})
 				.toList();

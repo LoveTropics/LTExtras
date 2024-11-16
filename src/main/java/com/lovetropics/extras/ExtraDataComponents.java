@@ -1,10 +1,12 @@
 package com.lovetropics.extras;
 
 import com.lovetropics.extras.collectible.CollectibleMarker;
+import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.ImageData;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -39,6 +41,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> JUMP_PAD = REGISTER.registerComponentType(
             "jump_pad",
             builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC)
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<MapConfig>>> MAP = REGISTER.registerComponentType(
+            "map",
+            builder -> builder.persistent(MapConfig.CODEC).networkSynchronized(MapConfig.STREAM_CODEC)
     );
 
     // General extensions

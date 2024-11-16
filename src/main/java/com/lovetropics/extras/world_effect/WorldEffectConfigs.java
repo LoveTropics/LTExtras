@@ -3,6 +3,7 @@ package com.lovetropics.extras.world_effect;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.Named;
 import com.lovetropics.extras.data.SimpleDataPackLister;
+import com.lovetropics.extras.registry.ExtraRegistries;
 import com.lovetropics.lib.codec.CodecRegistry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +16,7 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class WorldEffectConfigs {
     public static final CodecRegistry<ResourceLocation, Named<WorldEffect>> REGISTRY = CodecRegistry.resourceLocationKeys();
-    private static final SimpleDataPackLister<WorldEffect> LISTER = new SimpleDataPackLister<>("world_effects", WorldEffect.CODEC);
+    private static final SimpleDataPackLister<WorldEffect> LISTER = new SimpleDataPackLister<>("world_effects", ExtraRegistries.WORLD_EFFECT, WorldEffect.CODEC);
 
     @SubscribeEvent
     public static void addReloadListener(AddReloadListenerEvent event) {
