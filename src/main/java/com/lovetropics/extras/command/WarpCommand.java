@@ -61,7 +61,8 @@ public class WarpCommand {
             throw NOT_FOUND.create();
         }
 
-        player.teleportTo(level, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, player.getYRot(), player.getXRot());
+        float yRot = target.value().angle().orElse(player.getYRot());
+        player.teleportTo(level, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, yRot, player.getXRot());
         level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.PLAYERS, 1.0f, 1.0f);
 
         source.sendSuccess(() -> Component.translatable("commands.warp.success", target.value().description()), false);

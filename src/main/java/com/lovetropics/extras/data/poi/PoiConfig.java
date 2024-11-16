@@ -15,19 +15,22 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 public record PoiConfig(
 		Holder<MapConfig> map,
 		Component description,
 		Icon icon,
-		BlockPos pos
+		BlockPos pos,
+		Optional<Float> angle
 ) {
 	public static final Codec<PoiConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
 			MapConfig.CODEC.fieldOf("map").forGetter(PoiConfig::map),
 			ComponentSerialization.CODEC.fieldOf("description").forGetter(PoiConfig::description),
 			Icon.CODEC.fieldOf("icon").forGetter(PoiConfig::icon),
-			BlockPos.CODEC.fieldOf("pos").forGetter(PoiConfig::pos)
+			BlockPos.CODEC.fieldOf("pos").forGetter(PoiConfig::pos),
+			Codec.FLOAT.optionalFieldOf("angle").forGetter(PoiConfig::angle)
 	).apply(i, PoiConfig::new));
 
 	public sealed interface Icon {
