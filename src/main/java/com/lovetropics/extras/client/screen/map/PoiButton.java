@@ -1,5 +1,6 @@
 package com.lovetropics.extras.client.screen.map;
 
+import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.ClientMapPoiManager;
 import com.lovetropics.extras.data.poi.Poi;
 import net.minecraft.ChatFormatting;
@@ -26,7 +27,8 @@ class PoiButton extends AbstractButton {
 
     private static final int HOVER_ANIMATION_LENGTH = 8;
 
-    private static final ResourceLocation TOOLTIP_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/advancements/widgets.png");
+    private static final ResourceLocation TOOLTIP_SPRITE = LTExtras.location("widget/poi_tooltip");
+    private static final ResourceLocation TITLE_BOX_SPRITE = ResourceLocation.withDefaultNamespace("advancements/title_box");
 
     private final Poi poi;
     private final Font font;
@@ -79,8 +81,8 @@ class PoiButton extends AbstractButton {
             graphics.pose().pushPose();
             graphics.pose().translate(0.0f, 0.0f, zOffset);
 
-            graphics.blitSprite(TOOLTIP_LOCATION, getX(), getY() + (getHeight() - tooltipHeight) / 2, getWidth(), tooltipHeight, BORDER_SIZE, 200, 20, 0, 29);
-            graphics.blitSprite(TOOLTIP_LOCATION, getX(), getY(), SIZE, SIZE, BORDER_SIZE, 200, 20, 0, 55);
+            graphics.blitSprite(TOOLTIP_SPRITE, getX(), getY() + (getHeight() - tooltipHeight) / 2, getWidth(), tooltipHeight);
+            graphics.blitSprite(TITLE_BOX_SPRITE, getX(), getY(), SIZE, SIZE);
 
             graphics.enableScissor(getX() + BORDER_SIZE, getY() + BORDER_SIZE, getX() + getWidth() - BORDER_SIZE, getY() + getHeight() - BORDER_SIZE);
             int textLeft = getX() + SIZE + BORDER_SIZE - 1;

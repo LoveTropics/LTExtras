@@ -1,0 +1,9 @@
+{
+  "gui": {
+    "scaling": {
+      "width": 200,
+      "height": 26,
+      "border": 3
+    }
+  }
+}
