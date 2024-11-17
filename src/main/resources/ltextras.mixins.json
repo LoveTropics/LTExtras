@@ -26,6 +26,7 @@
     "collectible.SlotMixin",
     "no_vanilla.DropVanillaAdvancementsMixin",
     "perf.BiomeManagerMixin",
+    "perf.ReloadableServerResourcesMixin",
     "placeholder.TextDisplayAccessor",
     "placeholder.TextDisplayMixin",
     "placeholder.TransformationMixin",
@@ -45,7 +46,8 @@
     "client.perf.ViewFrustumAccess",
     "client.perf.WorldRendererAccess",
     "client.translation.MinecraftMixin",
-    "client.world_effect.ClientLevelMixin"
+    "client.world_effect.ClientLevelMixin",
+    "client.perf.TagCollectorMixin"
   ],
   "injectors": {
     "defaultRequire": 1
