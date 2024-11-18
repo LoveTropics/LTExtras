@@ -5,6 +5,7 @@ import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
 import com.lovetropics.extras.network.message.ClientboundOpenCollectibleBasketPacket;
 import com.lovetropics.extras.network.message.ClientboundPoiFacesPacket;
 import com.lovetropics.extras.network.message.ClientboundRemovePoiPacket;
+import com.lovetropics.extras.network.message.ClientboundUpdatePackControl;
 import com.lovetropics.extras.network.message.ClientboundUpdatePoiPacket;
 import com.lovetropics.extras.network.message.ClientboundSetAutoRejoinIntent;
 import com.lovetropics.extras.network.message.ClientboundSetDisplayTextPacket;
@@ -36,5 +37,6 @@ public class LTExtrasNetwork {
         registrar.playToClient(ClientboundRemovePoiPacket.TYPE, ClientboundRemovePoiPacket.STREAM_CODEC, ClientboundRemovePoiPacket::handle);
         registrar.playToClient(ClientboundPoiFacesPacket.TYPE, ClientboundPoiFacesPacket.STREAM_CODEC, ClientboundPoiFacesPacket::handle);
         registrar.playToClient(ClientboundOpenCollectibleBasketPacket.TYPE, ClientboundOpenCollectibleBasketPacket.STREAM_CODEC, ClientboundOpenCollectibleBasketPacket::handle);
+        registrar.playToClient(ClientboundUpdatePackControl.TYPE, ClientboundUpdatePackControl.STREAM_CODEC, ClientboundUpdatePackControl::handle);
     }
 }
