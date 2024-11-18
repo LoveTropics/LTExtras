@@ -1,6 +1,7 @@
 package com.lovetropics.extras;
 
-import com.lovetropics.extras.client.command.RenderPlayerNameTagCommand;
+import com.google.common.collect.Sets;
+import com.lovetropics.extras.client.command.NameTagModeCommand;
 import com.lovetropics.extras.client.entity.model.RaveKoaModel;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
@@ -18,10 +19,14 @@ import com.lovetropics.extras.world_effect.WorldEffectCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -29,6 +34,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -47,7 +54,12 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 
 import javax.annotation.Nullable;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Mod("ltextras")
 public class LTExtras {
@@ -103,7 +115,6 @@ public class LTExtras {
 
 					TpCommand.addTranslations(p);
 					WarpCommand.addTranslations(p);
-					RenderPlayerNameTagCommand.addTranslations(p);
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
                         .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))
@@ -134,11 +145,46 @@ public class LTExtras {
 		WorldEffectCommand.register(dispatcher);
 		WarpCommand.register(dispatcher);
 		PoiCommand.register(dispatcher, buildContext);
+		dispatcher.register(Commands.literal("test").executes(context -> {
+			context.getSource().sendSystemMessage(Component.literal("" + Block.BLOCK_STATE_REGISTRY.size()));
+			List<Map.Entry<Block, List<BlockState>>> sorted = StreamSupport.stream(Block.BLOCK_STATE_REGISTRY.spliterator(), false)
+					.collect(Collectors.groupingBy(BlockBehaviour.BlockStateBase::getBlock))
+					.entrySet()
+					.stream()
+//					.sorted(Comparator.comparing(e -> -e.getValue().size()))
+					.toList();
+			Object2IntOpenHashMap<String> wordToCount = new Object2IntOpenHashMap<>();
+			for (Map.Entry<Block, List<BlockState>> entry : sorted) {
+				String[] parts = entry.getKey().builtInRegistryHolder().key().location().getPath().split("_");
+				for (String part : Sets.newHashSet(parts)) {
+					wordToCount.addTo(part, entry.getValue().size());
+				}
+				wordToCount.addTo(entry.getKey().builtInRegistryHolder().key().location().getNamespace(), entry.getValue().size());
+			}
+			List<Object2IntMap.Entry<String>> list = wordToCount.object2IntEntrySet().stream()
+					.sorted(Comparator.comparing(e -> -e.getIntValue()))
+					.toList();
+			int i = 0;
+			for (Object2IntMap.Entry<String> entry : list) {
+				context.getSource().sendSystemMessage(Component.literal(entry.getKey() + ": " + entry.getIntValue()));
+				if (i++ > 50) {
+					break;
+				}
+			}
+//			int i = 0;
+//			for (Map.Entry<Block, List<BlockState>> entry : sorted) {
+//				context.getSource().sendSystemMessage(Component.literal(entry.getKey() + ": " + entry.getValue().size()));
+//				if (i++ > 500) {
+//					break;
+//				}
+//			}
+			return 1;
+		}));
 	}
 
 	private void onRegisterClientCommands(RegisterClientCommandsEvent event) {
 		CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-		RenderPlayerNameTagCommand.register(dispatcher);
+		NameTagModeCommand.register(dispatcher);
 	}
 
 	private void onModifyAttributes(EntityAttributeModificationEvent event) {
