@@ -49,7 +49,7 @@ public class EntityMixin {
 
     @Inject(method = "setRemoved", at = @At("HEAD"), cancellable = true)
     public final void setRemoved(Entity.RemovalReason removalReason, CallbackInfo ci) {
-        if(this.tags.contains(lTExtras$UNTOUCHABLE)) {
+        if(removalReason == Entity.RemovalReason.KILLED && this.tags.contains(lTExtras$UNTOUCHABLE)) {
             ci.cancel();
         }
     }
