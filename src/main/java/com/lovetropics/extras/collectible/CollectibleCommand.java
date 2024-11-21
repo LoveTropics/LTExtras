@@ -11,6 +11,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -18,6 +19,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.ResourceOrTagArgument;
 import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -40,6 +42,7 @@ import static net.minecraft.commands.Commands.literal;
 import static net.minecraft.commands.arguments.EntityArgument.getPlayers;
 import static net.minecraft.commands.arguments.EntityArgument.players;
 import static net.minecraft.commands.arguments.ResourceKeyArgument.key;
+import static net.minecraft.commands.arguments.ResourceOrTagArgument.getResourceOrTag;
 import static net.minecraft.commands.arguments.ResourceOrTagArgument.resourceOrTag;
 import static net.minecraft.commands.arguments.item.ItemArgument.getItem;
 import static net.minecraft.commands.arguments.item.ItemArgument.item;
@@ -61,8 +64,8 @@ public class CollectibleCommand {
                                                 .executes(c -> give(c, getPlayers(c, "target"), getItem(c, "item")))
                                         )
                                 )
-                                .then(argument("collectible", key(ExtraRegistries.COLLECTIBLE))
-                                        .executes(c -> give(c, getPlayers(c, "target"), getCollectible(c, "collectible")))
+                                .then(argument("collectible", resourceOrTag(buildContext, ExtraRegistries.COLLECTIBLE))
+                                        .executes(c -> give(c, getPlayers(c, "target"), getResourceOrTag(c, "collectible", ExtraRegistries.COLLECTIBLE)))
                                 )
                         )
                 )
@@ -74,7 +77,7 @@ public class CollectibleCommand {
                                         )
                                 )
                                 .then(argument("collectible", resourceOrTag(buildContext, ExtraRegistries.COLLECTIBLE))
-                                        .executes(c -> clear(c, getPlayers(c, "target"), ResourceOrTagArgument.getResourceOrTag(c, "collectible", ExtraRegistries.COLLECTIBLE)))
+                                        .executes(c -> clear(c, getPlayers(c, "target"), getResourceOrTag(c, "collectible", ExtraRegistries.COLLECTIBLE)))
                                 )
                                 .executes(c -> clear(c, getPlayers(c, "target"), i -> true))
                         )
@@ -104,10 +107,18 @@ public class CollectibleCommand {
 
     private static int give(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, ItemInput item) throws CommandSyntaxException {
         ItemStack stack = item.createItemStack(1, true);
-        return give(ctx, players, Holder.direct(new Collectible(stack)));
+		return giveSingle(ctx, players, Holder.direct(new Collectible(stack)));
     }
 
-    private static int give(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, Holder<Collectible> collectible) throws CommandSyntaxException {
+    private static int give(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, ResourceOrTagArgument.Result<Collectible> collectibles) throws CommandSyntaxException {
+        Either<Holder.Reference<Collectible>, HolderSet.Named<Collectible>> either = collectibles.unwrap();
+        if (either.left().isPresent()) {
+            return giveSingle(ctx, players, either.left().get());
+        }
+        return giveTag(ctx, players, either.right().orElseThrow());
+    }
+
+    private static int giveSingle(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, Holder<Collectible> collectible) throws CommandSyntaxException {
         int result = 0;
         for (ServerPlayer player : players) {
             CollectibleStore collectibles = CollectibleStore.get(player);
@@ -123,6 +134,27 @@ public class CollectibleCommand {
         int finalResult = result;
         ItemStack stack = Collectible.createItemStack(collectible, Util.NIL_UUID);
         ctx.getSource().sendSuccess(() -> Component.translatable("Gave %s to %s players", stack.getDisplayName(), finalResult), false);
+
+        return result;
+    }
+
+    private static int giveTag(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, HolderSet.Named<Collectible> collectiblesToGive) throws CommandSyntaxException {
+        int result = 0;
+        for (ServerPlayer player : players) {
+            CollectibleStore collectibles = CollectibleStore.get(player);
+			for (Holder<Collectible> collectible : collectiblesToGive) {
+                if (collectibles.give(collectible)) {
+                    result++;
+                }
+            }
+        }
+
+        if (result == 0) {
+            throw GAVE_TO_NO_PLAYERS.create();
+        }
+
+        int finalResult = result;
+        ctx.getSource().sendSuccess(() -> Component.translatable("Gave %s to %s players", Component.translationArg(collectiblesToGive.key().location()), finalResult), false);
 
         return result;
     }
