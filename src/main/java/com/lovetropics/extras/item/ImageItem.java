@@ -29,7 +29,8 @@ public class ImageItem extends Item {
             imageWithWidth("Mpanga River", "mpanga_river", 2.0f, 256, 340),
             imageWithWidth("Papyrus", "papyrus", 2.0f, 341, 256),
             imageWithWidth("Papyrus Yellow Warbler", "papyrus_yellow_warbler", 1.0f, 256, 184),
-            imageWithHeight("Women Holding Seeds", "women_holding_seeds", 1.0f, 300, 200)
+            imageWithHeight("Women Holding Seeds", "women_holding_seeds", 1.0f, 300, 200),
+            imageWithWidth("White-Collared Oliveback", "white_collared_oliveback", 1.0f, 256, 320)
     );
 
     private static ImageData imageWithWidth(String name, String path, float blockWidth, int textureWidth, int textureHeight) {
