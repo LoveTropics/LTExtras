@@ -21,7 +21,15 @@ public class ImageItem extends Item {
             imageWithWidth("Papyrus Gonolek", "papyrus_gonolek", 2.0f, 266, 200),
             imageWithHeight("Papyrus Harvest", "papyrus_harvest", 2.0f, 340, 256),
             imageWithWidth("Shoebill Stork", "shoebill_stork", 3.0f, 317, 256),
-            imageWithWidth("White-Winged Warbler", "white_winged_warbler", 3.0f, 301, 200)
+            imageWithWidth("White-Winged Warbler", "white_winged_warbler", 3.0f, 301, 200),
+            imageWithHeight("Bird Survey", "bird_survey", 2.0f, 400, 301),
+            imageWithHeight("Bridge", "bridge", 3.0f, 300, 450),
+            imageWithHeight("Love Tropics", "love_tropics", 1.0f, 128, 128),
+            imageWithHeight("WEA", "wea", 1.0f, 128, 128),
+            imageWithWidth("Mpanga River", "mpanga_river", 2.0f, 256, 340),
+            imageWithWidth("Papyrus", "papyrus", 2.0f, 341, 256),
+            imageWithWidth("Papyrus Yellow Warbler", "papyrus_yellow_warbler", 1.0f, 256, 184),
+            imageWithHeight("Women Holding Seeds", "women_holding_seeds", 1.0f, 300, 200)
     );
 
     private static ImageData imageWithWidth(String name, String path, float blockWidth, int textureWidth, int textureHeight) {
