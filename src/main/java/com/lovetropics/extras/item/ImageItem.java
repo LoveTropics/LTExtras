@@ -16,6 +16,8 @@ public class ImageItem extends Item {
             new ImageData(Component.literal("Plantain Ent"), LTExtras.location("textures/images/plantain_ent.png"), 2.5f, 3.0f),
             new ImageData(Component.literal("Manatee"), LTExtras.location("textures/images/manatee.png"), 2.5f, 3.0f),
             new ImageData(Component.literal("Shoebill"), LTExtras.location("textures/images/shoebill.png"), 2.5f, 3.0f),
+            new ImageData(Component.literal("Team Cents Poster"), LTExtras.location("textures/images/team_cents_poster.png"), 1.0f, 1.0f),
+            new ImageData(Component.literal("Team No Cents Poster"), LTExtras.location("textures/images/team_no_cents_poster.png"), 1.0f, 1.0f),
             imageWithHeight("Papyrus Canary", "canary_papyrus", 3.0f, 256, 335),
             imageWithHeight("Habitat Restoration - Riverbank", "habitat_restoration_riverbank_1", 3.0f, 256, 340),
             imageWithWidth("Papyrus Gonolek", "papyrus_gonolek", 2.0f, 266, 200),
