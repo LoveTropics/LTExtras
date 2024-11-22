@@ -213,7 +213,7 @@ public class ClientPlayerSensorEffects {
 		poseStack.last().pose().transformPosition(pos);
 		RenderSystem.getModelViewMatrix().transformPosition(pos);
 		RenderSystem.getProjectionMatrix().transformProject(pos);
-		return pos.set((pos.x + 1.0f) / 2.0f, 1.0f - (pos.y + 1.0f) / 2.0f, 0.0f);
+		return pos.set((pos.x + 1.0f) / 2.0f, 1.0f - (pos.y + 1.0f) / 2.0f, pos.z);
 	}
 
 	private record CapturedScreenBoxes(UUID playerId, ScreenBox face) {
