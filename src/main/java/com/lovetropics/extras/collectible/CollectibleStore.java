@@ -57,7 +57,9 @@ public class CollectibleStore {
 
     public static CollectibleStore get(Player player) {
         CollectibleStore data = player.getData(ExtraAttachments.COLLECTIBLE_STORE);
-        data.player = (ServerPlayer) player;
+        if (player instanceof ServerPlayer serverPlayer) {
+            data.player = serverPlayer;
+        }
         return data;
     }
 
