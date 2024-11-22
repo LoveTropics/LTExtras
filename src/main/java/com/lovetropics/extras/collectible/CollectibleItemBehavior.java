@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -94,8 +95,11 @@ public class CollectibleItemBehavior {
     public static InteractionResultHolder<ItemStack> wrapUse(ItemStack stack, Level level, Player player, InteractionHand hand) {
         if (Collectible.isCollectible(stack)) {
             int count = stack.getCount();
+            ItemStack oldStack = stack.copy();
             InteractionResultHolder<ItemStack> result = stack.getItem().use(level, player, hand);
-            stack.setCount(count);
+            if (!isEquipped(player, oldStack)) {
+                stack.setCount(count);
+            }
             return result;
         }
         return stack.getItem().use(level, player, hand);
@@ -109,5 +113,14 @@ public class CollectibleItemBehavior {
             return result;
         }
         return stack.useOn(context);
+    }
+
+    private static boolean isEquipped(Player player, ItemStack stack) {
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (ItemStack.isSameItemSameComponents(player.getItemBySlot(slot), stack)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
