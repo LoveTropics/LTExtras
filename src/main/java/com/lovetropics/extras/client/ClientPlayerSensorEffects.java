@@ -29,6 +29,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import org.joml.Vector3f;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -158,18 +159,26 @@ public class ClientPlayerSensorEffects {
 			return;
 		}
 		if (model instanceof HumanoidModel<T> humanoidModel) {
-			CAPTURED_SCREEN_POS.add(capturePlayerPose(entity, poseStack, humanoidModel));
+			CapturedScreenBoxes capture = capturePlayerPose(entity, poseStack, humanoidModel);
+			if (capture != null) {
+				CAPTURED_SCREEN_POS.add(capture);
+			}
 		}
 	}
 
+	@Nullable
 	private static CapturedScreenBoxes capturePlayerPose(LivingEntity entity, PoseStack poseStack, HumanoidModel<?> humanoidModel) {
 		poseStack.pushPose();
 		humanoidModel.head.translateAndRotate(poseStack);
 		ScreenBox faceBox = toScreenBox(poseStack, -4.0f, -8.0f, -4.0f, 4.0f, 0.0f, 4.0f);
 		poseStack.popPose();
-		return new CapturedScreenBoxes(entity.getUUID(), faceBox);
+		if (faceBox != null) {
+			return new CapturedScreenBoxes(entity.getUUID(), faceBox);
+		}
+		return null;
 	}
 
+	@Nullable
 	private static ScreenBox toScreenBox(PoseStack poseStack, float x0, float y0, float z0, float x1, float y1, float z1) {
 		Vector3f[] vertices = {
 				toScreenPos(poseStack, x0, y0, z0),
@@ -186,6 +195,11 @@ public class ClientPlayerSensorEffects {
 		float maxX = -Float.MAX_VALUE;
 		float maxY = -Float.MAX_VALUE;
 		for (Vector3f vertex : vertices) {
+			if (vertex.z >= 1.0f || vertex.z <= 0.1f) {
+				return null;
+			} else if (vertex.x <= -2.0f || vertex.x >= 2.0f || vertex.y <= -2.0f || vertex.y >= 2.0f) {
+				return null;
+			}
 			minX = Math.min(minX, vertex.x);
 			minY = Math.min(minY, vertex.y);
 			maxX = Math.max(maxX, vertex.x);
