@@ -8,9 +8,11 @@ import com.lovetropics.extras.item.ExtraItemProperties;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
+import com.lovetropics.extras.item.SunglassesItem;
 import com.lovetropics.extras.item.TropicMapItem;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.tterrag.registrate.Registrate;
+import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.Item;
@@ -25,6 +27,14 @@ public class ExtraItems {
             .register();
 
     public static final ItemEntry<Item> TROPICOIN = REGISTRATE.item("tropicoin", Item::new).lang("TropiCoin").register();
+
+    public static final ItemEntry<SunglassesItem> ORANGE_GLASSES = sunglasses("orange_glasses").register();
+    public static final ItemEntry<SunglassesItem> BLUE_GLASSES = sunglasses("blue_glasses").register();
+
+    private static ItemBuilder<SunglassesItem, Registrate> sunglasses(String name) {
+        return REGISTRATE.item(name, SunglassesItem::new)
+                .model((ctx, prov) -> {});
+    }
 
     public static final ItemEntry<CollectibleBasketItem> COLLECTIBLE_BASKET = REGISTRATE.item("collectible_basket", CollectibleBasketItem::new)
             .properties(p -> p.stacksTo(1))
