@@ -34,7 +34,7 @@ public class InviteOverlay {
             }
             ItemStack item = player.getMainHandItem();
             ImageData image = item.get(ExtraDataComponents.IMAGE);
-            if (item.is(ExtraItems.INVITE) && image != null) {
+            if (item.is(ExtraItems.INVITE) || item.is(ExtraItems.QUEST) && image != null) {
                 drawImage(graphics, image);
             }
         });

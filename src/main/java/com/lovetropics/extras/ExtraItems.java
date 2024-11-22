@@ -63,6 +63,9 @@ public class ExtraItems {
             })
             .register();
 
+
+    public static final ItemEntry<Item> QUEST = REGISTRATE.item("quest", Item::new).register();
+
     public static final ItemEntry<TropicMapItem> TROPICAL_MAP = REGISTRATE.item("tropical_map", TropicMapItem::new)
             .initialProperties(() -> new Item.Properties().stacksTo(1))
             .tab(LTExtras.TAB_KEY, modifier -> {
