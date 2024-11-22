@@ -35,6 +35,7 @@
   ],
   "client": [
     "client.IconSetMixin",
+    "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
     "client.collectible.MultiPlayerGameModeMixin",
     "client.menu.LogoRendererMixin",

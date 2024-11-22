@@ -4,6 +4,7 @@ import com.lovetropics.extras.collectible.CollectibleMarker;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.ImageData;
+import com.lovetropics.extras.item.sensor.PlayerSensor;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -24,11 +25,11 @@ public class ExtraDataComponents {
     // Components for specific items
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleMarker>> COLLECTIBLE = REGISTER.registerComponentType(
             "collectible",
-            builder -> builder.persistent(CollectibleMarker.CODEC).networkSynchronized(CollectibleMarker.STREAM_CODEC)
+            builder -> builder.persistent(CollectibleMarker.CODEC).networkSynchronized(CollectibleMarker.STREAM_CODEC).cacheEncoding()
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleCompassItem.Target>> COLLECTIBLE_TARGET = REGISTER.registerComponentType(
             "collectible_target",
-            builder -> builder.persistent(CollectibleCompassItem.Target.CODEC).networkSynchronized(CollectibleCompassItem.Target.STREAM_CODEC)
+            builder -> builder.persistent(CollectibleCompassItem.Target.CODEC).networkSynchronized(CollectibleCompassItem.Target.STREAM_CODEC).cacheEncoding()
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> COIN_COUNT = REGISTER.registerComponentType(
             "coin_count",
@@ -40,11 +41,11 @@ public class ExtraDataComponents {
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> JUMP_PAD = REGISTER.registerComponentType(
             "jump_pad",
-            builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC)
+            builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC).cacheEncoding()
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<MapConfig>>> MAP = REGISTER.registerComponentType(
             "map",
-            builder -> builder.persistent(MapConfig.CODEC).networkSynchronized(MapConfig.STREAM_CODEC)
+            builder -> builder.persistent(MapConfig.CODEC).networkSynchronized(MapConfig.STREAM_CODEC).cacheEncoding()
     );
 
     // General extensions
@@ -54,10 +55,14 @@ public class ExtraDataComponents {
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> COOLDOWN_OVERRIDE = REGISTER.registerComponentType(
             "cooldown_override",
-            builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT)
+            builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT).cacheEncoding()
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ImageData>> IMAGE = REGISTER.registerComponentType(
             "image",
-            builder -> builder.persistent(ImageData.CODEC)
+            builder -> builder.persistent(ImageData.CODEC).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<PlayerSensor>> PLAYER_SENSOR = REGISTER.registerComponentType(
+            "player_sensor",
+            builder -> builder.persistent(PlayerSensor.CODEC).networkSynchronized(PlayerSensor.STREAM_CODEC).cacheEncoding()
     );
 }
