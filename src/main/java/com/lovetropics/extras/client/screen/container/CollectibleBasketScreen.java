@@ -33,7 +33,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     private static final Component TITLE = ExtraItems.COLLECTIBLE_BASKET.get().getDescription();
 
     private static final ResourceLocation BACKGROUND_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/creative_inventory/tab_items.png");
-    private static final ResourceLocation CREATIVE_TABS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/creative_inventory/tabs.png");
+    private static final ResourceLocation SCROLLER_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/sprites/container/creative_inventory/scroller.png");
 
     private static final int BACKGROUND_WIDTH = 195;
     private static final int BACKGROUND_HEIGHT = 136;
@@ -74,7 +74,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
 
         ScreenRectangle scroller = scrollerRectangle();
         if (scroller != null) {
-            graphics.blit(CREATIVE_TABS_LOCATION, scroller.left(), scroller.top(), draggingScroller ? 244 : 232, 0, scroller.width(), scroller.height());
+            graphics.blit(SCROLLER_LOCATION, scroller.left(), scroller.top(), 0, 0, scroller.width(), scroller.height(), 12, 15);
         }
     }
 
