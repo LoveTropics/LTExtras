@@ -32,7 +32,7 @@ class PoiButton extends AbstractButton {
     private static final ResourceLocation BACKGROUND_SPRITE = LTExtras.location("widget/poi_background");
     private static final ResourceLocation TITLE_BOX_SPRITE = ResourceLocation.withDefaultNamespace("advancements/title_box");
 
-    private static final int SELECTED_Z_OFFSET = 250;
+    private static final int SELECTED_Z_OFFSET = 500;
 
     private final ClientPoi poi;
     private final Font font;
@@ -69,10 +69,12 @@ class PoiButton extends AbstractButton {
         float animation = Mth.lerp(partialTicks, lastFocusAnimation, focusAnimation) / HOVER_ANIMATION_LENGTH;
         animation = (float) (1.0 - Math.pow(1.0 - animation, 5.0));
 
-		graphics.pose().pushPose();
-        graphics.pose().translate(0.0f, 0.0f, animation > 0.0f ? SELECTED_Z_OFFSET : 0);
+        boolean isSelected = animation > Mth.EPSILON;
 
-        if (animation > 0.0f) {
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0f, 0.0f, isSelected ? SELECTED_Z_OFFSET : 0);
+
+        if (isSelected) {
             int tooltipWidth = Mth.floor((font.width(getMessage()) + BORDER_SIZE * 2) * animation);
             final int tooltipHeight = TOOLTIP_HEIGHT;
             setWidth(SIZE + tooltipWidth);
@@ -93,7 +95,7 @@ class PoiButton extends AbstractButton {
         int iconX = getX() + BORDER_SIZE;
         int iconY = getY() + BORDER_SIZE;
 
-        if (animation == 0.0f) {
+        if (!isSelected) {
             RenderSystem.enableBlend();
             graphics.blitSprite(BACKGROUND_SPRITE, iconX - 1, iconY - 1, ICON_SIZE + 2, ICON_SIZE + 2);
             RenderSystem.disableBlend();
@@ -104,6 +106,8 @@ class PoiButton extends AbstractButton {
             case PoiConfig.TextureIcon(ResourceLocation texture) -> graphics.blit(texture, iconX, iconY, 0, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
         }
 
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0f, 0.0f, 100.0f);
         List<UUID> faces = poi.faces();
         if (!faces.isEmpty()) {
             int faceFactor = faces.size() > 2 ? 2 : 1;
@@ -112,6 +116,7 @@ class PoiButton extends AbstractButton {
                 PlayerFaceRenderer.draw(graphics, face, getX() + BORDER_SIZE + i * HALF_ICON_SIZE / faceFactor + i, getY() + ICON_SIZE, HALF_ICON_SIZE / faceFactor);
             }
         }
+        graphics.pose().popPose();
 
         graphics.pose().popPose();
     }
