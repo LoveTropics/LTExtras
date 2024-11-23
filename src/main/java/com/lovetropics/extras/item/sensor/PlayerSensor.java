@@ -1,5 +1,9 @@
 package com.lovetropics.extras.item.sensor;
 
+import com.lovetropics.lib.codec.MoreCodecs;
+import com.lovetropics.lib.permission.PermissionsApi;
+import com.lovetropics.lib.permission.role.Role;
+import com.lovetropics.lib.permission.role.RoleReader;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -8,25 +12,43 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.List;
 import java.util.Optional;
 
 public record PlayerSensor(
-		String tag,
+		List<String> tags,
+		List<String> roles,
 		Appearance appearance
 ) {
 	public static final Codec<PlayerSensor> CODEC = RecordCodecBuilder.create(i -> i.group(
-			Codec.STRING.fieldOf("tag").forGetter(PlayerSensor::tag),
+			MoreCodecs.listOrUnit(Codec.STRING).optionalFieldOf("tag", List.of()).forGetter(PlayerSensor::tags),
+			MoreCodecs.listOrUnit(Codec.STRING).optionalFieldOf("roles", List.of()).forGetter(PlayerSensor::roles),
 			Appearance.CODEC.fieldOf("appearance").forGetter(PlayerSensor::appearance)
 	).apply(i, PlayerSensor::new));
 
 	public static final StreamCodec<ByteBuf, PlayerSensor> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.STRING_UTF8, PlayerSensor::tag,
+			ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), PlayerSensor::tags,
+			ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), PlayerSensor::roles,
 			Appearance.STREAM_CODEC, PlayerSensor::appearance,
 			PlayerSensor::new
 	);
 
 	public boolean matches(ServerPlayer player) {
-		return player.getTags().contains(tag);
+		for (String tag : tags) {
+			if (player.getTags().contains(tag)) {
+				return true;
+			}
+		}
+		if (!roles.isEmpty()) {
+			RoleReader reader = PermissionsApi.lookup().byPlayer(player);
+			for (String roleId : roles) {
+				Role role = PermissionsApi.provider().get(roleId);
+				if (reader.has(role)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public record Appearance(
