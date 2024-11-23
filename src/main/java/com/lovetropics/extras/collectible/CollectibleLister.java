@@ -35,13 +35,12 @@ public class CollectibleLister {
     private static final String PLAYER_DATA_SUFFIX = ".dat";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static CompletableFuture<List<UUID>> listPlayersWithItem(MinecraftServer server, Predicate<ItemStack> item) {
+    public static CompletableFuture<List<UUID>> listPlayersWithItem(MinecraftServer server, Predicate<Holder<Collectible>> predicate) {
         return list(server).thenApplyAsync(entries -> {
             List<UUID> profileIds = new ArrayList<>();
             for (CollectibleLister.Entry entry : entries) {
                 for (Holder<Collectible> collectible : entry.data().collectibles()) {
-                    ItemStack stack = Collectible.createItemStack(collectible, entry.profileId());
-                    if (item.test(stack)) {
+                    if (predicate.test(collectible)) {
                         profileIds.add(entry.profileId());
                     }
                 }

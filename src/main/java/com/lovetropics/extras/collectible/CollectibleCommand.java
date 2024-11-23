@@ -92,9 +92,12 @@ public class CollectibleCommand {
                 .then(literal("countdisguises").executes(CollectibleCommand::countDisguises))
                 .then(literal("find")
                         .executes(context -> findCollectibles(context.getSource(), stack -> true))
+                        .then(argument("collectible", resourceOrTag(buildContext, ExtraRegistries.COLLECTIBLE))
+                                .executes(context -> findCollectibles(context.getSource(), getResourceOrTag(context, "collectible", ExtraRegistries.COLLECTIBLE)))
+                        )
                         .then(literal("item")
                                 .then(argument("item", itemPredicate(buildContext))
-                                        .executes(context -> findCollectibles(context.getSource(), getItemPredicate(context, "item")))
+                                        .executes(context -> findCollectibles(context.getSource(), itemToCollectiblePredicate(getItemPredicate(context, "item"))))
                                 )
                         )
                 )
@@ -224,10 +227,10 @@ public class CollectibleCommand {
         return 1;
     }
 
-    private static int findCollectibles(CommandSourceStack source, Predicate<ItemStack> item) {
+    private static int findCollectibles(CommandSourceStack source, Predicate<Holder<Collectible>> predicate) {
         MinecraftServer server = source.getServer();
         GameProfileCache profileCache = server.getProfileCache();
-        CollectibleLister.listPlayersWithItem(server, item)
+        CollectibleLister.listPlayersWithItem(server, predicate)
                 .thenApplyAsync(
                         profileIds -> profileIds.stream().map(profileCache::get).flatMap(Optional::stream).toList(),
                         Util.backgroundExecutor()
