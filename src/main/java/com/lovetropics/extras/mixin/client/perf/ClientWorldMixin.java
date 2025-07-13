@@ -34,7 +34,7 @@ public class ClientWorldMixin {
 		SectionRenderDispatcher.RenderSection renderChunk = frustum.ltextras$getRenderChunk(pos);
 		if (renderChunk != null) {
 			for (Direction horizontal : ltextras$HORIZONTALS) {
-				BlockPos neighborPos = renderChunk.getRelativeOrigin(horizontal);
+				BlockPos neighborPos = BlockPos.of(renderChunk.getNeighborSectionNode(horizontal));
 				SectionRenderDispatcher.RenderSection neighborChunk = frustum.ltextras$getRenderChunk(neighborPos);
 				if (neighborChunk != null) {
 					((ChunkRendererExt) neighborChunk).extras$markNeighborChunksUnloaded();

@@ -1,22 +1,20 @@
 package com.lovetropics.extras.block.entity;
 
 import com.lovetropics.extras.entity.ExtendedCreatureEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,6 +35,14 @@ public class MobControllerBlockEntity extends BlockEntity {
 	public final Map<UUID, EntityType<?>> types = new HashMap<>();
 	public final Map<UUID, Vec3> positions = new HashMap<>();
 
+	public record MobConfig(UUID uuid, ResourceKey<EntityType<?>> type, Vec3 pos){
+		public static final Codec<MobConfig> CODEC = RecordCodecBuilder.create(inst ->
+				inst.group(UUIDUtil.CODEC.fieldOf("uuid").forGetter(MobConfig::uuid),
+								ResourceKey.codec(Registries.ENTITY_TYPE).fieldOf("type").forGetter(MobConfig::type),
+								Vec3.CODEC.fieldOf("pos").forGetter(MobConfig::pos))
+						.apply(inst, MobConfig::new));
+	}
+
 	public MobControllerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
@@ -45,42 +51,32 @@ public class MobControllerBlockEntity extends BlockEntity {
 	public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
 		super.loadAdditional(tag, registries);
 
-		ListTag mobUuids = tag.getList("Mobs", Tag.TAG_COMPOUND);
+		tag.read("Mobs", MobConfig.CODEC.listOf()).ifPresent(mobConfigs -> {
+			uuids.clear();
+			for (MobConfig mobConfig : mobConfigs) {
+				registries.lookupOrThrow(Registries.ENTITY_TYPE).get(mobConfig.type()).ifPresent(entityType -> {
+					uuids.add(mobConfig.uuid());
+					types.put(mobConfig.uuid(), entityType.value());
+					positions.put(mobConfig.uuid(), mobConfig.pos());
+				});
+			}
+		});
 
-		uuids.clear();
-		for (Tag mobNbt : mobUuids) {
-			CompoundTag compoundNBT = (CompoundTag) mobNbt;
-			UUID uuid = compoundNBT.getUUID("UUID");
-			ResourceLocation type = ResourceLocation.parse(compoundNBT.getString("Type"));
-
-			ListTag pos = compoundNBT.getList("Pos", Tag.TAG_DOUBLE);
-			registries.lookupOrThrow(Registries.ENTITY_TYPE).get(ResourceKey.create(Registries.ENTITY_TYPE, type)).ifPresent(entityType -> {
-				uuids.add(uuid);
-				types.put(uuid, entityType.value());
-				positions.put(uuid, new Vec3(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)));
-			});
-		}
-
-		loadState = tag.getBoolean("LoadState");
+		loadState = tag.getBooleanOr("LoadState", false);
 	}
 
 	@Override
 	protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
 		super.saveAdditional(compound, registries);
 
-		ListTag mobs = new ListTag();
+		List<MobConfig> mobConfigs = new ArrayList<>();
 		for (UUID uuid : uuids) {
-			CompoundTag compoundNBT = new CompoundTag();
-			compoundNBT.putUUID("UUID", uuid);
-			compoundNBT.putString("Type", EntityType.getKey(types.get(uuid)).toString());
-
+			ResourceLocation key = EntityType.getKey(types.get(uuid));
+			ResourceKey<EntityType<?>> entityTypeResourceKey = ResourceKey.create(Registries.ENTITY_TYPE, key);
 			Vec3 pos = positions.get(uuid);
-			compoundNBT.put("Pos", newDoubleNBTList(pos.x, pos.y, pos.z));
-
-			mobs.add(compoundNBT);
+			mobConfigs.add(new MobConfig(uuid, entityTypeResourceKey, pos));
 		}
-
-		compound.put("Mobs", mobs);
+		compound.store("Mobs", MobConfig.CODEC.listOf(), mobConfigs);
 		compound.putBoolean("LoadState", loadState);
 	}
 
@@ -111,7 +107,7 @@ public class MobControllerBlockEntity extends BlockEntity {
 		if (level instanceof ServerLevel serverLevel) {
 			long ticks = level.getGameTime();
 
-			// Update positions semi frequently
+			// Update pos semi frequently
 			if (controller.loadState && ticks % (SharedConstants.TICKS_PER_SECOND / 4) == 0) {
 				for (UUID uuid : controller.uuids) {
 					Entity entity = serverLevel.getEntity(uuid);
@@ -144,17 +140,17 @@ public class MobControllerBlockEntity extends BlockEntity {
 						controller.loadState = true;
 
 						for (UUID uuid : controller.uuids) {
-							Entity entity = controller.types.get(uuid).create(serverLevel);
+							Entity entity = controller.types.get(uuid).create(serverLevel, EntitySpawnReason.MOB_SUMMONED);
 							Vec3 mobPos = controller.positions.get(uuid);
 
 							if (entity != null) {
-								entity.moveTo(mobPos.x(), mobPos.y(), mobPos.z(), 0, 0);
+								entity.moveOrInterpolateTo(mobPos, 0, 0);
 
 								entity.setUUID(uuid);
 								level.addFreshEntity(entity);
 
 								if (entity instanceof Mob) {
-									((Mob) entity).finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED, null);
+									((Mob) entity).finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(pos), EntitySpawnReason.MOB_SUMMONED, null);
 								}
 
 								if (entity instanceof ExtendedCreatureEntity) {

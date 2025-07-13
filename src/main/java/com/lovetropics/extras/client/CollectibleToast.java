@@ -8,7 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.toasts.ToastManager;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -27,15 +28,25 @@ public class CollectibleToast implements Toast {
     private final ItemStack stack;
     private final Component name;
     private final Minecraft minecraft = Minecraft.getInstance();
+    private Toast.Visibility wantedVisibility = Toast.Visibility.HIDE;
 
     public CollectibleToast(Holder<Collectible> collectible) {
         stack = Collectible.createItemStack(collectible, Util.NIL_UUID);
         name = Component.empty().withStyle(ChatFormatting.DARK_RED).append(stack.getHoverName());
     }
+    @Override
+    public Visibility getWantedVisibility() {
+        return wantedVisibility;
+    }
 
     @Override
-    public Visibility render(GuiGraphics graphics, ToastComponent component, long time) {
-        graphics.blitSprite(SPRITE, 0, 0, WIDTH, HEIGHT);
+    public void update(ToastManager toastManager, long visibilityTime) {
+        wantedVisibility = visibilityTime < VISIBILITY_TIME_MS ? Visibility.SHOW : Visibility.HIDE;
+    }
+
+    @Override
+    public void render(GuiGraphics graphics, Font font, long visibilityTime) {
+        graphics.blitSprite(RenderType::guiTextured, SPRITE, 0, 0, WIDTH, HEIGHT);
 
         graphics.pose().pushPose();
         graphics.pose().translate(0.0f, 0.0f, 100.0f);
@@ -43,12 +54,9 @@ public class CollectibleToast implements Toast {
         graphics.pose().popPose();
         graphics.renderFakeItem(stack, 5, 4);
 
-        Font font = minecraft.font;
         final int textLeft = 30;
         graphics.drawString(font, TITLE, textLeft, 7, CommonColors.BLACK, false);
         graphics.drawString(font, Component.translatable("toast.collectible.item", name), textLeft, 18, CommonColors.BLACK, false);
-
-        return time < VISIBILITY_TIME_MS ? Visibility.SHOW : Visibility.HIDE;
     }
 
     @Override

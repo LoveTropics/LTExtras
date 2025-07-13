@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
@@ -20,7 +21,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.UUID;
 
 public class ExtraDataComponents {
-    public static final DeferredRegister.DataComponents REGISTER = DeferredRegister.createDataComponents(LTExtras.MODID);
+    public static final DeferredRegister.DataComponents REGISTER = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, LTExtras.MODID);
 
     // Components for specific items
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleMarker>> COLLECTIBLE = REGISTER.registerComponentType(

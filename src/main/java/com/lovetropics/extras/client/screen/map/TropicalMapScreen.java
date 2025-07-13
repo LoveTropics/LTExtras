@@ -7,6 +7,7 @@ import com.lovetropics.extras.data.poi.PoiConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
@@ -66,7 +67,7 @@ public class TropicalMapScreen extends Screen {
         int h = (height - MapManager.MAP_SIZE) / 2;
         int w = (width - MapManager.MAP_SIZE) / 2;
 
-        graphics.blit(map.texture(), w, h, 0, 0.0F, 0.0F, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE);
+        graphics.blit(RenderType::guiTextured, map.texture(), w, h, 0, 0, 0, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE);
     }
 
     private void doWarp(ResourceKey<PoiConfig> id) {

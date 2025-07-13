@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.TallSeagrassBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 
 public class CustomTallSeagrassBlock extends TallSeagrassBlock {
 
@@ -42,7 +41,8 @@ public class CustomTallSeagrassBlock extends TallSeagrassBlock {
  	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+	protected ItemStack getCloneItemStack(LevelReader p_304988_, BlockPos p_154750_, BlockState p_154751_, boolean p_387662_) {
 		return new ItemStack(drop.get());
 	}
+
 }

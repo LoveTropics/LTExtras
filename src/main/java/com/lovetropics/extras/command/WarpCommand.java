@@ -23,6 +23,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 
+import java.util.Set;
+
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
@@ -62,7 +64,8 @@ public class WarpCommand {
         }
 
         float yRot = target.value().angle().orElse(player.getYRot());
-        player.teleportTo(level, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, yRot, player.getXRot());
+        player.teleportTo(level, blockPos.getX() + 0.5, blockPos.getY() + 0d, blockPos.getZ() + 0.5,
+                Set.of(), yRot, player.getXRot(), true);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.PLAYERS, 1.0f, 1.0f);
 
         source.sendSuccess(() -> Component.translatable("commands.warp.success", target.value().description()), false);

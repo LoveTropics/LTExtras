@@ -16,6 +16,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -34,26 +35,33 @@ import static net.minecraft.commands.Commands.literal;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class PackControl extends SavedData {
-	private static final Factory<PackControl> FACTORY = new Factory<>(PackControl::new, PackControl::load);
 
 	private static final String STORAGE_ID = LTExtras.MODID + "_pack_control";
+	public static final SavedDataType<PackControl> ID = new SavedDataType<>(
+			STORAGE_ID,
+			PackControl::new,
+			RecordCodecBuilder.create(instance ->instance.group(
+					State.CODEC.fieldOf("state").forGetter(o -> o.state)
+			).apply(instance, PackControl::new))
+	);
 
 	private State state = State.DEFAULT;
 
-	@Override
-	public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-		tag.put("state", State.CODEC.encodeStart(NbtOps.INSTANCE, state).getOrThrow());
-		return tag;
-	}
-
 	public static PackControl get(MinecraftServer server) {
-		return server.overworld().getDataStorage().computeIfAbsent(FACTORY, STORAGE_ID);
+		return server.overworld().getDataStorage().computeIfAbsent(ID);
 	}
 
 	private static PackControl load(CompoundTag tag, HolderLookup.Provider registries) {
 		PackControl packControl = new PackControl();
 		State.CODEC.parse(NbtOps.INSTANCE, tag.get("state")).ifSuccess(state -> packControl.state = state);
 		return packControl;
+	}
+
+	public PackControl(State state) {
+		this.state = state;
+	}
+
+	public PackControl() {
 	}
 
 	@SubscribeEvent

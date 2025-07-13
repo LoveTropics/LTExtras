@@ -1,0 +1,32 @@
+{
+  "ambientocclusion": false,
+  "elements": [
+    {
+      "faces": {
+        "south": {
+          "texture": "#base",
+          "uv": [
+            16.0,
+            0.0,
+            0.0,
+            16.0
+          ]
+        }
+      },
+      "from": [
+        0,
+        0,
+        0.1
+      ],
+      "to": [
+        16,
+        16,
+        0.1
+      ]
+    }
+  ],
+  "textures": {
+    "base": "ltextras:block/pianguas",
+    "particle": "ltextras:block/pianguas"
+  }
+}

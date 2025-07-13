@@ -85,13 +85,15 @@ public final class SpawnItemsStore {
     @SubscribeEvent
     static void onPlayerClone(PlayerEvent.Clone event) {
         Player oldPlayer = event.getOriginal();
-        if (event.isWasDeath() && !oldPlayer.level().getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).get()) {
-            return;
-        }
+        if(oldPlayer instanceof ServerPlayer serverPlayer) {
+            if (event.isWasDeath() && !serverPlayer.serverLevel().getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).get()) {
+                return;
+            }
 
-        SpawnItemsStore oldStore = get(oldPlayer);
-        SpawnItemsStore newStore = get(event.getEntity());
-        newStore.receivedItems.putAll(oldStore.receivedItems);
+            SpawnItemsStore oldStore = get(oldPlayer);
+            SpawnItemsStore newStore = get(event.getEntity());
+            newStore.receivedItems.putAll(oldStore.receivedItems);
+        }
     }
 
     public static SpawnItemsStore get(Player player) {

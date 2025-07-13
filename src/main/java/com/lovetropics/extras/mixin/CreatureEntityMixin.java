@@ -36,17 +36,17 @@ public abstract class CreatureEntityMixin extends Mob implements ExtendedCreatur
 		super.readAdditionalSaveData(nbt);
 
 		if (nbt.contains("TheresNoPlaceLikeHome")) {
-			theresNoPlaceLikeHome = nbt.getBoolean("TheresNoPlaceLikeHome");
+			theresNoPlaceLikeHome = nbt.getBooleanOr("TheresNoPlaceLikeHome", false);
 
 			if (nbt.contains("HomePos")) {
-				ListTag posTag = nbt.getList("HomePos", Tag.TAG_DOUBLE);
-				homePos = new Vec3(posTag.getDouble(0), posTag.getDouble(1), posTag.getDouble(2));
+				ListTag posTag = nbt.getListOrEmpty("HomePos");
+				homePos = new Vec3(posTag.getDoubleOr(0, 0), posTag.getDoubleOr(1, 0), posTag.getDoubleOr(2, 1));
 			} else {
 				// Spawn egg or no recorded home- just grab the current position to have something to work with
 				homePos = position();
 			}
 			// In blocks
-			homeRange = nbt.contains("HomeRange") ? nbt.getInt("HomeRange") : 20;
+			homeRange =nbt.getIntOr("HomeRange", 20);
 
 			if (theresNoPlaceLikeHome) {
 				goalSelector.addGoal(0, new MoveBackToOriginGoal((PathfinderMob) (Object) this, 1.0, homePos, homeRange));

@@ -13,9 +13,14 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -98,31 +103,31 @@ public class ClientPlayerSensorEffects {
 		}
 
 		int faceBoxSize = faceSize + MARKER_BOX_INNER_PADDING;
-		RenderSystem.enableBlend();
-
-		setColor(graphics, appearance.color(), alpha);
-		graphics.blitSprite(MARKER_BOX_SPRITE, face.centerX() - faceBoxSize / 2, face.centerY() - faceBoxSize / 2, faceBoxSize, faceBoxSize);
+//		RenderSystem.enableBlend();
+//TODO: Fix coloring the sensors
+//		setColor(graphics, appearance.color(), alpha);
+		graphics.blitSprite(RenderType::guiTextured, MARKER_BOX_SPRITE, face.centerX() - faceBoxSize / 2, face.centerY() - faceBoxSize / 2, faceBoxSize, faceBoxSize);
 
 		Optional<PlayerSensor.Sprite> faceSprite = appearance.faceDecoration();
 		if (faceSprite.isPresent()) {
 			int spriteWidth = faceSprite.get().width();
 			int spriteHeight = faceSprite.get().height();
-			graphics.setColor(1.0f, 1.0f, 1.0f, alpha);
-			graphics.blitSprite(faceSprite.get().location(), face.centerX() - spriteWidth / 2, face.centerY() - faceBoxSize / 2 - spriteHeight, spriteWidth, spriteHeight);
+//			graphics.setColor(1.0f, 1.0f, 1.0f, alpha);
+			graphics.blitSprite(RenderType::guiTextured, faceSprite.get().location(), face.centerX() - spriteWidth / 2, face.centerY() - faceBoxSize / 2 - spriteHeight, spriteWidth, spriteHeight);
 		}
 
-		graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+//		graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-		RenderSystem.disableBlend();
+//		RenderSystem.disableBlend();
 	}
 
 	private static void setColor(GuiGraphics graphics, int color, float alpha) {
-		graphics.setColor(
-				FastColor.ARGB32.red(color) / 255.0f,
-				FastColor.ARGB32.green(color) / 255.0f,
-				FastColor.ARGB32.blue(color) / 255.0f,
-				alpha
-		);
+//		graphics.setColor(
+//				FastColor.ARGB32.red(color) / 255.0f,
+//				FastColor.ARGB32.green(color) / 255.0f,
+//				FastColor.ARGB32.blue(color) / 255.0f,
+//				alpha
+//		);
 	}
 
 	@SubscribeEvent
@@ -153,18 +158,19 @@ public class ClientPlayerSensorEffects {
 			}
 		}
 	}
+//	TODO: This needs looking at
+//	public static <T extends LivingEntity, R extends HumanoidRenderState> void captureModelPose(T entity, EntityModel<R> model, PoseStack poseStack) {
+//		if (entity.getType() != EntityType.PLAYER || !VISIBLE_MARKED_PLAYERS.contains(entity.getUUID())) {
+//			return;
+//		}
+//		if (model instanceof HumanoidModel<R> humanoidModel) {
+//			CapturedScreenBoxes capture = capturePlayerPose(entity, poseStack, humanoidModel);
+//			if (capture != null) {
+//				CAPTURED_SCREEN_POS.add(capture);
+//			}
+//		}
+//	}
 
-	public static <T extends LivingEntity> void captureModelPose(T entity, EntityModel<T> model, PoseStack poseStack) {
-		if (entity.getType() != EntityType.PLAYER || !VISIBLE_MARKED_PLAYERS.contains(entity.getUUID())) {
-			return;
-		}
-		if (model instanceof HumanoidModel<T> humanoidModel) {
-			CapturedScreenBoxes capture = capturePlayerPose(entity, poseStack, humanoidModel);
-			if (capture != null) {
-				CAPTURED_SCREEN_POS.add(capture);
-			}
-		}
-	}
 
 	@Nullable
 	private static CapturedScreenBoxes capturePlayerPose(LivingEntity entity, PoseStack poseStack, HumanoidModel<?> humanoidModel) {

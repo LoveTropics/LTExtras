@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Mixin(Display.TextDisplay.class)
@@ -121,11 +122,11 @@ public abstract class TextDisplayMixin extends Display {
 
 	@Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
 	private void readAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
-		if (tag.contains("template", Tag.TAG_LIST)) {
-			ListTag lines = tag.getList("template", Tag.TAG_STRING);
-			ltextras$setTemplateText(lines.stream().map(Tag::getAsString).collect(Collectors.joining("<r>\n")));
-		} else if (tag.contains("template", Tag.TAG_STRING)) {
-			ltextras$setTemplateText(tag.getString("template"));
+		if (tag.contains("template")) {
+			ListTag lines = tag.getListOrEmpty("template");
+			ltextras$setTemplateText(lines.stream().map(Tag::asString).map((o) -> o.orElse("")).collect(Collectors.joining("<r>\n")));
+		} else if (tag.contains("template")) {
+			ltextras$setTemplateText(tag.getStringOr("template", ""));
 		} else {
 			ltextras$setTemplateText(null);
 		}

@@ -26,6 +26,7 @@ import net.minecraft.world.level.Level;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -145,7 +146,7 @@ public class TpCommand {
 
         spamCheck(requestingPlayer.getUUID());
 
-        Style style = Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept " + requestingPlayer.getGameProfile().getName()));
+        Style style = Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent.RunCommand("/tpaccept " + requestingPlayer.getGameProfile().getName()));
         MutableComponent hereComponent = Component.translatable("commands.tpa.here").withStyle(style);
         MutableComponent translatable = Component.translatable("commands.tpa.request", requestingPlayer.getName(), hereComponent, requestingPlayer.getName());
         targetPlayer.sendSystemMessage(translatable);
@@ -172,7 +173,7 @@ public class TpCommand {
         }
 
         ServerLevel level = player.getServer().getLevel(globalPos.dimension());
-        player.teleportTo(level, globalPos.pos().getX(), globalPos.pos().getY(), globalPos.pos().getZ(), player.getYRot(), player.getXRot());
+        player.teleportTo(level, (double) globalPos.pos().getX(),  (double) globalPos.pos().getY(), (double)  globalPos.pos().getZ(), Set.of(), player.getYRot(), player.getXRot(), true);
     }
 
     private static Predicate<ResourceKey<Level>> dimensionPredicate() {

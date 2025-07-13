@@ -3,7 +3,7 @@ plugins {
     id 'idea'
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.36-beta'
+    id 'net.neoforged.moddev' version '2.0.96'
 }
 
 group = 'com.lovetropics.extras'
@@ -30,7 +30,7 @@ neoForge {
     version = project.neo_version
 
     parchment {
-        minecraftVersion = minecraft_version
+        minecraftVersion = parchment_minecraft_version
         mappingsVersion = parchment_version
     }
 
@@ -46,7 +46,7 @@ neoForge {
         }
 
         data {
-            data()
+            clientData()
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath(), '--existing-mod', 'tropicraft'
         }
 
@@ -69,7 +69,7 @@ sourceSets.main.resources {
 }
 
 repositories {
-    maven { url = "https://maven.ithundxr.dev/snapshots/" }
+    maven { url = "https://mvn.devos.one/snapshots/" }
     maven { url = "https://maven.tterrag.com/" }
     maven { url = "https://api.modrinth.com/maven" }
     mavenLocal()
@@ -77,10 +77,10 @@ repositories {
 
 dependencies {
     // TODO: HACK - We get Registrate at runtime through JarJar from Tropicraft. We should rather prefer to depend on the slim jar.
-    jarJar(compileOnly("com.tterrag.registrate:Registrate:MC1.21-${registrate_version}")) {
+    jarJar(compileOnly("com.tterrag.registrate:Registrate:MC1.21.5-${registrate_version}")) {
         version {
-            strictly "[MC1.21-${registrate_version},MC1.22)"
-            prefer "MC1.21-${registrate_version}"
+            strictly "[MC1.21.5-${registrate_version},MC1.22)"
+            prefer "MC1.21.5-${registrate_version}"
         }
     }
 
@@ -126,4 +126,7 @@ publishing {
             mavenLocal()
         }
     }
+}
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xmaxerrs" << "100000"
 }

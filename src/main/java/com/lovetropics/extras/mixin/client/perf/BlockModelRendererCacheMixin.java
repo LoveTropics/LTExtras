@@ -35,7 +35,7 @@ public class BlockModelRendererCacheMixin {
 	@Overwrite
 	public int getLightColor(BlockState state, BlockAndTintGetter world, BlockPos pos) {
 		if (!enabled) {
-			return LevelRenderer.getLightColor(world, state, pos);
+			return LevelRenderer.getLightColor(world, pos);
 		}
 
 		long posKey = pos.asLong();
@@ -46,7 +46,7 @@ public class BlockModelRendererCacheMixin {
 			return light;
 		}
 
-		light = LevelRenderer.getLightColor(world, state, pos);
+		light = LevelRenderer.getLightColor(world, pos);
 		cache.put(posKey, light);
 
 		return light;

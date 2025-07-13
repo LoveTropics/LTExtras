@@ -8,9 +8,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -30,6 +30,11 @@ public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity>
         itemRenderer = context.getItemRenderer();
         shadowRadius = 0.3f;
         shadowStrength = 0.75f;
+    }
+
+    @Override
+    public EntityRenderState createRenderState() {
+        return null;
     }
 
     @Override
