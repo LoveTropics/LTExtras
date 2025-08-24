@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_post",
+  "textures": {
+    "edge": "ltextras:block/curtain",
+    "pane": "ltextras:block/curtain"
+  }
+}

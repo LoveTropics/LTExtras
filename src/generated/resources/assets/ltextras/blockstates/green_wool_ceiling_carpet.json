@@ -1,9 +1,7 @@
 {
-  "multipart": [
-    {
-      "apply": {
-        "model": "ltextras:block/green_wool_ceiling_carpet"
-      }
+  "variants": {
+    "": {
+      "model": "ltextras:block/green_wool_ceiling_carpet"
     }
-  ]
+  }
 }

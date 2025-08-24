@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "ltextras:item/collectible_basket"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "ltextras:item/collectible_basket_unseen"
+    },
+    "property": "ltextras:has_unseen_collectible"
+  }
+}

@@ -1,9 +1,7 @@
 {
-  "multipart": [
-    {
-      "apply": {
-        "model": "ltextras:block/grass_grass"
-      }
+  "variants": {
+    "": {
+      "model": "ltextras:block/grass_grass"
     }
-  ]
+  }
 }

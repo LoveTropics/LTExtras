@@ -1,0 +1,6 @@
+{
+  "parent": "ltextras:item/template_glasses_equipped",
+  "textures": {
+    "layer0": "ltextras:item/orange_glasses_equipped"
+  }
+}

@@ -1,7 +1,6 @@
 {
   "parent": "minecraft:block/crop",
   "textures": {
-    "crop": "ltextras:block/reeds_top_short",
-    "particle": "ltextras:block/reeds_top_short"
+    "crop": "ltextras:block/reeds_top_short"
   }
 }

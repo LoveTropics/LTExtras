@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "ltextras:block/delighted_obsidian"
+      "model": "minecraft:block/crying_obsidian"
     }
   }
 }

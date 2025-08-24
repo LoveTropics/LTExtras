@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:air"
+          "name": "ltextras:delighted_obsidian"
         }
       ],
       "rolls": 1.0

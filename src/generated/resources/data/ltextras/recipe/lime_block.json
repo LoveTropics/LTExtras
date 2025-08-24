@@ -2,33 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "tropicraft:lime"
-    },
-    {
-      "tag": "tropicraft:lime"
-    },
-    {
-      "tag": "tropicraft:lime"
-    },
-    {
-      "tag": "tropicraft:lime"
-    },
-    {
-      "tag": "tropicraft:lime"
-    },
-    {
-      "tag": "tropicraft:lime"
-    },
-    {
-      "tag": "tropicraft:lime"
-    },
-    {
-      "tag": "tropicraft:lime"
-    },
-    {
-      "tag": "tropicraft:lime"
-    }
+    "#tropicraft:lime",
+    "#tropicraft:lime",
+    "#tropicraft:lime",
+    "#tropicraft:lime",
+    "#tropicraft:lime",
+    "#tropicraft:lime",
+    "#tropicraft:lime",
+    "#tropicraft:lime",
+    "#tropicraft:lime"
   ],
   "result": {
     "count": 1,

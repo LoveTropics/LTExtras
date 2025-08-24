@@ -2,7 +2,8 @@
   "multipart": [
     {
       "apply": {
-        "model": "ltextras:block/thorn_stem"
+        "model": "ltextras:block/thorn_stem",
+        "uvlock": true
       }
     },
     {

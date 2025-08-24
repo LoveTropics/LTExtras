@@ -34,7 +34,8 @@
       "apply": {
         "model": "ltextras:block/rusting_steel_girder",
         "uvlock": true,
-        "x": 90
+        "x": 90,
+        "y": 90
       },
       "when": {
         "x": "false",

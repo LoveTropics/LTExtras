@@ -1,9 +1,7 @@
 {
-  "multipart": [
-    {
-      "apply": {
-        "model": "ltextras:block/sand_ceiling_carpet"
-      }
+  "variants": {
+    "": {
+      "model": "ltextras:block/sand_ceiling_carpet"
     }
-  ]
+  }
 }

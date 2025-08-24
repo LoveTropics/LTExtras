@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:block/cube_column",
+  "parent": "minecraft:block/cube_top",
   "textures": {
-    "end": "ltextras:block/lime_top",
-    "side": "ltextras:block/lime_side"
+    "side": "ltextras:block/lime_side",
+    "top": "ltextras:block/lime_top"
   }
 }

@@ -3,9 +3,7 @@
   "category": "building",
   "group": "lime_slab",
   "key": {
-    "X": {
-      "item": "ltextras:lime_block"
-    }
+    "X": "ltextras:lime_block"
   },
   "pattern": [
     "XXX"

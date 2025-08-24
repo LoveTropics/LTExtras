@@ -1,7 +1,6 @@
 {
   "parent": "minecraft:block/template_seagrass",
   "textures": {
-    "particle": "ltextras:block/halophila_spinulosa",
     "texture": "ltextras:block/halophila_spinulosa"
   }
 }

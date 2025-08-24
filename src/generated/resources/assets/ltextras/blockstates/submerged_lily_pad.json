@@ -2,18 +2,18 @@
   "variants": {
     "": [
       {
-        "model": "ltextras:block/submerged_lily_pad"
+        "model": "minecraft:block/lily_pad"
       },
       {
-        "model": "ltextras:block/submerged_lily_pad",
+        "model": "minecraft:block/lily_pad",
         "y": 90
       },
       {
-        "model": "ltextras:block/submerged_lily_pad",
+        "model": "minecraft:block/lily_pad",
         "y": 180
       },
       {
-        "model": "ltextras:block/submerged_lily_pad",
+        "model": "minecraft:block/lily_pad",
         "y": 270
       }
     ]

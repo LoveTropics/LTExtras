@@ -1,9 +1,7 @@
 {
-  "multipart": [
-    {
-      "apply": {
-        "model": "ltextras:block/moss_block_ceiling_carpet"
-      }
+  "variants": {
+    "": {
+      "model": "ltextras:block/moss_block_ceiling_carpet"
     }
-  ]
+  }
 }

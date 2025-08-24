@@ -1,60 +1,30 @@
 {
-  "multipart": [
-    {
-      "apply": {
-        "model": "minecraft:block/end_rod",
-        "x": 180
-      },
-      "when": {
-        "facing": "down"
-      }
+  "variants": {
+    "facing=down": {
+      "model": "minecraft:block/end_rod",
+      "x": 180
     },
-    {
-      "apply": {
-        "model": "minecraft:block/end_rod",
-        "x": 90,
-        "y": 90
-      },
-      "when": {
-        "facing": "east"
-      }
+    "facing=east": {
+      "model": "minecraft:block/end_rod",
+      "x": 90,
+      "y": 90
     },
-    {
-      "apply": {
-        "model": "minecraft:block/end_rod",
-        "x": 90
-      },
-      "when": {
-        "facing": "north"
-      }
+    "facing=north": {
+      "model": "minecraft:block/end_rod",
+      "x": 90
     },
-    {
-      "apply": {
-        "model": "minecraft:block/end_rod",
-        "x": 90,
-        "y": 180
-      },
-      "when": {
-        "facing": "south"
-      }
+    "facing=south": {
+      "model": "minecraft:block/end_rod",
+      "x": 90,
+      "y": 180
     },
-    {
-      "apply": {
-        "model": "minecraft:block/end_rod"
-      },
-      "when": {
-        "facing": "up"
-      }
+    "facing=up": {
+      "model": "minecraft:block/end_rod"
     },
-    {
-      "apply": {
-        "model": "minecraft:block/end_rod",
-        "x": 90,
-        "y": 270
-      },
-      "when": {
-        "facing": "west"
-      }
+    "facing=west": {
+      "model": "minecraft:block/end_rod",
+      "x": 90,
+      "y": 270
     }
-  ]
+  }
 }

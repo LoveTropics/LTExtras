@@ -23,12 +23,10 @@
       "y": 180
     },
     "facing=up,half=bottom": {
-      "model": "ltextras:block/jump_pad_vertical",
-      "y": 90
+      "model": "ltextras:block/jump_pad_vertical"
     },
     "facing=up,half=top": {
-      "model": "ltextras:block/jump_pad_top_vertical",
-      "y": 90
+      "model": "ltextras:block/jump_pad_top_vertical"
     },
     "facing=west,half=bottom": {
       "model": "ltextras:block/jump_pad",

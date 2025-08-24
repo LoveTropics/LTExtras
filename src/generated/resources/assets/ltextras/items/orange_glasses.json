@@ -1,0 +1,19 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "ltextras:item/orange_glasses_equipped"
+        },
+        "when": "head"
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "ltextras:item/orange_glasses"
+    },
+    "property": "minecraft:display_context"
+  }
+}
