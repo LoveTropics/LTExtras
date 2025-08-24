@@ -7,20 +7,19 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class CheckpointParticle extends TextureSheetParticle {
-	CheckpointParticle(ClientLevel world, double x, double y, double z, ItemLike item) {
+	CheckpointParticle(ClientLevel world, double x, double y, double z, ResourceLocation spriteId) {
 		super(world, x, y, z);
-		setSprite(ExtraParticles.getItemSprite(world, new ItemStack(item)));
+		setSprite(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(spriteId));
 		gravity = 0.0F;
 		lifetime = 80;
 		hasPhysics = false;
@@ -44,7 +43,7 @@ public class CheckpointParticle extends TextureSheetParticle {
 	public static class Factory implements ParticleProvider<SimpleParticleType> {
 		@Override
 		public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-			return new CheckpointParticle(world, x, y, z, Blocks.STRUCTURE_VOID.asItem());
+			return new CheckpointParticle(world, x, y, z, ResourceLocation.withDefaultNamespace("item/structure_void"));
 		}
 	}
 }

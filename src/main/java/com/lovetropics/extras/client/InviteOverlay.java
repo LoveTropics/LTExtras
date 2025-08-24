@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -20,7 +21,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 import java.util.List;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class InviteOverlay {
     private static final int PADDING = 10;
 
@@ -34,7 +35,7 @@ public class InviteOverlay {
             }
             ItemStack item = player.getMainHandItem();
             ImageData image = item.get(ExtraDataComponents.IMAGE);
-            if (item.is(ExtraItems.INVITE) || item.is(ExtraItems.QUEST) && image != null) {
+            if ((item.is(ExtraItems.INVITE) || item.is(ExtraItems.QUEST)) && image != null) {
                 drawImage(graphics, image);
             }
         });
@@ -49,11 +50,11 @@ public class InviteOverlay {
 
         int left = (graphics.guiWidth() - width) / 2;
         int top = (graphics.guiHeight() - height) / 2;
-        graphics.blit(image.texture(), left, top, width, height, 0, 0, 1, 1, 1, 1);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, image.texture(), left, top, 0, 0, width, height, 1, 1, 1, 1);
 
-        graphics.pose().pushPose();
-        graphics.pose().translate(left, top, 200.0f);
-        graphics.pose().scale(scale, scale, scale);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(left, top);
+        graphics.pose().scale(scale, scale);
 
         for (ImageData.TextElement text : image.text()) {
             int maxWidth = text.maxWidth() != Float.MAX_VALUE ? Mth.floor(text.maxWidth()) : Integer.MAX_VALUE;
@@ -75,6 +76,6 @@ public class InviteOverlay {
             }
         }
 
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 }

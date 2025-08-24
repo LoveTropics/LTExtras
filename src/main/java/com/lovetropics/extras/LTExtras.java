@@ -14,7 +14,6 @@ import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
-import com.lovetropics.extras.item.ExtraItemProperties;
 import com.lovetropics.extras.world_effect.WorldEffectCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
@@ -28,9 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -39,10 +36,8 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -150,26 +145,8 @@ public class LTExtras {
 		return ResourceLocation.fromNamespaceAndPath(MODID, path);
 	}
 
-	@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+	@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 	public static class ClientSetup {
-		@SubscribeEvent
-		public static void clientSetup(FMLClientSetupEvent event) {
-			ExtraItemProperties.register();
-		}
-
-		@SubscribeEvent
-		public static void registerItemColors(RegisterColorHandlersEvent.Item evt) {
-			evt.getItemColors().register((stack, index) -> index == 0 ? 0x3f76e4 : -1,
-					ExtraBlocks.WATER_BARRIER.get(),
-					ExtraBlocks.FAKE_WATER.get());
-			evt.getItemColors().register((stack, index) -> {
-				BlockState blockstate = ((BlockItem)stack.getItem()).getBlock().defaultBlockState();
-				return evt.getBlockColors().getColor(blockstate, null, null, index);
-			}, ExtraBlocks.SUBMERGED_LILY_PAD.asItem());
-			evt.getItemColors().register((stack, index) -> 9551190,
-					ExtraBlocks.GRASS_GRASS.get());
-		}
-
 		@SubscribeEvent
 		public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
 			event.registerLayerDefinition(RaveKoaModel.LAYER_LOCATION, RaveKoaModel::createBodyLayer);

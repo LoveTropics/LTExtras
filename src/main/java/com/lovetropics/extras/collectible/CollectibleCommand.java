@@ -31,6 +31,7 @@ import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -165,7 +166,8 @@ public class CollectibleCommand {
     private static int summonCollectible(CommandContext<CommandSourceStack> ctx, Holder<Collectible> collectible) {
         ServerLevel level = ctx.getSource().getLevel();
         CollectibleEntity entity = new CollectibleEntity(ExtraEntities.COLLECTIBLE.get(), level);
-        entity.moveTo(ctx.getSource().getPosition());
+        Vec3 pos = ctx.getSource().getPosition();
+        entity.snapTo(pos, entity.getYRot(), entity.getXRot());
 
         entity.setCollectible(collectible);
 

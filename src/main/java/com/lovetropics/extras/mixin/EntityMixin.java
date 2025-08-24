@@ -1,10 +1,11 @@
 package com.lovetropics.extras.mixin;
 
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.RelativeMovement;
-import org.spongepowered.asm.mixin.*;
+import net.minecraft.world.level.portal.TeleportTransition;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -33,15 +34,16 @@ public class EntityMixin {
             ci.cancel();
         }
     }
-    @Inject(method = "teleportTo(Lnet/minecraft/server/level/ServerLevel;DDDLjava/util/Set;FF)Z", at = @At("HEAD"), cancellable = true)
-    public void teleportTo(ServerLevel level, double x, double y, double z, Set<RelativeMovement> relativeMovements, float yRot, float xRot, CallbackInfoReturnable<Boolean> cir) {
+
+    @Inject(method = "teleport", at = @At("HEAD"), cancellable = true)
+    public void teleportTo(TeleportTransition teleportTransition, CallbackInfoReturnable<Entity> cir) {
         if(this.tags.contains(lTExtras$UNTOUCHABLE)) {
-            cir.setReturnValue(false);
+            cir.setReturnValue(null);
         }
     }
 
-    @Inject(method = "moveTo(DDDFF)V", at = @At("HEAD"), cancellable = true)
-    public void moveTo(double x, double y, double z, float yRot, float xRot, CallbackInfo ci) {
+    @Inject(method = "snapTo(DDDFF)V", at = @At("HEAD"), cancellable = true)
+    public void snapTo(double x, double y, double z, float yRot, float xRot, CallbackInfo ci) {
         if(this.tags.contains(lTExtras$UNTOUCHABLE)) {
             ci.cancel();
         }

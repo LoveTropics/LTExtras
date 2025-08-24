@@ -3,11 +3,13 @@ package com.lovetropics.extras.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -39,17 +41,17 @@ public final class RopeBlock extends Block implements SimpleWaterloggedBlock {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
-		if (facing == Direction.UP && !canHangFrom(world, facingPos, facingState)) {
+	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+		if (direction == Direction.UP && !canHangFrom(level, neighborPos, neighborState)) {
 			return Blocks.AIR.defaultBlockState();
 		}
 
 		if (state.getValue(WATERLOGGED)) {
-			world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+			scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 		}
 
-		if (facing == Direction.DOWN) {
-			return state.setValue(KNOT, !facingState.is(this));
+		if (direction == Direction.DOWN) {
+			return state.setValue(KNOT, !neighborState.is(this));
 		}
 
 		return state;

@@ -3,11 +3,15 @@ package com.lovetropics.extras.block;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -38,8 +42,10 @@ public final class ThornStemBlock extends PipeBlock implements SimpleWaterlogged
 	}
 
 	@Override
-	public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
-		entity.hurt(entity.damageSources().sweetBerryBush(), 1.0F);
+	protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
+		if (level instanceof ServerLevel serverLevel) {
+			entity.hurtServer(serverLevel, entity.damageSources().sweetBerryBush(), 1.0f);
+		}
 	}
 
 	@Override
@@ -57,13 +63,13 @@ public final class ThornStemBlock extends PipeBlock implements SimpleWaterlogged
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
 		if (state.getValue(WATERLOGGED)) {
-			world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+			scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 		}
 
-		BooleanProperty property = PROPERTY_BY_DIRECTION.get(facing);
-		boolean connected = canConnectTo(world, facingPos, facing.getOpposite());
+		BooleanProperty property = PROPERTY_BY_DIRECTION.get(direction);
+		boolean connected = canConnectTo(level, neighborPos, direction.getOpposite());
 		return state.setValue(property, connected);
 	}
 

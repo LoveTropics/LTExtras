@@ -13,25 +13,22 @@ import net.neoforged.neoforge.client.event.ViewportEvent;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class FishEyeRenderingEffects {
-	private static final Minecraft CLIENT = Minecraft.getInstance();
-
 	@SubscribeEvent
 	public static void onRenderFog(ViewportEvent.RenderFog event) {
-		LocalPlayer player = CLIENT.player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		if (player != null && player.hasEffect(ExtraEffects.FISH_EYE)) {
 			event.scaleFarPlaneDistance(1.25f);
-			event.setCanceled(true);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onFovChange(ViewportEvent.ComputeFov event) {
-		LocalPlayer player = CLIENT.player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		if (event.getCamera().getFluidInCamera() == FogType.WATER) {
 			if (player != null && player.hasEffect(ExtraEffects.FISH_EYE)) {
-				double fov = event.getFOV();
+				float fov = event.getFOV();
 				// Undo vanilla FOV reduction when underwater
-				event.setFOV(fov / Mth.lerp(CLIENT.options.fovEffectScale().get(), 1.0F, 0.85714287F));
+				event.setFOV(fov / Mth.lerp(Minecraft.getInstance().options.fovEffectScale().get().floatValue(), 1.0F, 0.85714287F));
 			}
 		}
 	}

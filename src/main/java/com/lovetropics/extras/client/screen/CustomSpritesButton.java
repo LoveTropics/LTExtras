@@ -4,7 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.WidgetSprites;
-import net.minecraft.util.Mth;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.util.ARGB;
 
 public class CustomSpritesButton extends Button {
 	private final WidgetSprites sprites;
@@ -16,7 +17,7 @@ public class CustomSpritesButton extends Button {
 
 	@Override
 	protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-		graphics.blitSprite(sprites.get(active, isHoveredOrFocused()), getX(), getY(), getWidth(), getHeight());
-		renderString(graphics, Minecraft.getInstance().font, getFGColor() | Mth.ceil(alpha * 255.0F) << 24);
+		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprites.get(active, isHoveredOrFocused()), getX(), getY(), getWidth(), getHeight());
+		renderString(graphics, Minecraft.getInstance().font, ARGB.color(alpha, getFGColor()));
 	}
 }

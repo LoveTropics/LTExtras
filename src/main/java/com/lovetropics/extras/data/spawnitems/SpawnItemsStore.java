@@ -4,6 +4,7 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +23,7 @@ import java.util.function.Predicate;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public final class SpawnItemsStore {
-    public static final Codec<SpawnItemsStore> CODEC = Codec.unboundedMap(ResourceLocation.CODEC, SpawnItems.Stack.CODEC.listOf()).xmap(
+    public static final MapCodec<SpawnItemsStore> MAP_CODEC = Codec.unboundedMap(ResourceLocation.CODEC, SpawnItems.Stack.CODEC.listOf()).xmap(
             stacksById -> {
                 SpawnItemsStore store = new SpawnItemsStore();
                 stacksById.forEach((id, stacks) -> {
@@ -31,7 +32,7 @@ public final class SpawnItemsStore {
                 return store;
             },
             store -> store.receivedItems
-    );
+    ).fieldOf("received_items");
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -85,13 +86,15 @@ public final class SpawnItemsStore {
     @SubscribeEvent
     static void onPlayerClone(PlayerEvent.Clone event) {
         Player oldPlayer = event.getOriginal();
-        if (event.isWasDeath() && !oldPlayer.level().getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).get()) {
-            return;
-        }
+        if(oldPlayer instanceof ServerPlayer serverPlayer) {
+            if (event.isWasDeath() && !serverPlayer.level().getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).get()) {
+                return;
+            }
 
-        SpawnItemsStore oldStore = get(oldPlayer);
-        SpawnItemsStore newStore = get(event.getEntity());
-        newStore.receivedItems.putAll(oldStore.receivedItems);
+            SpawnItemsStore oldStore = get(oldPlayer);
+            SpawnItemsStore newStore = get(event.getEntity());
+            newStore.receivedItems.putAll(oldStore.receivedItems);
+        }
     }
 
     public static SpawnItemsStore get(Player player) {

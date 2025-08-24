@@ -6,7 +6,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.time.ZoneId;
 
@@ -24,6 +24,6 @@ public class TimeZoneSender {
     }
 
     private static void sendTimeZoneToServer() {
-        PacketDistributor.sendToServer(new ServerboundSetTimeZonePacket(ZoneId.systemDefault()));
+        ClientPacketDistributor.sendToServer(new ServerboundSetTimeZonePacket(ZoneId.systemDefault()));
     }
 }

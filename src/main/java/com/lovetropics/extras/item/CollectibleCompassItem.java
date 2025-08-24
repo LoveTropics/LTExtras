@@ -15,8 +15,9 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -37,24 +38,24 @@ public class CollectibleCompassItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+	public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (level.isClientSide()) {
-            return InteractionResultHolder.success(stack);
+		if (!(player instanceof ServerPlayer serverPlayer)) {
+			return InteractionResult.SUCCESS;
         }
-        player.getCooldowns().addCooldown(this, COOLDOWN_TICKS);
+		player.getCooldowns().addCooldown(stack, COOLDOWN_TICKS);
         if (stack.has(ExtraDataComponents.COLLECTIBLE_TARGET)) {
-            player.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_ALREADY_USED.get().withStyle(ChatFormatting.RED));
-            return InteractionResultHolder.fail(stack);
+			serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_ALREADY_USED.get().withStyle(ChatFormatting.RED));
+			return InteractionResult.FAIL;
         }
         Target target = tryLocateCollectible(level, player);
         if (target != null) {
             stack.set(ExtraDataComponents.COLLECTIBLE_TARGET, target);
-            player.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_SUCCESS.get().withStyle(ChatFormatting.GOLD));
+			serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_SUCCESS.get().withStyle(ChatFormatting.GOLD));
         } else {
-            player.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_FAIL.get().withStyle(ChatFormatting.RED));
+			serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_FAIL.get().withStyle(ChatFormatting.RED));
         }
-        return InteractionResultHolder.consume(stack);
+		return InteractionResult.CONSUME;
     }
 
     @Nullable

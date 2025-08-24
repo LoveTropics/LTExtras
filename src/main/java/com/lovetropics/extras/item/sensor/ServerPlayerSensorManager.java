@@ -73,7 +73,7 @@ public class ServerPlayerSensorManager {
 		public void refresh(ServerPlayer player, @Nullable PlayerSensor sensor) {
 			activeSensor = sensor;
 
-			ServerLevel level = player.serverLevel();
+			ServerLevel level = player.level();
 
 			markedPlayers.removeIf(playerId -> {
 				if (!(level.getPlayerByUUID(playerId) instanceof ServerPlayer target)) {

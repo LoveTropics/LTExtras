@@ -3,13 +3,13 @@ package com.lovetropics.extras.item;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.TriState;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
@@ -55,7 +55,7 @@ public class ItemExtensions {
     private static void applyCooldownOverride(ServerPlayer player, ItemStack stack) {
         int cooldown = stack.getOrDefault(ExtraDataComponents.COOLDOWN_OVERRIDE, 0);
         if (cooldown != 0) {
-            player.getCooldowns().addCooldown(stack.getItem(), cooldown);
+            player.getCooldowns().addCooldown(stack, cooldown);
         }
     }
 

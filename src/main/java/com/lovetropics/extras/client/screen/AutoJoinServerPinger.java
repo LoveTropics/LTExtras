@@ -17,13 +17,13 @@ import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 
 public class AutoJoinServerPinger {
 	private static final Duration INTERVAL = Duration.ofSeconds(5);
 	private static final Duration TIMEOUT = Duration.ofSeconds(30);
 
-	private static final ExecutorService EXECUTOR = Util.backgroundExecutor();
+	private static final Executor EXECUTOR = Util.backgroundExecutor();
 
 	private final ServerAddress address;
 

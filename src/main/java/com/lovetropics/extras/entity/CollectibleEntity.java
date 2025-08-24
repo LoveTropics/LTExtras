@@ -9,27 +9,27 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 
 public class CollectibleEntity extends Entity {
-    private static final Logger LOGGER = LogUtils.getLogger();
     private static final String KEY_COLLECTIBLE = "collectible";
     private static final String KEY_PARTICLES = "particles";
 
@@ -65,7 +65,12 @@ public class CollectibleEntity extends Entity {
         }
     }
 
-    @Override
+	@Override
+	public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
+		return false;
+	}
+
+	@Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (collectible == null) {
             return super.interact(player, hand);
@@ -111,7 +116,7 @@ public class CollectibleEntity extends Entity {
         double speedX = random.nextGaussian() * 0.005;
         double speedY = random.nextGaussian() * 0.005;
         double speedZ = random.nextGaussian() * 0.005;
-        level().addParticle(ParticleTypes.END_ROD, false, x, y, z, speedX, speedY, speedZ);
+        level().addParticle(ParticleTypes.END_ROD, false, false, x, y, z, speedX, speedY, speedZ);
     }
 
     private void setShowParticles(boolean particles) {
@@ -138,28 +143,16 @@ public class CollectibleEntity extends Entity {
         }
     }
 
-    @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
-        if (tag.contains(KEY_COLLECTIBLE)) {
-            Collectible.CODEC.parse(registryAccess().createSerializationContext(NbtOps.INSTANCE), tag.get(KEY_COLLECTIBLE))
-                    .resultOrPartial(Util.prefix("Collectible: ", LOGGER::error))
-                    .ifPresent(this::setCollectible);
-        } else {
-            setCollectible(null);
-        }
-        if (tag.contains(KEY_PARTICLES, Tag.TAG_BYTE)) {
-            setShowParticles(tag.getBoolean(KEY_PARTICLES));
-        } else {
-            setShowParticles(true);
-        }
+	@Override
+	protected void readAdditionalSaveData(ValueInput input) {
+		setCollectible(input.read(KEY_COLLECTIBLE, Collectible.CODEC).orElse(null));
+		setShowParticles(input.getBooleanOr(KEY_PARTICLES, true));
     }
 
-    @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
-        if (collectible != null) {
-            tag.put(KEY_COLLECTIBLE, Collectible.CODEC.encodeStart(registryAccess().createSerializationContext(NbtOps.INSTANCE), collectible).getOrThrow());
-        }
-        tag.putBoolean(KEY_PARTICLES, shouldShowParticles());
+	@Override
+	protected void addAdditionalSaveData(ValueOutput output) {
+		output.storeNullable(KEY_COLLECTIBLE, Collectible.CODEC, collectible);
+        output.putBoolean(KEY_PARTICLES, shouldShowParticles());
     }
 
     @Override
@@ -173,7 +166,7 @@ public class CollectibleEntity extends Entity {
 
     @Override
     public boolean shouldShowName() {
-        return getDisplayName() != null || super.shouldShowName();
+        return !getDisplayedItem().isEmpty() || super.shouldShowName();
     }
 
     @Override

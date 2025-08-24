@@ -1,24 +1,26 @@
 package com.lovetropics.extras.block;
 
+import com.lovetropics.extras.LTExtras;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SeagrassBlock;
 import net.minecraft.world.level.block.TallSeagrassBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Supplier;
 
+@EventBusSubscriber(modid = LTExtras.MODID)
 public class CustomSeagrassBlock extends SeagrassBlock {
 
 	private final String scientificName;
@@ -31,10 +33,12 @@ public class CustomSeagrassBlock extends SeagrassBlock {
 		this.tall = tall;
 	}
 
-	@Override
-	public void appendHoverText(ItemStack itemStack, @Nullable Item.TooltipContext ctx, List<Component> tooltip, TooltipFlag flag) {
-		tooltip.add(Component.literal(scientificName).withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
-	}
+    @SubscribeEvent
+    public static void addToTooltip(ItemTooltipEvent event) {
+        if (event.getItemStack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CustomSeagrassBlock seagrass) {
+            event.getToolTip().add(Component.literal(seagrass.scientificName).withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
+        }
+    }
 
 	@Override
 	public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {

@@ -9,9 +9,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,8 +23,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.List;
 // Stop doing scrolling
 // Containers were never meant to scroll
 public class CollectibleBasketScreen extends AbstractContainerScreen<CollectibleBasketScreen.Menu> {
-    private static final Component TITLE = ExtraItems.COLLECTIBLE_BASKET.get().getDescription();
+    private static final Component TITLE = ExtraItems.COLLECTIBLE_BASKET.get().getName();
 
     private static final ResourceLocation BACKGROUND_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/creative_inventory/tab_items.png");
     private static final ResourceLocation SCROLLER_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/sprites/container/creative_inventory/scroller.png");
@@ -68,7 +69,6 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
         renderTooltip(graphics, mouseX, mouseY);
 
@@ -119,7 +119,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        graphics.blit(BACKGROUND_LOCATION, leftPos, topPos, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_LOCATION, leftPos, topPos, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 256, 256, CommonColors.WHITE);
     }
 
     @Nullable
@@ -171,7 +171,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         Holder<Collectible> collectible = collectibleSlot.getCollectible();
         if (collectible != null) {
             menu.setCarried(slot.getItem().copy());
-            PacketDistributor.sendToServer(new ServerboundPickCollectibleItemPacket(collectible));
+            ClientPacketDistributor.sendToServer(new ServerboundPickCollectibleItemPacket(collectible));
         }
     }
 
@@ -179,7 +179,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         Holder<Collectible> carriedCollectible = Collectible.byItem(carried);
         if (carriedCollectible != null) {
             menu.setCarried(ItemStack.EMPTY);
-            PacketDistributor.sendToServer(new ServerboundReturnCollectibleItemPacket(carriedCollectible));
+            ClientPacketDistributor.sendToServer(new ServerboundReturnCollectibleItemPacket(carriedCollectible));
         }
     }
 

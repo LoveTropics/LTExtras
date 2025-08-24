@@ -17,10 +17,10 @@ public class ExtraAttachments {
     );
 
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<CollectibleStore>> COLLECTIBLE_STORE = REGISTER.register(
-            "collectible_store", () -> AttachmentType.builder(CollectibleStore::new).serialize(CollectibleStore.CODEC).build()
+            "collectible_store", () -> AttachmentType.builder(CollectibleStore::new).serialize(CollectibleStore.MAP_CODEC).build()
     );
 
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<SpawnItemsStore>> SPAWN_ITEMS_STORE = REGISTER.register(
-            "spawn_items_store", () -> AttachmentType.builder(SpawnItemsStore::new).serialize(SpawnItemsStore.CODEC).build()
+            "spawn_items_store", () -> AttachmentType.builder(SpawnItemsStore::new).serialize(SpawnItemsStore.MAP_CODEC).build()
     );
 }

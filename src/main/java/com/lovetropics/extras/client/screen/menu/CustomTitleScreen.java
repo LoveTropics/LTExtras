@@ -4,6 +4,7 @@ import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.ExtrasConfig;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.screen.CustomSpritesButton;
+import com.lovetropics.extras.mixin.client.AbstractWidgetAccess;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -30,6 +31,7 @@ public class CustomTitleScreen {
 	private static final Component QUIT_TEXT = Component.translatable("menu.quit");
 	private static final Component ACCESSIBILITY_TEXT = Component.translatable("options.accessibility");
 	private static final Component LANGUAGE_TEXT = Component.translatable("options.language");
+	private static final Component CREATE_TEST_WORLD_TEXT = Component.literal("Create Test World");
 
 	private static final WidgetSprites CONNECT_SPRITES = new WidgetSprites(
 			LTExtras.location("widget/connect"),
@@ -54,11 +56,16 @@ public class CustomTitleScreen {
 		event.removeListener(realms);
 		event.removeListener(mods);
 
+		Button createTestWorldButton = findButton(event, CREATE_TEST_WORLD_TEXT);
+		if (createTestWorldButton != null) {
+			event.removeListener(createTestWorldButton);
+		}
+
 		CustomSpritesButton connectButton = new CustomSpritesButton(CONNECT_SPRITES, Button.builder(ExtraLangKeys.MENU_CONNECT.get(), button -> connectToEvent(event.getScreen()))
 				.pos(singleplayer.getX(), singleplayer.getY())
 				.width(singleplayer.getWidth()));
 		connectButton.active = multiplayer.active;
-		connectButton.setTooltip(multiplayer.getTooltip());
+		connectButton.setTooltip(((AbstractWidgetAccess) multiplayer).getTooltip().get());
 		event.addListener(connectButton);
 
 		event.addListener(Button.builder(ExtraLangKeys.MENU_DONATE.get(), ConfirmLinkScreen.confirmLink(event.getScreen(), ExtrasConfig.DONATE_URL.get(), true))

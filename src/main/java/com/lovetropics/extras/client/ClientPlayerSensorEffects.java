@@ -13,11 +13,14 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
@@ -26,7 +29,9 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -42,7 +47,7 @@ public class ClientPlayerSensorEffects {
 	private static final ResourceLocation MARKER_BOX_SPRITE = LTExtras.location("marker_box");
 	private static final int MARKER_BOX_INNER_PADDING = 32;
 
-	private static final Minecraft CLIENT = Minecraft.getInstance();
+    private static final ContextKey<UUID> UUID_KEY = new ContextKey<>(LTExtras.location("sea_turtle"));
 
 	private static final int VISIBLE_REFRESH_INTERVAL = 10;
 
@@ -50,16 +55,17 @@ public class ClientPlayerSensorEffects {
 	private static final Set<UUID> VISIBLE_MARKED_PLAYERS = new ObjectArraySet<>();
 
 	private static final List<CapturedScreenBoxes> CAPTURED_SCREEN_POS = new ArrayList<>();
+    private static Matrix4f capturedProjectionMatrix = new Matrix4f();
 
 	public static void mark(int entityId, PlayerSensor.Appearance appearance) {
-		ClientLevel level = CLIENT.level;
+		ClientLevel level = Minecraft.getInstance().level;
 		if (level != null && level.getEntity(entityId) instanceof Player player) {
 			MARKED_PLAYERS.put(player.getUUID(), appearance);
 		}
 	}
 
 	public static void clear(int entityId) {
-		ClientLevel level = CLIENT.level;
+		ClientLevel level = Minecraft.getInstance().level;
 		if (level != null && level.getEntity(entityId) instanceof Player player) {
 			MARKED_PLAYERS.remove(player.getUUID());
 		}
@@ -70,7 +76,7 @@ public class ClientPlayerSensorEffects {
 	}
 
 	private static void renderGui(GuiGraphics graphics, DeltaTracker deltaTracker) {
-		ClientLevel level = CLIENT.level;
+		ClientLevel level = Minecraft.getInstance().level;
 		if (level == null) {
 			return;
 		}
@@ -98,31 +104,16 @@ public class ClientPlayerSensorEffects {
 		}
 
 		int faceBoxSize = faceSize + MARKER_BOX_INNER_PADDING;
-		RenderSystem.enableBlend();
-
-		setColor(graphics, appearance.color(), alpha);
-		graphics.blitSprite(MARKER_BOX_SPRITE, face.centerX() - faceBoxSize / 2, face.centerY() - faceBoxSize / 2, faceBoxSize, faceBoxSize);
+        int markerColor = ARGB.color(alpha, appearance.color());
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, MARKER_BOX_SPRITE, face.centerX() - faceBoxSize / 2, face.centerY() - faceBoxSize / 2, faceBoxSize, faceBoxSize, markerColor);
 
 		Optional<PlayerSensor.Sprite> faceSprite = appearance.faceDecoration();
 		if (faceSprite.isPresent()) {
 			int spriteWidth = faceSprite.get().width();
 			int spriteHeight = faceSprite.get().height();
-			graphics.setColor(1.0f, 1.0f, 1.0f, alpha);
-			graphics.blitSprite(faceSprite.get().location(), face.centerX() - spriteWidth / 2, face.centerY() - faceBoxSize / 2 - spriteHeight, spriteWidth, spriteHeight);
+            int color = ARGB.white(alpha);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, faceSprite.get().location(), face.centerX() - spriteWidth / 2, face.centerY() - faceBoxSize / 2 - spriteHeight, spriteWidth, spriteHeight, color);
 		}
-
-		graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-		RenderSystem.disableBlend();
-	}
-
-	private static void setColor(GuiGraphics graphics, int color, float alpha) {
-		graphics.setColor(
-				FastColor.ARGB32.red(color) / 255.0f,
-				FastColor.ARGB32.green(color) / 255.0f,
-				FastColor.ARGB32.blue(color) / 255.0f,
-				alpha
-		);
 	}
 
 	@SubscribeEvent
@@ -134,7 +125,7 @@ public class ClientPlayerSensorEffects {
 
 	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent.Post event) {
-		LocalPlayer player = CLIENT.player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		if (player == null) {
 			return;
 		}
@@ -150,30 +141,41 @@ public class ClientPlayerSensorEffects {
 			Player target = level.getPlayerByUUID(playerId);
 			if (target != null && player.hasLineOfSight(target)) {
 				VISIBLE_MARKED_PLAYERS.add(target.getUUID());
-			}
-		}
-	}
+            }
+        }
+    }
 
-	public static <T extends LivingEntity> void captureModelPose(T entity, EntityModel<T> model, PoseStack poseStack) {
-		if (entity.getType() != EntityType.PLAYER || !VISIBLE_MARKED_PLAYERS.contains(entity.getUUID())) {
-			return;
-		}
-		if (model instanceof HumanoidModel<T> humanoidModel) {
-			CapturedScreenBoxes capture = capturePlayerPose(entity, poseStack, humanoidModel);
-			if (capture != null) {
-				CAPTURED_SCREEN_POS.add(capture);
-			}
-		}
-	}
+    @SubscribeEvent
+    public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
+        event.registerEntityModifier(PlayerRenderer.class, (entity, state) ->
+                state.setRenderData(UUID_KEY, entity.getUUID())
+        );
+    }
+
+    public static <T extends LivingEntityRenderState> void captureModelPose(T state, EntityModel<?> model, PoseStack poseStack) {
+        if (state.entityType != EntityType.PLAYER) {
+            return;
+        }
+        UUID playerId = state.getRenderData(UUID_KEY);
+        if (playerId == null || !VISIBLE_MARKED_PLAYERS.contains(playerId)) {
+            return;
+        }
+        if (model instanceof HumanoidModel<?> humanoidModel) {
+            CapturedScreenBoxes capture = capturePlayerPose(playerId, poseStack, humanoidModel);
+            if (capture != null) {
+                CAPTURED_SCREEN_POS.add(capture);
+            }
+        }
+    }
 
 	@Nullable
-	private static CapturedScreenBoxes capturePlayerPose(LivingEntity entity, PoseStack poseStack, HumanoidModel<?> humanoidModel) {
+    private static CapturedScreenBoxes capturePlayerPose(UUID entityId, PoseStack poseStack, HumanoidModel<?> humanoidModel) {
 		poseStack.pushPose();
 		humanoidModel.head.translateAndRotate(poseStack);
 		ScreenBox faceBox = toScreenBox(poseStack, -4.0f, -8.0f, -4.0f, 4.0f, 0.0f, 4.0f);
 		poseStack.popPose();
 		if (faceBox != null) {
-			return new CapturedScreenBoxes(entity.getUUID(), faceBox);
+            return new CapturedScreenBoxes(entityId, faceBox);
 		}
 		return null;
 	}
@@ -208,15 +210,19 @@ public class ClientPlayerSensorEffects {
 		return new ScreenBox(minX, minY, maxX, maxY);
 	}
 
-	private static Vector3f toScreenPos(PoseStack poseStack, float x, float y, float z) {
+    public static void captureProjectionMatrix(Matrix4f projectionMatrix) {
+        capturedProjectionMatrix = projectionMatrix;
+    }
+
+    private static Vector3f toScreenPos(PoseStack poseStack, float x, float y, float z) {
 		Vector3f pos = new Vector3f(x, y, z).mul(1.0f / 16.0f);
 		poseStack.last().pose().transformPosition(pos);
 		RenderSystem.getModelViewMatrix().transformPosition(pos);
-		RenderSystem.getProjectionMatrix().transformProject(pos);
+        capturedProjectionMatrix.transformProject(pos);
 		return pos.set((pos.x + 1.0f) / 2.0f, 1.0f - (pos.y + 1.0f) / 2.0f, pos.z);
 	}
 
-	private record CapturedScreenBoxes(UUID playerId, ScreenBox face) {
+    private record CapturedScreenBoxes(UUID playerId, ScreenBox face) {
 	}
 
 	private record ScreenBox(float x0, float y0, float x1, float y1) {

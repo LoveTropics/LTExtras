@@ -12,6 +12,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -32,44 +34,30 @@ public abstract class CreatureEntityMixin extends Mob implements ExtendedCreatur
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag nbt) {
-		super.readAdditionalSaveData(nbt);
+	protected void readAdditionalSaveData(ValueInput input) {
+		super.readAdditionalSaveData(input);
 
-		if (nbt.contains("TheresNoPlaceLikeHome")) {
-			theresNoPlaceLikeHome = nbt.getBoolean("TheresNoPlaceLikeHome");
+		theresNoPlaceLikeHome = input.getBooleanOr("TheresNoPlaceLikeHome", false);
 
-			if (nbt.contains("HomePos")) {
-				ListTag posTag = nbt.getList("HomePos", Tag.TAG_DOUBLE);
-				homePos = new Vec3(posTag.getDouble(0), posTag.getDouble(1), posTag.getDouble(2));
-			} else {
-				// Spawn egg or no recorded home- just grab the current position to have something to work with
-				homePos = position();
-			}
+		if (theresNoPlaceLikeHome) {
+			// Spawn egg or no recorded home- just grab the current position to have something to work with
+			homePos = input.read("HomePos", Vec3.CODEC).orElse(position());
 			// In blocks
-			homeRange = nbt.contains("HomeRange") ? nbt.getInt("HomeRange") : 20;
+			homeRange = input.getIntOr("HomeRange", 20);
 
-			if (theresNoPlaceLikeHome) {
-				goalSelector.addGoal(0, new MoveBackToOriginGoal((PathfinderMob) (Object) this, 1.0, homePos, homeRange));
-			}
+			goalSelector.addGoal(0, new MoveBackToOriginGoal((PathfinderMob) (Object) this, 1.0, homePos, homeRange));
 		}
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag nbt) {
-		super.addAdditionalSaveData(nbt);
+	protected void addAdditionalSaveData(ValueOutput output) {
+		super.addAdditionalSaveData(output);
 
 		// Don't pollute! Only write if it'll be used
 		if (theresNoPlaceLikeHome) {
-			nbt.putBoolean("TheresNoPlaceLikeHome", theresNoPlaceLikeHome);
-			nbt.putInt("HomeRange", homeRange);
-
-			// vec3d -> nbt
-			ListTag pos = new ListTag();
-			pos.add(0, DoubleTag.valueOf(homePos.x()));
-			pos.add(1, DoubleTag.valueOf(homePos.y()));
-			pos.add(2, DoubleTag.valueOf(homePos.z()));
-
-			nbt.put("HomePos", pos);
+			output.putBoolean("TheresNoPlaceLikeHome", true);
+			output.putInt("HomeRange", homeRange);
+			output.storeNullable("HomePos", Vec3.CODEC, homePos);
 		}
 	}
 

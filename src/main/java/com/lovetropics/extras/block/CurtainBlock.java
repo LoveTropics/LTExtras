@@ -4,6 +4,7 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -25,7 +26,7 @@ public class CurtainBlock extends StainedGlassPaneBlock {
     }
 
     @Override
-    public int getLightBlock(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        return pLevel.getMaxLightLevel();
+	protected int getLightBlock(BlockState state) {
+		return Level.MAX_BRIGHTNESS;
     }
 }

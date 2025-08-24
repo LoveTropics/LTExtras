@@ -1,71 +1,72 @@
 package com.lovetropics.extras.client.entity;
 
+import com.lovetropics.extras.client.entity.state.CollectibleEntityRenderState;
 import com.lovetropics.extras.entity.CollectibleEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.joml.Quaternionf;
 
-public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity> {
+public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity, CollectibleEntityRenderState> {
     private static final ItemDisplayContext DISPLAY_CONTEXT = ItemDisplayContext.GROUND;
 
-    private final ItemRenderer itemRenderer;
+	private final ItemModelResolver itemModeResolver;
 
     public CollectibleEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
-        itemRenderer = context.getItemRenderer();
+		itemModeResolver = context.getItemModelResolver();
         shadowRadius = 0.3f;
         shadowStrength = 0.75f;
     }
 
     @Override
-    public void render(CollectibleEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        ItemStack displayedItem = entity.getDisplayedItem();
-        if (displayedItem.isEmpty()) {
+	public CollectibleEntityRenderState createRenderState() {
+		return new CollectibleEntityRenderState();
+    }
+
+	@Override
+	public void extractRenderState(CollectibleEntity entity, CollectibleEntityRenderState state, float partialTick) {
+		super.extractRenderState(entity, state, partialTick);
+		ItemStack displayedItem = entity.getDisplayedItem();
+		itemModeResolver.updateForNonLiving(state.displayedItemState, displayedItem, DISPLAY_CONTEXT, entity);
+	}
+
+	@Override
+	public void render(CollectibleEntityRenderState state, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+		if (state.displayedItemState.isEmpty()) {
             return;
         }
 
         poseStack.pushPose();
 
-        BakedModel model = itemRenderer.getModel(displayedItem, entity.level(), null, entity.getId());
-        float age = entity.tickCount + partialTicks;
+		// TODO: Re-evaluate scaling and positioning now that we have access to bounding box
+		AABB boundingBox = state.displayedItemState.getModelBoundingBox();
+		float offset = (1.0f / 16.0f) - (float) boundingBox.minY;
+		float bob = (Mth.sin(state.ageInTicks / 10.0f) + 1.0f) * 0.05f;
+		poseStack.translate(0.0F, bob + offset, 0.0F);
+		poseStack.mulPose(Mth.rotationAroundAxis(Mth.Y_AXIS, entityRenderDispatcher.cameraOrientation(), new Quaternionf()));
+		poseStack.scale(2.0f, 2.0f, 2.0f);
 
-        float groundScale = model.getTransforms().getTransform(DISPLAY_CONTEXT).scale.y();
-        float bob = (Mth.sin(age / 10.0f) + 1.0f) * 0.05f;
-        poseStack.translate(0.0f, bob + 0.4f * groundScale, 0.0f);
-        poseStack.mulPose(Mth.rotationAroundAxis(Mth.Y_AXIS, entityRenderDispatcher.cameraOrientation(), new Quaternionf()));
-
-        float scale = model.isGui3d() ? 2.25f : 2.0f;
-        poseStack.scale(scale, scale, scale);
-
-        itemRenderer.render(displayedItem, DISPLAY_CONTEXT, false, poseStack, bufferSource, packedLight, OverlayTexture.NO_OVERLAY, model);
+		state.displayedItemState.render(poseStack, bufferSource, packedLight, OverlayTexture.NO_OVERLAY);
 
         poseStack.popPose();
 
-        super.render(entity, yaw, partialTicks, poseStack, bufferSource, packedLight);
+		super.render(state, poseStack, bufferSource, packedLight);
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(CollectibleEntity pEntity) {
-        return TextureAtlas.LOCATION_BLOCKS;
-    }
-
-    @Override
-    protected boolean shouldShowName(CollectibleEntity entity) {
+	@Override
+	protected boolean shouldShowName(CollectibleEntity entity, double distanceToCameraSq) {
         return entity.hasCustomName() || entity.shouldShowName() && isEntityPicked(entity);
     }
 

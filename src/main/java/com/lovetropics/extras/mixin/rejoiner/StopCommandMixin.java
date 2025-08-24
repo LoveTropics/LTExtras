@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StopCommand.class)
 public abstract class StopCommandMixin {
-	@Inject(method = "lambda$register$2", at = @At("HEAD"))
+	@Inject(method = "lambda$register$1", at = @At("HEAD"))
 	private static void executeStop(CommandContext<CommandSourceStack> context, CallbackInfoReturnable<Integer> cir) {
 		if (ExtrasConfig.CLIENT_AUTO_REJOIN.get()) {
 			ServerAutoRejoinHandler.broadcastRejoinIntent(context.getSource().getServer(), AutoRejoinIntent.RESTART_SERVER);

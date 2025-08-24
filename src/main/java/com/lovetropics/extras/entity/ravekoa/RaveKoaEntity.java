@@ -1,12 +1,13 @@
 package com.lovetropics.extras.entity.ravekoa;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -42,8 +43,10 @@ public class RaveKoaEntity extends PathfinderMob {
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource pSource) {
-        if (pSource.isCreativePlayer() || pSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
+	public boolean isInvulnerableTo(ServerLevel level, DamageSource source) {
+		if (source.isCreativePlayer() || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+			return false;
+		}
         return true;
     }
 
@@ -55,11 +58,11 @@ public class RaveKoaEntity extends PathfinderMob {
 
     }
 
-    @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pSpawnType, @Nullable SpawnGroupData pSpawnGroupData) {
+	@Nullable
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData) {
         setPersistenceRequired();
-        return super.finalizeSpawn(pLevel, pDifficulty, pSpawnType, pSpawnGroupData);
+		return super.finalizeSpawn(level, difficulty, spawnReason, spawnGroupData);
     }
 
     @Override

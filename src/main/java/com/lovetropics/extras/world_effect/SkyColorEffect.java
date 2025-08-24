@@ -6,8 +6,8 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.util.FastColor;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public record SkyColorEffect(int red, int green, int blue, int fadeLength) implements WorldEffect {
@@ -22,7 +22,7 @@ public record SkyColorEffect(int red, int green, int blue, int fadeLength) imple
 
     @Override
     public void apply(ServerPlayer player, boolean immediate) {
-        int color = FastColor.ARGB32.color(0, red, green, blue);
+        int color = ARGB.color(0, red, green, blue);
         PacketDistributor.sendToPlayer(player, new ClientboundSetSkyColorPacket(color, immediate ? 0 : fadeLength));
     }
 

@@ -49,7 +49,7 @@ public class ClientPackControl {
 		}
 		handleStateChange(Minecraft.getInstance(), oldState, state);
 		stateFuture = CompletableFuture.completedFuture(state);
-		Util.ioPool().submit(() -> storeState(state));
+		Util.ioPool().execute(() -> storeState(state));
 	}
 
 	private static void handleStateChange(Minecraft minecraft, PackControl.State oldState, PackControl.State newState) {

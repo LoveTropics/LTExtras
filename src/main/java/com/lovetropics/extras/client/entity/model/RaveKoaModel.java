@@ -5,11 +5,10 @@ package com.lovetropics.extras.client.entity.model;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.entity.animation.RaveKoaAnimation;
-import com.lovetropics.extras.entity.ravekoa.RaveKoaEntity;
-import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDJ;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.HierarchicalModel;
+import com.lovetropics.extras.client.entity.state.RaveKoaRenderState;
+import com.lovetropics.extras.entity.ExtraEntities;
+import net.minecraft.client.animation.KeyframeAnimation;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -19,18 +18,21 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-public class RaveKoaModel<T extends RaveKoaEntity> extends HierarchicalModel<T> {
-    // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
+public class RaveKoaModel extends EntityModel<RaveKoaRenderState> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.location("rave_koa_model"), "main");
-    private final ModelPart CenterPivot;
     private final ModelPart booth;
-    private final ModelPart root;
+
+	private final KeyframeAnimation djAnimation;
+	private final KeyframeAnimation dance1Animation;
+	private final KeyframeAnimation dance3Animation;
 
     public RaveKoaModel(ModelPart root) {
-        this.root = root;
-        CenterPivot = root.getChild("CenterPivot");
+		super(root);
         booth = root.getChild("booth");
-    }
+		djAnimation = RaveKoaAnimation.PLAYER_ELBOWS_DJ_KEYFRAMED.bake(root);
+		dance1Animation = RaveKoaAnimation.PLAYER_ELBOWS_DANCE1_KEYFRAMED.bake(root);
+		dance3Animation = RaveKoaAnimation.PLAYER_ELBOWS_DANCE3_KEYFRAMED.bake(root);
+	}
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
@@ -69,25 +71,14 @@ public class RaveKoaModel<T extends RaveKoaEntity> extends HierarchicalModel<T> 
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
 
-    @Override
-    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        root().getAllParts().forEach(ModelPart::resetPose);
-        if (!(entity instanceof RaveKoaEntityDJ)) {
-            booth.skipDraw = true;
-        }
-        animate(entity.raveAnimationStateDJ, RaveKoaAnimation.PLAYER_ELBOWS_DJ_KEYFRAMED, ageInTicks);
-        animate(entity.raveAnimationStateDance1, RaveKoaAnimation.PLAYER_ELBOWS_DANCE1_KEYFRAMED, ageInTicks);
-        animate(entity.raveAnimationStateDance2, RaveKoaAnimation.PLAYER_ELBOWS_DANCE3_KEYFRAMED, ageInTicks);
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
-        CenterPivot.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
-        booth.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
-    }
-
-    @Override
-    public ModelPart root() {
-        return root;
-    }
+	@Override
+	public void setupAnim(RaveKoaRenderState state) {
+		super.setupAnim(state);
+		if (state.entityType != ExtraEntities.RAVEKOADJ.get()) {
+			booth.skipDraw = true;
+		}
+		djAnimation.apply(state.raveAnimationStateDJ, state.ageInTicks);
+		dance1Animation.apply(state.raveAnimationStateDance1, state.ageInTicks);
+		dance3Animation.apply(state.raveAnimationStateDance2, state.ageInTicks);
+	}
 }

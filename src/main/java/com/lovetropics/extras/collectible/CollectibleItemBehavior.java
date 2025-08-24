@@ -1,12 +1,13 @@
 package com.lovetropics.extras.collectible;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.lovetropics.extras.LTExtras;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,7 +17,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
@@ -92,17 +92,17 @@ public class CollectibleItemBehavior {
         }
     }
 
-    public static InteractionResultHolder<ItemStack> wrapUse(ItemStack stack, Level level, Player player, InteractionHand hand) {
+    public static InteractionResult wrapUse(ItemStack stack, Level level, Player player, InteractionHand hand, Operation<InteractionResult> original) {
         if (Collectible.isCollectible(stack)) {
             int count = stack.getCount();
             ItemStack oldStack = stack.copy();
-            InteractionResultHolder<ItemStack> result = stack.getItem().use(level, player, hand);
+            InteractionResult result = original.call(stack.getItem(), level, player, hand);
             if (!isEquipped(player, oldStack)) {
                 stack.setCount(count);
             }
             return result;
         }
-        return stack.getItem().use(level, player, hand);
+        return original.call(stack.getItem(), level, player, hand);
     }
 
     public static InteractionResult wrapUseOn(ItemStack stack, UseOnContext context) {

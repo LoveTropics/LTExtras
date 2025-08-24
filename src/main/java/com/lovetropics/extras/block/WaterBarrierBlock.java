@@ -1,8 +1,11 @@
 package com.lovetropics.extras.block;
 
 import com.lovetropics.extras.ExtendedFluidState;
+import com.lovetropics.extras.client.particle.ExtraParticles;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -57,7 +60,7 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
 	}
 
 	@Override
-	public boolean canPlaceLiquid(@Nullable Player pPlayer, BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
+	public boolean canPlaceLiquid(@Nullable LivingEntity entity, BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
 		return false;
 	}
 
@@ -67,7 +70,7 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
 	}
 
 	@Override
-	public ItemStack pickupBlock(@Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+	public ItemStack pickupBlock(@Nullable LivingEntity entity, LevelAccessor level, BlockPos pos, BlockState state) {
 		return ItemStack.EMPTY;
 	}
 
@@ -77,5 +80,10 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
 		asBlock().playerWillDestroy(level, pos, state, player);
 		// Changed to set air instead of the fluid state
 		return level.setBlock(pos, Blocks.AIR.defaultBlockState(), level.isClientSide ? 11 : 3);
+	}
+
+	@Override
+	protected ParticleOptions createParticle() {
+		return ExtraParticles.WATER_BARRIER.get();
 	}
 }

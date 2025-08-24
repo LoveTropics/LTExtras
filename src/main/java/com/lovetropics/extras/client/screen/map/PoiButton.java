@@ -4,12 +4,13 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.map.ClientMapManager;
 import com.lovetropics.extras.client.map.ClientPoi;
 import com.lovetropics.extras.data.poi.PoiConfig;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.PlayerFaceRenderer;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.CommonColors;
@@ -31,8 +32,6 @@ class PoiButton extends AbstractButton {
     private static final ResourceLocation TOOLTIP_SPRITE = LTExtras.location("widget/poi_tooltip");
     private static final ResourceLocation BACKGROUND_SPRITE = LTExtras.location("widget/poi_background");
     private static final ResourceLocation TITLE_BOX_SPRITE = ResourceLocation.withDefaultNamespace("advancements/title_box");
-
-    private static final int SELECTED_Z_OFFSET = 500;
 
     private final ClientPoi poi;
     private final Font font;
@@ -71,16 +70,13 @@ class PoiButton extends AbstractButton {
 
         boolean isSelected = animation > Mth.EPSILON;
 
-        graphics.pose().pushPose();
-        graphics.pose().translate(0.0f, 0.0f, isSelected ? SELECTED_Z_OFFSET : 0);
-
         if (isSelected) {
             int tooltipWidth = Mth.floor((font.width(getMessage()) + BORDER_SIZE * 2) * animation);
             final int tooltipHeight = TOOLTIP_HEIGHT;
             setWidth(SIZE + tooltipWidth);
 
-            graphics.blitSprite(TOOLTIP_SPRITE, getX(), getY() + (getHeight() - tooltipHeight) / 2, getWidth(), tooltipHeight);
-            graphics.blitSprite(TITLE_BOX_SPRITE, getX(), getY() - BORDER_SIZE, SIZE, SIZE + BORDER_SIZE * 2);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TOOLTIP_SPRITE, getX(), getY() + (getHeight() - tooltipHeight) / 2, getWidth(), tooltipHeight);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TITLE_BOX_SPRITE, getX(), getY() - BORDER_SIZE, SIZE, SIZE + BORDER_SIZE * 2);
 
             graphics.enableScissor(getX() + BORDER_SIZE, getY() + BORDER_SIZE, getX() + getWidth() - BORDER_SIZE, getY() + getHeight() - BORDER_SIZE);
             int textLeft = getX() + SIZE + BORDER_SIZE - 1;
@@ -96,29 +92,23 @@ class PoiButton extends AbstractButton {
         int iconY = getY() + BORDER_SIZE;
 
         if (!isSelected) {
-            RenderSystem.enableBlend();
-            graphics.blitSprite(BACKGROUND_SPRITE, iconX - 1, iconY - 1, ICON_SIZE + 2, ICON_SIZE + 2);
-            RenderSystem.disableBlend();
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, iconX - 1, iconY - 1, ICON_SIZE + 2, ICON_SIZE + 2);
         }
 
         switch (poi.icon()) {
             case PoiConfig.ItemIcon(ItemStack item) -> graphics.renderFakeItem(item, iconX, iconY);
-            case PoiConfig.TextureIcon(ResourceLocation texture) -> graphics.blit(texture, iconX, iconY, 0, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+            case PoiConfig.TextureIcon(ResourceLocation texture) ->
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, texture, iconX, iconY, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE, CommonColors.WHITE);
         }
 
-        graphics.pose().pushPose();
-        graphics.pose().translate(0.0f, 0.0f, 100.0f);
         List<UUID> faces = poi.faces();
         if (!faces.isEmpty()) {
             int faceFactor = faces.size() > 2 ? 2 : 1;
             for (int i = 0; i < faces.size(); i++) {
-				ResourceLocation face = ClientMapManager.getFace(faces.get(i));
-                PlayerFaceRenderer.draw(graphics, face, getX() + BORDER_SIZE + i * HALF_ICON_SIZE / faceFactor + i, getY() + ICON_SIZE, HALF_ICON_SIZE / faceFactor);
+                PlayerSkin skin = ClientMapManager.getOnlinePlayerSkin(faces.get(i));
+                PlayerFaceRenderer.draw(graphics, skin, getX() + BORDER_SIZE + i * HALF_ICON_SIZE / faceFactor + i, getY() + ICON_SIZE, HALF_ICON_SIZE / faceFactor);
             }
         }
-        graphics.pose().popPose();
-
-        graphics.pose().popPose();
     }
 
     @Override

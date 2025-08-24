@@ -8,24 +8,35 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.ItemFrameRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.util.CommonColors;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderItemInFrameEvent;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
+import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class ImageRenderer {
+	private static final ContextKey<ImageData> IMAGE_KEY = new ContextKey<>(LTExtras.location("image"));
+
+	@SubscribeEvent
+	public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
+		Class<ItemFrameRenderer<?>> itemFrameRenderer = (Class<ItemFrameRenderer<?>>) (Class<?>) ItemFrameRenderer.class;
+		event.registerEntityModifier(itemFrameRenderer, (entity, state) -> {
+			ItemStack stack = entity.getItem();
+			if (stack.is(ExtraItems.IMAGE.get())) {
+				state.setRenderData(IMAGE_KEY, stack.get(ExtraDataComponents.IMAGE));
+			}
+		});
+	}
+
     @SubscribeEvent
     public static void onRenderItemInFrame(RenderItemInFrameEvent event) {
-        ItemStack stack = event.getItemStack();
-        if (!stack.is(ExtraItems.IMAGE.get())) {
-            return;
-        }
-        ImageData image = stack.get(ExtraDataComponents.IMAGE);
+		ImageData image = event.getItemFrameRenderState().getRenderData(IMAGE_KEY);
         if (image != null) {
             renderImage(image, event.getPoseStack().last(), event.getMultiBufferSource(), event.getPackedLight());
             event.setCanceled(true);
@@ -46,10 +57,8 @@ public class ImageRenderer {
     }
 
     private static void addVertex(VertexConsumer consumer, PoseStack.Pose pose, float x, float y, float u, float v, int packedLight) {
-        Matrix4f matrix = pose.pose();
-        Matrix3f normal = pose.normal();
-        consumer.addVertex(matrix, x, y, 0.0f)
-                .setColor(1.0f, 1.0f, 1.0f, 1.0f)
+		consumer.addVertex(pose.pose(), x, y, 0.0f)
+                .setColor(CommonColors.WHITE)
                 .setUv(u, v)
                 .setOverlay(OverlayTexture.NO_OVERLAY)
                 .setLight(packedLight)

@@ -1,31 +1,31 @@
 modLoader = "javafml"
-loaderVersion = "[2,)"
-issueTrackerURL="https://github.com/LoveTropics/LTExtras/issues"
+loaderVersion = "${loader_version_range}"
+issueTrackerURL = "https://github.com/LoveTropics/LTExtras/issues"
 license = "Mozilla Public License Version 2.0"
 
 [[mods]]
-modId="ltextras"
-version="${mod_version}"
-displayName="LTExtras"
-displayURL="https://lovetropics.org"
-authors="The Love Tropics Team"
-description='''
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "LTExtras"
+displayURL = "https://lovetropics.org"
+authors = "The Love Tropics Team"
+description = '''
 Extra content for the LoveTropics map build.
 '''
 
 [[mixins]]
 config = "ltextras.mixins.json"
 
-[[dependencies.ltextras]]
-modId="neoforge"
-mandatory=true
-versionRange="[21.0.0,)"
-ordering="NONE"
-side="BOTH"
+[[dependencies.${ mod_id }]]
+modId = "neoforge"
+type = "required"
+versionRange = "${neo_version_range}"
+ordering = "NONE"
+side = "BOTH"
 
-[[dependencies.ltextras]]
-modId="minecraft"
-mandatory=true
-versionRange="[1.21,)"
-ordering="NONE"
-side="BOTH"
+[[dependencies.${ mod_id }]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"

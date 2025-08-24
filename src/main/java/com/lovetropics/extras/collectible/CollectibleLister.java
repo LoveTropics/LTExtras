@@ -110,12 +110,12 @@ public class CollectibleLister {
             LOGGER.error("Failed to load player data for {}", profileId, e);
             return null;
         }
-        CompoundTag attachmentsTag = tag.getCompound(AttachmentHolder.ATTACHMENTS_NBT_KEY);
+        CompoundTag attachmentsTag = tag.getCompoundOrEmpty(AttachmentHolder.ATTACHMENTS_NBT_KEY);
         Tag collectiblesTag = attachmentsTag.get(ExtraAttachments.COLLECTIBLE_STORE.getKey().location().toString());
         if (collectiblesTag == null) {
             return null;
         }
-        return CollectibleData.CODEC.parse(ops, collectiblesTag)
+        return CollectibleData.MAP_CODEC.codec().parse(ops, collectiblesTag)
                 .resultOrPartial(Util.prefix("Failed to parse player data for " + profileId, LOGGER::warn))
                 .map(data -> new Entry(profileId, data))
                 .orElse(null);

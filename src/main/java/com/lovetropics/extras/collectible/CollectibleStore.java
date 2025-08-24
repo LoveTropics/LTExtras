@@ -3,7 +3,7 @@ package com.lovetropics.extras.collectible;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class CollectibleStore {
-    public static final Codec<CollectibleStore> CODEC = CollectibleData.CODEC.xmap(
+    public static final MapCodec<CollectibleStore> MAP_CODEC = CollectibleData.MAP_CODEC.xmap(
             data -> {
                 CollectibleStore store = new CollectibleStore();
                 store.collectibles.clear();

@@ -1,7 +1,7 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @FieldsAreNonnullByDefault
-package com.lovetropics.extras.mixin.perf;
+package com.lovetropics.extras.client.entity.state;
 
 import com.mojang.blaze3d.FieldsAreNonnullByDefault;
 import com.mojang.blaze3d.MethodsReturnNonnullByDefault;

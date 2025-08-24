@@ -13,7 +13,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ClientboundUpdatePoiPacket(
@@ -25,7 +24,7 @@ public record ClientboundUpdatePoiPacket(
 		int markerX,
 		int markerY
 ) implements CustomPacketPayload {
-	public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUpdatePoiPacket> STREAM_CODEC = NeoForgeStreamCodecs.composite(
+	public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUpdatePoiPacket> STREAM_CODEC = StreamCodec.composite(
 			ByteBufCodecs.VAR_INT, ClientboundUpdatePoiPacket::networkId,
 			ResourceKey.streamCodec(ExtraRegistries.POI), ClientboundUpdatePoiPacket::id,
 			MapConfig.STREAM_CODEC, ClientboundUpdatePoiPacket::map,

@@ -10,15 +10,13 @@ import com.lovetropics.extras.registry.ExtraRegistries;
 import com.lovetropics.lib.permission.PermissionsApi;
 import com.lovetropics.lib.permission.role.RoleOverrideType;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -26,6 +24,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PermissionsChangedEvent;
@@ -45,35 +44,29 @@ import java.util.stream.Stream;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class MapManager extends SavedData {
-	private static final Factory<MapManager> FACTORY = new Factory<>(MapManager::new, MapManager::load);
-
 	public static final int MAP_SIZE = 256;
 
-	private static final String STORAGE_ID = LTExtras.MODID + "_map_poi";
+	public static final Codec<MapManager> CODEC = RecordCodecBuilder.create(i -> i.group(
+			ResourceKey.codec(ExtraRegistries.POI).listOf().fieldOf("disabled").forGetter(m -> List.copyOf(m.disabledPois))
+	).apply(i, disabledPois -> {
+		MapManager mapManager = new MapManager();
+		mapManager.disabledPois.addAll(disabledPois);
+		return mapManager;
+	}));
 
-	private static final Codec<List<ResourceKey<PoiConfig>>> DISABLED_CODEC = ResourceKey.codec(ExtraRegistries.POI).listOf();
+	private static final SavedDataType<MapManager> TYPE = new SavedDataType<>(
+			LTExtras.MODID + "_map_poi",
+			MapManager::new,
+			CODEC
+	);
 
 	private final Set<ResourceKey<PoiConfig>> disabledPois = new ObjectOpenHashSet<>();
 	private Map<ResourceKey<PoiConfig>, Set<UUID>> facesByPoi = Map.of();
 
 	private final Map<UUID, PlayerSender> playerSenders = new HashMap<>();
 
-	@Override
-	public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-		tag.put("disabled", DISABLED_CODEC.encodeStart(NbtOps.INSTANCE, List.copyOf(disabledPois)).getOrThrow());
-		return tag;
-	}
-
 	public static MapManager get(MinecraftServer server) {
-		return server.overworld().getDataStorage().computeIfAbsent(FACTORY, STORAGE_ID);
-	}
-
-	private static MapManager load(CompoundTag tag, HolderLookup.Provider registries) {
-		MapManager manager = new MapManager();
-		manager.disabledPois.addAll(DISABLED_CODEC.parse(NbtOps.INSTANCE, tag.get("disabled"))
-				.resultOrPartial()
-				.orElse(List.of()));
-		return manager;
+		return server.overworld().getDataStorage().computeIfAbsent(TYPE);
 	}
 
 	@SubscribeEvent

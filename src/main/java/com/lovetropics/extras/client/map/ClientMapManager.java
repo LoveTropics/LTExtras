@@ -10,10 +10,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -53,18 +53,13 @@ public class ClientMapManager {
 		POIS.clear();
 	}
 
-	public static ResourceLocation getFace(UUID uuid) {
-		return getPlayerSkinOrDefault(uuid);
-	}
-
-	private static ResourceLocation getPlayerSkinOrDefault(UUID uuid) {
+	public static PlayerSkin getOnlinePlayerSkin(UUID id) {
 		ClientPacketListener connection = Minecraft.getInstance().getConnection();
-
 		PlayerInfo playerInfo;
-		if (connection == null || (playerInfo = connection.getPlayerInfo(uuid)) == null) {
-			return DefaultPlayerSkin.get(uuid).texture();
+		if (connection == null || (playerInfo = connection.getPlayerInfo(id)) == null) {
+			return DefaultPlayerSkin.get(id);
 		}
-		return playerInfo.getSkin().texture();
+		return playerInfo.getSkin();
 	}
 
 	public static Collection<ClientPoi> get() {

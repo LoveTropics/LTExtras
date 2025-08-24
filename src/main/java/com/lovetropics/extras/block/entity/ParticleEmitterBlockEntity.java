@@ -2,14 +2,14 @@ package com.lovetropics.extras.block.entity;
 
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class ParticleEmitterBlockEntity extends BlockEntity {
     // mode 0: crit hit particles
@@ -52,16 +52,14 @@ public class ParticleEmitterBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-
-        mode = tag.getInt("Mode");
+	protected void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		mode = input.getIntOr("Mode", 0);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
-
-        compound.putInt("Mode", mode);
+	protected void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
+		output.putInt("Mode", mode);
     }
 }

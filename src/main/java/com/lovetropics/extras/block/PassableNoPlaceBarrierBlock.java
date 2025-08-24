@@ -1,11 +1,11 @@
 package com.lovetropics.extras.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -33,7 +33,7 @@ public final class PassableNoPlaceBarrierBlock extends CustomBarrierBlock {
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		if(context instanceof EntityCollisionContext entityCollisionContext){
 			if(entityCollisionContext.getEntity() instanceof Player player){
-				if(!isHoldingBarrier(player)){
+				if(!player.isHolding(asItem())){
 					return Shapes.empty();
 				}
 			}
@@ -42,7 +42,7 @@ public final class PassableNoPlaceBarrierBlock extends CustomBarrierBlock {
 	}
 
 	@Override
-	protected void onExplosionHit(BlockState state, Level level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
+	protected void onExplosionHit(BlockState state, ServerLevel level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
 		// We have no blast resistance to let explosion pass through, but don't blow it up either
 	}
 }

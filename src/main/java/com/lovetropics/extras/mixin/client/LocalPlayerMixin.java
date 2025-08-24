@@ -3,7 +3,6 @@ package com.lovetropics.extras.mixin.client;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin extends Player {
-	public LocalPlayerMixin(Level level, BlockPos pos, float yRot, GameProfile profile) {
-		super(level, pos, yRot, profile);
+	public LocalPlayerMixin(Level level, GameProfile profile) {
+		super(level, profile);
 	}
 
 	@Inject(method = "getWaterVision", at = @At("HEAD"), cancellable = true)

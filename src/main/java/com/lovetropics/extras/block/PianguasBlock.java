@@ -2,11 +2,13 @@ package com.lovetropics.extras.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
@@ -107,14 +109,14 @@ public final class PianguasBlock extends Block implements SimpleWaterloggedBlock
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction facing, BlockState adjacentState, LevelAccessor world, BlockPos currentPos, BlockPos adjacentPos) {
-		BlockState newState = removeInvalidAttachments(state, world, currentPos);
+	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+		BlockState newState = removeInvalidAttachments(state, level, pos);
 		if (!hasAttachments(newState)) {
 			return Blocks.AIR.defaultBlockState();
 		}
 
 		if (state.getValue(WATERLOGGED)) {
-			world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+			scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 		}
 
 		return newState;

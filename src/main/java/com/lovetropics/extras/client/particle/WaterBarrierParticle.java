@@ -1,20 +1,22 @@
 package com.lovetropics.extras.client.particle;
 
 import com.lovetropics.extras.LTExtras;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.DepthTestFunction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
@@ -22,26 +24,50 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class WaterBarrierParticle extends TextureSheetParticle {
-	WaterBarrierParticle(ClientLevel world, double x, double y, double z, ItemLike item) {
+    private static final RenderPipeline RENDER_PIPELINE = RenderPipeline.builder(RenderPipelines.PARTICLE_SNIPPET)
+            .withLocation(LTExtras.location("pipeline/water_barrier_particle"))
+            .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+            .withDepthWrite(true)
+            .withBlend(BlendFunction.TRANSLUCENT).build();
+
+    private static final ParticleRenderType RENDER_TYPE = new ParticleRenderType("water_barrier", RenderType.create(
+            "water_barrier_particle",
+            1536,
+            false,
+            false,
+            RENDER_PIPELINE,
+            RenderType.CompositeState.builder()
+                    .setTextureState(new RenderStateShard.TextureStateShard(TextureAtlas.LOCATION_BLOCKS, false))
+                    .setOutputState(RenderStateShard.PARTICLES_TARGET)
+                    .setLightmapState(RenderStateShard.LIGHTMAP)
+                    .createCompositeState(false)
+    ));
+
+    WaterBarrierParticle(ClientLevel world, double x, double y, double z, ResourceLocation sprite) {
 		super(world, x, y, z);
-		setSprite(ExtraParticles.getItemSprite(world, new ItemStack(item)));
+		setSprite(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(sprite));
 		gravity = 0.0F;
 		lifetime = 80;
 		hasPhysics = false;
 	}
 
-	@SubscribeEvent
+    @SubscribeEvent
+    public static void registerRenderPipeline(RegisterRenderPipelinesEvent event) {
+        event.registerPipeline(RENDER_PIPELINE);
+    }
+
+    @SubscribeEvent
 	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
 		Minecraft.getInstance().particleEngine.register(ExtraParticles.WATER_BARRIER.get(), new Factory());
 	}
 
 	@Override
 	public ParticleRenderType getRenderType() {
-		return RenderType.INSTANCE;
+        return RENDER_TYPE;
 	}
 
 	@Override
@@ -52,24 +78,7 @@ public class WaterBarrierParticle extends TextureSheetParticle {
 	public static class Factory implements ParticleProvider<SimpleParticleType> {
 		@Override
 		public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-			return new WaterBarrierParticle(world, x, y, z, Blocks.BARRIER.asItem());
-		}
-	}
-
-	public static class RenderType implements ParticleRenderType {
-		public static final RenderType INSTANCE = new RenderType();
-
-		private RenderType() {
-		}
-
-		@Nullable
-		@Override
-		public BufferBuilder begin(Tesselator tess, TextureManager pTextureManager) {
-			RenderSystem.disableBlend();
-			RenderSystem.disableDepthTest();
-			RenderSystem.depthMask(true);
-			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
-			return tess.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+			return new WaterBarrierParticle(world, x, y, z, ResourceLocation.withDefaultNamespace("item/barrier"));
 		}
 	}
 }

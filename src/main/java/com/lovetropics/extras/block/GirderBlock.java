@@ -8,9 +8,11 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,7 +26,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -70,7 +71,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
+	protected boolean propagatesSkylightDown(BlockState state) {
 		return !state.getValue(WATERLOGGED);
 	}
 
@@ -108,16 +109,15 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
-								  BlockPos currentPos, BlockPos facingPos) {
-		if (stateIn.getValue(WATERLOGGED)) {
-			worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+		if (state.getValue(WATERLOGGED)) {
+			scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 		}
-		BlockState ret = stateIn;
+		BlockState ret = state;
 		boolean connected = false;
 		for (Axis a : Axis.values()) {
-			if (worldIn.getBlockState(currentPos.relative(Direction.get(AxisDirection.NEGATIVE, a))).is(connectionTag)
-					|| worldIn.getBlockState(currentPos.relative(Direction.get(AxisDirection.POSITIVE, a))).is(connectionTag)) {
+			if (level.getBlockState(pos.relative(Direction.get(AxisDirection.NEGATIVE, a))).is(connectionTag)
+					|| level.getBlockState(pos.relative(Direction.get(AxisDirection.POSITIVE, a))).is(connectionTag)) {
 				connected = true;
 				ret = ret.setValue(PROPS.get(a), true);
 			} else {
@@ -125,7 +125,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock {
 			}
 		}
 		if (!connected) {
-			return stateIn;
+			return state;
 		}
 		return ret;
 	}

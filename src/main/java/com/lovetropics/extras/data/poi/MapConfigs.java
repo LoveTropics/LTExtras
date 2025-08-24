@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
@@ -20,11 +20,11 @@ public class MapConfigs {
 	private static final SimpleDataPackLister<PoiConfig> POI_LISTER = new SimpleDataPackLister<>("ltextras/map_poi", ExtraRegistries.POI, PoiConfig.CODEC);
 
 	@SubscribeEvent
-	public static void addReloadListener(AddReloadListenerEvent event) {
+	public static void addReloadListener(AddServerReloadListenersEvent event) {
 		RegistryAccess registries = event.getRegistryAccess();
-		event.addListener((stage, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor) ->
+		event.addListener(LTExtras.location("map_configs"), (barrier, resourceManager, backgroundExecutor, gameExecutor) ->
 				POI_LISTER.load(registries, resourceManager, backgroundExecutor)
-						.thenCompose(stage::wait)
+						.thenCompose(barrier::wait)
 						.thenAcceptAsync(pois -> {
 							POIS.clear();
 							pois.forEach(holder -> POIS.register(holder.id(), holder));
@@ -33,6 +33,7 @@ public class MapConfigs {
 							if (server != null) {
 								MapManager.get(server).reload(server);
 							}
-						}, gameExecutor));
+						}, gameExecutor)
+		);
 	}
 }

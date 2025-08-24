@@ -2,7 +2,7 @@ package com.lovetropics.extras.client.world_effect;
 
 import com.lovetropics.extras.LTExtras;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
@@ -36,11 +36,7 @@ public class SkyColorEffectHandler {
 
     public static void apply(int color, int fadeLength) {
         INTERPOLATOR.setTarget(new State(
-                new Vec3(
-                        FastColor.ARGB32.red(color) / 255.0,
-                        FastColor.ARGB32.green(color) / 255.0,
-                        FastColor.ARGB32.blue(color) / 255.0
-                ),
+                new Vec3(ARGB.redFloat(color), ARGB.greenFloat(color), ARGB.blueFloat(color)),
                 1.0f
         ), fadeLength);
     }

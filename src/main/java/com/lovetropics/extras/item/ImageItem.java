@@ -2,11 +2,9 @@ package com.lovetropics.extras.item;
 
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
@@ -49,11 +47,11 @@ public class ImageItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag flag) {
-        super.appendHoverText(stack, context, lines, flag);
+	public Component getName(ItemStack stack) {
         ImageData image = stack.get(ExtraDataComponents.IMAGE);
         if (image != null && image.name().isPresent()) {
-            lines.add(image.name().get().copy().withStyle(ChatFormatting.GRAY));
+			return image.name().get();
         }
+		return super.getName(stack);
     }
 }

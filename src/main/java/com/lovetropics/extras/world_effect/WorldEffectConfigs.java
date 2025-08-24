@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
@@ -19,11 +19,11 @@ public class WorldEffectConfigs {
     private static final SimpleDataPackLister<WorldEffect> LISTER = new SimpleDataPackLister<>("world_effects", ExtraRegistries.WORLD_EFFECT, WorldEffect.CODEC);
 
     @SubscribeEvent
-    public static void addReloadListener(AddReloadListenerEvent event) {
+    public static void addReloadListener(AddServerReloadListenersEvent event) {
         RegistryAccess registries = event.getRegistryAccess();
-        event.addListener((stage, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor) ->
+        event.addListener(LTExtras.location("world_effects"), (barrier, resourceManager, backgroundExecutor, gameExecutor) ->
                 LISTER.load(registries, resourceManager, backgroundExecutor)
-                        .thenCompose(stage::wait)
+                        .thenCompose(barrier::wait)
                         .thenAcceptAsync(effects -> {
                             REGISTRY.clear();
                             effects.forEach(holder ->

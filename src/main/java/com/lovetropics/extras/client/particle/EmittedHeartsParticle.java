@@ -13,7 +13,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class EmittedHeartsParticle extends EmittedRaisingParticle {
 	EmittedHeartsParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
 		super(world, x, y, z, sprites);

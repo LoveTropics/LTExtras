@@ -5,12 +5,12 @@ import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
 import com.lovetropics.extras.network.message.ClientboundOpenCollectibleBasketPacket;
 import com.lovetropics.extras.network.message.ClientboundPoiFacesPacket;
 import com.lovetropics.extras.network.message.ClientboundRemovePoiPacket;
-import com.lovetropics.extras.network.message.ClientboundSetEntityMarkedPacket;
-import com.lovetropics.extras.network.message.ClientboundUpdatePackControl;
-import com.lovetropics.extras.network.message.ClientboundUpdatePoiPacket;
 import com.lovetropics.extras.network.message.ClientboundSetAutoRejoinIntent;
 import com.lovetropics.extras.network.message.ClientboundSetDisplayTextPacket;
+import com.lovetropics.extras.network.message.ClientboundSetEntityMarkedPacket;
 import com.lovetropics.extras.network.message.ClientboundSetSkyColorPacket;
+import com.lovetropics.extras.network.message.ClientboundUpdatePackControl;
+import com.lovetropics.extras.network.message.ClientboundUpdatePoiPacket;
 import com.lovetropics.extras.network.message.ClientboundWorldParticleEffectsPacket;
 import com.lovetropics.extras.network.message.ServerboundPickCollectibleItemPacket;
 import com.lovetropics.extras.network.message.ServerboundReturnCollectibleItemPacket;
@@ -20,7 +20,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-@EventBusSubscriber(modid = LTExtras.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = LTExtras.MODID)
 public class LTExtrasNetwork {
     @SubscribeEvent
     public static void registerPackets(RegisterPayloadHandlersEvent event) {

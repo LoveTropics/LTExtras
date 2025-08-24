@@ -1,16 +1,16 @@
 package com.lovetropics.extras.block;
 
+import com.lovetropics.extras.LTExtras;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 // sorry
+@EventBusSubscriber(modid = LTExtras.MODID)
 public class ScientificNameBlock extends Block {
 	private final String scientificName;
 
@@ -19,8 +19,10 @@ public class ScientificNameBlock extends Block {
 		this.scientificName = scientificName;
 	}
 
-	@Override
-	public void appendHoverText(ItemStack itemStack, @Nullable Item.TooltipContext ctx, List<Component> tooltip, TooltipFlag flag) {
-		tooltip.add(Component.literal(scientificName).withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
+	@SubscribeEvent
+	public static void addToTooltip(ItemTooltipEvent event) {
+		if (event.getItemStack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof ScientificNameBlock seagrass) {
+			event.getToolTip().add(Component.literal(seagrass.scientificName).withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
+		}
 	}
 }

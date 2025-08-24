@@ -14,7 +14,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +27,6 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.phys.BlockHitResult;
@@ -44,7 +42,9 @@ import org.jetbrains.annotations.Nullable;
 public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBlock {
     public static final MapCodec<JumpPadBlock> CODEC = simpleCodec(JumpPadBlock::new);
 
-    public static final DirectionProperty FACING = DirectionProperty.create("facing", direction -> direction != Direction.DOWN);
+    public static final EnumProperty<Direction> FACING = EnumProperty.create(
+            "facing", Direction.class, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP
+    );
     public static final EnumProperty<Half> HALF = EnumProperty.create("half", Half.class);
 
     private static final VoxelShape BOTTOM_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
@@ -56,13 +56,13 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (stack.is(Items.DEBUG_STICK) && player.canUseGameMasterBlocks()) {
-            if (!level.isClientSide()) {
-                player.sendSystemMessage(Component.literal("Right-click with the debug stick at the desired jump target location"));
+            if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.sendSystemMessage(Component.literal("Right-click with the debug stick at the desired jump target location"));
                 stack.set(ExtraDataComponents.JUMP_PAD.get(), pos);
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
@@ -76,9 +76,11 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
         Level level = event.getLevel();
         if (!level.isClientSide() && level.getBlockEntity(jumpPadPos) instanceof JumpPadBlockEntity jumpPad) {
 			jumpPad.updateTarget(event.getHitVec().getLocation());
-            event.getEntity().sendSystemMessage(Component.literal("Set jump target"));
+            if(event.getEntity() instanceof ServerPlayer serverPlayer) {
+                serverPlayer.sendSystemMessage(Component.literal("Set jump target"));
+            }
         }
-        event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide()));
+        event.setCancellationResult(InteractionResult.SUCCESS);
     }
 
     @SubscribeEvent
@@ -90,9 +92,11 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
         Level level = event.getLevel();
         if (!level.isClientSide() && level.getBlockEntity(jumpPadPos) instanceof JumpPadBlockEntity jumpPad) {
             jumpPad.updateTarget(event.getEntity().position());
-            event.getEntity().sendSystemMessage(Component.literal("Set jump target"));
+            if(event.getEntity() instanceof ServerPlayer serverPlayer) {
+                serverPlayer.sendSystemMessage(Component.literal("Set jump target"));
+            }
         }
-        event.setCancellationResult(InteractionResult.sidedSuccess(event.getSide().isClient()));
+        event.setCancellationResult(InteractionResult.SUCCESS);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.lovetropics.extras.block;
 
+import com.lovetropics.extras.ExtraBlocks;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
@@ -7,7 +8,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -18,8 +18,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class CheckpointBlock extends Block {
 	public static final MapCodec<CheckpointBlock> CODEC = simpleCodec(CheckpointBlock::new);
@@ -42,7 +40,7 @@ public class CheckpointBlock extends Block {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
+	protected boolean propagatesSkylightDown(BlockState state) {
 		return true;
 	}
 
@@ -66,21 +64,24 @@ public class CheckpointBlock extends Block {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
-		LocalPlayer player = Minecraft.getInstance().player;
-		if (player == null) {
-			return;
-		}
-
-		if (isHoldingBarrier(player)) {
-			world.addParticle(ExtraParticles.CHECKPOINT.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
-		}
+		Client.animateTick(world, pos);
 	}
 
-	private boolean isHoldingBarrier(Player player) {
-		Item item = asItem();
-		return player.getMainHandItem().getItem() == item
-				|| player.getOffhandItem().getItem() == item;
+	private static class Client {
+		private static void animateTick(Level level, BlockPos pos) {
+			LocalPlayer player = Minecraft.getInstance().player;
+			if (player == null) {
+				return;
+			}
+
+			if (isHoldingBarrier(player)) {
+				level.addParticle(ExtraParticles.CHECKPOINT.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
+			}
+		}
+
+		private static boolean isHoldingBarrier(Player player) {
+			return player.isHolding(ExtraBlocks.CHECKPOINT.asItem());
+		}
 	}
 }

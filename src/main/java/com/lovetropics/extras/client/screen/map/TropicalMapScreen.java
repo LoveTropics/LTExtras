@@ -7,7 +7,7 @@ import com.lovetropics.extras.data.poi.PoiConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 
@@ -54,24 +54,18 @@ public class TropicalMapScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
-        super.render(graphics, pMouseX, pMouseY, pPartialTick);
-    }
-
-    @Override
     public void renderBackground(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
 
         int h = (height - MapManager.MAP_SIZE) / 2;
         int w = (width - MapManager.MAP_SIZE) / 2;
 
-        graphics.blit(map.texture(), w, h, 0, 0.0F, 0.0F, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, map.texture(), w, h, 0, 0, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE);
     }
 
     private void doWarp(ResourceKey<PoiConfig> id) {
         if (player instanceof LocalPlayer localPlayer) {
-            localPlayer.connection.sendUnsignedCommand("warp " + id.location());
+			localPlayer.connection.sendUnattendedCommand("warp " + id.location(), null);
             onClose();
         }
     }
