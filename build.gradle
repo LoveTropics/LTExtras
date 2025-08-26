@@ -6,24 +6,16 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.103'
 }
 
-group = 'com.lovetropics.extras'
+group = 'org.lovetropics'
 base {
     archivesName = 'LTExtras'
 }
 
 def env = System.getenv()
-
-ext.buildnumber = 0
-project.buildnumber = env.BUILD_NUMBER ?: 'custom'
-
-if (env.GHA_RELEASE_WORKFLOW) {
-    version = "${mod_version}"
-} else if (env.GITHUB_RUN_NUMBER) {
-    project.buildnumber = env.GITHUB_RUN_NUMBER
-    version = "${mod_version}-${release_type}+${buildnumber}-gha"
+if (env.GITHUB_RUN_NUMBER) {
+    version = "$mod_version.${env.GITHUB_RUN_NUMBER}"
 } else {
-    project.buildnumber = env.BUILD_NUMBER ?: 'custom'
-    version = "${mod_version}-${release_type}+${buildnumber}"
+    version = "$mod_version.0-SNAPSHOT"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -146,7 +138,6 @@ publishing {
                 url env.MAVEN_URL
             }
         } else {
-            println("Warning: no MAVEN_URL specified, publishing to mavenLocal")
             mavenLocal()
         }
     }
