@@ -129,10 +129,18 @@ publishing {
             from components.java
         }
     }
+
     repositories {
-        if (project.hasProperty('mavendir')) {
-            maven { url mavendir }
+        if (env.MAVEN_URL) {
+            maven {
+                credentials {
+                    username env.MAVEN_USERNAME
+                    password env.MAVEN_PASSWORD
+                }
+                url env.MAVEN_URL
+            }
         } else {
+            println("Warning: no MAVEN_URL specified, publishing to mavenLocal")
             mavenLocal()
         }
     }
