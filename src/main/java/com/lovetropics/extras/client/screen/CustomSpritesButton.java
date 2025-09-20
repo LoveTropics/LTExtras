@@ -17,7 +17,7 @@ public class CustomSpritesButton extends Button {
 
 	@Override
 	protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprites.get(active, isHoveredOrFocused()), getX(), getY(), getWidth(), getHeight());
+		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprites.get(active, isHoveredOrFocused()), getX(), getY(), getWidth(), getHeight(), alpha);
 		renderString(graphics, Minecraft.getInstance().font, ARGB.color(alpha, getFGColor()));
 	}
 }

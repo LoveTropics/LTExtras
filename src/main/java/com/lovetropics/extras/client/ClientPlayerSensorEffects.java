@@ -47,7 +47,7 @@ public class ClientPlayerSensorEffects {
 	private static final ResourceLocation MARKER_BOX_SPRITE = LTExtras.location("marker_box");
 	private static final int MARKER_BOX_INNER_PADDING = 32;
 
-    private static final ContextKey<UUID> UUID_KEY = new ContextKey<>(LTExtras.location("sea_turtle"));
+    private static final ContextKey<UUID> UUID_KEY = new ContextKey<>(LTExtras.location("uuid"));
 
 	private static final int VISIBLE_REFRESH_INTERVAL = 10;
 
