@@ -4150,5 +4150,4 @@ public class RaveKoaAnimation {
                                     AnimationChannel.Interpolations.LINEAR),
                             new Keyframe(4f, KeyframeAnimations.degreeVec(0f, 0f, -10f),
                                     AnimationChannel.Interpolations.LINEAR))).build();
-    
 }

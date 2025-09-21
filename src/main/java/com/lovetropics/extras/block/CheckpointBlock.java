@@ -20,68 +20,68 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CheckpointBlock extends Block {
-	public static final MapCodec<CheckpointBlock> CODEC = simpleCodec(CheckpointBlock::new);
+    public static final MapCodec<CheckpointBlock> CODEC = simpleCodec(CheckpointBlock::new);
 
-	public static final IntegerProperty STAGE = IntegerProperty.create("stage", 1, 40);
+    public static final IntegerProperty STAGE = IntegerProperty.create("stage", 1, 40);
 
-	public CheckpointBlock(Properties properties) {
-		super(properties);
-		registerDefaultState(defaultBlockState().setValue(STAGE, 1));
-	}
+    public CheckpointBlock(Properties properties) {
+        super(properties);
+        registerDefaultState(defaultBlockState().setValue(STAGE, 1));
+    }
 
-	@Override
-	protected MapCodec<? extends CheckpointBlock> codec() {
-		return CODEC;
-	}
+    @Override
+    protected MapCodec<? extends CheckpointBlock> codec() {
+        return CODEC;
+    }
 
-	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		builder.add(STAGE);
-	}
+    @Override
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+        builder.add(STAGE);
+    }
 
-	@Override
-	protected boolean propagatesSkylightDown(BlockState state) {
-		return true;
-	}
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state) {
+        return true;
+    }
 
-	@Override
-	@Deprecated
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (worldIn instanceof Level level && level.isClientSide()) {
-			if (context instanceof EntityCollisionContext entityContext) {
-				if (entityContext.getEntity() instanceof Player player && !player.isCreative()) {
-					return Shapes.empty();
-				}
-			}
-		}
+    @Override
+    @Deprecated
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        if (worldIn instanceof Level level && level.isClientSide()) {
+            if (context instanceof EntityCollisionContext entityContext) {
+                if (entityContext.getEntity() instanceof Player player && !player.isCreative()) {
+                    return Shapes.empty();
+                }
+            }
+        }
 
-		return super.getShape(state, worldIn, pos, context);
-	}
+        return super.getShape(state, worldIn, pos, context);
+    }
 
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		return Shapes.empty();
-	}
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
+    }
 
-	@Override
-	public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
-		Client.animateTick(world, pos);
-	}
+    @Override
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+        Client.animateTick(world, pos);
+    }
 
-	private static class Client {
-		private static void animateTick(Level level, BlockPos pos) {
-			LocalPlayer player = Minecraft.getInstance().player;
-			if (player == null) {
-				return;
-			}
+    private static class Client {
+        private static void animateTick(Level level, BlockPos pos) {
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player == null) {
+                return;
+            }
 
-			if (isHoldingBarrier(player)) {
-				level.addParticle(ExtraParticles.CHECKPOINT.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
-			}
-		}
+            if (isHoldingBarrier(player)) {
+                level.addParticle(ExtraParticles.CHECKPOINT.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
+            }
+        }
 
-		private static boolean isHoldingBarrier(Player player) {
-			return player.isHolding(ExtraBlocks.CHECKPOINT.asItem());
-		}
-	}
+        private static boolean isHoldingBarrier(Player player) {
+            return player.isHolding(ExtraBlocks.CHECKPOINT.asItem());
+        }
+    }
 }

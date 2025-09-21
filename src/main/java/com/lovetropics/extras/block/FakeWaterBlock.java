@@ -12,25 +12,25 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FakeWaterBlock extends WaterBarrierBlock {
 
-	public FakeWaterBlock(Properties properties) {
-		super(properties);
-	}
+    public FakeWaterBlock(Properties properties) {
+        super(properties);
+    }
 
-	@Override
-	@Deprecated
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (worldIn instanceof Level level && level.isClientSide()) {
-			if (context instanceof EntityCollisionContext entityContext) {
-				if (entityContext.getEntity() instanceof Player player && !player.isCreative()) {
-					return Shapes.empty();
-				}
-			}
-		}
-		return super.getShape(state, worldIn, pos, context);
-	}
+    @Override
+    @Deprecated
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        if (worldIn instanceof Level level && level.isClientSide()) {
+            if (context instanceof EntityCollisionContext entityContext) {
+                if (entityContext.getEntity() instanceof Player player && !player.isCreative()) {
+                    return Shapes.empty();
+                }
+            }
+        }
+        return super.getShape(state, worldIn, pos, context);
+    }
 
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		return Shapes.empty();
-	}
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
+    }
 }

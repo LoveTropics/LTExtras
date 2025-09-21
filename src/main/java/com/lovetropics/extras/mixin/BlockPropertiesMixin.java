@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(BlockBehaviour.Properties.class)
 public interface BlockPropertiesMixin {
 
-	@Accessor
-	void setIsRandomlyTicking(boolean ticksRandomly);
+    @Accessor
+    void setIsRandomlyTicking(boolean ticksRandomly);
 }

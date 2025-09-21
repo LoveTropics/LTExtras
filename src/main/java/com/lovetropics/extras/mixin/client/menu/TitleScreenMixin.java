@@ -12,13 +12,13 @@ import javax.annotation.Nullable;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin {
-	@Shadow
-	@Nullable
-	private RealmsNotificationsScreen realmsNotificationsScreen;
+    @Shadow
+    @Nullable
+    private RealmsNotificationsScreen realmsNotificationsScreen;
 
-	@Inject(method = "init", at = @At("TAIL"))
-	private void postInit(CallbackInfo ci) {
-		// Realms button is gone, so that's not useful
-		realmsNotificationsScreen = null;
-	}
+    @Inject(method = "init", at = @At("TAIL"))
+    private void postInit(CallbackInfo ci) {
+        // Realms button is gone, so that's not useful
+        realmsNotificationsScreen = null;
+    }
 }

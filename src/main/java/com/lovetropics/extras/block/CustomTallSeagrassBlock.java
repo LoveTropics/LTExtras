@@ -10,16 +10,15 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class CustomTallSeagrassBlock extends TallSeagrassBlock {
 
-	private final NonNullSupplier<? extends SeagrassBlock> drop;
+    private final NonNullSupplier<? extends SeagrassBlock> drop;
 
-	public CustomTallSeagrassBlock(Properties p, NonNullSupplier<? extends SeagrassBlock> drop) {
-		super(p);
-		this.drop = drop;
- 	}
+    public CustomTallSeagrassBlock(Properties p, NonNullSupplier<? extends SeagrassBlock> drop) {
+        super(p);
+        this.drop = drop;
+    }
 
-	@Override
-	protected ItemStack getCloneItemStack(LevelReader p_304988_, BlockPos p_154750_, BlockState p_154751_, boolean p_387662_) {
-		return new ItemStack(drop.get());
-	}
-
+    @Override
+    protected ItemStack getCloneItemStack(LevelReader p_304988_, BlockPos p_154750_, BlockState p_154751_, boolean p_387662_) {
+        return new ItemStack(drop.get());
+    }
 }

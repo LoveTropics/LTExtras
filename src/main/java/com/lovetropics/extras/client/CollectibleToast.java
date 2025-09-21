@@ -32,6 +32,7 @@ public class CollectibleToast implements Toast {
         stack = Collectible.createItemStack(collectible, Util.NIL_UUID);
         name = Component.empty().withStyle(ChatFormatting.DARK_RED).append(stack.getHoverName());
     }
+
     @Override
     public Visibility getWantedVisibility() {
         return wantedVisibility;
@@ -44,7 +45,7 @@ public class CollectibleToast implements Toast {
 
     @Override
     public void render(GuiGraphics graphics, Font font, long visibilityTime) {
-		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITE, 0, 0, WIDTH, HEIGHT);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITE, 0, 0, WIDTH, HEIGHT);
         graphics.renderFakeItem(new ItemStack(ExtraItems.COLLECTIBLE_BASKET.asItem()), 11, 12);
         graphics.renderFakeItem(stack, 5, 4);
 

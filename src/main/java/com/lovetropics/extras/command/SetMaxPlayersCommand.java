@@ -13,8 +13,8 @@ import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
 public final class SetMaxPlayersCommand {
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		// @formatter:off
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        // @formatter:off
 		dispatcher.register(
 			literal("setmaxplayers").requires(source -> source.hasPermission(4))
 				.then(argument("max", IntegerArgumentType.integer(1))
@@ -22,16 +22,16 @@ public final class SetMaxPlayersCommand {
 			)
 		);
 		// @formatter:on
-	}
+    }
 
-	private static int setMaxPlayers(CommandContext<CommandSourceStack> ctx) {
-		int maxPlayers = IntegerArgumentType.getInteger(ctx, "max");
+    private static int setMaxPlayers(CommandContext<CommandSourceStack> ctx) {
+        int maxPlayers = IntegerArgumentType.getInteger(ctx, "max");
 
-		MinecraftServer server = ctx.getSource().getServer();
-		((PlayerListAccess) server.getPlayerList()).setMaxPlayers(maxPlayers);
+        MinecraftServer server = ctx.getSource().getServer();
+        ((PlayerListAccess) server.getPlayerList()).setMaxPlayers(maxPlayers);
 
-		ctx.getSource().sendSuccess(() -> Component.literal("Set max player count to " + maxPlayers), true);
+        ctx.getSource().sendSuccess(() -> Component.literal("Set max player count to " + maxPlayers), true);
 
-		return Command.SINGLE_SUCCESS;
-	}
+        return Command.SINGLE_SUCCESS;
+    }
 }

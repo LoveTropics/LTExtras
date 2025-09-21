@@ -57,12 +57,12 @@ public class SubmergedLilyBlock extends WaterlilyBlock implements SimpleWaterlog
     }
 
     @Override
-	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
-		if (!state.canSurvive(level, pos)) {
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (!state.canSurvive(level, pos)) {
             return Blocks.AIR.defaultBlockState();
         } else {
-			scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-			return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
+            scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
         }
     }
 

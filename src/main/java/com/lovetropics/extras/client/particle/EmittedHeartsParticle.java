@@ -15,31 +15,31 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class EmittedHeartsParticle extends EmittedRaisingParticle {
-	EmittedHeartsParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
-		super(world, x, y, z, sprites);
-		setSize(0.75f, 0.75f);
-	}
+    EmittedHeartsParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
+        super(world, x, y, z, sprites);
+        setSize(0.75f, 0.75f);
+    }
 
-	@SubscribeEvent
-	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-		Minecraft.getInstance().particleEngine.register(ExtraParticles.EMITTED_HEARTS_PARTICLE.get(), EmittedHeartsParticle.Factory::new);
-	}
+    @SubscribeEvent
+    public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
+        Minecraft.getInstance().particleEngine.register(ExtraParticles.EMITTED_HEARTS_PARTICLE.get(), EmittedHeartsParticle.Factory::new);
+    }
 
-	@Override
-	public ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
-	}
+    @Override
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    }
 
-	public static class Factory implements ParticleProvider<SimpleParticleType> {
-		private final SpriteSet sprites;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
 
-		public Factory(SpriteSet pSprites) {
-			sprites = pSprites;
-		}
+        public Factory(SpriteSet pSprites) {
+            sprites = pSprites;
+        }
 
-		@Override
+        @Override
         public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-			return new EmittedHeartsParticle(pLevel, pX, pY, pZ, sprites);
-		}
-	}
+            return new EmittedHeartsParticle(pLevel, pX, pY, pZ, sprites);
+        }
+    }
 }

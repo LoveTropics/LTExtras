@@ -168,12 +168,12 @@ public class TpCommand {
 
     private static void doTeleport(ServerPlayer player, GlobalPos globalPos) throws CommandSyntaxException {
         Predicate<ResourceKey<Level>> dimensionPredicate = dimensionPredicate();
-		if (!dimensionPredicate.test(player.level().dimension()) || !dimensionPredicate.test(globalPos.dimension())) {
+        if (!dimensionPredicate.test(player.level().dimension()) || !dimensionPredicate.test(globalPos.dimension())) {
             throw NOT_ALLOWED_HERE.create();
         }
 
         ServerLevel level = player.getServer().getLevel(globalPos.dimension());
-		player.teleportTo(level, globalPos.pos().getX(), globalPos.pos().getY(), globalPos.pos().getZ(), Set.of(), player.getYRot(), player.getXRot(), true);
+        player.teleportTo(level, globalPos.pos().getX(), globalPos.pos().getY(), globalPos.pos().getZ(), Set.of(), player.getYRot(), player.getXRot(), true);
     }
 
     private static Predicate<ResourceKey<Level>> dimensionPredicate() {

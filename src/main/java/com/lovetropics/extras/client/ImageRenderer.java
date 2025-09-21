@@ -21,22 +21,22 @@ import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEve
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class ImageRenderer {
-	private static final ContextKey<ImageData> IMAGE_KEY = new ContextKey<>(LTExtras.location("image"));
+    private static final ContextKey<ImageData> IMAGE_KEY = new ContextKey<>(LTExtras.location("image"));
 
-	@SubscribeEvent
-	public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
-		Class<ItemFrameRenderer<?>> itemFrameRenderer = (Class<ItemFrameRenderer<?>>) (Class<?>) ItemFrameRenderer.class;
-		event.registerEntityModifier(itemFrameRenderer, (entity, state) -> {
-			ItemStack stack = entity.getItem();
-			if (stack.is(ExtraItems.IMAGE.get())) {
-				state.setRenderData(IMAGE_KEY, stack.get(ExtraDataComponents.IMAGE));
-			}
-		});
-	}
+    @SubscribeEvent
+    public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
+        Class<ItemFrameRenderer<?>> itemFrameRenderer = (Class<ItemFrameRenderer<?>>) (Class<?>) ItemFrameRenderer.class;
+        event.registerEntityModifier(itemFrameRenderer, (entity, state) -> {
+            ItemStack stack = entity.getItem();
+            if (stack.is(ExtraItems.IMAGE.get())) {
+                state.setRenderData(IMAGE_KEY, stack.get(ExtraDataComponents.IMAGE));
+            }
+        });
+    }
 
     @SubscribeEvent
     public static void onRenderItemInFrame(RenderItemInFrameEvent event) {
-		ImageData image = event.getItemFrameRenderState().getRenderData(IMAGE_KEY);
+        ImageData image = event.getItemFrameRenderState().getRenderData(IMAGE_KEY);
         if (image != null) {
             renderImage(image, event.getPoseStack().last(), event.getMultiBufferSource(), event.getPackedLight());
             event.setCanceled(true);
@@ -57,7 +57,7 @@ public class ImageRenderer {
     }
 
     private static void addVertex(VertexConsumer consumer, PoseStack.Pose pose, float x, float y, float u, float v, int packedLight) {
-		consumer.addVertex(pose.pose(), x, y, 0.0f)
+        consumer.addVertex(pose.pose(), x, y, 0.0f)
                 .setColor(CommonColors.WHITE)
                 .setUv(u, v)
                 .setOverlay(OverlayTexture.NO_OVERLAY)

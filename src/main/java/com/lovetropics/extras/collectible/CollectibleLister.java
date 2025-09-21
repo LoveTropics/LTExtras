@@ -14,7 +14,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.PlayerDataStorage;
 import net.neoforged.neoforge.attachment.AttachmentHolder;
 import org.jetbrains.annotations.Nullable;

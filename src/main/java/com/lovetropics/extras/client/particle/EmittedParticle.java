@@ -16,43 +16,43 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class EmittedParticle extends TextureSheetParticle {
-	EmittedParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
-		super(world, x, y, z);
-		lifetime = 80;
-		gravity = 0.5f;
-		yd = 0.75f;
-		xd = (Math.random() - Math.random()) * 0.05;
-		zd = (Math.random() - Math.random()) * 0.05;
-		setSize(0.5f, 0.5f);
+    EmittedParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
+        super(world, x, y, z);
+        lifetime = 80;
+        gravity = 0.5f;
+        yd = 0.75f;
+        xd = (Math.random() - Math.random()) * 0.05;
+        zd = (Math.random() - Math.random()) * 0.05;
+        setSize(0.5f, 0.5f);
 
-		float f = (float)(Math.random() * (double)0.3F + (double)0.6F);
-		rCol = f;
-		gCol = f;
-		bCol = f;
+        float f = (float) (Math.random() * (double) 0.3F + (double) 0.6F);
+        rCol = f;
+        gCol = f;
+        bCol = f;
 
-		pickSprite(sprites);
-	}
+        pickSprite(sprites);
+    }
 
-	@SubscribeEvent
-	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-		Minecraft.getInstance().particleEngine.register(ExtraParticles.EMITTED_PARTICLE.get(), EmittedParticle.Factory::new);
-	}
+    @SubscribeEvent
+    public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
+        Minecraft.getInstance().particleEngine.register(ExtraParticles.EMITTED_PARTICLE.get(), EmittedParticle.Factory::new);
+    }
 
-	@Override
-	public ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
-	}
+    @Override
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    }
 
-	public static class Factory implements ParticleProvider<SimpleParticleType> {
-		private final SpriteSet sprites;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
 
-		public Factory(SpriteSet pSprites) {
-			sprites = pSprites;
-		}
+        public Factory(SpriteSet pSprites) {
+            sprites = pSprites;
+        }
 
-		@Override
-		public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-			return new EmittedParticle(pLevel, pX, pY, pZ, sprites);
-		}
-	}
+        @Override
+        public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
+            return new EmittedParticle(pLevel, pX, pY, pZ, sprites);
+        }
+    }
 }

@@ -9,13 +9,13 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(PlayerList.class)
 public class PlayerListMixin implements PlayerListAccess {
-	@Shadow
-	@Final
-	@Mutable
-	protected int maxPlayers;
+    @Shadow
+    @Final
+    @Mutable
+    protected int maxPlayers;
 
-	@Override
-	public void setMaxPlayers(int maxPlayers) {
-		this.maxPlayers = maxPlayers;
-	}
+    @Override
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
+    }
 }

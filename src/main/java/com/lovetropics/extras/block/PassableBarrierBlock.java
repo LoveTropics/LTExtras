@@ -8,17 +8,17 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public final class PassableBarrierBlock extends CustomBarrierBlock {
-	public PassableBarrierBlock(Properties properties) {
-		super(properties);
-	}
+    public PassableBarrierBlock(Properties properties) {
+        super(properties);
+    }
 
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-		return Shapes.empty();
-	}
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
+    }
 
-	@Override
-	public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-		return getShape(state, world, pos, context);
-	}
+    @Override
+    public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return getShape(state, world, pos, context);
+    }
 }

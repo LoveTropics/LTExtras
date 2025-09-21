@@ -9,21 +9,21 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ClientboundRemovePoiPacket(
-		int id
+        int id
 ) implements CustomPacketPayload {
-	public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundRemovePoiPacket> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.VAR_INT, ClientboundRemovePoiPacket::id,
-			ClientboundRemovePoiPacket::new
-	);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundRemovePoiPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, ClientboundRemovePoiPacket::id,
+            ClientboundRemovePoiPacket::new
+    );
 
-	public static final Type<ClientboundRemovePoiPacket> TYPE = new Type<>(LTExtras.location("remove_poi"));
+    public static final Type<ClientboundRemovePoiPacket> TYPE = new Type<>(LTExtras.location("remove_poi"));
 
-	public static void handle(ClientboundRemovePoiPacket packet, IPayloadContext context) {
-		ClientMapManager.removePoi(packet.id());
-	}
+    public static void handle(ClientboundRemovePoiPacket packet, IPayloadContext context) {
+        ClientMapManager.removePoi(packet.id());
+    }
 
-	@Override
-	public Type<ClientboundRemovePoiPacket> type() {
-		return TYPE;
-	}
+    @Override
+    public Type<ClientboundRemovePoiPacket> type() {
+        return TYPE;
+    }
 }

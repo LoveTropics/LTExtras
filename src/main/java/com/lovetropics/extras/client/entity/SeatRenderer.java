@@ -7,17 +7,17 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 
 public class SeatRenderer extends EntityRenderer<SeatEntity, EntityRenderState> {
-   public SeatRenderer(EntityRendererProvider.Context ctx) {
+    public SeatRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
-   }
+    }
 
     @Override
     public boolean shouldRender(SeatEntity livingEntity, Frustum camera, double camX, double camY, double camZ) {
         return false;
     }
 
-	@Override
-	public EntityRenderState createRenderState() {
-		return new EntityRenderState();
-	}
+    @Override
+    public EntityRenderState createRenderState() {
+        return new EntityRenderState();
+    }
 }

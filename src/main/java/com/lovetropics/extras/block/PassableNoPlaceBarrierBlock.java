@@ -15,34 +15,34 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.function.BiConsumer;
 
 public final class PassableNoPlaceBarrierBlock extends CustomBarrierBlock {
-	public PassableNoPlaceBarrierBlock(Properties properties) {
-		super(properties);
-	}
+    public PassableNoPlaceBarrierBlock(Properties properties) {
+        super(properties);
+    }
 
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-		return Shapes.empty();
-	}
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
+    }
 
-	@Override
-	public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-		return Shapes.empty();
-	}
+    @Override
+    public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return Shapes.empty();
+    }
 
-	@Override
-	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		if(context instanceof EntityCollisionContext entityCollisionContext){
-			if(entityCollisionContext.getEntity() instanceof Player player){
-				if(!player.isHolding(asItem())){
-					return Shapes.empty();
-				}
-			}
-		}
-		return super.getShape(state, level, pos, context);
-	}
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        if (context instanceof EntityCollisionContext entityCollisionContext) {
+            if (entityCollisionContext.getEntity() instanceof Player player) {
+                if (!player.isHolding(asItem())) {
+                    return Shapes.empty();
+                }
+            }
+        }
+        return super.getShape(state, level, pos, context);
+    }
 
-	@Override
-	protected void onExplosionHit(BlockState state, ServerLevel level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
-		// We have no blast resistance to let explosion pass through, but don't blow it up either
-	}
+    @Override
+    protected void onExplosionHit(BlockState state, ServerLevel level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
+        // We have no blast resistance to let explosion pass through, but don't blow it up either
+    }
 }

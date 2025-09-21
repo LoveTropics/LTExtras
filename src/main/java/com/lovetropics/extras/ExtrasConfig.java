@@ -1,4 +1,5 @@
 package com.lovetropics.extras;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -65,9 +66,9 @@ public class ExtrasConfig {
         }
     }
 
-	public static final ModConfigSpec.ConfigValue<Boolean> CLIENT_AUTO_REJOIN = COMMON_BUILDER
-			.comment("If true, clients will automatically try to reconnect when the server closes.")
-			.define("clientAutoRejoin", false);
+    public static final ModConfigSpec.ConfigValue<Boolean> CLIENT_AUTO_REJOIN = COMMON_BUILDER
+            .comment("If true, clients will automatically try to reconnect when the server closes.")
+            .define("clientAutoRejoin", false);
 
     public static final ModConfigSpec.ConfigValue<String> SERVER_ADDRESS = COMMON_BUILDER
             .comment("The IP address for the Love Tropics event server")

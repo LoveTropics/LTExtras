@@ -17,12 +17,12 @@ public class TropicMapItem extends Item {
     }
 
     @Override
-	public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         Holder<MapConfig> map = itemStack.get(ExtraDataComponents.MAP);
         if (level.isClientSide() && map != null) {
             ClientMapManager.openScreen(player, map);
         }
-		return InteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

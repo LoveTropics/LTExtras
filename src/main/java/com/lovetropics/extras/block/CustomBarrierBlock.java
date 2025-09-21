@@ -16,33 +16,33 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class CustomBarrierBlock extends BarrierBlock {
-	public CustomBarrierBlock(Properties properties) {
-		super(properties);
-	}
+    public CustomBarrierBlock(Properties properties) {
+        super(properties);
+    }
 
-	@Override
-	public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
-		Client.animateTick(world, pos, this, createParticle());
-	}
+    @Override
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+        Client.animateTick(world, pos, this, createParticle());
+    }
 
-	protected ParticleOptions createParticle() {
-		return new BlockParticleOption(ParticleTypes.BLOCK_MARKER, Blocks.BARRIER.defaultBlockState());
-	}
+    protected ParticleOptions createParticle() {
+        return new BlockParticleOption(ParticleTypes.BLOCK_MARKER, Blocks.BARRIER.defaultBlockState());
+    }
 
-	private static class Client {
-		private static void animateTick(Level world, BlockPos pos, Block block, ParticleOptions particle) {
-			LocalPlayer player = Minecraft.getInstance().player;
-			if (player == null) {
-				return;
-			}
+    private static class Client {
+        private static void animateTick(Level world, BlockPos pos, Block block, ParticleOptions particle) {
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player == null) {
+                return;
+            }
 
-			if (isHoldingBarrier(player, block.asItem())) {
-				world.addParticle(particle, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
-			}
-		}
+            if (isHoldingBarrier(player, block.asItem())) {
+                world.addParticle(particle, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
+            }
+        }
 
-		private static boolean isHoldingBarrier(Player player, Item item) {
-			return player.isHolding(item);
-		}
-	}
+        private static boolean isHoldingBarrier(Player player, Item item) {
+            return player.isHolding(item);
+        }
+    }
 }

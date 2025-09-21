@@ -12,9 +12,9 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
-	@WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/PerspectiveProjectionMatrixBuffer;getBuffer(Lorg/joml/Matrix4f;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;"))
-	private GpuBufferSlice captureProjectionMatrix(PerspectiveProjectionMatrixBuffer buffer, Matrix4f projectionMatrix, Operation<GpuBufferSlice> original) {
-		ClientPlayerSensorEffects.captureProjectionMatrix(projectionMatrix);
-		return original.call(buffer, projectionMatrix);
-	}
+    @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/PerspectiveProjectionMatrixBuffer;getBuffer(Lorg/joml/Matrix4f;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;"))
+    private GpuBufferSlice captureProjectionMatrix(PerspectiveProjectionMatrixBuffer buffer, Matrix4f projectionMatrix, Operation<GpuBufferSlice> original) {
+        ClientPlayerSensorEffects.captureProjectionMatrix(projectionMatrix);
+        return original.call(buffer, projectionMatrix);
+    }
 }

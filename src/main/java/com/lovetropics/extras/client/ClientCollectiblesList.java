@@ -69,7 +69,7 @@ public class ClientCollectiblesList {
     private static void notifyCollections(List<Holder<Collectible>> newCollectibles) {
         Minecraft minecraft = Minecraft.getInstance();
         for (Holder<Collectible> newCollectible : newCollectibles) {
-			minecraft.getToastManager().addToast(new CollectibleToast(newCollectible));
+            minecraft.getToastManager().addToast(new CollectibleToast(newCollectible));
         }
         minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0f));
     }

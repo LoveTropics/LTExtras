@@ -43,10 +43,10 @@ public class RaveKoaEntity extends PathfinderMob {
     }
 
     @Override
-	public boolean isInvulnerableTo(ServerLevel level, DamageSource source) {
-		if (source.isCreativePlayer() || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-			return false;
-		}
+    public boolean isInvulnerableTo(ServerLevel level, DamageSource source) {
+        if (source.isCreativePlayer() || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            return false;
+        }
         return true;
     }
 
@@ -55,14 +55,13 @@ public class RaveKoaEntity extends PathfinderMob {
                 .add(Attributes.MAX_HEALTH, 10.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.2F)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1F);
-
     }
 
     @Override
-	@Nullable
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData) {
+    @Nullable
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData) {
         setPersistenceRequired();
-		return super.finalizeSpawn(level, difficulty, spawnReason, spawnGroupData);
+        return super.finalizeSpawn(level, difficulty, spawnReason, spawnGroupData);
     }
 
     @Override

@@ -23,9 +23,9 @@ public class TropicalMapScreen extends Screen {
     public TropicalMapScreen(Player player, MapConfig map, List<ClientPoi> pois) {
         super(map.description());
         this.player = player;
-		this.map = map;
-		this.pois = pois;
-	}
+        this.map = map;
+        this.pois = pois;
+    }
 
     @Override
     protected void init() {
@@ -60,12 +60,12 @@ public class TropicalMapScreen extends Screen {
         int h = (height - MapManager.MAP_SIZE) / 2;
         int w = (width - MapManager.MAP_SIZE) / 2;
 
-		graphics.blit(RenderPipelines.GUI_TEXTURED, map.texture(), w, h, 0, 0, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, map.texture(), w, h, 0, 0, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE, MapManager.MAP_SIZE);
     }
 
     private void doWarp(ResourceKey<PoiConfig> id) {
         if (player instanceof LocalPlayer localPlayer) {
-			localPlayer.connection.sendUnattendedCommand("warp " + id.location(), null);
+            localPlayer.connection.sendUnattendedCommand("warp " + id.location(), null);
             onClose();
         }
     }

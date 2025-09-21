@@ -16,19 +16,19 @@ import javax.annotation.Nullable;
 
 @Mixin(ClientCommonPacketListenerImpl.class)
 public class ClientCommonPacketListenerImplMixin {
-	@Shadow
-	@Final
-	@Nullable
-	protected ServerData serverData;
+    @Shadow
+    @Final
+    @Nullable
+    protected ServerData serverData;
 
-	@WrapOperation(method = "onDisconnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientCommonPacketListenerImpl;createDisconnectScreen(Lnet/minecraft/network/DisconnectionDetails;)Lnet/minecraft/client/gui/screens/Screen;"))
-	private Screen onDisconnect(ClientCommonPacketListenerImpl instance, DisconnectionDetails details, Operation<Screen> original) {
-		if (serverData != null) {
-			Screen newScreen = ClientAutoRejoinHandler.createConnectionClosedScreen(details, serverData);
-			if (newScreen != null) {
-				return newScreen;
-			}
-		}
-		return original.call(instance, details);
-	}
+    @WrapOperation(method = "onDisconnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientCommonPacketListenerImpl;createDisconnectScreen(Lnet/minecraft/network/DisconnectionDetails;)Lnet/minecraft/client/gui/screens/Screen;"))
+    private Screen onDisconnect(ClientCommonPacketListenerImpl instance, DisconnectionDetails details, Operation<Screen> original) {
+        if (serverData != null) {
+            Screen newScreen = ClientAutoRejoinHandler.createConnectionClosedScreen(details, serverData);
+            if (newScreen != null) {
+                return newScreen;
+            }
+        }
+        return original.call(instance, details);
+    }
 }

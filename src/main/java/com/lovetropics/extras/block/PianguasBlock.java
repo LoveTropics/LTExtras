@@ -6,7 +6,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
@@ -33,117 +32,117 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class PianguasBlock extends Block implements SimpleWaterloggedBlock {
-	private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-	private static final BooleanProperty UP = PipeBlock.UP;
-	private static final BooleanProperty DOWN = PipeBlock.DOWN;
-	private static final BooleanProperty NORTH = PipeBlock.NORTH;
-	private static final BooleanProperty EAST = PipeBlock.EAST;
-	private static final BooleanProperty SOUTH = PipeBlock.SOUTH;
-	private static final BooleanProperty WEST = PipeBlock.WEST;
-	public static final Map<Direction, BooleanProperty> ATTACHMENTS = PipeBlock.PROPERTY_BY_DIRECTION;
+    private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    private static final BooleanProperty UP = PipeBlock.UP;
+    private static final BooleanProperty DOWN = PipeBlock.DOWN;
+    private static final BooleanProperty NORTH = PipeBlock.NORTH;
+    private static final BooleanProperty EAST = PipeBlock.EAST;
+    private static final BooleanProperty SOUTH = PipeBlock.SOUTH;
+    private static final BooleanProperty WEST = PipeBlock.WEST;
+    public static final Map<Direction, BooleanProperty> ATTACHMENTS = PipeBlock.PROPERTY_BY_DIRECTION;
 
-	private static final VoxelShape UP_SHAPE = Block.box(0.0, 15.0, 0.0, 16.0, 16.0, 16.0);
-	private static final VoxelShape DOWN_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
-	private static final VoxelShape EAST_SHAPE = Block.box(0.0, 0.0, 0.0, 1.0, 16.0, 16.0);
-	private static final VoxelShape WEST_SHAPE = Block.box(15.0, 0.0, 0.0, 16.0, 16.0, 16.0);
-	private static final VoxelShape SOUTH_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 1.0);
-	private static final VoxelShape NORTH_SHAPE = Block.box(0.0, 0.0, 15.0, 16.0, 16.0, 16.0);
+    private static final VoxelShape UP_SHAPE = Block.box(0.0, 15.0, 0.0, 16.0, 16.0, 16.0);
+    private static final VoxelShape DOWN_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
+    private static final VoxelShape EAST_SHAPE = Block.box(0.0, 0.0, 0.0, 1.0, 16.0, 16.0);
+    private static final VoxelShape WEST_SHAPE = Block.box(15.0, 0.0, 0.0, 16.0, 16.0, 16.0);
+    private static final VoxelShape SOUTH_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 1.0);
+    private static final VoxelShape NORTH_SHAPE = Block.box(0.0, 0.0, 15.0, 16.0, 16.0, 16.0);
 
-	private static final Direction[] DIRECTIONS = Direction.values();
+    private static final Direction[] DIRECTIONS = Direction.values();
 
-	private final Map<BlockState, VoxelShape> stateToShape;
+    private final Map<BlockState, VoxelShape> stateToShape;
 
-	public PianguasBlock(BlockBehaviour.Properties properties) {
-		super(properties);
+    public PianguasBlock(BlockBehaviour.Properties properties) {
+        super(properties);
 
-		registerDefaultState(stateDefinition.any()
-				.setValue(UP, false)
-				.setValue(DOWN, false)
-				.setValue(NORTH, false)
-				.setValue(EAST, false)
-				.setValue(SOUTH, false)
-				.setValue(WEST, false)
-				.setValue(WATERLOGGED, false)
-		);
+        registerDefaultState(stateDefinition.any()
+                .setValue(UP, false)
+                .setValue(DOWN, false)
+                .setValue(NORTH, false)
+                .setValue(EAST, false)
+                .setValue(SOUTH, false)
+                .setValue(WEST, false)
+                .setValue(WATERLOGGED, false)
+        );
 
-		stateToShape = stateDefinition.getPossibleStates().stream()
-				.collect(Collectors.toMap(
-						Function.identity(),
-						PianguasBlock::getShapeForState
-				));
-	}
+        stateToShape = stateDefinition.getPossibleStates().stream()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        PianguasBlock::getShapeForState
+                ));
+    }
 
-	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-		return stateToShape.get(state);
-	}
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return stateToShape.get(state);
+    }
 
-	@Override
-	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-		return hasAttachments(removeInvalidAttachments(state, world, pos));
-	}
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        return hasAttachments(removeInvalidAttachments(state, world, pos));
+    }
 
-	@Override
-	@Nullable
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		Level world = context.getLevel();
-		BlockPos pos = context.getClickedPos();
+    @Override
+    @Nullable
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
 
-		BlockState currentState = world.getBlockState(pos);
-		boolean extend = currentState.is(this);
+        BlockState currentState = world.getBlockState(pos);
+        boolean extend = currentState.is(this);
 
-		BlockState placementState = extend ? currentState : defaultBlockState();
+        BlockState placementState = extend ? currentState : defaultBlockState();
 
-		Fluid fluid = world.getFluidState(pos).getType();
-		placementState = placementState.setValue(WATERLOGGED, fluid == Fluids.WATER);
+        Fluid fluid = world.getFluidState(pos).getType();
+        placementState = placementState.setValue(WATERLOGGED, fluid == Fluids.WATER);
 
-		for (Direction direction : context.getNearestLookingDirections()) {
-			BooleanProperty property = getPropertyFor(direction);
-			boolean replacing = extend && currentState.getValue(property);
-			if (!replacing && canAttachTo(world, pos.relative(direction), direction)) {
-				return placementState.setValue(property, true);
-			}
-		}
+        for (Direction direction : context.getNearestLookingDirections()) {
+            BooleanProperty property = getPropertyFor(direction);
+            boolean replacing = extend && currentState.getValue(property);
+            if (!replacing && canAttachTo(world, pos.relative(direction), direction)) {
+                return placementState.setValue(property, true);
+            }
+        }
 
-		return extend ? placementState : null;
-	}
+        return extend ? placementState : null;
+    }
 
-	@Override
-	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
-		BlockState newState = removeInvalidAttachments(state, level, pos);
-		if (!hasAttachments(newState)) {
-			return Blocks.AIR.defaultBlockState();
-		}
+    @Override
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        BlockState newState = removeInvalidAttachments(state, level, pos);
+        if (!hasAttachments(newState)) {
+            return Blocks.AIR.defaultBlockState();
+        }
 
-		if (state.getValue(WATERLOGGED)) {
-			scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-		}
+        if (state.getValue(WATERLOGGED)) {
+            scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+        }
 
-		return newState;
-	}
+        return newState;
+    }
 
-	@Override
-	public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
-		BlockState currentState = context.getLevel().getBlockState(context.getClickedPos());
-		if (currentState.is(this)) {
-			return getAttachmentCount(currentState) < ATTACHMENTS.size();
-		} else {
-			return super.canBeReplaced(state, context);
-		}
-	}
+    @Override
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+        BlockState currentState = context.getLevel().getBlockState(context.getClickedPos());
+        if (currentState.is(this)) {
+            return getAttachmentCount(currentState) < ATTACHMENTS.size();
+        } else {
+            return super.canBeReplaced(state, context);
+        }
+    }
 
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(WATERLOGGED, UP, DOWN, NORTH, EAST, SOUTH, WEST);
-	}
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(WATERLOGGED, UP, DOWN, NORTH, EAST, SOUTH, WEST);
+    }
 
-	@Override
-	public FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-	}
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
 
-	@Override
-	public BlockState rotate(BlockState state, Rotation rotation) {
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
         return switch (rotation) {
             case CLOCKWISE_180 ->
                     state.setValue(NORTH, state.getValue(SOUTH)).setValue(EAST, state.getValue(WEST)).setValue(SOUTH, state.getValue(NORTH)).setValue(WEST, state.getValue(EAST));
@@ -153,64 +152,78 @@ public final class PianguasBlock extends Block implements SimpleWaterloggedBlock
                     state.setValue(NORTH, state.getValue(WEST)).setValue(EAST, state.getValue(NORTH)).setValue(SOUTH, state.getValue(EAST)).setValue(WEST, state.getValue(SOUTH));
             default -> state;
         };
-	}
+    }
 
-	@Override
-	public BlockState mirror(BlockState state, Mirror mirror) {
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
         return switch (mirror) {
             case LEFT_RIGHT -> state.setValue(NORTH, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(NORTH));
             case FRONT_BACK -> state.setValue(EAST, state.getValue(WEST)).setValue(WEST, state.getValue(EAST));
             default -> super.mirror(state, mirror);
         };
-	}
+    }
 
-	public static boolean canAttachTo(BlockGetter world, BlockPos attachPos, Direction direction) {
-		BlockState attachState = world.getBlockState(attachPos);
-		VoxelShape attachShape = attachState.getCollisionShape(world, attachPos);
-		return Block.isFaceFull(attachShape, direction.getOpposite());
-	}
+    public static boolean canAttachTo(BlockGetter world, BlockPos attachPos, Direction direction) {
+        BlockState attachState = world.getBlockState(attachPos);
+        VoxelShape attachShape = attachState.getCollisionShape(world, attachPos);
+        return Block.isFaceFull(attachShape, direction.getOpposite());
+    }
 
-	private static BlockState removeInvalidAttachments(BlockState state, BlockGetter world, BlockPos pos) {
-		for (Direction direction : DIRECTIONS) {
-			BooleanProperty property = getPropertyFor(direction);
-			if (!state.getValue(property)) continue;
+    private static BlockState removeInvalidAttachments(BlockState state, BlockGetter world, BlockPos pos) {
+        for (Direction direction : DIRECTIONS) {
+            BooleanProperty property = getPropertyFor(direction);
+            if (!state.getValue(property)) {
+                continue;
+            }
 
-			BlockPos attachPos = pos.relative(direction);
-			if (!canAttachTo(world, attachPos, direction)) {
-				state = state.setValue(property, false);
-			}
-		}
+            BlockPos attachPos = pos.relative(direction);
+            if (!canAttachTo(world, attachPos, direction)) {
+                state = state.setValue(property, false);
+            }
+        }
 
-		return state;
-	}
+        return state;
+    }
 
-	private static VoxelShape getShapeForState(BlockState state) {
-		VoxelShape shape = Shapes.empty();
-		if (state.getValue(UP)) shape = UP_SHAPE;
-		if (state.getValue(DOWN)) shape = DOWN_SHAPE;
-		if (state.getValue(NORTH)) shape = Shapes.or(shape, SOUTH_SHAPE);
-		if (state.getValue(SOUTH)) shape = Shapes.or(shape, NORTH_SHAPE);
-		if (state.getValue(EAST)) shape = Shapes.or(shape, WEST_SHAPE);
-		if (state.getValue(WEST)) shape = Shapes.or(shape, EAST_SHAPE);
+    private static VoxelShape getShapeForState(BlockState state) {
+        VoxelShape shape = Shapes.empty();
+        if (state.getValue(UP)) {
+            shape = UP_SHAPE;
+        }
+        if (state.getValue(DOWN)) {
+            shape = DOWN_SHAPE;
+        }
+        if (state.getValue(NORTH)) {
+            shape = Shapes.or(shape, SOUTH_SHAPE);
+        }
+        if (state.getValue(SOUTH)) {
+            shape = Shapes.or(shape, NORTH_SHAPE);
+        }
+        if (state.getValue(EAST)) {
+            shape = Shapes.or(shape, WEST_SHAPE);
+        }
+        if (state.getValue(WEST)) {
+            shape = Shapes.or(shape, EAST_SHAPE);
+        }
 
-		return shape;
-	}
+        return shape;
+    }
 
-	private static boolean hasAttachments(BlockState state) {
-		return getAttachmentCount(state) > 0;
-	}
+    private static boolean hasAttachments(BlockState state) {
+        return getAttachmentCount(state) > 0;
+    }
 
-	private static int getAttachmentCount(BlockState state) {
-		int count = 0;
-		for (BooleanProperty property : ATTACHMENTS.values()) {
-			if (state.getValue(property)) {
-				count++;
-			}
-		}
-		return count;
-	}
+    private static int getAttachmentCount(BlockState state) {
+        int count = 0;
+        for (BooleanProperty property : ATTACHMENTS.values()) {
+            if (state.getValue(property)) {
+                count++;
+            }
+        }
+        return count;
+    }
 
-	private static BooleanProperty getPropertyFor(Direction side) {
-		return ATTACHMENTS.get(side);
-	}
+    private static BooleanProperty getPropertyFor(Direction side) {
+        return ATTACHMENTS.get(side);
+    }
 }

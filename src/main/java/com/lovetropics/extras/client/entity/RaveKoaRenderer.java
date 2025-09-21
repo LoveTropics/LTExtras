@@ -14,32 +14,32 @@ public class RaveKoaRenderer extends MobRenderer<RaveKoaEntity, RaveKoaRenderSta
     private static final ResourceLocation TEXTURE_MAN_FISHER = LTExtras.location("textures/entity/koa_man_fisher.png");
     private static final ResourceLocation TEXTURE_WOMAN_FISHER = LTExtras.location("textures/entity/koa_woman_fisher.png");
 
-   public RaveKoaRenderer(EntityRendererProvider.Context context) {
-      super(context, new RaveKoaModel(context.bakeLayer(RaveKoaModel.LAYER_LOCATION)), 0.9f);
-   }
+    public RaveKoaRenderer(EntityRendererProvider.Context context) {
+        super(context, new RaveKoaModel(context.bakeLayer(RaveKoaModel.LAYER_LOCATION)), 0.9f);
+    }
 
-	@Override
-	public RaveKoaRenderState createRenderState() {
-		return new RaveKoaRenderState();
-	}
+    @Override
+    public RaveKoaRenderState createRenderState() {
+        return new RaveKoaRenderState();
+    }
 
-	@Override
-	public void extractRenderState(RaveKoaEntity entity, RaveKoaRenderState state, float partialTicks) {
-		super.extractRenderState(entity, state, partialTicks);
-		state.raveAnimationStateDJ.copyFrom(entity.raveAnimationStateDJ);
-		state.raveAnimationStateDance1.copyFrom(entity.raveAnimationStateDance1);
-		state.raveAnimationStateDance2.copyFrom(entity.raveAnimationStateDance2);
-	}
+    @Override
+    public void extractRenderState(RaveKoaEntity entity, RaveKoaRenderState state, float partialTicks) {
+        super.extractRenderState(entity, state, partialTicks);
+        state.raveAnimationStateDJ.copyFrom(entity.raveAnimationStateDJ);
+        state.raveAnimationStateDance1.copyFrom(entity.raveAnimationStateDance1);
+        state.raveAnimationStateDance2.copyFrom(entity.raveAnimationStateDance2);
+    }
 
-	@Override
-	public ResourceLocation getTextureLocation(RaveKoaRenderState state) {
-		if (state.entityType == ExtraEntities.RAVEKOADJ.get()) {
-			return TEXTURE_MAN_HUNTER;
-		} else if (state.entityType == ExtraEntities.RAVEKOADANCE1.get()) {
-			return TEXTURE_WOMAN_FISHER;
-		} else if (state.entityType == ExtraEntities.RAVEKOADANCE2.get()) {
-			return TEXTURE_MAN_FISHER;
-		}
-		return TEXTURE_MAN_HUNTER;
-	}
+    @Override
+    public ResourceLocation getTextureLocation(RaveKoaRenderState state) {
+        if (state.entityType == ExtraEntities.RAVEKOADJ.get()) {
+            return TEXTURE_MAN_HUNTER;
+        } else if (state.entityType == ExtraEntities.RAVEKOADANCE1.get()) {
+            return TEXTURE_WOMAN_FISHER;
+        } else if (state.entityType == ExtraEntities.RAVEKOADANCE2.get()) {
+            return TEXTURE_MAN_FISHER;
+        }
+        return TEXTURE_MAN_HUNTER;
+    }
 }

@@ -10,7 +10,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
@@ -73,7 +72,7 @@ public final class PapyrusStemBlock extends Block implements SimpleWaterloggedBl
     private boolean canGrow(ServerLevel level, BlockPos pos) {
         // Don't grow naturally if there is water above us
         boolean aboveIsEmpty = level.isEmptyBlock(pos.above());
-		return aboveIsEmpty && !hasStemHeightInclusive(level, pos, MAX_HEIGHT);
+        return aboveIsEmpty && !hasStemHeightInclusive(level, pos, MAX_HEIGHT);
     }
 
     private boolean hasStemHeightInclusive(ServerLevel level, BlockPos pos, int height) {
@@ -94,8 +93,8 @@ public final class PapyrusStemBlock extends Block implements SimpleWaterloggedBl
         return stateBelow.is(BlockTags.DIRT) || stateBelow.is(this);
     }
 
-	@Override
-	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+    @Override
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         if (!state.canSurvive(level, pos)) {
             scheduledTickAccess.scheduleTick(pos, this, 1);
         }
@@ -140,8 +139,8 @@ public final class PapyrusStemBlock extends Block implements SimpleWaterloggedBl
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
-	@Override
-	protected boolean propagatesSkylightDown(BlockState state) {
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state) {
         return true;
     }
 

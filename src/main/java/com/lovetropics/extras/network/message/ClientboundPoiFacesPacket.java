@@ -13,23 +13,23 @@ import java.util.List;
 import java.util.UUID;
 
 public record ClientboundPoiFacesPacket(
-		int id,
-		List<UUID> faces
+        int id,
+        List<UUID> faces
 ) implements CustomPacketPayload {
-	public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundPoiFacesPacket> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.VAR_INT, ClientboundPoiFacesPacket::id,
-			UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.list()), ClientboundPoiFacesPacket::faces,
-			ClientboundPoiFacesPacket::new
-	);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundPoiFacesPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, ClientboundPoiFacesPacket::id,
+            UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.list()), ClientboundPoiFacesPacket::faces,
+            ClientboundPoiFacesPacket::new
+    );
 
-	public static final Type<ClientboundPoiFacesPacket> TYPE = new Type<>(LTExtras.location("poi_faces"));
+    public static final Type<ClientboundPoiFacesPacket> TYPE = new Type<>(LTExtras.location("poi_faces"));
 
-	public static void handle(ClientboundPoiFacesPacket packet, IPayloadContext context) {
-		ClientMapManager.updateFaces(packet.id(), packet.faces());
-	}
+    public static void handle(ClientboundPoiFacesPacket packet, IPayloadContext context) {
+        ClientMapManager.updateFaces(packet.id(), packet.faces());
+    }
 
-	@Override
-	public Type<ClientboundPoiFacesPacket> type() {
-		return TYPE;
-	}
+    @Override
+    public Type<ClientboundPoiFacesPacket> type() {
+        return TYPE;
+    }
 }

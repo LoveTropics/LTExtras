@@ -7,13 +7,13 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SpeedySlabBlock extends SlabBlock {
-	public SpeedySlabBlock(Properties properties) {
-		super(properties);
-	}
+    public SpeedySlabBlock(Properties properties) {
+        super(properties);
+    }
 
-	@Override
-	public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-		SpeedyBlock.applySpeedy(entity);
-		super.stepOn(level, pos, state, entity);
-	}
+    @Override
+    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+        SpeedyBlock.applySpeedy(entity);
+        super.stepOn(level, pos, state, entity);
+    }
 }

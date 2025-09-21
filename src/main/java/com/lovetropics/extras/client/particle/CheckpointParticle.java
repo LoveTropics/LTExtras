@@ -17,33 +17,33 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class CheckpointParticle extends TextureSheetParticle {
-	CheckpointParticle(ClientLevel world, double x, double y, double z, ResourceLocation spriteId) {
-		super(world, x, y, z);
-		setSprite(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(spriteId));
-		gravity = 0.0F;
-		lifetime = 80;
-		hasPhysics = false;
-	}
+    CheckpointParticle(ClientLevel world, double x, double y, double z, ResourceLocation spriteId) {
+        super(world, x, y, z);
+        setSprite(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(spriteId));
+        gravity = 0.0F;
+        lifetime = 80;
+        hasPhysics = false;
+    }
 
-	@SubscribeEvent
-	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-		Minecraft.getInstance().particleEngine.register(ExtraParticles.CHECKPOINT.get(), new Factory());
-	}
+    @SubscribeEvent
+    public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
+        Minecraft.getInstance().particleEngine.register(ExtraParticles.CHECKPOINT.get(), new Factory());
+    }
 
-	@Override
-	public ParticleRenderType getRenderType() {
-		return ParticleRenderType.TERRAIN_SHEET;
-	}
+    @Override
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.TERRAIN_SHEET;
+    }
 
-	@Override
-	public float getQuadSize(float scaleFactor) {
-		return 0.5F;
-	}
+    @Override
+    public float getQuadSize(float scaleFactor) {
+        return 0.5F;
+    }
 
-	public static class Factory implements ParticleProvider<SimpleParticleType> {
-		@Override
-		public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-			return new CheckpointParticle(world, x, y, z, ResourceLocation.withDefaultNamespace("item/structure_void"));
-		}
-	}
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new CheckpointParticle(world, x, y, z, ResourceLocation.withDefaultNamespace("item/structure_void"));
+        }
+    }
 }

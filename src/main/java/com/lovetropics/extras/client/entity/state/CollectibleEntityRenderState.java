@@ -4,5 +4,5 @@ import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 
 public class CollectibleEntityRenderState extends EntityRenderState {
-	public final ItemStackRenderState displayedItemState = new ItemStackRenderState();
+    public final ItemStackRenderState displayedItemState = new ItemStackRenderState();
 }

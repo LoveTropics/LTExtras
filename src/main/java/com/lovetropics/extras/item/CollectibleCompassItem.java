@@ -38,24 +38,24 @@ public class CollectibleCompassItem extends Item {
     }
 
     @Override
-	public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-		if (!(player instanceof ServerPlayer serverPlayer)) {
-			return InteractionResult.SUCCESS;
+        if (!(player instanceof ServerPlayer serverPlayer)) {
+            return InteractionResult.SUCCESS;
         }
-		player.getCooldowns().addCooldown(stack, COOLDOWN_TICKS);
+        player.getCooldowns().addCooldown(stack, COOLDOWN_TICKS);
         if (stack.has(ExtraDataComponents.COLLECTIBLE_TARGET)) {
-			serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_ALREADY_USED.get().withStyle(ChatFormatting.RED));
-			return InteractionResult.FAIL;
+            serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_ALREADY_USED.get().withStyle(ChatFormatting.RED));
+            return InteractionResult.FAIL;
         }
         Target target = tryLocateCollectible(level, player);
         if (target != null) {
             stack.set(ExtraDataComponents.COLLECTIBLE_TARGET, target);
-			serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_SUCCESS.get().withStyle(ChatFormatting.GOLD));
+            serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_SUCCESS.get().withStyle(ChatFormatting.GOLD));
         } else {
-			serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_FAIL.get().withStyle(ChatFormatting.RED));
+            serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLE_COMPASS_FAIL.get().withStyle(ChatFormatting.RED));
         }
-		return InteractionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
 
     @Nullable
@@ -82,7 +82,7 @@ public class CollectibleCompassItem extends Item {
 
     public record Target(GlobalPos pos, UUID id) {
         public static final Codec<Target> CODEC = RecordCodecBuilder.create(i -> i.group(
-        		GlobalPos.CODEC.fieldOf("pos").forGetter(Target::pos),
+                GlobalPos.CODEC.fieldOf("pos").forGetter(Target::pos),
                 UUIDUtil.CODEC.fieldOf("id").forGetter(Target::id)
         ).apply(i, Target::new));
 

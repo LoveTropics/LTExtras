@@ -7,7 +7,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
@@ -25,81 +24,81 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 public final class RopeBlock extends Block implements SimpleWaterloggedBlock {
-	private static final VoxelShape SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
+    private static final VoxelShape SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
 
-	public static final BooleanProperty KNOT = BooleanProperty.create("knot");
-	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final BooleanProperty KNOT = BooleanProperty.create("knot");
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-	public RopeBlock(Properties properties) {
-		super(properties);
-		registerDefaultState(stateDefinition.any().setValue(KNOT, false).setValue(WATERLOGGED, false));
-	}
+    public RopeBlock(Properties properties) {
+        super(properties);
+        registerDefaultState(stateDefinition.any().setValue(KNOT, false).setValue(WATERLOGGED, false));
+    }
 
-	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-		return SHAPE;
-	}
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return SHAPE;
+    }
 
-	@Override
-	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
-		if (direction == Direction.UP && !canHangFrom(level, neighborPos, neighborState)) {
-			return Blocks.AIR.defaultBlockState();
-		}
+    @Override
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (direction == Direction.UP && !canHangFrom(level, neighborPos, neighborState)) {
+            return Blocks.AIR.defaultBlockState();
+        }
 
-		if (state.getValue(WATERLOGGED)) {
-			scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-		}
+        if (state.getValue(WATERLOGGED)) {
+            scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+        }
 
-		if (direction == Direction.DOWN) {
-			return state.setValue(KNOT, !neighborState.is(this));
-		}
+        if (direction == Direction.DOWN) {
+            return state.setValue(KNOT, !neighborState.is(this));
+        }
 
-		return state;
-	}
+        return state;
+    }
 
-	@Override
-	@Nullable
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		Level world = context.getLevel();
-		BlockPos pos = context.getClickedPos();
+    @Override
+    @Nullable
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
 
-		if (canHangAt(world, pos)) {
-			return defaultBlockState()
-					.setValue(KNOT, isKnottedAt(world, pos))
-					.setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
-		} else {
-			return null;
-		}
-	}
+        if (canHangAt(world, pos)) {
+            return defaultBlockState()
+                    .setValue(KNOT, isKnottedAt(world, pos))
+                    .setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
+        } else {
+            return null;
+        }
+    }
 
-	@Override
-	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-		return canHangAt(world, pos);
-	}
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        return canHangAt(world, pos);
+    }
 
-	private boolean canHangAt(LevelReader world, BlockPos pos) {
-		BlockPos attachPos = pos.above();
-		BlockState attachState = world.getBlockState(attachPos);
-		return canHangFrom(world, attachPos, attachState);
-	}
+    private boolean canHangAt(LevelReader world, BlockPos pos) {
+        BlockPos attachPos = pos.above();
+        BlockState attachState = world.getBlockState(attachPos);
+        return canHangFrom(world, attachPos, attachState);
+    }
 
-	private boolean canHangFrom(LevelReader world, BlockPos attachPos, BlockState attachState) {
-		return attachState.is(this) ||
-				Block.canSupportCenter(world, attachPos, Direction.DOWN) ||
-				attachState.is(BlockTags.LEAVES);
-	}
+    private boolean canHangFrom(LevelReader world, BlockPos attachPos, BlockState attachState) {
+        return attachState.is(this) ||
+                Block.canSupportCenter(world, attachPos, Direction.DOWN) ||
+                attachState.is(BlockTags.LEAVES);
+    }
 
-	private boolean isKnottedAt(LevelReader world, BlockPos pos) {
-		return !world.getBlockState(pos.below()).is(this);
-	}
+    private boolean isKnottedAt(LevelReader world, BlockPos pos) {
+        return !world.getBlockState(pos.below()).is(this);
+    }
 
-	@Override
-	public FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-	}
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
 
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(KNOT, WATERLOGGED);
-	}
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(KNOT, WATERLOGGED);
+    }
 }

@@ -26,7 +26,7 @@ public class CurtainBlock extends StainedGlassPaneBlock {
     }
 
     @Override
-	protected int getLightBlock(BlockState state) {
-		return Level.MAX_BRIGHTNESS;
+    protected int getLightBlock(BlockState state) {
+        return Level.MAX_BRIGHTNESS;
     }
 }

@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Display.TextDisplay.class)
 public interface TextDisplayAccessor {
-	@Invoker("setText")
-	void ltextras$setText(Component text);
+    @Invoker("setText")
+    void ltextras$setText(Component text);
 }

@@ -40,7 +40,7 @@ public class ExtraTags {
     }
 
     public static class Collectibles extends ExtraTags {
-        public static final TagKey<Collectible> DONATION_GOAL =  modTag("donation_goal");
+        public static final TagKey<Collectible> DONATION_GOAL = modTag("donation_goal");
 
         static TagKey<Collectible> modTag(String name) {
             return TagKey.create(ExtraRegistries.COLLECTIBLE, LTExtras.location(name));

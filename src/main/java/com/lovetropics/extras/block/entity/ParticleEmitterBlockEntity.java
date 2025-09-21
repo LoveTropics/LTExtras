@@ -52,14 +52,14 @@ public class ParticleEmitterBlockEntity extends BlockEntity {
     }
 
     @Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
-		mode = input.getIntOr("Mode", 0);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        mode = input.getIntOr("Mode", 0);
     }
 
     @Override
-	protected void saveAdditional(ValueOutput output) {
-		super.saveAdditional(output);
-		output.putInt("Mode", mode);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("Mode", mode);
     }
 }

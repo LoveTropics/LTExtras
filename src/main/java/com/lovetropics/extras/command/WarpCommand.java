@@ -1,8 +1,6 @@
 package com.lovetropics.extras.command;
 
 import com.lovetropics.extras.data.Named;
-import com.lovetropics.extras.data.poi.MapConfig;
-import com.lovetropics.extras.data.poi.MapConfigs;
 import com.lovetropics.extras.data.poi.MapManager;
 import com.lovetropics.extras.data.poi.PoiConfig;
 import com.mojang.brigadier.Command;

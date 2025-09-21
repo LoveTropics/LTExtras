@@ -24,53 +24,53 @@ import static net.minecraft.commands.Commands.literal;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class NameTagModeCommand {
-	private static Mode mode = Mode.DEFAULT;
+    private static Mode mode = Mode.DEFAULT;
 
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(literal("nameTagMode")
-				.then(argument("mode", word())
-						.suggests((context, builder) -> SharedSuggestionProvider.suggest(Arrays.stream(Mode.values()).map(Mode::getSerializedName), builder))
-						.executes(NameTagModeCommand::setNameTagsMode)
-				));
-	}
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(literal("nameTagMode")
+                .then(argument("mode", word())
+                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(Arrays.stream(Mode.values()).map(Mode::getSerializedName), builder))
+                        .executes(NameTagModeCommand::setNameTagsMode)
+                ));
+    }
 
-	public static int setNameTagsMode(CommandContext<CommandSourceStack> ctx) {
-		mode = Mode.CODEC.byName(StringArgumentType.getString(ctx, "mode"), Mode.DEFAULT);
-		ctx.getSource().sendSuccess(() -> Component.literal("Name tag mode: " + mode.getSerializedName()), false);
-		return Command.SINGLE_SUCCESS;
-	}
+    public static int setNameTagsMode(CommandContext<CommandSourceStack> ctx) {
+        mode = Mode.CODEC.byName(StringArgumentType.getString(ctx, "mode"), Mode.DEFAULT);
+        ctx.getSource().sendSuccess(() -> Component.literal("Name tag mode: " + mode.getSerializedName()), false);
+        return Command.SINGLE_SUCCESS;
+    }
 
-	@SubscribeEvent
-	public static void onRenderNameTagEvent(RenderNameTagEvent.CanRender evt) {
-		switch (mode) {
-			case NONE -> evt.setCanRender(TriState.FALSE);
-			case ALL_PLAYERS -> {
-				if (evt.getEntity() instanceof Player) {
-					evt.setCanRender(TriState.TRUE);
-				}
-			}
-			case ALL -> evt.setCanRender(TriState.TRUE);
-		}
-	}
+    @SubscribeEvent
+    public static void onRenderNameTagEvent(RenderNameTagEvent.CanRender evt) {
+        switch (mode) {
+            case NONE -> evt.setCanRender(TriState.FALSE);
+            case ALL_PLAYERS -> {
+                if (evt.getEntity() instanceof Player) {
+                    evt.setCanRender(TriState.TRUE);
+                }
+            }
+            case ALL -> evt.setCanRender(TriState.TRUE);
+        }
+    }
 
-	public enum Mode implements StringRepresentable {
-		DEFAULT("default"),
-		NONE("none"),
-		ALL_PLAYERS("all_players"),
-		ALL("all"),
-		;
+    public enum Mode implements StringRepresentable {
+        DEFAULT("default"),
+        NONE("none"),
+        ALL_PLAYERS("all_players"),
+        ALL("all"),
+        ;
 
-		public static final EnumCodec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
+        public static final EnumCodec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
 
-		private final String id;
+        private final String id;
 
-		Mode(String id) {
-			this.id = id;
-		}
+        Mode(String id) {
+            this.id = id;
+        }
 
-		@Override
-		public String getSerializedName() {
-			return id;
-		}
-	}
+        @Override
+        public String getSerializedName() {
+            return id;
+        }
+    }
 }

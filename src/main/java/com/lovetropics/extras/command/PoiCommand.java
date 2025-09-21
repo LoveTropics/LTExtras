@@ -10,7 +10,6 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +19,6 @@ import java.util.stream.Stream;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
-import static net.minecraft.commands.SharedSuggestionProvider.suggest;
 import static net.minecraft.commands.SharedSuggestionProvider.suggestResource;
 import static net.minecraft.commands.arguments.ResourceLocationArgument.getId;
 import static net.minecraft.commands.arguments.ResourceLocationArgument.id;

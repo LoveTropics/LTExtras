@@ -26,43 +26,43 @@ import java.util.UUID;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class ClientMapManager {
-	private static final Int2ObjectMap<ClientPoi> POIS = new Int2ObjectOpenHashMap<>();
+    private static final Int2ObjectMap<ClientPoi> POIS = new Int2ObjectOpenHashMap<>();
 
-	public static void updatePoi(int networkId, ResourceKey<PoiConfig> id, Holder<MapConfig> map, Component description, PoiConfig.Icon icon, int markerX, int markerY) {
-		POIS.put(networkId, new ClientPoi(id, map, description, icon, markerX, markerY));
-	}
+    public static void updatePoi(int networkId, ResourceKey<PoiConfig> id, Holder<MapConfig> map, Component description, PoiConfig.Icon icon, int markerX, int markerY) {
+        POIS.put(networkId, new ClientPoi(id, map, description, icon, markerX, markerY));
+    }
 
-	public static void removePoi(int networkId) {
-		POIS.remove(networkId);
-	}
+    public static void removePoi(int networkId) {
+        POIS.remove(networkId);
+    }
 
-	public static void updateFaces(int networkId, List<UUID> faces) {
-		ClientPoi poi = POIS.get(networkId);
-		if (poi != null) {
-			poi.updateFaces(faces);
-		}
-	}
+    public static void updateFaces(int networkId, List<UUID> faces) {
+        ClientPoi poi = POIS.get(networkId);
+        if (poi != null) {
+            poi.updateFaces(faces);
+        }
+    }
 
-	public static void openScreen(Player player, Holder<MapConfig> map) {
-		List<ClientPoi> pois = POIS.values().stream().filter(poi -> poi.map().equals(map)).toList();
-		Minecraft.getInstance().setScreen(new TropicalMapScreen(player, map.value(), pois));
-	}
+    public static void openScreen(Player player, Holder<MapConfig> map) {
+        List<ClientPoi> pois = POIS.values().stream().filter(poi -> poi.map().equals(map)).toList();
+        Minecraft.getInstance().setScreen(new TropicalMapScreen(player, map.value(), pois));
+    }
 
-	@SubscribeEvent
-	public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
-		POIS.clear();
-	}
+    @SubscribeEvent
+    public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
+        POIS.clear();
+    }
 
-	public static PlayerSkin getOnlinePlayerSkin(UUID id) {
-		ClientPacketListener connection = Minecraft.getInstance().getConnection();
-		PlayerInfo playerInfo;
-		if (connection == null || (playerInfo = connection.getPlayerInfo(id)) == null) {
-			return DefaultPlayerSkin.get(id);
-		}
-		return playerInfo.getSkin();
-	}
+    public static PlayerSkin getOnlinePlayerSkin(UUID id) {
+        ClientPacketListener connection = Minecraft.getInstance().getConnection();
+        PlayerInfo playerInfo;
+        if (connection == null || (playerInfo = connection.getPlayerInfo(id)) == null) {
+            return DefaultPlayerSkin.get(id);
+        }
+        return playerInfo.getSkin();
+    }
 
-	public static Collection<ClientPoi> get() {
-		return POIS.values();
-	}
+    public static Collection<ClientPoi> get() {
+        return POIS.values();
+    }
 }

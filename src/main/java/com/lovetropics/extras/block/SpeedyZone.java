@@ -15,16 +15,16 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SpeedyZone extends CustomShapeBlock {
 
-	private static final VoxelShape SMALL_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 0.5D, 16.0D);
+    private static final VoxelShape SMALL_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 0.5D, 16.0D);
 
-	public SpeedyZone(Properties properties) {
-		super(SMALL_SHAPE, properties.noTerrainParticles());
-	}
+    public SpeedyZone(Properties properties) {
+        super(SMALL_SHAPE, properties.noTerrainParticles());
+    }
 
-	@Override
-	protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
-		if (entity instanceof LivingEntity livingEntity && !livingEntity.isSteppingCarefully()) {
-			livingEntity.addEffect(new MobEffectInstance(MobEffects.SPEED, SharedConstants.TICKS_PER_SECOND, 2, false, false));
-		}
-	}
+    @Override
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
+        if (entity instanceof LivingEntity livingEntity && !livingEntity.isSteppingCarefully()) {
+            livingEntity.addEffect(new MobEffectInstance(MobEffects.SPEED, SharedConstants.TICKS_PER_SECOND, 2, false, false));
+        }
+    }
 }

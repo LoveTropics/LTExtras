@@ -26,104 +26,104 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.Tags;
 
 public final class ReedsBlock extends Block implements SimpleWaterloggedBlock {
-	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-	public static final EnumProperty<Type> TYPE = EnumProperty.create("type", Type.class);
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final EnumProperty<Type> TYPE = EnumProperty.create("type", Type.class);
 
-	private static final VoxelShape SHAPE = Block.box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
+    private static final VoxelShape SHAPE = Block.box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
 
-	public ReedsBlock(Properties properties) {
-		super(properties);
-		registerDefaultState(getStateDefinition().any().setValue(TYPE, Type.SINGLE).setValue(WATERLOGGED, false));
-	}
+    public ReedsBlock(Properties properties) {
+        super(properties);
+        registerDefaultState(getStateDefinition().any().setValue(TYPE, Type.SINGLE).setValue(WATERLOGGED, false));
+    }
 
-	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		return SHAPE;
-	}
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return SHAPE;
+    }
 
-	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
-		if (!state.canSurvive(world, pos)) {
-			world.destroyBlock(pos, true);
-		}
-	}
+    @Override
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
+        if (!state.canSurvive(world, pos)) {
+            world.destroyBlock(pos, true);
+        }
+    }
 
-	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		Level world = context.getLevel();
-		FluidState fluid = world.getFluidState(context.getClickedPos());
-		return defaultBlockState()
-				.setValue(TYPE, getAppropriateTypeAt(world, context.getClickedPos()))
-				.setValue(WATERLOGGED, fluid.getType() == Fluids.WATER);
-	}
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Level world = context.getLevel();
+        FluidState fluid = world.getFluidState(context.getClickedPos());
+        return defaultBlockState()
+                .setValue(TYPE, getAppropriateTypeAt(world, context.getClickedPos()))
+                .setValue(WATERLOGGED, fluid.getType() == Fluids.WATER);
+    }
 
     @Override
     protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         if (!state.canSurvive(level, pos)) {
-			return Blocks.AIR.defaultBlockState();
-		}
+            return Blocks.AIR.defaultBlockState();
+        }
 
-		if (state.getValue(WATERLOGGED)) {
+        if (state.getValue(WATERLOGGED)) {
             scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-		}
+        }
 
         return state.setValue(TYPE, getAppropriateTypeAt(level, pos));
-	}
+    }
 
     private Type getAppropriateTypeAt(LevelReader level, BlockPos pos) {
         if (level.getBlockState(pos.above()).is(this)) {
-			return Type.BOTTOM;
-		}
+            return Type.BOTTOM;
+        }
         return level.getBlockState(pos.below()).is(this) ? Type.TOP : Type.SINGLE;
-	}
+    }
 
-	@Override
-	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-		BlockPos groundPos = pos.below();
-		BlockState growOn = world.getBlockState(groundPos);
-		if (growOn.canSustainPlant(world, groundPos, Direction.UP, state).isTrue()) {
-			return true;
-		}
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        BlockPos groundPos = pos.below();
+        BlockState growOn = world.getBlockState(groundPos);
+        if (growOn.canSustainPlant(world, groundPos, Direction.UP, state).isTrue()) {
+            return true;
+        }
 
-		return growOn.getBlock() == this || canGrowOn(growOn);
-	}
+        return growOn.getBlock() == this || canGrowOn(growOn);
+    }
 
-	private boolean canGrowOn(BlockState state) {
-		return state.is(Blocks.GRASS_BLOCK)
-				|| state.is(BlockTags.SAND) || state.is(BlockTags.DIRT) || state.is(Tags.Blocks.GRAVELS)
-				|| state.is(Blocks.CLAY);
-	}
+    private boolean canGrowOn(BlockState state) {
+        return state.is(Blocks.GRASS_BLOCK)
+                || state.is(BlockTags.SAND) || state.is(BlockTags.DIRT) || state.is(Tags.Blocks.GRAVELS)
+                || state.is(Blocks.CLAY);
+    }
 
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(WATERLOGGED, TYPE);
-	}
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(WATERLOGGED, TYPE);
+    }
 
-	@Override
-	public FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-	}
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
 
-	public enum Type implements StringRepresentable {
-		SINGLE("single", "reeds_top_short"),
-		BOTTOM("bottom", "reeds_bottom"),
-		TOP("top", "reeds_top_tall", "reeds_top_short");
+    public enum Type implements StringRepresentable {
+        SINGLE("single", "reeds_top_short"),
+        BOTTOM("bottom", "reeds_bottom"),
+        TOP("top", "reeds_top_tall", "reeds_top_short");
 
-		private final String key;
-		private final String[] textures;
+        private final String key;
+        private final String[] textures;
 
-		Type(String key, String... textures) {
-			this.key = key;
-			this.textures = textures;
-		}
+        Type(String key, String... textures) {
+            this.key = key;
+            this.textures = textures;
+        }
 
-		public String[] getTextures() {
-			return textures;
-		}
+        public String[] getTextures() {
+            return textures;
+        }
 
-		@Override
-		public String getSerializedName() {
-			return key;
-		}
-	}
+        @Override
+        public String getSerializedName() {
+            return key;
+        }
+    }
 }

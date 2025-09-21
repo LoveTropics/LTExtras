@@ -122,14 +122,14 @@ public class WorldEffectManager {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-			forEachEffect(player, player.level(), (e, p) -> e.apply(p, true));
+            forEachEffect(player, player.level(), (e, p) -> e.apply(p, true));
         }
     }
 
     @SubscribeEvent
     public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-			MinecraftServer server = player.getServer();
+            MinecraftServer server = player.getServer();
             ServerLevel fromLevel = server.getLevel(event.getFrom());
             if (fromLevel != null) {
                 forEachEffect(player, fromLevel, (e, p) -> e.clear(p, true));

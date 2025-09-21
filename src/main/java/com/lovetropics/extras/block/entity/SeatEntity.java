@@ -21,20 +21,20 @@ public class SeatEntity extends Entity implements PlayerRideable {
         remove(RemovalReason.DISCARDED);
     }
 
-	@Override
-	public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
-		return false;
-	}
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
+        return false;
+    }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
     }
 
-	@Override
-	protected void readAdditionalSaveData(ValueInput input) {
-	}
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+    }
 
-	@Override
-	protected void addAdditionalSaveData(ValueOutput output) {
-	}
+    @Override
+    protected void addAdditionalSaveData(ValueOutput output) {
+    }
 }

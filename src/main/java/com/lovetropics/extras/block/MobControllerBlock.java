@@ -15,30 +15,31 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class MobControllerBlock extends BaseEntityBlock {
-	public static final MapCodec<MobControllerBlock> CODEC = simpleCodec(MobControllerBlock::new);
-	public MobControllerBlock(Properties properties) {
-		super(properties);
-	}
+    public static final MapCodec<MobControllerBlock> CODEC = simpleCodec(MobControllerBlock::new);
 
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
-	}
+    public MobControllerBlock(Properties properties) {
+        super(properties);
+    }
 
-	@Override
-	public RenderShape getRenderShape(BlockState state) {
-		return RenderShape.MODEL;
-	}
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
 
-	@Nullable
-	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new MobControllerBlockEntity(ExtraBlocks.MOB_CONTROLLER_BE.get(), pos, state);
-	}
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
 
-	@Nullable
-	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-		return createTickerHelper(type, ExtraBlocks.MOB_CONTROLLER_BE.get(), MobControllerBlockEntity::tick);
-	}
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new MobControllerBlockEntity(ExtraBlocks.MOB_CONTROLLER_BE.get(), pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, ExtraBlocks.MOB_CONTROLLER_BE.get(), MobControllerBlockEntity::tick);
+    }
 }

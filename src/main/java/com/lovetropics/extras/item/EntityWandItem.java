@@ -19,12 +19,12 @@ import net.minecraft.world.level.Level;
 import java.util.UUID;
 
 public class EntityWandItem extends Item {
-	public EntityWandItem(Properties properties) {
-		super(properties);
-	}
+    public EntityWandItem(Properties properties) {
+        super(properties);
+    }
 
-	@Override
-	public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
+    @Override
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         if (player.level().isClientSide()) {
             return super.interactLivingEntity(stack, player, target, hand);
         }
@@ -39,17 +39,17 @@ public class EntityWandItem extends Item {
         }
 
         return super.interactLivingEntity(stack, player, target, hand);
-	}
+    }
 
-	@Override
-	public InteractionResult useOn(UseOnContext context) {
-		Level level = context.getLevel();
-		if (!(level instanceof ServerLevel serverLevel)) {
-			return super.useOn(context);
-		}
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        Level level = context.getLevel();
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return super.useOn(context);
+        }
 
-		BlockPos pos = context.getClickedPos();
-		ItemStack stack = context.getItemInHand();
+        BlockPos pos = context.getClickedPos();
+        ItemStack stack = context.getItemInHand();
 
         if (level.getBlockEntity(pos) instanceof MobControllerBlockEntity mobController) {
             UUID entityId = stack.get(ExtraDataComponents.TARGETED_ENTITY);
@@ -63,5 +63,5 @@ public class EntityWandItem extends Item {
         }
 
         return super.useOn(context);
-	}
+    }
 }

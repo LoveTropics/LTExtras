@@ -75,8 +75,8 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
         }
         Level level = event.getLevel();
         if (!level.isClientSide() && level.getBlockEntity(jumpPadPos) instanceof JumpPadBlockEntity jumpPad) {
-			jumpPad.updateTarget(event.getHitVec().getLocation());
-            if(event.getEntity() instanceof ServerPlayer serverPlayer) {
+            jumpPad.updateTarget(event.getHitVec().getLocation());
+            if (event.getEntity() instanceof ServerPlayer serverPlayer) {
                 serverPlayer.sendSystemMessage(Component.literal("Set jump target"));
             }
         }
@@ -92,7 +92,7 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
         Level level = event.getLevel();
         if (!level.isClientSide() && level.getBlockEntity(jumpPadPos) instanceof JumpPadBlockEntity jumpPad) {
             jumpPad.updateTarget(event.getEntity().position());
-            if(event.getEntity() instanceof ServerPlayer serverPlayer) {
+            if (event.getEntity() instanceof ServerPlayer serverPlayer) {
                 serverPlayer.sendSystemMessage(Component.literal("Set jump target"));
             }
         }
@@ -110,25 +110,25 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
             return;
         }
 
-		if (level.getBlockEntity(pos) instanceof JumpPadBlockEntity jumpPad) {
+        if (level.getBlockEntity(pos) instanceof JumpPadBlockEntity jumpPad) {
             Vec3 velocity = jumpPad.getLaunchVelocity();
             if (velocity.lengthSqr() < 0.01) {
                 return;
             }
             level.playSound(null, entity, SoundEvents.BREEZE_JUMP, SoundSource.BLOCKS, 1.0f, 1.0f);
             entity.setDeltaMovement(velocity);
-			if (entity instanceof ServerPlayer serverPlayer) {
-				serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
-			}
-		}
+            if (entity instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+            }
+        }
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
-		Direction clickedFace = context.getClickedFace();
-		boolean onTopHalf = context.getClickLocation().y - pos.getY() > 0.5;
-		return defaultBlockState().setValue(HALF, clickedFace == Direction.DOWN || (clickedFace != Direction.UP && onTopHalf) ? Half.TOP : Half.BOTTOM);
+        Direction clickedFace = context.getClickedFace();
+        boolean onTopHalf = context.getClickLocation().y - pos.getY() > 0.5;
+        return defaultBlockState().setValue(HALF, clickedFace == Direction.DOWN || (clickedFace != Direction.UP && onTopHalf) ? Half.TOP : Half.BOTTOM);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
         return switch (state.getValue(HALF)) {
             case BOTTOM -> BOTTOM_SHAPE;
             case TOP -> TOP_SHAPE;
-		};
+        };
     }
 
     @Override

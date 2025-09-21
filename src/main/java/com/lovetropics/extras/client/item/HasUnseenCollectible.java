@@ -10,16 +10,16 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public record HasUnseenCollectible() implements ConditionalItemModelProperty {
-	public static final MapCodec<HasUnseenCollectible> MAP_CODEC = MapCodec.unit(HasUnseenCollectible::new);
+    public static final MapCodec<HasUnseenCollectible> MAP_CODEC = MapCodec.unit(HasUnseenCollectible::new);
 
-	@Override
-	public boolean get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed, ItemDisplayContext displayContext) {
-		ClientCollectiblesList collectibles = ClientCollectiblesList.getOrNull();
-		return collectibles != null && collectibles.hasUnseen();
-	}
+    @Override
+    public boolean get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed, ItemDisplayContext displayContext) {
+        ClientCollectiblesList collectibles = ClientCollectiblesList.getOrNull();
+        return collectibles != null && collectibles.hasUnseen();
+    }
 
-	@Override
-	public MapCodec<HasUnseenCollectible> type() {
-		return MAP_CODEC;
-	}
+    @Override
+    public MapCodec<HasUnseenCollectible> type() {
+        return MAP_CODEC;
+    }
 }

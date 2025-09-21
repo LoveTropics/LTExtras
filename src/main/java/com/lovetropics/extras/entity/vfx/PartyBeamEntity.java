@@ -43,9 +43,9 @@ public class PartyBeamEntity extends EndCrystal {
                 int az = targetPos.getZ() + (random.nextInt(5) - random.nextInt(5));
 
                 int packed = Mth.hsvToRgb(random.nextFloat(), 0.8f, 0.8F);
-				int r = ARGB.red(packed);
-				int g = ARGB.green(packed);
-				int b = ARGB.blue(packed);
+                int r = ARGB.red(packed);
+                int g = ARGB.green(packed);
+                int b = ARGB.blue(packed);
 
                 setColor(new Vector3f(r / 255.0f, g / 255.0f, b / 255.0f));
 
@@ -54,19 +54,19 @@ public class PartyBeamEntity extends EndCrystal {
         }
     }
 
-	@Override
-	protected void addAdditionalSaveData(ValueOutput output) {
-		super.addAdditionalSaveData(output);
-		output.storeNullable("TargetPos", BlockPos.CODEC, targetPos);
-		output.store("TargetColor", ExtraCodecs.VECTOR3F, getColor());
+    @Override
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.storeNullable("TargetPos", BlockPos.CODEC, targetPos);
+        output.store("TargetColor", ExtraCodecs.VECTOR3F, getColor());
     }
 
-	@Override
-	protected void readAdditionalSaveData(ValueInput input) {
-		super.readAdditionalSaveData(input);
-		targetPos = input.read("TargetPos", BlockPos.CODEC).orElse(null);
-		setColor(input.read("TargetColor", ExtraCodecs.VECTOR3F).orElse(new Vector3f()));
-	}
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        targetPos = input.read("TargetPos", BlockPos.CODEC).orElse(null);
+        setColor(input.read("TargetColor", ExtraCodecs.VECTOR3F).orElse(new Vector3f()));
+    }
 
     public void setColor(Vector3f color) {
         getEntityData().set(DATA_COLOR, color);
@@ -83,10 +83,10 @@ public class PartyBeamEntity extends EndCrystal {
         builder.define(DATA_COLOR, new Vector3f(0.0f, 0.0f, 0.0f));
     }
 
-	@SubscribeEvent
-	public static void onExplosionStart(ExplosionEvent.Start event) {
-		if (event.getExplosion().getDirectSourceEntity() instanceof PartyBeamEntity) {
-			event.setCanceled(true);
-		}
-	}
+    @SubscribeEvent
+    public static void onExplosionStart(ExplosionEvent.Start event) {
+        if (event.getExplosion().getDirectSourceEntity() instanceof PartyBeamEntity) {
+            event.setCanceled(true);
+        }
+    }
 }

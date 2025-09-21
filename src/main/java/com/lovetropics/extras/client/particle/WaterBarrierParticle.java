@@ -14,12 +14,8 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -48,12 +44,12 @@ public class WaterBarrierParticle extends TextureSheetParticle {
     ));
 
     WaterBarrierParticle(ClientLevel world, double x, double y, double z, ResourceLocation sprite) {
-		super(world, x, y, z);
-		setSprite(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(sprite));
-		gravity = 0.0F;
-		lifetime = 80;
-		hasPhysics = false;
-	}
+        super(world, x, y, z);
+        setSprite(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(sprite));
+        gravity = 0.0F;
+        lifetime = 80;
+        hasPhysics = false;
+    }
 
     @SubscribeEvent
     public static void registerRenderPipeline(RegisterRenderPipelinesEvent event) {
@@ -61,24 +57,24 @@ public class WaterBarrierParticle extends TextureSheetParticle {
     }
 
     @SubscribeEvent
-	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-		Minecraft.getInstance().particleEngine.register(ExtraParticles.WATER_BARRIER.get(), new Factory());
-	}
+    public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
+        Minecraft.getInstance().particleEngine.register(ExtraParticles.WATER_BARRIER.get(), new Factory());
+    }
 
-	@Override
-	public ParticleRenderType getRenderType() {
+    @Override
+    public ParticleRenderType getRenderType() {
         return RENDER_TYPE;
-	}
+    }
 
-	@Override
-	public float getQuadSize(float scaleFactor) {
-		return 0.5F;
-	}
+    @Override
+    public float getQuadSize(float scaleFactor) {
+        return 0.5F;
+    }
 
-	public static class Factory implements ParticleProvider<SimpleParticleType> {
-		@Override
-		public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-			return new WaterBarrierParticle(world, x, y, z, ResourceLocation.withDefaultNamespace("item/barrier"));
-		}
-	}
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new WaterBarrierParticle(world, x, y, z, ResourceLocation.withDefaultNamespace("item/barrier"));
+        }
+    }
 }

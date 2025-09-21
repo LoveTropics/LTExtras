@@ -20,7 +20,7 @@ public interface BlockStateExtensionMixin {
         if (entity instanceof Player player) {
             var thiz = ((BlockState) this);
             cir.setReturnValue(
-                    thiz.getBlock().getFriction(thiz, level, pos, entity) * (float)player.getAttributeValue(LTExtras.FRICTION)
+                    thiz.getBlock().getFriction(thiz, level, pos, entity) * (float) player.getAttributeValue(LTExtras.FRICTION)
             );
         }
     }

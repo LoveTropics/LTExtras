@@ -18,8 +18,8 @@ public class CollectibleBasketItem extends Item {
     }
 
     @Override
-	public InteractionResult use(Level level, Player player, InteractionHand hand) {
-		if (player instanceof ServerPlayer serverPlayer) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        if (player instanceof ServerPlayer serverPlayer) {
             CollectibleStore collectibles = CollectibleStore.get(serverPlayer);
             if (!collectibles.isLocked()) {
                 collectibles.markSeen();
@@ -28,6 +28,6 @@ public class CollectibleBasketItem extends Item {
                 serverPlayer.sendSystemMessage(ExtraLangKeys.COLLECTIBLES_LOCKED.get().withStyle(ChatFormatting.RED), true);
             }
         }
-		return InteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

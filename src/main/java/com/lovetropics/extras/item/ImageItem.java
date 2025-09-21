@@ -47,11 +47,11 @@ public class ImageItem extends Item {
     }
 
     @Override
-	public Component getName(ItemStack stack) {
+    public Component getName(ItemStack stack) {
         ImageData image = stack.get(ExtraDataComponents.IMAGE);
         if (image != null && image.name().isPresent()) {
-			return image.name().get();
+            return image.name().get();
         }
-		return super.getName(stack);
+        return super.getName(stack);
     }
 }

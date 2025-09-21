@@ -77,14 +77,14 @@ public class ExtraDataComponents {
             builder -> builder.persistent(PlayerSensor.CODEC).networkSynchronized(PlayerSensor.STREAM_CODEC).cacheEncoding()
     );
 
-	@SubscribeEvent
-	public static void addToTooltip(ItemTooltipEvent event) {
-		ItemStack itemStack = event.getItemStack();
-		List<Component> tooltip = event.getToolTip();
+    @SubscribeEvent
+    public static void addToTooltip(ItemTooltipEvent event) {
+        ItemStack itemStack = event.getItemStack();
+        List<Component> tooltip = event.getToolTip();
 
-		Holder<MapConfig> map = itemStack.get(ExtraDataComponents.MAP);
-		if (map != null) {
-			tooltip.add(ComponentUtils.mergeStyles(map.value().description().copy(), Style.EMPTY.withColor(ChatFormatting.GRAY)));
-		}
-	}
+        Holder<MapConfig> map = itemStack.get(ExtraDataComponents.MAP);
+        if (map != null) {
+            tooltip.add(ComponentUtils.mergeStyles(map.value().description().copy(), Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        }
+    }
 }

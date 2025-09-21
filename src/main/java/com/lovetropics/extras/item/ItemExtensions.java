@@ -41,16 +41,16 @@ public class ItemExtensions {
     }
 
     public static void onItemUsedOn(ServerPlayer player, ItemStack stack, UseOnContext context) {
-		if (!player.isUsingItem()) {
-			applyCooldownOverride(player, stack);
-		}
-	}
+        if (!player.isUsingItem()) {
+            applyCooldownOverride(player, stack);
+        }
+    }
 
     public static void onItemUsed(ServerPlayer player, ItemStack stack) {
-		if (!player.isUsingItem()) {
-			applyCooldownOverride(player, stack);
-		}
-	}
+        if (!player.isUsingItem()) {
+            applyCooldownOverride(player, stack);
+        }
+    }
 
     private static void applyCooldownOverride(ServerPlayer player, ItemStack stack) {
         int cooldown = stack.getOrDefault(ExtraDataComponents.COOLDOWN_OVERRIDE, 0);

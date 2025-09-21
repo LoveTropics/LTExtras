@@ -16,33 +16,33 @@ import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ClientboundUpdatePoiPacket(
-		int networkId,
-		ResourceKey<PoiConfig> id,
-		Holder<MapConfig> map,
-		Component description,
-		PoiConfig.Icon icon,
-		int markerX,
-		int markerY
+        int networkId,
+        ResourceKey<PoiConfig> id,
+        Holder<MapConfig> map,
+        Component description,
+        PoiConfig.Icon icon,
+        int markerX,
+        int markerY
 ) implements CustomPacketPayload {
-	public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUpdatePoiPacket> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.VAR_INT, ClientboundUpdatePoiPacket::networkId,
-			ResourceKey.streamCodec(ExtraRegistries.POI), ClientboundUpdatePoiPacket::id,
-			MapConfig.STREAM_CODEC, ClientboundUpdatePoiPacket::map,
-			ComponentSerialization.STREAM_CODEC, ClientboundUpdatePoiPacket::description,
-			PoiConfig.Icon.STREAM_CODEC, ClientboundUpdatePoiPacket::icon,
-			ByteBufCodecs.VAR_INT, ClientboundUpdatePoiPacket::markerX,
-			ByteBufCodecs.VAR_INT, ClientboundUpdatePoiPacket::markerY,
-			ClientboundUpdatePoiPacket::new
-	);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUpdatePoiPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, ClientboundUpdatePoiPacket::networkId,
+            ResourceKey.streamCodec(ExtraRegistries.POI), ClientboundUpdatePoiPacket::id,
+            MapConfig.STREAM_CODEC, ClientboundUpdatePoiPacket::map,
+            ComponentSerialization.STREAM_CODEC, ClientboundUpdatePoiPacket::description,
+            PoiConfig.Icon.STREAM_CODEC, ClientboundUpdatePoiPacket::icon,
+            ByteBufCodecs.VAR_INT, ClientboundUpdatePoiPacket::markerX,
+            ByteBufCodecs.VAR_INT, ClientboundUpdatePoiPacket::markerY,
+            ClientboundUpdatePoiPacket::new
+    );
 
-	public static final Type<ClientboundUpdatePoiPacket> TYPE = new Type<>(LTExtras.location("update_poi"));
+    public static final Type<ClientboundUpdatePoiPacket> TYPE = new Type<>(LTExtras.location("update_poi"));
 
-	public static void handle(ClientboundUpdatePoiPacket packet, IPayloadContext context) {
-		ClientMapManager.updatePoi(packet.networkId(), packet.id(), packet.map(), packet.description(), packet.icon(), packet.markerX(), packet.markerY());
-	}
+    public static void handle(ClientboundUpdatePoiPacket packet, IPayloadContext context) {
+        ClientMapManager.updatePoi(packet.networkId(), packet.id(), packet.map(), packet.description(), packet.icon(), packet.markerX(), packet.markerY());
+    }
 
-	@Override
-	public Type<ClientboundUpdatePoiPacket> type() {
-		return TYPE;
-	}
+    @Override
+    public Type<ClientboundUpdatePoiPacket> type() {
+        return TYPE;
+    }
 }

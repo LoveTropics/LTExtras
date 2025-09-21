@@ -15,25 +15,25 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class MapConfigs {
-	public static final CodecRegistry<ResourceLocation, Named<PoiConfig>> POIS = CodecRegistry.resourceLocationKeys();
+    public static final CodecRegistry<ResourceLocation, Named<PoiConfig>> POIS = CodecRegistry.resourceLocationKeys();
 
-	private static final SimpleDataPackLister<PoiConfig> POI_LISTER = new SimpleDataPackLister<>("ltextras/map_poi", ExtraRegistries.POI, PoiConfig.CODEC);
+    private static final SimpleDataPackLister<PoiConfig> POI_LISTER = new SimpleDataPackLister<>("ltextras/map_poi", ExtraRegistries.POI, PoiConfig.CODEC);
 
-	@SubscribeEvent
-	public static void addReloadListener(AddServerReloadListenersEvent event) {
-		RegistryAccess registries = event.getRegistryAccess();
-		event.addListener(LTExtras.location("map_configs"), (barrier, resourceManager, backgroundExecutor, gameExecutor) ->
-				POI_LISTER.load(registries, resourceManager, backgroundExecutor)
-						.thenCompose(barrier::wait)
-						.thenAcceptAsync(pois -> {
-							POIS.clear();
-							pois.forEach(holder -> POIS.register(holder.id(), holder));
+    @SubscribeEvent
+    public static void addReloadListener(AddServerReloadListenersEvent event) {
+        RegistryAccess registries = event.getRegistryAccess();
+        event.addListener(LTExtras.location("map_configs"), (barrier, resourceManager, backgroundExecutor, gameExecutor) ->
+                POI_LISTER.load(registries, resourceManager, backgroundExecutor)
+                        .thenCompose(barrier::wait)
+                        .thenAcceptAsync(pois -> {
+                            POIS.clear();
+                            pois.forEach(holder -> POIS.register(holder.id(), holder));
 
-							MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-							if (server != null) {
-								MapManager.get(server).reload(server);
-							}
-						}, gameExecutor)
-		);
-	}
+                            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+                            if (server != null) {
+                                MapManager.get(server).reload(server);
+                            }
+                        }, gameExecutor)
+        );
+    }
 }

@@ -71,7 +71,7 @@ public class ExtraItems {
             .model(() -> Models::generateCollectibleCompass)
             .register();
 
-	public static final ItemEntry<ImageItem> IMAGE = REGISTRATE.item("image", ImageItem::new)
+    public static final ItemEntry<ImageItem> IMAGE = REGISTRATE.item("image", ImageItem::new)
             .tab(LTExtras.TAB_KEY, (ctx, modifier) -> {
                 for (ImageData preset : ImageItem.PRESETS) {
                     ItemStack stack = new ItemStack(ctx.get());
@@ -90,7 +90,6 @@ public class ExtraItems {
                 }
             })
             .register();
-
 
     public static final ItemEntry<Item> QUEST = REGISTRATE.item("quest", Item::new).register();
 
@@ -158,8 +157,8 @@ public class ExtraItems {
             );
         }
 
-		private static void generateCollectibleCompass(DataGenContext<Item, CollectibleCompassItem> ctx, RegistrateItemModelGenerator prov) {
-			generateCustomCompass(ctx, prov, new CollectibleCompassAngle());
-		}
-	}
+        private static void generateCollectibleCompass(DataGenContext<Item, CollectibleCompassItem> ctx, RegistrateItemModelGenerator prov) {
+            generateCustomCompass(ctx, prov, new CollectibleCompassAngle());
+        }
+    }
 }

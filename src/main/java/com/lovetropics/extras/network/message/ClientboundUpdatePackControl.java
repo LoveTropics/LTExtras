@@ -9,18 +9,18 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ClientboundUpdatePackControl(
-		PackControl.State state
+        PackControl.State state
 ) implements CustomPacketPayload {
-	public static final StreamCodec<ByteBuf, ClientboundUpdatePackControl> STREAM_CODEC = PackControl.State.STREAM_CODEC.map(ClientboundUpdatePackControl::new, ClientboundUpdatePackControl::state);
+    public static final StreamCodec<ByteBuf, ClientboundUpdatePackControl> STREAM_CODEC = PackControl.State.STREAM_CODEC.map(ClientboundUpdatePackControl::new, ClientboundUpdatePackControl::state);
 
-	public static final Type<ClientboundUpdatePackControl> TYPE = new Type<>(LTExtras.location("update_resource_packs"));
+    public static final Type<ClientboundUpdatePackControl> TYPE = new Type<>(LTExtras.location("update_resource_packs"));
 
-	public static void handle(ClientboundUpdatePackControl packet, IPayloadContext context) {
-		ClientPackControl.updatePacks(packet.state);
-	}
+    public static void handle(ClientboundUpdatePackControl packet, IPayloadContext context) {
+        ClientPackControl.updatePacks(packet.state);
+    }
 
-	@Override
-	public Type<ClientboundUpdatePackControl> type() {
-		return TYPE;
-	}
+    @Override
+    public Type<ClientboundUpdatePackControl> type() {
+        return TYPE;
+    }
 }

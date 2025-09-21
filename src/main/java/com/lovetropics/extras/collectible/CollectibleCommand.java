@@ -111,7 +111,7 @@ public class CollectibleCommand {
 
     private static int give(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, ItemInput item) throws CommandSyntaxException {
         ItemStack stack = item.createItemStack(1, true);
-		return giveSingle(ctx, players, Holder.direct(new Collectible(stack)));
+        return giveSingle(ctx, players, Holder.direct(new Collectible(stack)));
     }
 
     private static int give(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, ResourceOrTagArgument.Result<Collectible> collectibles) throws CommandSyntaxException {
@@ -146,7 +146,7 @@ public class CollectibleCommand {
         int result = 0;
         for (ServerPlayer player : players) {
             CollectibleStore collectibles = CollectibleStore.get(player);
-			for (Holder<Collectible> collectible : collectiblesToGive) {
+            for (Holder<Collectible> collectible : collectiblesToGive) {
                 if (collectibles.give(collectible)) {
                     result++;
                 }

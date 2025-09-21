@@ -23,97 +23,96 @@ import javax.annotation.Nullable;
 import java.util.function.Function;
 
 public class ServerClosedScreen extends Screen {
-	private static final Component TITLE = ExtraLangKeys.SERVER_CLOSED_TITLE.get();
-	private static final Component QUIT = Component.translatable("menu.quit");
+    private static final Component TITLE = ExtraLangKeys.SERVER_CLOSED_TITLE.get();
+    private static final Component QUIT = Component.translatable("menu.quit");
 
-	private final Type type;
-	private final ServerData server;
-	private final Component description;
+    private final Type type;
+    private final ServerData server;
+    private final Component description;
 
-	private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
-	@Nullable
-	private final AutoJoinServerPinger pinger;
+    private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
+    @Nullable
+    private final AutoJoinServerPinger pinger;
 
-	public ServerClosedScreen(Type type, DisconnectionDetails details, ServerData server) {
-		super(TITLE);
-		this.type = type;
-		this.server = server;
-		pinger = type.autoJoin ? new AutoJoinServerPinger(server.ip) : null;
+    public ServerClosedScreen(Type type, DisconnectionDetails details, ServerData server) {
+        super(TITLE);
+        this.type = type;
+        this.server = server;
+        pinger = type.autoJoin ? new AutoJoinServerPinger(server.ip) : null;
 
-		MutableComponent description = Component.empty();
-		description.append(type.description.apply(details));
-		if (type.autoJoin) {
-			description.append("\n\n").append(ExtraLangKeys.SERVER_CLOSED_AUTO_JOIN.get().withStyle(ChatFormatting.YELLOW));
-		}
-		this.description = description;
-	}
+        MutableComponent description = Component.empty();
+        description.append(type.description.apply(details));
+        if (type.autoJoin) {
+            description.append("\n\n").append(ExtraLangKeys.SERVER_CLOSED_AUTO_JOIN.get().withStyle(ChatFormatting.YELLOW));
+        }
+        this.description = description;
+    }
 
-	@Override
-	protected void init() {
-		layout.addTitleHeader(TITLE, font);
+    @Override
+    protected void init() {
+        layout.addTitleHeader(TITLE, font);
 
-		LinearLayout contents = layout.addToContents(LinearLayout.vertical()).spacing(10);
-		contents.defaultCellSetting().alignHorizontallyCenter().alignVerticallyMiddle();
+        LinearLayout contents = layout.addToContents(LinearLayout.vertical()).spacing(10);
+        contents.defaultCellSetting().alignHorizontallyCenter().alignVerticallyMiddle();
 
-		int textWidth = Window.BASE_WIDTH - 20;
-		contents.addChild(new FocusableTextWidget(textWidth, description, font));
+        int textWidth = Window.BASE_WIDTH - 20;
+        contents.addChild(new FocusableTextWidget(textWidth, description, font));
 
-		if (type.autoJoin) {
-			contents.addChild(new LoadingDotsWidget(font, CommonComponents.EMPTY));
-		}
+        if (type.autoJoin) {
+            contents.addChild(new LoadingDotsWidget(font, CommonComponents.EMPTY));
+        }
 
-		contents.addChild(SpacerElement.height(Button.DEFAULT_HEIGHT));
-		if (type == Type.CLIENT_RESTART) {
-			contents.addChild(Button.builder(QUIT, b -> minecraft.stop()).build());
-		} else {
-			contents.addChild(Button.builder(CommonComponents.GUI_TO_TITLE, b -> onClose()).build());
-		}
+        contents.addChild(SpacerElement.height(Button.DEFAULT_HEIGHT));
+        if (type == Type.CLIENT_RESTART) {
+            contents.addChild(Button.builder(QUIT, b -> minecraft.stop()).build());
+        } else {
+            contents.addChild(Button.builder(CommonComponents.GUI_TO_TITLE, b -> onClose()).build());
+        }
 
-		layout.visitWidgets(this::addRenderableWidget);
-		repositionElements();
-	}
+        layout.visitWidgets(this::addRenderableWidget);
+        repositionElements();
+    }
 
-	@Override
-	protected void repositionElements() {
-		layout.arrangeElements();
-	}
+    @Override
+    protected void repositionElements() {
+        layout.arrangeElements();
+    }
 
-	@Override
-	public void tick() {
-		if (pinger != null && pinger.tick()) {
-			ServerAddress address = ServerAddress.parseString(server.ip);
-			ConnectScreen.startConnecting(new TitleScreen(), minecraft, address, server, false, null);
-		}
-	}
+    @Override
+    public void tick() {
+        if (pinger != null && pinger.tick()) {
+            ServerAddress address = ServerAddress.parseString(server.ip);
+            ConnectScreen.startConnecting(new TitleScreen(), minecraft, address, server, false, null);
+        }
+    }
 
-	@Override
-	public Component getNarrationMessage() {
-		return CommonComponents.joinForNarration(super.getNarrationMessage(), description);
-	}
+    @Override
+    public Component getNarrationMessage() {
+        return CommonComponents.joinForNarration(super.getNarrationMessage(), description);
+    }
 
-	@Override
-	public void onClose() {
-		minecraft.setScreen(new TitleScreen());
-	}
+    @Override
+    public void onClose() {
+        minecraft.setScreen(new TitleScreen());
+    }
 
-	@Override
-	public boolean shouldCloseOnEsc() {
-		return false;
-	}
+    @Override
+    public boolean shouldCloseOnEsc() {
+        return false;
+    }
 
-	public enum Type {
-		UNEXPECTED(true, details -> ExtraLangKeys.SERVER_CLOSED_UNEXPECTED.format(details.reason().copy().withStyle(ChatFormatting.GRAY))),
-		SERVER_RESTART(true, details -> ExtraLangKeys.SERVER_CLOSED_RESTART.get()),
-		CLIENT_RESTART(false, details -> ExtraLangKeys.SERVER_CLOSED_CLIENT_RESTART.get()),
-		PERMANENT(false, details -> ExtraLangKeys.SERVER_CLOSED_PERMANENT.get())
-		;
+    public enum Type {
+        UNEXPECTED(true, details -> ExtraLangKeys.SERVER_CLOSED_UNEXPECTED.format(details.reason().copy().withStyle(ChatFormatting.GRAY))),
+        SERVER_RESTART(true, details -> ExtraLangKeys.SERVER_CLOSED_RESTART.get()),
+        CLIENT_RESTART(false, details -> ExtraLangKeys.SERVER_CLOSED_CLIENT_RESTART.get()),
+        PERMANENT(false, details -> ExtraLangKeys.SERVER_CLOSED_PERMANENT.get());
 
-		private final boolean autoJoin;
-		private final Function<DisconnectionDetails, Component> description;
+        private final boolean autoJoin;
+        private final Function<DisconnectionDetails, Component> description;
 
-		Type(boolean autoJoin, Function<DisconnectionDetails, Component> description) {
-			this.autoJoin = autoJoin;
-			this.description = description;
-		}
-	}
+        Type(boolean autoJoin, Function<DisconnectionDetails, Component> description) {
+            this.autoJoin = autoJoin;
+            this.description = description;
+        }
+    }
 }

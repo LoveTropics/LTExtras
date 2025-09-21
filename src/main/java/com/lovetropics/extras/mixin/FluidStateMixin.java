@@ -11,18 +11,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FluidState.class)
 public class FluidStateMixin implements ExtendedFluidState {
-	@Unique
-	private boolean noDripParticles;
+    @Unique
+    private boolean noDripParticles;
 
-	@Override
-	public void setNoDripParticles() {
-		noDripParticles = true;
-	}
+    @Override
+    public void setNoDripParticles() {
+        noDripParticles = true;
+    }
 
-	@Inject(method = "getDripParticle", at = @At("HEAD"), cancellable = true)
-	private void getDripParticles(CallbackInfoReturnable<ParticleOptions> ci) {
-		if (noDripParticles) {
-			ci.setReturnValue(null);
-		}
-	}
+    @Inject(method = "getDripParticle", at = @At("HEAD"), cancellable = true)
+    private void getDripParticles(CallbackInfoReturnable<ParticleOptions> ci) {
+        if (noDripParticles) {
+            ci.setReturnValue(null);
+        }
+    }
 }

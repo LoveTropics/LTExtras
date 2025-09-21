@@ -16,25 +16,25 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(LogoRenderer.class)
 public class LogoRendererMixin {
-	@Shadow
-	@Final
-	private boolean keepLogoThroughFade;
-	@Unique
-	private static final ResourceLocation LOVE_TROPICS_TEXTURE = LTExtras.location("textures/gui/title.png");
+    @Shadow
+    @Final
+    private boolean keepLogoThroughFade;
+    @Unique
+    private static final ResourceLocation LOVE_TROPICS_TEXTURE = LTExtras.location("textures/gui/title.png");
 
-	@ModifyConstant(method = "renderLogo(Lnet/minecraft/client/gui/GuiGraphics;IF)V", constant = @Constant(intValue = 30))
-	private int modifyDefaultHeight(int height) {
-		return height - 10;
-	}
+    @ModifyConstant(method = "renderLogo(Lnet/minecraft/client/gui/GuiGraphics;IF)V", constant = @Constant(intValue = 30))
+    private int modifyDefaultHeight(int height) {
+        return height - 10;
+    }
 
-	/**
-	 * @author Gegy
-	 * @reason Replace the game logo
-	 */
-	@Overwrite
-	public void renderLogo(GuiGraphics graphics, int screenWidth, float transparency, int height) {
-		int x = (screenWidth - 256) / 2;
-		int color = ARGB.white(keepLogoThroughFade ? 1.0f : transparency);
-		graphics.blit(RenderPipelines.GUI_TEXTURED, LOVE_TROPICS_TEXTURE, x, height, 0.0f, 0.0f, 256, 38, 256, 64, color);
-	}
+    /**
+     * @author Gegy
+     * @reason Replace the game logo
+     */
+    @Overwrite
+    public void renderLogo(GuiGraphics graphics, int screenWidth, float transparency, int height) {
+        int x = (screenWidth - 256) / 2;
+        int color = ARGB.white(keepLogoThroughFade ? 1.0f : transparency);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, LOVE_TROPICS_TEXTURE, x, height, 0.0f, 0.0f, 256, 38, 256, 64, color);
+    }
 }

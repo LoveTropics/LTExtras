@@ -15,31 +15,31 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class ParticleEmitterBlock extends BaseEntityBlock {
-	public static final MapCodec<ParticleEmitterBlock> CODEC = simpleCodec(ParticleEmitterBlock::new);
+    public static final MapCodec<ParticleEmitterBlock> CODEC = simpleCodec(ParticleEmitterBlock::new);
 
-	public ParticleEmitterBlock(Properties properties) {
-		super(properties);
-	}
+    public ParticleEmitterBlock(Properties properties) {
+        super(properties);
+    }
 
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
-	}
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
 
-	@Override
-	public RenderShape getRenderShape(BlockState state) {
-		return RenderShape.MODEL;
-	}
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
 
-	@Nullable
-	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new ParticleEmitterBlockEntity(ExtraBlocks.PARTICLE_EMITTER_BE.get(), pos, state);
-	}
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new ParticleEmitterBlockEntity(ExtraBlocks.PARTICLE_EMITTER_BE.get(), pos, state);
+    }
 
-	@Nullable
-	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-		return createTickerHelper(type, ExtraBlocks.PARTICLE_EMITTER_BE.get(), ParticleEmitterBlockEntity::tick);
-	}
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, ExtraBlocks.PARTICLE_EMITTER_BE.get(), ParticleEmitterBlockEntity::tick);
+    }
 }

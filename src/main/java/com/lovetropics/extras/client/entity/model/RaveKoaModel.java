@@ -22,17 +22,17 @@ public class RaveKoaModel extends EntityModel<RaveKoaRenderState> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.location("rave_koa_model"), "main");
     private final ModelPart booth;
 
-	private final KeyframeAnimation djAnimation;
-	private final KeyframeAnimation dance1Animation;
-	private final KeyframeAnimation dance3Animation;
+    private final KeyframeAnimation djAnimation;
+    private final KeyframeAnimation dance1Animation;
+    private final KeyframeAnimation dance3Animation;
 
     public RaveKoaModel(ModelPart root) {
-		super(root);
+        super(root);
         booth = root.getChild("booth");
-		djAnimation = RaveKoaAnimation.PLAYER_ELBOWS_DJ_KEYFRAMED.bake(root);
-		dance1Animation = RaveKoaAnimation.PLAYER_ELBOWS_DANCE1_KEYFRAMED.bake(root);
-		dance3Animation = RaveKoaAnimation.PLAYER_ELBOWS_DANCE3_KEYFRAMED.bake(root);
-	}
+        djAnimation = RaveKoaAnimation.PLAYER_ELBOWS_DJ_KEYFRAMED.bake(root);
+        dance1Animation = RaveKoaAnimation.PLAYER_ELBOWS_DANCE1_KEYFRAMED.bake(root);
+        dance3Animation = RaveKoaAnimation.PLAYER_ELBOWS_DANCE3_KEYFRAMED.bake(root);
+    }
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
@@ -71,14 +71,14 @@ public class RaveKoaModel extends EntityModel<RaveKoaRenderState> {
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
 
-	@Override
-	public void setupAnim(RaveKoaRenderState state) {
-		super.setupAnim(state);
-		if (state.entityType != ExtraEntities.RAVEKOADJ.get()) {
-			booth.skipDraw = true;
-		}
-		djAnimation.apply(state.raveAnimationStateDJ, state.ageInTicks);
-		dance1Animation.apply(state.raveAnimationStateDance1, state.ageInTicks);
-		dance3Animation.apply(state.raveAnimationStateDance2, state.ageInTicks);
-	}
+    @Override
+    public void setupAnim(RaveKoaRenderState state) {
+        super.setupAnim(state);
+        if (state.entityType != ExtraEntities.RAVEKOADJ.get()) {
+            booth.skipDraw = true;
+        }
+        djAnimation.apply(state.raveAnimationStateDJ, state.ageInTicks);
+        dance1Animation.apply(state.raveAnimationStateDance1, state.ageInTicks);
+        dance3Animation.apply(state.raveAnimationStateDance2, state.ageInTicks);
+    }
 }

@@ -5,7 +5,6 @@ import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.item.CollectibleCompassItem;
-import com.mojang.logging.LogUtils;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 
@@ -65,12 +63,12 @@ public class CollectibleEntity extends Entity {
         }
     }
 
-	@Override
-	public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
-		return false;
-	}
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
+        return false;
+    }
 
-	@Override
+    @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (collectible == null) {
             return super.interact(player, hand);
@@ -143,15 +141,15 @@ public class CollectibleEntity extends Entity {
         }
     }
 
-	@Override
-	protected void readAdditionalSaveData(ValueInput input) {
-		setCollectible(input.read(KEY_COLLECTIBLE, Collectible.CODEC).orElse(null));
-		setShowParticles(input.getBooleanOr(KEY_PARTICLES, true));
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+        setCollectible(input.read(KEY_COLLECTIBLE, Collectible.CODEC).orElse(null));
+        setShowParticles(input.getBooleanOr(KEY_PARTICLES, true));
     }
 
-	@Override
-	protected void addAdditionalSaveData(ValueOutput output) {
-		output.storeNullable(KEY_COLLECTIBLE, Collectible.CODEC, collectible);
+    @Override
+    protected void addAdditionalSaveData(ValueOutput output) {
+        output.storeNullable(KEY_COLLECTIBLE, Collectible.CODEC, collectible);
         output.putBoolean(KEY_PARTICLES, shouldShowParticles());
     }
 

@@ -26,28 +26,28 @@ import org.joml.Vector3f;
 public class PartyBeamRenderer extends EntityRenderer<PartyBeamEntity, PartyBeamRenderState> {
     private static final RenderType BEAM = RenderType.entitySmoothCutout(EnderDragonRenderer.CRYSTAL_BEAM_LOCATION);
 
-	private static final ResourceLocation END_CRYSTAL_LOCATION = ResourceLocation.withDefaultNamespace("textures/entity/end_crystal/end_crystal.png");
-	private static final RenderType RENDER_TYPE = RenderType.entityCutoutNoCull(END_CRYSTAL_LOCATION);
-	private final EndCrystalModel model;
+    private static final ResourceLocation END_CRYSTAL_LOCATION = ResourceLocation.withDefaultNamespace("textures/entity/end_crystal/end_crystal.png");
+    private static final RenderType RENDER_TYPE = RenderType.entityCutoutNoCull(END_CRYSTAL_LOCATION);
+    private final EndCrystalModel model;
 
     public PartyBeamRenderer(EntityRendererProvider.Context context) {
         super(context);
         shadowRadius = 0.5f;
-		model = new EndCrystalModel(context.bakeLayer(ModelLayers.END_CRYSTAL));
+        model = new EndCrystalModel(context.bakeLayer(ModelLayers.END_CRYSTAL));
     }
 
-	@Override
-	public void render(PartyBeamRenderState state, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-		poseStack.pushPose();
-		poseStack.scale(2.0f, 2.0f, 2.0f);
-		poseStack.translate(0.0f, -0.5f, 0.0f);
-		model.setupAnim(state);
-		model.renderToBuffer(poseStack, bufferSource.getBuffer(RENDER_TYPE), packedLight, OverlayTexture.NO_OVERLAY);
-		poseStack.popPose();
+    @Override
+    public void render(PartyBeamRenderState state, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        poseStack.pushPose();
+        poseStack.scale(2.0f, 2.0f, 2.0f);
+        poseStack.translate(0.0f, -0.5f, 0.0f);
+        model.setupAnim(state);
+        model.renderToBuffer(poseStack, bufferSource.getBuffer(RENDER_TYPE), packedLight, OverlayTexture.NO_OVERLAY);
+        poseStack.popPose();
 
-		Vec3 beamOffset = state.beamOffset;
-		if (beamOffset != null) {
-			float offsetY = EndCrystalRenderer.getY(state.ageInTicks);
+        Vec3 beamOffset = state.beamOffset;
+        if (beamOffset != null) {
+            float offsetY = EndCrystalRenderer.getY(state.ageInTicks);
             float deltaX = (float) beamOffset.x;
             float deltaY = (float) beamOffset.y;
             float deltaZ = (float) beamOffset.z;
@@ -55,10 +55,10 @@ public class PartyBeamRenderer extends EntityRenderer<PartyBeamEntity, PartyBeam
             renderCrystalBeams(state.color, -deltaX, -deltaY + offsetY, -deltaZ, state.ageInTicks, poseStack, bufferSource, packedLight);
         }
 
-		super.render(state, poseStack, bufferSource, packedLight);
+        super.render(state, poseStack, bufferSource, packedLight);
     }
 
-	// Copy of EnderDragonRenderer.renderCrystalBeams with a custom color
+    // Copy of EnderDragonRenderer.renderCrystalBeams with a custom color
     public void renderCrystalBeams(int color, float deltaX, float deltaY, float deltaZ, float time, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         float lengthXz = Mth.sqrt(deltaX * deltaX + deltaZ * deltaZ);
         float length = Mth.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
@@ -90,27 +90,27 @@ public class PartyBeamRenderer extends EntityRenderer<PartyBeamEntity, PartyBeam
         poseStack.popPose();
     }
 
-	@Override
-	public PartyBeamRenderState createRenderState() {
-		return new PartyBeamRenderState();
-	}
+    @Override
+    public PartyBeamRenderState createRenderState() {
+        return new PartyBeamRenderState();
+    }
 
-	@Override
-	public void extractRenderState(PartyBeamEntity entity, PartyBeamRenderState state, float partialTick) {
-		super.extractRenderState(entity, state, partialTick);
-		state.ageInTicks = entity.time + partialTick;
-		state.showsBottom = entity.showsBottom();
-		BlockPos target = entity.getBeamTarget();
-		if (target != null) {
-			state.beamOffset = Vec3.atCenterOf(target).subtract(entity.getPosition(partialTick));
-		} else {
-			state.beamOffset = null;
-		}
-		Vector3f color = entity.getColor();
-		state.color = ARGB.colorFromFloat(1.0f, color.x, color.y, color.z);
-	}
+    @Override
+    public void extractRenderState(PartyBeamEntity entity, PartyBeamRenderState state, float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+        state.ageInTicks = entity.time + partialTick;
+        state.showsBottom = entity.showsBottom();
+        BlockPos target = entity.getBeamTarget();
+        if (target != null) {
+            state.beamOffset = Vec3.atCenterOf(target).subtract(entity.getPosition(partialTick));
+        } else {
+            state.beamOffset = null;
+        }
+        Vector3f color = entity.getColor();
+        state.color = ARGB.colorFromFloat(1.0f, color.x, color.y, color.z);
+    }
 
-	@Override
+    @Override
     public boolean shouldRender(PartyBeamEntity entity, Frustum frustum, double cameraX, double cameraY, double cameraZ) {
         return super.shouldRender(entity, frustum, cameraX, cameraY, cameraZ) || entity.getBeamTarget() != null;
     }

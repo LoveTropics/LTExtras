@@ -34,12 +34,12 @@ import static net.minecraft.commands.Commands.literal;
 
 public class GenerateCommand {
 
-	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-	private static final DynamicCommandExceptionType FAILED_TO_WRITE = new DynamicCommandExceptionType(o -> Component.literal("Failed to write to file: " + o));
+    private static final DynamicCommandExceptionType FAILED_TO_WRITE = new DynamicCommandExceptionType(o -> Component.literal("Failed to write to file: " + o));
 
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		// @formatter:off
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        // @formatter:off
         dispatcher.register(
             literal("generate").requires(source -> source.hasPermission(4))
                 .then(literal("tag")
@@ -48,30 +48,30 @@ public class GenerateCommand {
                             .then(argument("pattern", StringArgumentType.greedyString())
                                 .executes(GenerateCommand::generateItemTag))))));
         // @formatter:on
-	}
+    }
 
-	private static int generateItemTag(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-		Pattern pattern = Pattern.compile(StringArgumentType.getString(ctx, "pattern"));
+    private static int generateItemTag(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        Pattern pattern = Pattern.compile(StringArgumentType.getString(ctx, "pattern"));
 
-		TagBuilder tagBuilder = TagBuilder.create();
+        TagBuilder tagBuilder = TagBuilder.create();
 
-		for (Entry<ResourceKey<Item>, Item> e : BuiltInRegistries.ITEM.entrySet()) {
-			ResourceLocation id = e.getKey().location();
-			if (pattern.matcher(id.toString()).matches()) {
-				tagBuilder.addElement(id);
-			}
-		}
+        for (Entry<ResourceKey<Item>, Item> e : BuiltInRegistries.ITEM.entrySet()) {
+            ResourceLocation id = e.getKey().location();
+            if (pattern.matcher(id.toString()).matches()) {
+                tagBuilder.addElement(id);
+            }
+        }
 
-		JsonElement json = TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(tagBuilder.build(), false, List.of())).getOrThrow();
+        JsonElement json = TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(tagBuilder.build(), false, List.of())).getOrThrow();
 
-		Path output = Paths.get("export", "generated", "tags", "item", StringArgumentType.getString(ctx, "name") + ".json");
-		try {
-			Files.createDirectories(output.getParent());
-			Files.write(output, Collections.singleton(GSON.toJson(json)), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			throw FAILED_TO_WRITE.create(e1);
-		}
-		return Command.SINGLE_SUCCESS;
-	}
+        Path output = Paths.get("export", "generated", "tags", "item", StringArgumentType.getString(ctx, "name") + ".json");
+        try {
+            Files.createDirectories(output.getParent());
+            Files.write(output, Collections.singleton(GSON.toJson(json)), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            throw FAILED_TO_WRITE.create(e1);
+        }
+        return Command.SINGLE_SUCCESS;
+    }
 }

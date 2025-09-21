@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
@@ -19,17 +18,17 @@ import java.util.function.Function;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
-	@Shadow
-	@Final
-	public Font font;
+    @Shadow
+    @Final
+    public Font font;
 
-	@Shadow
-	public abstract void setScreen(@Nullable Screen screen);
+    @Shadow
+    public abstract void setScreen(@Nullable Screen screen);
 
-	@Inject(method = "addInitialScreens", at = @At("RETURN"))
-	private void showPrompt(List<Function<Runnable, Screen>> output, CallbackInfoReturnable<Boolean> cir) {
-		if (!ExtrasConfig.TRANSLATION.prompted.get()) {
-			output.add(onClose -> new TranslationPromptScreen(onClose, (Minecraft) (Object) this, font));
-		}
-	}
+    @Inject(method = "addInitialScreens", at = @At("RETURN"))
+    private void showPrompt(List<Function<Runnable, Screen>> output, CallbackInfoReturnable<Boolean> cir) {
+        if (!ExtrasConfig.TRANSLATION.prompted.get()) {
+            output.add(onClose -> new TranslationPromptScreen(onClose, (Minecraft) (Object) this, font));
+        }
+    }
 }

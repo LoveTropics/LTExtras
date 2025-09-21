@@ -5,6 +5,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public interface BlockFactory<T extends Block> extends NonNullFunction<BlockBehaviour.Properties, T> {
-	@Override
-	T apply(BlockBehaviour.Properties properties);
+    @Override
+    T apply(BlockBehaviour.Properties properties);
 }

@@ -13,12 +13,12 @@ import java.io.InputStream;
 
 @Mixin(IconSet.class)
 public class IconSetMixin {
-	@Redirect(method = "getFile", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/PackResources;getRootResource([Ljava/lang/String;)Lnet/minecraft/server/packs/resources/IoSupplier;"))
-	@Nullable
-	private IoSupplier<InputStream> getResource(PackResources resources, String[] path) {
-		if (path[path.length - 1].endsWith(".icns")) {
-			return resources.getRootResource(path);
-		}
-		return () -> LTExtras.class.getResourceAsStream("/" + String.join("/", path));
-	}
+    @Redirect(method = "getFile", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/PackResources;getRootResource([Ljava/lang/String;)Lnet/minecraft/server/packs/resources/IoSupplier;"))
+    @Nullable
+    private IoSupplier<InputStream> getResource(PackResources resources, String[] path) {
+        if (path[path.length - 1].endsWith(".icns")) {
+            return resources.getRootResource(path);
+        }
+        return () -> LTExtras.class.getResourceAsStream("/" + String.join("/", path));
+    }
 }

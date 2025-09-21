@@ -7,17 +7,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 
 public class LightweightBarrierBlock extends CustomBarrierBlock {
-	public LightweightBarrierBlock(Properties properties) {
-		super(properties);
-	}
+    public LightweightBarrierBlock(Properties properties) {
+        super(properties);
+    }
 
-	@Override
-	public float getDestroyProgress(BlockState state, Player player, BlockGetter worldIn, BlockPos pos) {
-		return 0.0F;
-	}
+    @Override
+    public float getDestroyProgress(BlockState state, Player player, BlockGetter worldIn, BlockPos pos) {
+        return 0.0F;
+    }
 
-	@Override
-	public PushReaction getPistonPushReaction(BlockState state) {
-		return PushReaction.NORMAL;
-	}
+    @Override
+    public PushReaction getPistonPushReaction(BlockState state) {
+        return PushReaction.NORMAL;
+    }
 }

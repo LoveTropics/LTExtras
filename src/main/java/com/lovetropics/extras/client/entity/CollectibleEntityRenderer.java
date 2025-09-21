@@ -21,52 +21,52 @@ import org.joml.Quaternionf;
 public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity, CollectibleEntityRenderState> {
     private static final ItemDisplayContext DISPLAY_CONTEXT = ItemDisplayContext.GROUND;
 
-	private final ItemModelResolver itemModeResolver;
+    private final ItemModelResolver itemModeResolver;
 
     public CollectibleEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
-		itemModeResolver = context.getItemModelResolver();
+        itemModeResolver = context.getItemModelResolver();
         shadowRadius = 0.3f;
         shadowStrength = 0.75f;
     }
 
     @Override
-	public CollectibleEntityRenderState createRenderState() {
-		return new CollectibleEntityRenderState();
+    public CollectibleEntityRenderState createRenderState() {
+        return new CollectibleEntityRenderState();
     }
 
-	@Override
-	public void extractRenderState(CollectibleEntity entity, CollectibleEntityRenderState state, float partialTick) {
-		super.extractRenderState(entity, state, partialTick);
-		ItemStack displayedItem = entity.getDisplayedItem();
-		itemModeResolver.updateForNonLiving(state.displayedItemState, displayedItem, DISPLAY_CONTEXT, entity);
-	}
+    @Override
+    public void extractRenderState(CollectibleEntity entity, CollectibleEntityRenderState state, float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+        ItemStack displayedItem = entity.getDisplayedItem();
+        itemModeResolver.updateForNonLiving(state.displayedItemState, displayedItem, DISPLAY_CONTEXT, entity);
+    }
 
-	@Override
-	public void render(CollectibleEntityRenderState state, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-		if (state.displayedItemState.isEmpty()) {
+    @Override
+    public void render(CollectibleEntityRenderState state, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        if (state.displayedItemState.isEmpty()) {
             return;
         }
 
         poseStack.pushPose();
 
-		// TODO: Re-evaluate scaling and positioning now that we have access to bounding box
-		AABB boundingBox = state.displayedItemState.getModelBoundingBox();
-		float offset = (1.0f / 16.0f) - (float) boundingBox.minY;
-		float bob = (Mth.sin(state.ageInTicks / 10.0f) + 1.0f) * 0.05f;
-		poseStack.translate(0.0F, bob + offset, 0.0F);
-		poseStack.mulPose(Mth.rotationAroundAxis(Mth.Y_AXIS, entityRenderDispatcher.cameraOrientation(), new Quaternionf()));
-		poseStack.scale(2.0f, 2.0f, 2.0f);
+        // TODO: Re-evaluate scaling and positioning now that we have access to bounding box
+        AABB boundingBox = state.displayedItemState.getModelBoundingBox();
+        float offset = (1.0f / 16.0f) - (float) boundingBox.minY;
+        float bob = (Mth.sin(state.ageInTicks / 10.0f) + 1.0f) * 0.05f;
+        poseStack.translate(0.0F, bob + offset, 0.0F);
+        poseStack.mulPose(Mth.rotationAroundAxis(Mth.Y_AXIS, entityRenderDispatcher.cameraOrientation(), new Quaternionf()));
+        poseStack.scale(2.0f, 2.0f, 2.0f);
 
-		state.displayedItemState.render(poseStack, bufferSource, packedLight, OverlayTexture.NO_OVERLAY);
+        state.displayedItemState.render(poseStack, bufferSource, packedLight, OverlayTexture.NO_OVERLAY);
 
         poseStack.popPose();
 
-		super.render(state, poseStack, bufferSource, packedLight);
+        super.render(state, poseStack, bufferSource, packedLight);
     }
 
-	@Override
-	protected boolean shouldShowName(CollectibleEntity entity, double distanceToCameraSq) {
+    @Override
+    protected boolean shouldShowName(CollectibleEntity entity, double distanceToCameraSq) {
         return entity.hasCustomName() || entity.shouldShowName() && isEntityPicked(entity);
     }
 

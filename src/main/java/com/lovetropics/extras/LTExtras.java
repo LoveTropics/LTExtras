@@ -49,57 +49,57 @@ import java.util.regex.Pattern;
 @Mod("ltextras")
 public class LTExtras {
 
-	public static final String MODID = "ltextras";
+    public static final String MODID = "ltextras";
 
-	private static final ResourceLocation TAB_ID = LTExtras.location("ltextras");
-	public static final ResourceKey<CreativeModeTab> TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, TAB_ID);
+    private static final ResourceLocation TAB_ID = LTExtras.location("ltextras");
+    public static final ResourceKey<CreativeModeTab> TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, TAB_ID);
 
-	@Nullable
-	private static Registrate REGISTRATE = null;
+    @Nullable
+    private static Registrate REGISTRATE = null;
 
-	public static Registrate registrate() {
-		if (REGISTRATE == null) {
-			REGISTRATE = Registrate.create(MODID).defaultCreativeTab(TAB_KEY);
-		}
+    public static Registrate registrate() {
+        if (REGISTRATE == null) {
+            REGISTRATE = Registrate.create(MODID).defaultCreativeTab(TAB_KEY);
+        }
 
-		return REGISTRATE;
-	}
+        return REGISTRATE;
+    }
 
-	public static final Holder<Attribute> FRICTION = registrate().simple(
-			"friction",
-			Registries.ATTRIBUTE,
-			() -> new RangedAttribute("ltextras.friction", 1D, 0D, 1024D).setSyncable(true)
-	);
+    public static final Holder<Attribute> FRICTION = registrate().simple(
+            "friction",
+            Registries.ATTRIBUTE,
+            () -> new RangedAttribute("ltextras.friction", 1D, 0D, 1024D).setSyncable(true)
+    );
 
-	public LTExtras(IEventBus modBus, ModContainer container) {
-		ExtraBlocks.init();
-		ExtraItems.init();
-		ExtraEntities.init();
+    public LTExtras(IEventBus modBus, ModContainer container) {
+        ExtraBlocks.init();
+        ExtraItems.init();
+        ExtraEntities.init();
 
-		ExtraParticles.REGISTER.register(modBus);
-		ExtraEffects.REGISTER.register(modBus);
-		ExtraDataComponents.REGISTER.register(modBus);
-		ExtraAttachments.REGISTER.register(modBus);
+        ExtraParticles.REGISTER.register(modBus);
+        ExtraEffects.REGISTER.register(modBus);
+        ExtraDataComponents.REGISTER.register(modBus);
+        ExtraAttachments.REGISTER.register(modBus);
 
-		NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
-		NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
-		modBus.addListener(this::onModifyAttributes);
+        NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
+        NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
+        modBus.addListener(this::onModifyAttributes);
 
-		ExtraLangKeys.init(registrate());
-		registrate()
+        ExtraLangKeys.init(registrate());
+        registrate()
                 .addDataGenerator(ProviderType.LANG, p -> {
                     p.add(ExtraEffects.FISH_EYE.get(), "Fish Eye");
-					p.add("toast.collectible.title", "New Collectible!");
-					p.add("toast.collectible.item", " + %s");
+                    p.add("toast.collectible.title", "New Collectible!");
+                    p.add("toast.collectible.item", " + %s");
 
-					p.add("spawnitems.set_not_restorable", "The spawn item set %s cannot be restored!");
-					p.add("spawnitems.unknown_set", "Unknown spawn item set: %s");
-					p.add("spawnitems.restored_successfully", "Items restored!");
+                    p.add("spawnitems.set_not_restorable", "The spawn item set %s cannot be restored!");
+                    p.add("spawnitems.unknown_set", "Unknown spawn item set: %s");
+                    p.add("spawnitems.restored_successfully", "Items restored!");
 
-					p.add("ltextras.friction", "Friction");
+                    p.add("ltextras.friction", "Friction");
 
-					TpCommand.addTranslations(p);
-					WarpCommand.addTranslations(p);
+                    TpCommand.addTranslations(p);
+                    WarpCommand.addTranslations(p);
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
                         .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))
@@ -107,54 +107,56 @@ public class LTExtras {
                         .build()
                 ).build();
 
-		container.registerConfig(ModConfig.Type.COMMON, ExtrasConfig.COMMON_CONFIG);
-		container.registerConfig(ModConfig.Type.CLIENT, ExtrasConfig.CLIENT_CONFIG);
-	}
+        container.registerConfig(ModConfig.Type.COMMON, ExtrasConfig.COMMON_CONFIG);
+        container.registerConfig(ModConfig.Type.CLIENT, ExtrasConfig.CLIENT_CONFIG);
+    }
 
-	private static final Pattern QUALIFIER = Pattern.compile("-\\w+\\+\\d+");
-	public static String getCompatVersion() {
-		return getCompatVersion(ModList.get().getModContainerById(MODID).orElseThrow(IllegalStateException::new).getModInfo().getVersion().toString());
-	}
-	private static String getCompatVersion(String fullVersion) {
-		return QUALIFIER.matcher(fullVersion).replaceAll("");
-	}
+    private static final Pattern QUALIFIER = Pattern.compile("-\\w+\\+\\d+");
 
-	private void onRegisterCommands(RegisterCommandsEvent event) {
-		CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-		CommandBuildContext buildContext = event.getBuildContext();
-		SetMaxPlayersCommand.register(dispatcher);
-		GenerateCommand.register(dispatcher);
-		CollectibleCommand.register(dispatcher, buildContext);
-		SpawnItemsCommand.register(dispatcher);
-		TpCommand.register(dispatcher);
-		WorldEffectCommand.register(dispatcher);
-		WarpCommand.register(dispatcher);
-		PoiCommand.register(dispatcher, buildContext);
-	}
+    public static String getCompatVersion() {
+        return getCompatVersion(ModList.get().getModContainerById(MODID).orElseThrow(IllegalStateException::new).getModInfo().getVersion().toString());
+    }
 
-	private void onRegisterClientCommands(RegisterClientCommandsEvent event) {
-		CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-		NameTagModeCommand.register(dispatcher);
-	}
+    private static String getCompatVersion(String fullVersion) {
+        return QUALIFIER.matcher(fullVersion).replaceAll("");
+    }
 
-	private void onModifyAttributes(EntityAttributeModificationEvent event) {
-		event.add(EntityType.PLAYER, FRICTION);
-	}
+    private void onRegisterCommands(RegisterCommandsEvent event) {
+        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+        CommandBuildContext buildContext = event.getBuildContext();
+        SetMaxPlayersCommand.register(dispatcher);
+        GenerateCommand.register(dispatcher);
+        CollectibleCommand.register(dispatcher, buildContext);
+        SpawnItemsCommand.register(dispatcher);
+        TpCommand.register(dispatcher);
+        WorldEffectCommand.register(dispatcher);
+        WarpCommand.register(dispatcher);
+        PoiCommand.register(dispatcher, buildContext);
+    }
 
-	public static ResourceLocation location(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MODID, path);
-	}
+    private void onRegisterClientCommands(RegisterClientCommandsEvent event) {
+        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+        NameTagModeCommand.register(dispatcher);
+    }
 
-	@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
-	public static class ClientSetup {
-		@SubscribeEvent
-		public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-			event.registerLayerDefinition(RaveKoaModel.LAYER_LOCATION, RaveKoaModel::createBodyLayer);
-		}
+    private void onModifyAttributes(EntityAttributeModificationEvent event) {
+        event.add(EntityType.PLAYER, FRICTION);
+    }
 
-		@SubscribeEvent
-		public static void registerGuiLayers(RegisterGuiLayersEvent event) {
-			ClientPlayerSensorEffects.registerGuiLayers(event);
-		}
-	}
+    public static ResourceLocation location(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    }
+
+    @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+    public static class ClientSetup {
+        @SubscribeEvent
+        public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+            event.registerLayerDefinition(RaveKoaModel.LAYER_LOCATION, RaveKoaModel::createBodyLayer);
+        }
+
+        @SubscribeEvent
+        public static void registerGuiLayers(RegisterGuiLayersEvent event) {
+            ClientPlayerSensorEffects.registerGuiLayers(event);
+        }
+    }
 }

@@ -86,7 +86,7 @@ public final class SpawnItemsStore {
     @SubscribeEvent
     static void onPlayerClone(PlayerEvent.Clone event) {
         Player oldPlayer = event.getOriginal();
-        if(oldPlayer instanceof ServerPlayer serverPlayer) {
+        if (oldPlayer instanceof ServerPlayer serverPlayer) {
             if (event.isWasDeath() && !serverPlayer.level().getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).get()) {
                 return;
             }
