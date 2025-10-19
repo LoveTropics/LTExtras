@@ -51,12 +51,4 @@ public abstract class LivingEntityMixin extends Entity {
         }
         return super.isPushedByFluid(type);
     }
-
-    @Override
-    public boolean isEyeInFluidType(FluidType type) {
-        if (type == NeoForgeMod.WATER_TYPE.value() && hasEffect(ExtraEffects.FISH_EYE)) {
-            return false;
-        }
-        return super.isEyeInFluidType(type);
-    }
 }
