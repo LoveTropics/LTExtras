@@ -76,6 +76,10 @@ public class ExtraDataComponents {
             "player_sensor",
             builder -> builder.persistent(PlayerSensor.CODEC).networkSynchronized(PlayerSensor.STREAM_CODEC).cacheEncoding()
     );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> GRAVITY = REGISTER.registerComponentType(
+            "gravity",
+            builder -> builder.persistent(Codec.floatRange(-10.0f, 10.0f)).networkSynchronized(ByteBufCodecs.FLOAT)
+    );
 
     @SubscribeEvent
     public static void addToTooltip(ItemTooltipEvent event) {

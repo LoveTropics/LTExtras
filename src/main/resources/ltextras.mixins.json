@@ -13,6 +13,7 @@
     "EntityMixin",
     "FluidStateMixin",
     "ForgeHooksMixin",
+    "ItemEntityMixin",
     "ItemFrameMixin",
     "LivingEntityMixin",
     "MinecraftServerAccessor",
