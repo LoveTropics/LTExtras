@@ -1,7 +1,11 @@
 package com.lovetropics.extras.mixin;
 
+import com.lovetropics.extras.effect.ExtraEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.portal.TeleportTransition;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.fluids.FluidType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,6 +24,8 @@ public class EntityMixin {
     @Final
     private Set<String> tags;
 
+    @Shadow
+    private FluidType forgeFluidTypeOnEyes;
     @Unique
     private static final String lTExtras$UNTOUCHABLE = "Untouchable";
 
@@ -55,6 +61,13 @@ public class EntityMixin {
     public final void setRemoved(Entity.RemovalReason removalReason, CallbackInfo ci) {
         if (removalReason == Entity.RemovalReason.KILLED && this.tags.contains(lTExtras$UNTOUCHABLE)) {
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "updateFluidOnEyes", at = @At("RETURN"))
+    private void updateFluidOnEyes(CallbackInfo ci) {
+        if ((Object) this instanceof LivingEntity livingEntity && livingEntity.hasEffect(ExtraEffects.FISH_EYE)) {
+            forgeFluidTypeOnEyes = NeoForgeMod.EMPTY_TYPE.value();
         }
     }
 }
