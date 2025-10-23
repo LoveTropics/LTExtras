@@ -25,11 +25,13 @@ import com.lovetropics.extras.block.ReedsBlock;
 import com.lovetropics.extras.block.RopeBlock;
 import com.lovetropics.extras.block.ScientificNameBlock;
 import com.lovetropics.extras.block.SeatBlock;
+import com.lovetropics.extras.block.ShippingContainerBlock;
 import com.lovetropics.extras.block.SpeedyBlock;
 import com.lovetropics.extras.block.SpeedySlabBlock;
 import com.lovetropics.extras.block.SpeedyZone;
 import com.lovetropics.extras.block.SubmergedLilyBlock;
 import com.lovetropics.extras.block.ThornStemBlock;
+import com.lovetropics.extras.block.WarehouseRoadBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.block.entity.JumpPadBlockEntity;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
@@ -115,6 +117,7 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.TallSeagrassBlock;
 import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -575,6 +578,36 @@ public class ExtraBlocks {
             .recipe((ctx, prov) ->
                     prov.slab(DataIngredient.items((NonNullSupplier<? extends ItemLike>) LIME_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx, "lime_slab", true)
             )
+            .register();
+
+    // Fusion dependent connected texture blocks
+
+    public static final BlockEntry<ShippingContainerBlock.RedShippingContainerBlock> RED_SHIPPING_CONTAINER = REGISTRATE
+            .block("red_shipping_container", ShippingContainerBlock.RedShippingContainerBlock::new)
+            .initialProperties(() -> Blocks.BEDROCK)
+            .properties(BlockBehaviour.Properties::noLootTable)
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<ShippingContainerBlock.YellowShippingContainerBlock> YELLOW_SHIPPING_CONTAINER = REGISTRATE
+            .block("yellow_shipping_container", ShippingContainerBlock.YellowShippingContainerBlock::new)
+            .initialProperties(() -> Blocks.BEDROCK)
+            .properties(BlockBehaviour.Properties::noLootTable)
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<ShippingContainerBlock.BlueShippingContainerBlock> BLUE_SHIPPING_CONTAINER = REGISTRATE
+            .block("blue_shipping_container", ShippingContainerBlock.BlueShippingContainerBlock::new)
+            .initialProperties(() -> Blocks.BEDROCK)
+            .properties(BlockBehaviour.Properties::noLootTable)
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<WarehouseRoadBlock> WAREHOUSE_ROAD = REGISTRATE
+            .block("warehouse_road", WarehouseRoadBlock::new)
+            .initialProperties(() -> Blocks.BEDROCK)
+            .properties(BlockBehaviour.Properties::noLootTable)
+            .simpleItem()
             .register();
 
     // Speedy blocks

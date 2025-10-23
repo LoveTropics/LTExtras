@@ -10,6 +10,7 @@ import com.lovetropics.extras.command.PoiCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
 import com.lovetropics.extras.command.TpCommand;
 import com.lovetropics.extras.command.WarpCommand;
+import com.lovetropics.extras.data.GenericFusionModelProvider;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
@@ -84,6 +85,7 @@ public class LTExtras {
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
         modBus.addListener(this::onModifyAttributes);
+        modBus.addListener(GenericFusionModelProvider::onGatherData);
 
         ExtraLangKeys.init(registrate());
         registrate()

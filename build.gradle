@@ -92,6 +92,8 @@ dependencies {
     jarJar(implementation("org.lovetropics:LTLib:$ltlib_version"))
     jarJar(implementation("eu.pb4:placeholder-api-lt:$placeholder_api_version"))
 
+    jarJar(implementation("maven.modrinth:fusion-connected-textures:1.2.11a-neoforge-mc1.21.6"))
+
     runtimeOnly 'maven.modrinth:tropicraft:9.9.1-1.21.8'
 }
 
