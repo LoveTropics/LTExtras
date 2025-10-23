@@ -6,10 +6,12 @@ import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleBasketItem;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.EntityWandItem;
+import com.lovetropics.extras.item.HighHeelsItem;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
 import com.lovetropics.extras.item.TropicMapItem;
+import com.lovetropics.extras.item.WalkAnimation;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
@@ -27,6 +29,8 @@ import net.minecraft.client.renderer.item.RangeSelectItemModel;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
 import net.minecraft.client.renderer.item.properties.select.DisplayContext;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -34,6 +38,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+import net.minecraft.world.item.equipment.EquipmentAssets;
+import net.minecraft.world.item.equipment.Equippable;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.EventBusSubscriber;
 
@@ -45,6 +52,8 @@ import static net.minecraft.client.data.models.model.ItemModelUtils.*;
 
 public class ExtraItems {
     private static final Registrate REGISTRATE = LTExtras.registrate();
+
+    private static final ResourceKey<EquipmentAsset> PLACEHOLDER_EQUIPMENT_ASSET = EquipmentAssets.LEATHER;
 
     public static final ItemEntry<EntityWandItem> ENTITY_WAND = REGISTRATE.item("entity_wand", EntityWandItem::new)
             .properties(p -> p.stacksTo(1))
@@ -103,6 +112,17 @@ public class ExtraItems {
                     modifier.accept(stack);
                 });
             })
+            .defaultModel()
+            .register();
+
+    public static final ItemEntry<HighHeelsItem> HIGH_HEELS = REGISTRATE.item("high_heels", HighHeelsItem::new)
+            .properties(p -> p.stacksTo(1)
+                    .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.FEET)
+                            .setAsset(PLACEHOLDER_EQUIPMENT_ASSET)
+                            .build())
+                    .component(ExtraDataComponents.WALK_ANIMATION, WalkAnimation.FABULOUS)
+            )
+            .clientExtension(() -> HighHeelsItem.ClientExtensions::new)
             .defaultModel()
             .register();
 

@@ -1,6 +1,7 @@
 package com.lovetropics.extras.client.entity.animation;
 
 import com.lovetropics.extras.ExtraDataComponents;
+import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.item.WalkAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -9,12 +10,25 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Mth;
 
 public class SpecialWalkAnimator {
+    public static final float HEELS_OFFSET = -4.0f;
+
     public static void apply(LivingEntityRenderState renderState, EntityModel<?> model) {
-        if (renderState instanceof HumanoidRenderState humanoidRenderState && model instanceof HumanoidModel<?> humanoidModel) {
-            WalkAnimation walkAnimation = humanoidRenderState.feetEquipment.getOrDefault(ExtraDataComponents.WALK_ANIMATION, WalkAnimation.DEFAULT);
-            if (walkAnimation == WalkAnimation.FABULOUS) {
-                applyFabulous(humanoidRenderState, humanoidModel);
-            }
+        if (!(renderState instanceof HumanoidRenderState humanoidRenderState) || !(model instanceof HumanoidModel<?> humanoidModel)) {
+            return;
+        }
+
+        WalkAnimation walkAnimation = humanoidRenderState.feetEquipment.getOrDefault(ExtraDataComponents.WALK_ANIMATION, WalkAnimation.DEFAULT);
+        if (walkAnimation == WalkAnimation.FABULOUS) {
+            applyFabulous(humanoidRenderState, humanoidModel);
+        }
+
+        if (humanoidRenderState.feetEquipment.is(ExtraItems.HIGH_HEELS)) {
+            humanoidModel.body.y += HEELS_OFFSET;
+            humanoidModel.leftLeg.y += HEELS_OFFSET;
+            humanoidModel.rightLeg.y += HEELS_OFFSET;
+            humanoidModel.head.y += HEELS_OFFSET;
+            humanoidModel.leftArm.y += HEELS_OFFSET;
+            humanoidModel.rightArm.y += HEELS_OFFSET;
         }
     }
 

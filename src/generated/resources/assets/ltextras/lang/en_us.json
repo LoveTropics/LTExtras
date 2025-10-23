@@ -401,6 +401,7 @@
   "item.ltextras.collectible_compass.fail": "The Compass was not able to find any Collectibles that you don't have nearby. Maybe try somewhere else?",
   "item.ltextras.collectible_compass.success": "👀 The Compass has found a Collectible that you don't have yet, and now points towards it.",
   "item.ltextras.entity_wand": "Entity Wand",
+  "item.ltextras.high_heels": "High Heels",
   "item.ltextras.image": "Image",
   "item.ltextras.invite": "Invite",
   "item.ltextras.orange_glasses": "Orange Glasses",

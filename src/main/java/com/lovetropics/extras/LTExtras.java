@@ -2,6 +2,7 @@ package com.lovetropics.extras;
 
 import com.lovetropics.extras.client.ClientPlayerSensorEffects;
 import com.lovetropics.extras.client.command.NameTagModeCommand;
+import com.lovetropics.extras.client.entity.model.HighHeelsModel;
 import com.lovetropics.extras.client.entity.model.RaveKoaModel;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
@@ -152,6 +153,7 @@ public class LTExtras {
         @SubscribeEvent
         public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
             event.registerLayerDefinition(RaveKoaModel.LAYER_LOCATION, RaveKoaModel::createBodyLayer);
+            event.registerLayerDefinition(HighHeelsModel.LAYER_LOCATION, HighHeelsModel::createLayer);
         }
 
         @SubscribeEvent
