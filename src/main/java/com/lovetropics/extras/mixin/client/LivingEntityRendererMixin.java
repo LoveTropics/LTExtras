@@ -1,6 +1,7 @@
 package com.lovetropics.extras.mixin.client;
 
 import com.lovetropics.extras.client.ClientPlayerSensorEffects;
+import com.lovetropics.extras.client.entity.animation.SpecialWalkAnimator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,8 +19,9 @@ public class LivingEntityRendererMixin<T extends LivingEntity, S extends LivingE
     @Shadow
     protected M model;
 
-    @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V"))
+    @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"))
     private void render(LivingEntityRenderState renderState, PoseStack poseStack, MultiBufferSource bufferSource, int lightCoords, CallbackInfo ci) {
+        SpecialWalkAnimator.apply(renderState, model);
         ClientPlayerSensorEffects.captureModelPose(renderState, model, poseStack);
     }
 }

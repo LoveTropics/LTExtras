@@ -4,6 +4,7 @@ import com.lovetropics.extras.collectible.CollectibleMarker;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.ImageData;
+import com.lovetropics.extras.item.WalkAnimation;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
@@ -79,6 +80,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> GRAVITY = REGISTER.registerComponentType(
             "gravity",
             builder -> builder.persistent(Codec.floatRange(-10.0f, 10.0f)).networkSynchronized(ByteBufCodecs.FLOAT)
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<WalkAnimation>> WALK_ANIMATION = REGISTER.registerComponentType(
+            "walk_animation",
+            builder -> builder.persistent(WalkAnimation.CODEC).networkSynchronized(WalkAnimation.STREAM_CODEC)
     );
 
     @SubscribeEvent
