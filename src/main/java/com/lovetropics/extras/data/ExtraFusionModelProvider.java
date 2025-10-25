@@ -13,6 +13,7 @@ import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -23,7 +24,7 @@ import javax.annotation.Nullable;
  * LTExtras
  * FIRE EMOJI, FIRE EMOJI, FIRE EMOJI
  */
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class ExtraFusionModelProvider extends FusionModelProvider {
     public ExtraFusionModelProvider(PackOutput output) {
         super(LTExtras.MODID, output);
