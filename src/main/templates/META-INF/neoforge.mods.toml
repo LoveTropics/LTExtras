@@ -29,3 +29,10 @@ type = "required"
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.${ mod_id }]]
+modId = "fusion"
+type = "required"
+versionRange = "${fusion_version_range}"
+ordering = "NONE"
+side = "CLIENT"

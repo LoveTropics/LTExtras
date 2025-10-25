@@ -92,6 +92,8 @@ dependencies {
     jarJar(implementation("org.lovetropics:LTLib:$ltlib_version"))
     jarJar(implementation("eu.pb4:placeholder-api-lt:$placeholder_api_version"))
 
+    implementation "maven.modrinth:fusion-connected-textures:$fusion_version"
+
     runtimeOnly 'maven.modrinth:tropicraft:9.9.1-1.21.8'
 }
 
@@ -104,6 +106,7 @@ var generateModMetadata = tasks.register('generateModMetadata', ProcessResources
             loader_version_range   : loader_version_range,
             mod_id                 : mod_id,
             mod_version            : mod_version,
+            fusion_version_range   : fusion_version_range,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
