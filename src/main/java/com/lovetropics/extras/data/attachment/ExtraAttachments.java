@@ -2,6 +2,7 @@ package com.lovetropics.extras.data.attachment;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.collectible.CollectibleStore;
+import com.lovetropics.extras.data.TropiCoinsStore;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsStore;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
@@ -19,6 +20,10 @@ public class ExtraAttachments {
 
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<PlayerTimeZone>> TIME_ZONE = REGISTER.register(
             "time_zone", () -> AttachmentType.builder(PlayerTimeZone::new).build()
+    );
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<TropiCoinsStore>> TROPICOINS_STORE = REGISTER.register(
+            "tropicoins_store", () -> AttachmentType.builder(TropiCoinsStore::new).serialize(TropiCoinsStore.CODEC).sync(TropiCoinsStore.STREAM_CODEC).build()
     );
 
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<CollectibleStore>> COLLECTIBLE_STORE = REGISTER.register(

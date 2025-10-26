@@ -13,6 +13,7 @@ import com.lovetropics.extras.network.message.ClientboundUpdatePackControl;
 import com.lovetropics.extras.network.message.ClientboundUpdatePoiPacket;
 import com.lovetropics.extras.network.message.ClientboundWorldParticleEffectsPacket;
 import com.lovetropics.extras.network.message.ServerboundDriftForkliftPacket;
+import com.lovetropics.extras.network.message.ServerboundExchangeTropiCoinsPacket;
 import com.lovetropics.extras.network.message.ServerboundLiftForkliftPacket;
 import com.lovetropics.extras.network.message.ServerboundPickCollectibleItemPacket;
 import com.lovetropics.extras.network.message.ServerboundReturnCollectibleItemPacket;
@@ -44,5 +45,6 @@ public class LTExtrasNetwork {
         registrar.playToClient(ClientboundOpenCollectibleBasketPacket.TYPE, ClientboundOpenCollectibleBasketPacket.STREAM_CODEC, ClientboundOpenCollectibleBasketPacket::handle);
         registrar.playToClient(ClientboundUpdatePackControl.TYPE, ClientboundUpdatePackControl.STREAM_CODEC, ClientboundUpdatePackControl::handle);
         registrar.playToClient(ClientboundSetEntityMarkedPacket.TYPE, ClientboundSetEntityMarkedPacket.STREAM_CODEC, ClientboundSetEntityMarkedPacket::handle);
+        registrar.playToServer(ServerboundExchangeTropiCoinsPacket.TYPE, ServerboundExchangeTropiCoinsPacket.STREAM_CODEC, ServerboundExchangeTropiCoinsPacket::handle);
     }
 }
