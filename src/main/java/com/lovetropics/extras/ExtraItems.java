@@ -12,7 +12,9 @@ import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
 import com.lovetropics.extras.item.TropicMapItem;
 import com.lovetropics.extras.item.WalkAnimation;
+import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.registry.ExtraRegistries;
+import com.lovetropics.extras.sounds.ExtraSounds;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -32,6 +34,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
@@ -121,6 +124,7 @@ public class ExtraItems {
                             .setAsset(PLACEHOLDER_EQUIPMENT_ASSET)
                             .build())
                     .component(ExtraDataComponents.WALK_ANIMATION, WalkAnimation.FABULOUS)
+                    .component(ExtraDataComponents.WALK_SOUND, WalkSound.builder().soundEvent(ExtraSounds.HEELS_STEP).cooldown(0.9f).volume(.5f).build())
             )
             .clientExtension(() -> HighHeelsItem.ClientExtensions::new)
             .defaultModel()

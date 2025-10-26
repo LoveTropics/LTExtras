@@ -52,6 +52,10 @@ public record WalkSound(
         this(soundEvent, DEFAULT_COOLDOWN, DEFAULT_VOLUME, DEFAULT_PITCH, DEFAULT_PLAY_OTHER_SOUNDS);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private @Nullable Holder<SoundEvent> soundEvent = null;
         private FloatProvider cooldown = DEFAULT_COOLDOWN;
