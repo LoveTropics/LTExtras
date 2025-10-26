@@ -6,6 +6,7 @@ import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleBasketItem;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.EntityWandItem;
+import com.lovetropics.extras.item.ForkliftSpawnEggItem;
 import com.lovetropics.extras.item.HighHeelsItem;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.ImageItem;
@@ -34,7 +35,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
@@ -132,6 +132,10 @@ public class ExtraItems {
             .register();
 
     public static final ItemEntry<Item> FORKLIFT_CERTIFICATION = REGISTRATE.item("forklift_certification", Item::new)
+            .properties(p -> p.stacksTo(1))
+            .register();
+
+    public static final ItemEntry<ForkliftSpawnEggItem> FORKLIFT_SPAWN_EGG = REGISTRATE.item("forklift_spawn_egg", ForkliftSpawnEggItem::new)
             .properties(p -> p.stacksTo(1))
             .register();
 
