@@ -36,6 +36,8 @@
   ],
   "client": [
     "client.AbstractWidgetAccess",
+    "client.CapeLayerMixin",
+    "client.ClientPacketListenerMixin",
     "client.GameRendererMixin",
     "client.IconSetMixin",
     "client.LivingEntityRendererMixin",
@@ -45,8 +47,7 @@
     "client.menu.TitleScreenMixin",
     "client.packcontrol.PackSelectionModelMixin",
     "client.translation.MinecraftMixin",
-    "client.world_effect.ClientLevelMixin",
-    "client.CapeLayerMixin"
+    "client.world_effect.ClientLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
