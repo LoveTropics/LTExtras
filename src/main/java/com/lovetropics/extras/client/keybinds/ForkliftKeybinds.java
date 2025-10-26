@@ -7,8 +7,9 @@ import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.client.settings.KeyModifier;
 
 public class ForkliftKeybinds {
-    public static final KeyMapping LIFT_FORK = create("lift_fork", InputConstants.KEY_SPACE, KeyModifier.NONE);
-    public static final KeyMapping LOWER_FORK = create("lower_fork", InputConstants.KEY_LCONTROL, KeyModifier.NONE);
+    public static final KeyMapping RAISE_FORKLIFT = create("forklift_raise", InputConstants.KEY_R, KeyModifier.NONE);
+    public static final KeyMapping LOWER_FORKLIFT = create("forklift_lower", InputConstants.KEY_F, KeyModifier.NONE);
+    public static final KeyMapping DRIFT = create("forklift_drift", InputConstants.KEY_SPACE, KeyModifier.NONE);
 
     public static void init() {
     }

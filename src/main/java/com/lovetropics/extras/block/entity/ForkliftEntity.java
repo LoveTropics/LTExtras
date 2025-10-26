@@ -2,6 +2,8 @@ package com.lovetropics.extras.block.entity;
 
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.ExtraLangKeys;
+import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
+import com.lovetropics.extras.network.message.ServerboundDriftForkliftPacket;
 import com.lovetropics.extras.network.message.ServerboundLiftForkliftPacket;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
@@ -36,6 +38,7 @@ import javax.annotation.Nullable;
 
 public class ForkliftEntity extends Entity implements PlayerRideable {
     private static final EntityDataAccessor<Integer> DATA_FORK_HEIGHT = SynchedEntityData.defineId(ForkliftEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> DATA_IS_DRIFTING = SynchedEntityData.defineId(ForkliftEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final Component CERTIFICATION_MISSING = ExtraLangKeys.FORKLIFT_CERTIFICATION_MISSING.get().withStyle(ChatFormatting.RED);
 
@@ -45,7 +48,14 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     private static final float RIDER_X_OFFSET = 0.3f;
     private static final float RIDER_Z_OFFSET = 2.0f;
     public static final float FORKLIFT_SCALE = 1.2f;
-    public static final double FRICTION = 0.92f;
+    public static final double FRICTION = 0.85f;
+    public static final double DRIFT_FRICTION = 0.9f;
+    public static final int DRIFT_TICKS = 50;
+
+    public int driftBuildTicks = 0;
+    public int driftDuration = 0;
+    public int driftCooldown = 0;
+    public float driftStrength = 0.0f;
 
     private final InterpolationHandler interpolation = new InterpolationHandler(this, 3);
 
@@ -109,6 +119,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_FORK_HEIGHT, 0);
+        builder.define(DATA_IS_DRIFTING, false);
     }
 
     private void setForkHeightFromClient(final int height) {
@@ -123,14 +134,24 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         return entityData.get(DATA_FORK_HEIGHT);
     }
 
+    public void setDrifting(final boolean drifting) {
+        entityData.set(DATA_IS_DRIFTING, drifting);
+    }
+
+    public boolean isDrifting() {
+        return entityData.get(DATA_IS_DRIFTING);
+    }
+
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         requiresCertification = input.read("RequiresCertification", Codec.BOOL).orElse(false);
+        driftDuration = input.read("DriftDuration", Codec.INT).orElse(0);
     }
 
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         output.putBoolean("RequiresCertification", requiresCertification);
+        output.putInt("DriftDuration", driftDuration);
     }
 
     @Override
@@ -165,20 +186,41 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         interpolation.interpolate();
 
         if (isLocalInstanceAuthoritative()) {
-            applyFriction();
             if (level().isClientSide) {
+                if (isDrifting() && driftDuration == 0) {
+                    ClientPacketDistributor.sendToServer(new ServerboundDriftForkliftPacket(false, getId()));
+                    driftCooldown = DRIFT_TICKS;
+                }
+
+                if (driftDuration > 0) {
+                    driftDuration--;
+                }
+
+                if (driftCooldown > 0) {
+                    driftCooldown--;
+                }
+
                 controlForklift();
             }
 
-            move(MoverType.SELF, getDeltaMovement());
-        } else {
+            // TODO add gravity
+            //setDeltaMovement(getDeltaMovement().x, getDeltaMovement().y - getDefaultGravity(), getDeltaMovement().z);
+        }
+        else {
             setDeltaMovement(Vec3.ZERO);
         }
+
+        move(MoverType.SELF, getDeltaMovement());
     }
 
-    private void applyFriction() {
+    @Override
+    protected double getDefaultGravity() {
+        return 0.04;
+    }
+
+    private void applyFriction(double friction) {
         Vec3 velocity = getDeltaMovement();
-        setDeltaMovement(velocity.x * FRICTION, velocity.y, velocity.z * FRICTION);
+        setDeltaMovement(velocity.x * friction, velocity.y - getDefaultGravity(), velocity.z * friction);
     }
 
     private void moveFork(int amt) {
@@ -193,8 +235,9 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             boolean inputUp = localPlayer.input.keyPresses.forward();
             boolean inputDown = localPlayer.input.keyPresses.backward();
 
-            boolean liftUp = localPlayer.input.keyPresses.sprint();
-            boolean liftDown = localPlayer.input.keyPresses.jump();
+            boolean liftUp = ForkliftKeybinds.RAISE_FORKLIFT.isDown();
+            boolean liftDown = ForkliftKeybinds.LOWER_FORKLIFT.isDown();
+            boolean drift = ForkliftKeybinds.DRIFT.isDown();
 
             if (liftUp) {
                 moveFork(1);
@@ -217,18 +260,49 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             }
 
             if (inputUp) {
-                f += 0.04F;
+                f += 0.05F;
             }
 
             if (inputDown) {
-                f -= 0.04F;
+                f -= 0.05F;
             }
 
-            setDeltaMovement(getDeltaMovement().add(Mth.sin(-this.getYRot() * ((float)Math.PI / 180F)) * f, 0.0F, Mth.cos(this.getYRot() * ((float)Math.PI / 180F)) * f));
+            final boolean buildingDrift = driftCooldown == 0 && !isDrifting() && drift && ((inputUp && inputRight) || (inputDown && inputRight) || (inputUp && inputLeft) || (inputDown && inputLeft));
+            if (buildingDrift) {
+                driftBuildTicks++;
+            } else {
+                if (driftBuildTicks > 0 && !isDrifting() && driftCooldown == 0) {
+                    ClientPacketDistributor.sendToServer(new ServerboundDriftForkliftPacket(true, getId()));
+                    driftDuration = DRIFT_TICKS;
+                    driftStrength = driftBuildTicks / (float) DRIFT_TICKS;
+                }
+
+                driftBuildTicks = 0;
+            }
+
+            driftBuildTicks = Mth.clamp(driftBuildTicks, 0, DRIFT_TICKS);
+
+            if (isDrifting()) {
+                executeDrift(getDeltaMovement());
+            } else {
+                applyFriction(FRICTION);
+                setDeltaMovement(getDeltaMovement().add(Mth.sin(-this.getYRot() * ((float)Math.PI / 180F)) * f, 0.0F, Mth.cos(this.getYRot() * ((float)Math.PI / 180F)) * f));
+            }
 
             if (isPassenger()) {
                 localPlayer.connection.send(ServerboundMoveVehiclePacket.fromEntity(this));
             }
+        }
+    }
+
+    private void executeDrift(Vec3 travelVector) {
+        hasImpulse = true;
+
+        if (travelVector.lengthSqr() > Mth.EPSILON) {
+            float xVelocity = Mth.sin(this.getYRot() * ((float)Math.PI / 180F));
+            float zVelocity = Mth.cos(this.getYRot() * ((float)Math.PI / 180F));
+            float boost = driftStrength / 10.f;
+            setDeltaMovement(getDeltaMovement().add(-xVelocity * boost * DRIFT_FRICTION, 0.0F, zVelocity * boost * DRIFT_FRICTION));
         }
     }
 }

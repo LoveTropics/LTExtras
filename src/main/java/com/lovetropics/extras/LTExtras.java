@@ -1,5 +1,6 @@
 package com.lovetropics.extras;
 
+import com.lovetropics.extras.client.ClientPlayerForkliftHUD;
 import com.lovetropics.extras.client.ClientPlayerSensorEffects;
 import com.lovetropics.extras.client.command.NameTagModeCommand;
 import com.lovetropics.extras.client.entity.model.ForkliftModel;
@@ -165,6 +166,7 @@ public class LTExtras {
         @SubscribeEvent
         public static void registerGuiLayers(RegisterGuiLayersEvent event) {
             ClientPlayerSensorEffects.registerGuiLayers(event);
+            ClientPlayerForkliftHUD.registerGuiLayers(event);
         }
 
         @SubscribeEvent

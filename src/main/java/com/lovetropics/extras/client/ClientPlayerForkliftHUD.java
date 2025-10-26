@@ -1,0 +1,49 @@
+package com.lovetropics.extras.client;
+
+import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.block.entity.ForkliftEntity;
+import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+
+import java.awt.*;
+
+@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+public class ClientPlayerForkliftHUD {
+
+    private static ForkliftDriftBarRenderer DRIFT_BAR;
+
+    public static void registerGuiLayers(RegisterGuiLayersEvent event) {
+        DRIFT_BAR = new ForkliftDriftBarRenderer(Minecraft.getInstance());
+        event.registerBelow(VanillaGuiLayers.CAMERA_OVERLAYS, LTExtras.location("forklift_hud"), ClientPlayerForkliftHUD::renderGui);
+    }
+
+    private static void renderGui(GuiGraphics graphics, DeltaTracker deltaTracker) {
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) {
+            return;
+        }
+
+        final LocalPlayer player = Minecraft.getInstance().player;
+
+        if (player != null && player.isPassenger() && player.getVehicle() instanceof ForkliftEntity forkliftEntity) {
+            String raise = ForkliftKeybinds.RAISE_FORKLIFT.getTranslatedKeyMessage().getString();
+            String lower = ForkliftKeybinds.LOWER_FORKLIFT.getTranslatedKeyMessage().getString();
+            String drift = ForkliftKeybinds.DRIFT.getTranslatedKeyMessage().getString();
+            graphics.drawString(Minecraft.getInstance().font, "Raise Lift: " + raise, 2, 20, Color.WHITE.getRGB());
+            graphics.drawString(Minecraft.getInstance().font, "Lower Lift: " + lower, 2, 30, Color.WHITE.getRGB());
+            graphics.drawString(Minecraft.getInstance().font, "Drift: " + drift, 2, 40, Color.WHITE.getRGB());
+            graphics.drawString(Minecraft.getInstance().font, "Is drifting: " + forkliftEntity.isDrifting(), 2, 50, Color.GREEN.getRGB());
+            graphics.drawString(Minecraft.getInstance().font, "Drift cooldown: " + forkliftEntity.driftCooldown, 2, 60, Color.GREEN.getRGB());
+
+            DRIFT_BAR.render(graphics, forkliftEntity);
+        }
+    }
+}
