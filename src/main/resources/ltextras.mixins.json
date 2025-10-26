@@ -19,6 +19,7 @@
     "MinecraftServerAccessor",
     "PlayerListMixin",
     "ResourceKeyArgumentAccessor",
+    "RideCommandMixin",
     "ScaffoldingBlockMixin",
     "ServerGamePacketListenerImplMixin",
     "client.fix.ClientCommandHandlerMixin",

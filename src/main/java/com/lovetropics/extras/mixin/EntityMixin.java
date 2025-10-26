@@ -1,5 +1,6 @@
 package com.lovetropics.extras.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.effect.ExtraEffects;
 import net.minecraft.core.BlockPos;
@@ -96,5 +97,11 @@ public class EntityMixin {
                 }
             }
         }
+    }
+
+    // Required for allowing /ride to work with players
+    @ModifyExpressionValue(method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;canSerialize()Z"))
+    private boolean skipChecks(boolean original) {
+        return true;
     }
 }
