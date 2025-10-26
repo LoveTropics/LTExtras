@@ -20,6 +20,7 @@
     "PlayerListMixin",
     "ResourceKeyArgumentAccessor",
     "ScaffoldingBlockMixin",
+    "ServerGamePacketListenerImplMixin",
     "client.fix.ClientCommandHandlerMixin",
     "collectible.ItemStackMixin",
     "collectible.MerchantResultSlotMixin",
