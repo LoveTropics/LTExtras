@@ -29,11 +29,13 @@ import com.lovetropics.extras.block.SpeedyBlock;
 import com.lovetropics.extras.block.SpeedySlabBlock;
 import com.lovetropics.extras.block.SpeedyZone;
 import com.lovetropics.extras.block.SubmergedLilyBlock;
+import com.lovetropics.extras.block.TeleportPadBlock;
 import com.lovetropics.extras.block.ThornStemBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.block.entity.JumpPadBlockEntity;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
+import com.lovetropics.extras.block.entity.TeleportPadBlockEntity;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
 import com.lovetropics.extras.mixin.BlockPropertiesMixin;
 import com.lovetropics.lib.block.CustomShapeBlock;
@@ -1084,6 +1086,23 @@ public class ExtraBlocks {
             .simpleItem()
             .register();
 
+    public static final BlockEntry<TeleportPadBlock> TELEPORT_PAD = REGISTRATE.block("teleport_pad", TeleportPadBlock::new)
+            .lang("Teleport Pad")
+            .initialProperties(() -> Blocks.STONE_SLAB)
+            .blockstate(() -> (ctx, prov) -> {
+                ResourceLocation modelBottom = createTeleportPadModel(ctx, prov, false);
+                ResourceLocation modelTop = createTeleportPadModel(ctx, prov, true);
+                prov.blockStateOutput.accept(dispatch(ctx.get())
+                        .with(PropertyDispatch.initial(TeleportPadBlock.HALF).generate(half -> {
+                            ResourceLocation selectedModel = half == Half.TOP ? modelTop : modelBottom;
+                            return plainVariant(selectedModel);
+                        })));
+            })
+            .blockEntity(TeleportPadBlockEntity::new)
+            .build()
+            .simpleItem()
+            .register();
+
     private static ResourceLocation createJumpPadModel(DataGenContext<Block, JumpPadBlock> ctx, RegistrateBlockModelGenerator prov, boolean top) {
         return prov.getBuilder()
                 .transformTemplate(template -> {
@@ -1096,7 +1115,18 @@ public class ExtraBlocks {
                 .build(prov.modLoc("block/" + (top ? ctx.getName() + "_top" : ctx.getName())));
     }
 
+    private static ResourceLocation createTeleportPadModel(DataGenContext<Block, TeleportPadBlock> ctx, RegistrateBlockModelGenerator prov, boolean top) {
+        return prov.getBuilder()
+                .transformTemplate(template -> template.parent(prov.mcLoc(top ? "block/slab_top" : "block/slab")))
+                .texture(TextureSlot.BOTTOM, prov.modLoc("block/teleport_pad_bottom"))
+                .texture(TextureSlot.SIDE, prov.modLoc("block/teleport_pad_side"))
+                .texture(TextureSlot.TOP, prov.modLoc("block/teleport_pad_top"))
+                .texture(TextureSlot.PARTICLE, prov.modLoc("block/teleport_pad_side"))
+                .build(prov.modLoc("block/" + (top ? ctx.getName() + "_top" : ctx.getName())));
+    }
+
     public static final BlockEntityEntry<JumpPadBlockEntity> JUMP_PAD_ENTITY = BlockEntityEntry.cast(JUMP_PAD.getSibling(Registries.BLOCK_ENTITY_TYPE));
+    public static final BlockEntityEntry<TeleportPadBlockEntity> TELEPORT_PAD_ENTITY = BlockEntityEntry.cast(TELEPORT_PAD.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
     private static final TemplateBuilder<CeilingCarpetBlock, BlockFactory<CeilingCarpetBlock>> CEILING_CARPET_TEMPLATES = new TemplateBuilder<CeilingCarpetBlock, BlockFactory<CeilingCarpetBlock>>()
             .add(Blocks.SAND, CeilingCarpetBlock::new)

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=bottom": {
+      "model": "ltextras:block/teleport_pad"
+    },
+    "half=top": {
+      "model": "ltextras:block/teleport_pad_top"
+    }
+  }
+}

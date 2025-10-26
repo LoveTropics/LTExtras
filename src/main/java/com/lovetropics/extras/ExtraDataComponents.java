@@ -55,6 +55,10 @@ public class ExtraDataComponents {
             "jump_pad",
             builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC).cacheEncoding()
     );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> TELEPORT_PAD = REGISTER.registerComponentType(
+            "teleport_pad",
+            builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC).cacheEncoding()
+    );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<MapConfig>>> MAP = REGISTER.registerComponentType(
             "map",
             builder -> builder.persistent(MapConfig.CODEC).networkSynchronized(MapConfig.STREAM_CODEC).cacheEncoding()

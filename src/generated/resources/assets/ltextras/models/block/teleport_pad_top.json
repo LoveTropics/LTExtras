@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "ltextras:block/teleport_pad_bottom",
+    "particle": "ltextras:block/teleport_pad_side",
+    "side": "ltextras:block/teleport_pad_side",
+    "top": "ltextras:block/teleport_pad_top"
+  }
+}
