@@ -1,8 +1,12 @@
 package com.lovetropics.extras.mixin;
 
+import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.effect.ExtraEffects;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -68,6 +72,29 @@ public class EntityMixin {
     private void updateFluidOnEyes(CallbackInfo ci) {
         if ((Object) this instanceof LivingEntity livingEntity && livingEntity.hasEffect(ExtraEffects.FISH_EYE)) {
             forgeFluidTypeOnEyes = NeoForgeMod.EMPTY_TYPE.value();
+        }
+    }
+
+    @Inject(method = "nextStep", at = @At("RETURN"), cancellable = true)
+    private void nextStep(CallbackInfoReturnable<Float> cir) {
+        if ((Object) this instanceof LivingEntity livingEntity) {
+            var sound = livingEntity.getItemBySlot(EquipmentSlot.FEET).get(ExtraDataComponents.WALK_SOUND);
+            if(sound != null) {
+                cir.setReturnValue(livingEntity.moveDist + sound.cooldown().sample(livingEntity.getRandom()));
+            }
+        }
+    }
+
+    @Inject(method = "walkingStepSound", at = @At("HEAD"), cancellable = true)
+    private void walkingStepSound(BlockPos pos, BlockState state, CallbackInfo ci) {
+        if ((Object) this instanceof LivingEntity livingEntity) {
+            var sound = livingEntity.getItemBySlot(EquipmentSlot.FEET).get(ExtraDataComponents.WALK_SOUND);
+            if(sound != null) {
+                livingEntity.playSound(sound.soundEvent().value(), sound.volume().sample(livingEntity.getRandom()), sound.pitch().sample(livingEntity.getRandom()));
+                if(!sound.playOtherSounds()) {
+                    ci.cancel();
+                }
+            }
         }
     }
 }
