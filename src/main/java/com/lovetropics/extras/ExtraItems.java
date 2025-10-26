@@ -125,6 +125,7 @@ public class ExtraItems {
                             .build())
                     .component(ExtraDataComponents.WALK_ANIMATION, WalkAnimation.FABULOUS)
                     .component(ExtraDataComponents.WALK_SOUND, WalkSound.builder().soundEvent(ExtraSounds.HEELS_STEP).cooldown(0.9f).volume(.5f).build())
+                    .component(ExtraDataComponents.ADJUST_HEIGHT, 0.2F)
             )
             .clientExtension(() -> HighHeelsItem.ClientExtensions::new)
             .defaultModel()
