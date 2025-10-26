@@ -2,8 +2,10 @@ package com.lovetropics.extras;
 
 import com.lovetropics.extras.client.ClientPlayerSensorEffects;
 import com.lovetropics.extras.client.command.NameTagModeCommand;
+import com.lovetropics.extras.client.entity.model.ForkliftModel;
 import com.lovetropics.extras.client.entity.model.HighHeelsModel;
 import com.lovetropics.extras.client.entity.model.RaveKoaModel;
+import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
 import com.lovetropics.extras.command.GenerateCommand;
@@ -37,6 +39,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
@@ -154,11 +157,17 @@ public class LTExtras {
         public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
             event.registerLayerDefinition(RaveKoaModel.LAYER_LOCATION, RaveKoaModel::createBodyLayer);
             event.registerLayerDefinition(HighHeelsModel.LAYER_LOCATION, HighHeelsModel::createLayer);
+            event.registerLayerDefinition(ForkliftModel.LAYER_LOCATION, ForkliftModel::createBodyLayer);
         }
 
         @SubscribeEvent
         public static void registerGuiLayers(RegisterGuiLayersEvent event) {
             ClientPlayerSensorEffects.registerGuiLayers(event);
+        }
+
+        @SubscribeEvent
+        public static void setupClient(final FMLClientSetupEvent event) {
+            ForkliftKeybinds.init();
         }
     }
 }

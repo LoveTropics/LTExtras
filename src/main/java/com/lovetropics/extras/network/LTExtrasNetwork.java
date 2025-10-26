@@ -12,6 +12,7 @@ import com.lovetropics.extras.network.message.ClientboundSetSkyColorPacket;
 import com.lovetropics.extras.network.message.ClientboundUpdatePackControl;
 import com.lovetropics.extras.network.message.ClientboundUpdatePoiPacket;
 import com.lovetropics.extras.network.message.ClientboundWorldParticleEffectsPacket;
+import com.lovetropics.extras.network.message.ServerboundLiftForkliftPacket;
 import com.lovetropics.extras.network.message.ServerboundPickCollectibleItemPacket;
 import com.lovetropics.extras.network.message.ServerboundReturnCollectibleItemPacket;
 import com.lovetropics.extras.network.message.ServerboundSetTimeZonePacket;
@@ -30,6 +31,7 @@ public class LTExtrasNetwork {
         registrar.playToServer(ServerboundPickCollectibleItemPacket.TYPE, ServerboundPickCollectibleItemPacket.STREAM_CODEC, ServerboundPickCollectibleItemPacket::handle);
         registrar.playToServer(ServerboundReturnCollectibleItemPacket.TYPE, ServerboundReturnCollectibleItemPacket.STREAM_CODEC, ServerboundReturnCollectibleItemPacket::handle);
         registrar.playToServer(ServerboundSetTimeZonePacket.TYPE, ServerboundSetTimeZonePacket.STREAM_CODEC, ServerboundSetTimeZonePacket::handle);
+        registrar.playToServer(ServerboundLiftForkliftPacket.TYPE, ServerboundLiftForkliftPacket.STREAM_CODEC, ServerboundLiftForkliftPacket::handle);
         registrar.playToClient(ClientboundSetDisplayTextPacket.TYPE, ClientboundSetDisplayTextPacket.STREAM_CODEC, ClientboundSetDisplayTextPacket::handle);
         registrar.playToClient(ClientboundSetSkyColorPacket.TYPE, ClientboundSetSkyColorPacket.STREAM_CODEC, ClientboundSetSkyColorPacket::handle);
         registrar.playToClient(ClientboundWorldParticleEffectsPacket.TYPE, ClientboundWorldParticleEffectsPacket.STREAM_CODEC, ClientboundWorldParticleEffectsPacket::handle);

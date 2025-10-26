@@ -126,12 +126,23 @@ public class ExtraItems {
             .defaultModel()
             .register();
 
+    public static final ItemEntry<Item> FORKLIFT_CERTIFICATION = REGISTRATE.item("forklift_certification", Item::new)
+            .properties(p -> p.stacksTo(1))
+            .register();
+
     public static void init() {
     }
 
     @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
     private static class Models {
         public static final ModelTemplate GLASSES_EQUIPPED_TEMPLATE = ModelTemplates.createItem(LTExtras.location("template_glasses_equipped").toString(), "_equipped", TextureSlot.LAYER0);
+
+        private static void generateForkliftCertification(DataGenContext<Item, CollectibleBasketItem> ctx, RegistrateItemModelGenerator prov) {
+            prov.itemModelOutput.accept(ctx.get(), conditional(new HasUnseenCollectible(),
+                    plainModel(prov.createFlatItemModel(ctx.get(), "_unseen", ModelTemplates.FLAT_ITEM)),
+                    plainModel(prov.createFlatItemModel(ctx.get(), ModelTemplates.FLAT_ITEM))
+            ));
+        }
 
         private static void generateCollectibleBasket(DataGenContext<Item, CollectibleBasketItem> ctx, RegistrateItemModelGenerator prov) {
             prov.itemModelOutput.accept(ctx.get(), conditional(new HasUnseenCollectible(),
