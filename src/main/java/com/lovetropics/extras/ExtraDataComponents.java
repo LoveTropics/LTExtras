@@ -94,6 +94,10 @@ public class ExtraDataComponents {
             "walk_sound",
             builder -> builder.persistent(WalkSound.CODEC).networkSynchronized(WalkSound.STREAM_CODEC).cacheEncoding()
     );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> ADJUST_HEIGHT = REGISTER.registerComponentType(
+            "adjust_height",
+            builder -> builder.persistent(Codec.floatRange(-2f, 2.0F)).networkSynchronized(ByteBufCodecs.FLOAT)
+    );
 
     @SubscribeEvent
     public static void addToTooltip(ItemTooltipEvent event) {
