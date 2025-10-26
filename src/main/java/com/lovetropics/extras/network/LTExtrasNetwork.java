@@ -12,9 +12,11 @@ import com.lovetropics.extras.network.message.ClientboundSetSkyColorPacket;
 import com.lovetropics.extras.network.message.ClientboundUpdatePackControl;
 import com.lovetropics.extras.network.message.ClientboundUpdatePoiPacket;
 import com.lovetropics.extras.network.message.ClientboundWorldParticleEffectsPacket;
+import com.lovetropics.extras.network.message.ServerboundCarryStackPacket;
 import com.lovetropics.extras.network.message.ServerboundPickCollectibleItemPacket;
 import com.lovetropics.extras.network.message.ServerboundReturnCollectibleItemPacket;
 import com.lovetropics.extras.network.message.ServerboundSetTimeZonePacket;
+import com.lovetropics.extras.network.message.ServerboundSetTropiCoinsAmountPacket;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -40,5 +42,7 @@ public class LTExtrasNetwork {
         registrar.playToClient(ClientboundOpenCollectibleBasketPacket.TYPE, ClientboundOpenCollectibleBasketPacket.STREAM_CODEC, ClientboundOpenCollectibleBasketPacket::handle);
         registrar.playToClient(ClientboundUpdatePackControl.TYPE, ClientboundUpdatePackControl.STREAM_CODEC, ClientboundUpdatePackControl::handle);
         registrar.playToClient(ClientboundSetEntityMarkedPacket.TYPE, ClientboundSetEntityMarkedPacket.STREAM_CODEC, ClientboundSetEntityMarkedPacket::handle);
+        registrar.playToServer(ServerboundSetTropiCoinsAmountPacket.TYPE, ServerboundSetTropiCoinsAmountPacket.STREAM_CODEC, ServerboundSetTropiCoinsAmountPacket::handle);
+        registrar.playToServer(ServerboundCarryStackPacket.TYPE, ServerboundCarryStackPacket.STREAM_CODEC, ServerboundCarryStackPacket::handle);
     }
 }

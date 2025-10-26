@@ -1,10 +1,16 @@
 package com.lovetropics.extras.client.screen.container;
 
 import com.lovetropics.extras.ExtraItems;
+import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.ClientCollectiblesList;
 import com.lovetropics.extras.collectible.Collectible;
+import com.lovetropics.extras.data.TropiCoinsStore;
+import com.lovetropics.extras.data.attachment.ExtraAttachments;
+import com.lovetropics.extras.network.message.ServerboundCarryStackPacket;
 import com.lovetropics.extras.network.message.ServerboundPickCollectibleItemPacket;
 import com.lovetropics.extras.network.message.ServerboundReturnCollectibleItemPacket;
+import com.lovetropics.extras.network.message.ServerboundSetTropiCoinsAmountPacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -16,13 +22,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.Nullable;
@@ -35,6 +44,9 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
 
     private static final ResourceLocation BACKGROUND_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/creative_inventory/tab_items.png");
     private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("container/creative_inventory/scroller");
+    private static final ResourceLocation TROPICOIN_SLOT_SPRITE = ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "currency_slot");
+
+    private static final SimpleContainer TROPICOIN_CONTAINER = new SimpleContainer(1);
 
     private static final int BACKGROUND_WIDTH = 195;
     private static final int BACKGROUND_HEIGHT = 136;
@@ -49,9 +61,15 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     private static final int SCROLLER_WIDTH = 12;
     private static final int SCROLLER_HEIGHT = 15;
 
+    private static final int TROPICOIN_SLOT_X = -24;
+    private static final int TROPICOIN_SLOT_Y = BACKGROUND_HEIGHT - 24;
+
     private float scroll;
     private boolean draggingScroller;
     private double dragOffsetY;
+
+    @Nullable
+    private Slot tropiCoinSlot;
 
     public CollectibleBasketScreen(Inventory playerInventory) {
         super(new Menu(playerInventory.player, new CollectibleContainer(ClientCollectiblesList.get())), playerInventory, TITLE);
@@ -76,6 +94,32 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         if (scroller != null) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_SPRITE, scroller.left(), scroller.top(), scroller.width(), scroller.height());
         }
+
+        if (this.tropiCoinSlot == null) {
+            this.tropiCoinSlot = new Slot(TROPICOIN_CONTAINER, 0, TROPICOIN_SLOT_X, TROPICOIN_SLOT_Y);
+            this.getMenu().slots.add(this.tropiCoinSlot);
+        }
+        if (this.tropiCoinSlot != null) {
+            if (Minecraft.getInstance().player != null) {
+                if (this.isHovering(this.tropiCoinSlot.x, this.tropiCoinSlot.y, 16, 16, mouseX, mouseY)) {
+                    graphics.setComponentTooltipForNextFrame(this.font, ExtraItems.TROPICOIN.asStack().getTooltipLines(Item.TooltipContext.of(Minecraft.getInstance().level), Minecraft.getInstance().player, TooltipFlag.NORMAL), mouseX, mouseY);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void renderSlot(GuiGraphics graphics, Slot slot) {
+        if (slot == this.tropiCoinSlot) {
+            if (Minecraft.getInstance().player != null) {
+                TropiCoinsStore data = Minecraft.getInstance().player.getData(ExtraAttachments.TROPICOINS_STORE);
+                String text = data.getAmount() > 99 ? "99₊" : String.valueOf(data.getAmount()); //todo
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TROPICOIN_SLOT_SPRITE, slot.x - 8, slot.y - 8, 32, 32);
+                graphics.renderFakeItem(ExtraItems.TROPICOIN.asStack(), slot.x, slot.y);
+                graphics.renderItemDecorations(this.font, ExtraItems.TROPICOIN.asStack(), slot.x, slot.y, text);
+            }
+        }
+        super.renderSlot(graphics, slot);
     }
 
     @Override
@@ -160,6 +204,48 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
                 }
                 default -> {
                     // Should implement more, but this screen is already a horrible hack
+                }
+            }
+        } else if (slot == this.tropiCoinSlot) {
+            TropiCoinsStore data = Minecraft.getInstance().player.getData(ExtraAttachments.TROPICOINS_STORE);
+            if (type == ClickType.PICKUP || type == ClickType.QUICK_CRAFT) {
+                if (type == ClickType.QUICK_CRAFT) {
+                    if (mouseButton == 5) {
+                        mouseButton = 1;
+                    } else if (mouseButton == 1) {
+                        mouseButton = 0;
+                    }
+                }
+                if (this.getMenu().getCarried().isEmpty()) {
+                    if (data.getAmount() > 0) {
+                        ItemStack stack = ExtraItems.TROPICOIN.asStack();
+                        int amount = 0;
+                        if (mouseButton == 0) { // pick up stack
+                            amount = Math.min(64, data.getAmount());
+                        } else if (mouseButton == 1) { // pick up half a stack
+                            amount = data.getAmount() >= 64 ? 32 : data.getAmount() / 2;
+                        }
+                        if (amount > 0) {
+                            stack.setCount(amount);
+                            ClientPacketDistributor.sendToServer(new ServerboundSetTropiCoinsAmountPacket(data.getAmount() - amount));
+                            this.getMenu().setCarried(stack.copy());
+                            ClientPacketDistributor.sendToServer(new ServerboundCarryStackPacket(stack.copy()));
+                        }
+                    }
+                } else if (this.getMenu().getCarried().is(ExtraItems.TROPICOIN)) {
+                    ItemStack stack = this.getMenu().getCarried().copy();
+                    int amount = 0;
+                    if (mouseButton == 0) { // place carried stack
+                        amount = stack.getCount();
+                    } else if (mouseButton == 1) { // place single item
+                        amount = 1;
+                    }
+                    if (amount > 0) {
+                        stack.shrink(amount);
+                        ClientPacketDistributor.sendToServer(new ServerboundSetTropiCoinsAmountPacket(data.getAmount() + amount));
+                        this.getMenu().setCarried(stack);
+                        ClientPacketDistributor.sendToServer(new ServerboundCarryStackPacket(stack));
+                    }
                 }
             }
         } else {
