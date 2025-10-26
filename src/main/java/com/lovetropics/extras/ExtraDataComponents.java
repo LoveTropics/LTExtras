@@ -5,6 +5,7 @@ import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.WalkAnimation;
+import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
@@ -88,6 +89,14 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<WalkAnimation>> WALK_ANIMATION = REGISTER.registerComponentType(
             "walk_animation",
             builder -> builder.persistent(WalkAnimation.CODEC).networkSynchronized(WalkAnimation.STREAM_CODEC)
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<WalkSound>> WALK_SOUND = REGISTER.registerComponentType(
+            "walk_sound",
+            builder -> builder.persistent(WalkSound.CODEC).networkSynchronized(WalkSound.STREAM_CODEC).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> ADJUST_HEIGHT = REGISTER.registerComponentType(
+            "adjust_height",
+            builder -> builder.persistent(Codec.floatRange(-2f, 2.0F)).networkSynchronized(ByteBufCodecs.FLOAT)
     );
 
     @SubscribeEvent

@@ -12,7 +12,9 @@ import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
 import com.lovetropics.extras.item.TropicMapItem;
 import com.lovetropics.extras.item.WalkAnimation;
+import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.registry.ExtraRegistries;
+import com.lovetropics.extras.sounds.ExtraSounds;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -32,6 +34,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
@@ -121,9 +124,15 @@ public class ExtraItems {
                             .setAsset(PLACEHOLDER_EQUIPMENT_ASSET)
                             .build())
                     .component(ExtraDataComponents.WALK_ANIMATION, WalkAnimation.FABULOUS)
+                    .component(ExtraDataComponents.WALK_SOUND, WalkSound.builder().soundEvent(ExtraSounds.HEELS_STEP).cooldown(0.9f).volume(.5f).build())
+                    .component(ExtraDataComponents.ADJUST_HEIGHT, 0.2F)
             )
             .clientExtension(() -> HighHeelsItem.ClientExtensions::new)
             .defaultModel()
+            .register();
+
+    public static final ItemEntry<Item> FORKLIFT_CERTIFICATION = REGISTRATE.item("forklift_certification", Item::new)
+            .properties(p -> p.stacksTo(1))
             .register();
 
     public static void init() {
@@ -132,6 +141,13 @@ public class ExtraItems {
     @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
     private static class Models {
         public static final ModelTemplate GLASSES_EQUIPPED_TEMPLATE = ModelTemplates.createItem(LTExtras.location("template_glasses_equipped").toString(), "_equipped", TextureSlot.LAYER0);
+
+        private static void generateForkliftCertification(DataGenContext<Item, CollectibleBasketItem> ctx, RegistrateItemModelGenerator prov) {
+            prov.itemModelOutput.accept(ctx.get(), conditional(new HasUnseenCollectible(),
+                    plainModel(prov.createFlatItemModel(ctx.get(), "_unseen", ModelTemplates.FLAT_ITEM)),
+                    plainModel(prov.createFlatItemModel(ctx.get(), ModelTemplates.FLAT_ITEM))
+            ));
+        }
 
         private static void generateCollectibleBasket(DataGenContext<Item, CollectibleBasketItem> ctx, RegistrateItemModelGenerator prov) {
             prov.itemModelOutput.accept(ctx.get(), conditional(new HasUnseenCollectible(),

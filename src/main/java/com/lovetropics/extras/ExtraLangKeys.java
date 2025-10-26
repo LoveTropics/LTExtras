@@ -29,6 +29,8 @@ public enum ExtraLangKeys {
 
     MENU_CONNECT("screen", "menu_connect", "Connect to Love Tropics"),
     MENU_DONATE("screen", "menu_donate", "Donate to Women's Earth Alliance"),
+
+    FORKLIFT_CERTIFICATION_MISSING("forklift", "certification.missing", "You must have a Forklift Certification to drive this forklift"),
     ;
 
     private final String key;

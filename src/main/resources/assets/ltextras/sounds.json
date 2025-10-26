@@ -1,0 +1,13 @@
+{
+  "heels_step": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      "ltextras:heels_step/1",
+      "ltextras:heels_step/2",
+      "ltextras:heels_step/3",
+      "ltextras:heels_step/4",
+      "ltextras:heels_step/5",
+      "ltextras:heels_step/6"
+    ]
+  }
+}

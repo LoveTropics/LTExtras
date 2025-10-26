@@ -1,8 +1,10 @@
 package com.lovetropics.extras.entity;
 
 import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.block.entity.ForkliftEntity;
 import com.lovetropics.extras.block.entity.SeatEntity;
 import com.lovetropics.extras.client.entity.CollectibleEntityRenderer;
+import com.lovetropics.extras.client.entity.ForkliftRenderer;
 import com.lovetropics.extras.client.entity.PartyBeamRenderer;
 import com.lovetropics.extras.client.entity.RaveKoaRenderer;
 import com.lovetropics.extras.client.entity.SeatRenderer;
@@ -20,6 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.phys.Vec3;
 
 public class ExtraEntities {
     public static final Registrate REGISTRATE = LTExtras.registrate();
@@ -94,6 +97,18 @@ public class ExtraEntities {
             )
             .loot(noDrops())
             .renderer(() -> SeatRenderer::new)
+            .register();
+
+    public static final EntityEntry<ForkliftEntity> FORKLIFT = REGISTRATE.entity("forklift", ForkliftEntity::new, MobCategory.MISC)
+            .defaultLang()
+            .properties(builder -> builder
+                    .sized(1.4f, 2.1f)
+                    .clientTrackingRange(8)
+                    .passengerAttachments(new Vec3(0.0f, 0.8f, 0.0f), new Vec3(1.0f, 1.0f, 1.0f), new Vec3(-1.0f, 1.0f, 1.0f))
+                    .updateInterval(3)
+            )
+            .loot(noDrops())
+            .renderer(() -> ForkliftRenderer::new)
             .register();
 
     public static void init() {

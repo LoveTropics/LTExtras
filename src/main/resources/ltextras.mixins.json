@@ -20,6 +20,7 @@
     "PlayerListMixin",
     "ResourceKeyArgumentAccessor",
     "ScaffoldingBlockMixin",
+    "ServerGamePacketListenerImplMixin",
     "client.fix.ClientCommandHandlerMixin",
     "collectible.ItemStackMixin",
     "collectible.MerchantResultSlotMixin",
@@ -43,7 +44,8 @@
     "client.menu.TitleScreenMixin",
     "client.packcontrol.PackSelectionModelMixin",
     "client.translation.MinecraftMixin",
-    "client.world_effect.ClientLevelMixin"
+    "client.world_effect.ClientLevelMixin",
+    "client.CapeLayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
