@@ -20,8 +20,6 @@ public class ForkliftRenderer extends EntityRenderer<ForkliftEntity, ForkliftRen
 
     private final ForkliftModel<ForkliftEntity> model;
 
-    private static final float SCALE = 1.2f;
-
     public ForkliftRenderer(EntityRendererProvider.Context context) {
         super(context);
         model = new ForkliftModel<>(context.bakeLayer(ForkliftModel.LAYER_LOCATION));
@@ -41,7 +39,7 @@ public class ForkliftRenderer extends EntityRenderer<ForkliftEntity, ForkliftRen
 
         poseStack.pushPose();
         poseStack.scale(-1.0F, -1.0F, 1.0F);
-        poseStack.scale(SCALE, SCALE, SCALE);
+        poseStack.scale(ForkliftEntity.FORKLIFT_SCALE, ForkliftEntity.FORKLIFT_SCALE, ForkliftEntity.FORKLIFT_SCALE);
         poseStack.translate(0.0F, EntityModel.MODEL_Y_OFFSET, 0.0F);
         poseStack.mulPose(Axis.YP.rotationDegrees(180f));
         poseStack.mulPose(Axis.YP.rotationDegrees(state.yRot));

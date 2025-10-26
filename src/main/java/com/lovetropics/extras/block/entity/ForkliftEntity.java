@@ -42,6 +42,10 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     private static final int MAX_PASSENGERS = 3;
     private static final int MIN_FORK_HEIGHT = -5;
     private static final int MAX_FORK_HEIGHT = 20;
+    private static final float RIDER_X_OFFSET = 0.3f;
+    private static final float RIDER_Z_OFFSET = 2.0f;
+    public static final float FORKLIFT_SCALE = 1.2f;
+    public static final double FRICTION = 0.92f;
 
     private final InterpolationHandler interpolation = new InterpolationHandler(this, 3);
 
@@ -74,16 +78,14 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     @Override
     protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
         final int riderIndex = getPassengers().indexOf(entity);
+        final float forkHeight = FORKLIFT_SCALE * getForkHeight() / 16.0f;
+        final float forkRiderOffset = 1.8f - forkHeight;
+        final float riderYRot = -getYRot() * ((float) Math.PI / 180F);
 
-        final float forkHeight = 1.2f * getForkHeight() / 16.0f;
-        final float FORK_RIDE_HEIGHT = 1.8f - forkHeight;
-
-        if (riderIndex == 0) {
-
-        } else if (riderIndex == 1) {
-            return new Vec3(-0.3f, FORK_RIDE_HEIGHT, 2.0f).yRot(-getYRot() * ((float)Math.PI / 180F));
+        if (riderIndex == 1) {
+            return new Vec3(-RIDER_X_OFFSET, forkRiderOffset, RIDER_Z_OFFSET).yRot(riderYRot);
         } else if (riderIndex == 2) {
-            return new Vec3(0.3f, FORK_RIDE_HEIGHT, 2.0f).yRot(-getYRot() * ((float)Math.PI / 180F));
+            return new Vec3(RIDER_X_OFFSET, forkRiderOffset, RIDER_Z_OFFSET).yRot(riderYRot);
         }
 
         return super.getPassengerAttachmentPoint(entity, dimensions, partialTick);
@@ -162,28 +164,21 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
         interpolation.interpolate();
 
-        if (this.isLocalInstanceAuthoritative()) {
-            LivingEntity controllingPassenger = getControllingPassenger();
-            if (controllingPassenger != null) {
-                //Vec2 vec2 = this.getRiddenRotation(controllingPassenger);
-                //this.setRot(vec2.y, vec2.x);
-                //controllingPassenger.setYBodyRot(getYRot());
-            }
+        if (isLocalInstanceAuthoritative()) {
             applyFriction();
-            if (this.level().isClientSide) {
-                this.controlForklift();
+            if (level().isClientSide) {
+                controlForklift();
             }
 
-            this.move(MoverType.SELF, this.getDeltaMovement());
+            move(MoverType.SELF, getDeltaMovement());
         } else {
-            this.setDeltaMovement(Vec3.ZERO);
+            setDeltaMovement(Vec3.ZERO);
         }
     }
 
     private void applyFriction() {
-        double friction = 0.9f;
         Vec3 velocity = getDeltaMovement();
-        setDeltaMovement(velocity.x * friction, velocity.y, velocity.z * friction);
+        setDeltaMovement(velocity.x * FRICTION, velocity.y, velocity.z * FRICTION);
     }
 
     private void moveFork(int amt) {
@@ -202,26 +197,25 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             boolean liftDown = localPlayer.input.keyPresses.jump();
 
             if (liftUp) {
-                this.moveFork(1);
+                moveFork(1);
             }
 
             if (liftDown) {
-                this.moveFork(-1);
+                moveFork(-1);
             }
 
             if (inputLeft) {
-                this.setYRot(getYRot() - 5f);
+                setYRot(getYRot() - 5f);
             }
 
             if (inputRight) {
-                this.setYRot(getYRot() + 5f);
+                setYRot(getYRot() + 5f);
             }
 
             if (inputRight != inputLeft && !inputUp && !inputDown) {
                 f += 0.005F;
             }
 
-            //this.setYRot(this.getYRot() + this.deltaRotation);
             if (inputUp) {
                 f += 0.04F;
             }
