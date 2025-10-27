@@ -1,6 +1,6 @@
 package com.lovetropics.extras.client;
 
-import com.lovetropics.extras.block.entity.ForkliftEntity;
+import com.lovetropics.extras.entity.ForkliftEntity;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

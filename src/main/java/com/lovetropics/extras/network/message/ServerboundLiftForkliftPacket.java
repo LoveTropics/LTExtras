@@ -1,7 +1,7 @@
 package com.lovetropics.extras.network.message;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.block.entity.ForkliftEntity;
+import com.lovetropics.extras.entity.ForkliftEntity;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

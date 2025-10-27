@@ -1,7 +1,7 @@
 package com.lovetropics.extras.client.entity;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.block.entity.ForkliftEntity;
+import com.lovetropics.extras.entity.ForkliftEntity;
 import com.lovetropics.extras.client.entity.model.ForkliftModel;
 import com.lovetropics.extras.client.entity.state.ForkliftRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;

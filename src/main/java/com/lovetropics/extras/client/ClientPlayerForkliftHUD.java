@@ -1,7 +1,7 @@
 package com.lovetropics.extras.client;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.block.entity.ForkliftEntity;
+import com.lovetropics.extras.entity.ForkliftEntity;
 import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;

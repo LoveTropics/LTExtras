@@ -1,7 +1,6 @@
 package com.lovetropics.extras.entity;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.block.entity.ForkliftEntity;
 import com.lovetropics.extras.block.entity.SeatEntity;
 import com.lovetropics.extras.client.entity.CollectibleEntityRenderer;
 import com.lovetropics.extras.client.entity.ForkliftRenderer;

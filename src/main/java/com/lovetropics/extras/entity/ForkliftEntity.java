@@ -1,4 +1,4 @@
-package com.lovetropics.extras.block.entity;
+package com.lovetropics.extras.entity;
 
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.ExtraLangKeys;
@@ -85,7 +85,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     }
 
     private void pickupEntitiesInFront() {
-        if (!level().isClientSide && hasControllingPassenger() && getPassengers().size() < MAX_PASSENGERS) {
+        if (!level().isClientSide && hasControllingPassenger() && getPassengers().size() < MAX_PASSENGERS && getKnownMovement().lengthSqr() > 0) {
             Predicate<Entity> predicate = EntitySelector.NO_SPECTATORS.and(this::canCollideWith).and(p -> p != getControllingPassenger() && !p.isPassenger());
             List<Entity> list = level().getEntities(this, getPickupAABB(), predicate);
             if (!list.isEmpty()) {

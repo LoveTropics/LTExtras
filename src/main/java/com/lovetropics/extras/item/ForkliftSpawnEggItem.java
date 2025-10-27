@@ -2,7 +2,7 @@ package com.lovetropics.extras.item;
 
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.block.entity.ForkliftEntity;
+import com.lovetropics.extras.entity.ForkliftEntity;
 import com.lovetropics.extras.entity.ExtraEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

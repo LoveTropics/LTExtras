@@ -1,6 +1,6 @@
 package com.lovetropics.extras.mixin;
 
-import com.lovetropics.extras.block.entity.ForkliftEntity;
+import com.lovetropics.extras.entity.ForkliftEntity;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.MinecraftServer;
