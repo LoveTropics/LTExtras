@@ -240,11 +240,11 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             boolean drift = ForkliftKeybinds.DRIFT.isDown();
 
             if (liftUp) {
-                moveFork(1);
+                moveFork(-1);
             }
 
             if (liftDown) {
-                moveFork(-1);
+                moveFork(1);
             }
 
             if (inputLeft) {
