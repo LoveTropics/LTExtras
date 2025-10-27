@@ -37,11 +37,13 @@ public class ClientPlayerForkliftHUD {
             String raise = ForkliftKeybinds.RAISE_FORKLIFT.getTranslatedKeyMessage().getString();
             String lower = ForkliftKeybinds.LOWER_FORKLIFT.getTranslatedKeyMessage().getString();
             String drift = ForkliftKeybinds.DRIFT.getTranslatedKeyMessage().getString();
+            String eject = ForkliftKeybinds.EJECT_FORK_RIDERS.getTranslatedKeyMessage().getString();
             graphics.drawString(Minecraft.getInstance().font, "Raise Lift: " + raise, 2, 20, Color.WHITE.getRGB());
             graphics.drawString(Minecraft.getInstance().font, "Lower Lift: " + lower, 2, 30, Color.WHITE.getRGB());
             graphics.drawString(Minecraft.getInstance().font, "Drift: " + drift, 2, 40, Color.WHITE.getRGB());
-            graphics.drawString(Minecraft.getInstance().font, "Is drifting: " + forkliftEntity.isDrifting(), 2, 50, Color.GREEN.getRGB());
-            graphics.drawString(Minecraft.getInstance().font, "Drift cooldown: " + forkliftEntity.driftCooldown, 2, 60, Color.GREEN.getRGB());
+            graphics.drawString(Minecraft.getInstance().font, "Eject Riders: " + eject, 2, 50, Color.WHITE.getRGB());
+            graphics.drawString(Minecraft.getInstance().font, "Is drifting: " + forkliftEntity.isDrifting(), 2, 60, Color.GREEN.getRGB());
+            graphics.drawString(Minecraft.getInstance().font, "Drift cooldown: " + forkliftEntity.driftCooldown, 2, 70, Color.GREEN.getRGB());
 
             DRIFT_BAR.render(graphics, forkliftEntity);
         }

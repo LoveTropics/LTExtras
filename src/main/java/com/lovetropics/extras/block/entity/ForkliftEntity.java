@@ -21,20 +21,26 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.InterpolationHandler;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PlayerRideable;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class ForkliftEntity extends Entity implements PlayerRideable {
     private static final EntityDataAccessor<Integer> DATA_FORK_HEIGHT = SynchedEntityData.defineId(ForkliftEntity.class, EntityDataSerializers.INT);
@@ -43,8 +49,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     private static final Component CERTIFICATION_MISSING = ExtraLangKeys.FORKLIFT_CERTIFICATION_MISSING.get().withStyle(ChatFormatting.RED);
 
     private static final int MAX_PASSENGERS = 3;
-    private static final int MIN_FORK_HEIGHT = -5;
-    private static final int MAX_FORK_HEIGHT = 20;
+    public static final int MIN_FORK_HEIGHT = -5;
+    public static final int MAX_FORK_HEIGHT = 20;
     private static final float RIDER_X_OFFSET = 0.3f;
     private static final float RIDER_Z_OFFSET = 2.0f;
     public static final float FORKLIFT_SCALE = 1.2f;
@@ -63,6 +69,35 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
     public ForkliftEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
+    }
+
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        if (passenger.is(getControllingPassenger())) {
+            return super.getDismountLocationForPassenger(passenger);
+        }
+        return getPickupAABB().getCenter().add(0, 32 / 16f * FORKLIFT_SCALE, 0);
+    }
+
+    public AABB getPickupAABB() {
+        Vec3 lookVec = getLookAngle();
+        return getBoundingBox().move(lookVec.normalize().multiply(2, 2, 2));
+    }
+
+    private void pickupEntitiesInFront() {
+        if (!level().isClientSide && hasControllingPassenger() && getPassengers().size() < MAX_PASSENGERS) {
+            Predicate<Entity> predicate = EntitySelector.NO_SPECTATORS.and(this::canCollideWith).and(p -> p != getControllingPassenger() && !p.isPassenger());
+            List<Entity> list = level().getEntities(this, getPickupAABB(), predicate);
+            if (!list.isEmpty()) {
+                for (Entity e : list) {
+                    // Hurt anything when picked up not near the bottom
+                    if (getForkHeight() < MAX_FORK_HEIGHT - 3) {
+                        e.hurtServer((ServerLevel) level(), damageSources().thorns(this), 1);
+                    }
+                    e.startRiding(this);
+                }
+            }
+        }
     }
 
     private boolean hasItem(final Player player, final Item item) {
@@ -102,6 +137,11 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     }
 
     @Override
+    public boolean canCollideWith(Entity entity) {
+        return entity.isPushable() || super.canCollideWith(entity) || entity instanceof FallingBlockEntity || entity instanceof PrimedTnt;
+    }
+
+    @Override
     public boolean canBeCollidedWith(@Nullable Entity entity) {
         return true;
     }
@@ -122,8 +162,12 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         builder.define(DATA_IS_DRIFTING, false);
     }
 
+    private void eject() {
+        ClientPacketDistributor.sendToServer(new ServerboundLiftForkliftPacket(true, MIN_FORK_HEIGHT, getId()));
+    }
+
     private void setForkHeightFromClient(final int height) {
-        ClientPacketDistributor.sendToServer(new ServerboundLiftForkliftPacket(height, getId()));
+        ClientPacketDistributor.sendToServer(new ServerboundLiftForkliftPacket(false, height, getId()));
     }
 
     public void setForkHeight(final int height) {
@@ -211,6 +255,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         }
 
         move(MoverType.SELF, getDeltaMovement());
+
+        pickupEntitiesInFront();
     }
 
     @Override
@@ -238,6 +284,12 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             boolean liftUp = ForkliftKeybinds.RAISE_FORKLIFT.isDown();
             boolean liftDown = ForkliftKeybinds.LOWER_FORKLIFT.isDown();
             boolean drift = ForkliftKeybinds.DRIFT.isDown();
+            boolean eject_riders = ForkliftKeybinds.EJECT_FORK_RIDERS.isDown();
+
+            // Must have enough space to eject
+            if (eject_riders && getForkHeight() > MIN_FORK_HEIGHT) {
+                eject();
+            }
 
             if (liftUp) {
                 moveFork(-1);
