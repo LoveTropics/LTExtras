@@ -230,6 +230,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         interpolation.interpolate();
 
         if (isLocalInstanceAuthoritative()) {
+            applyGravity();
+
             if (level().isClientSide) {
                 if (isDrifting() && driftDuration == 0) {
                     ClientPacketDistributor.sendToServer(new ServerboundDriftForkliftPacket(false, getId()));
@@ -266,7 +268,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
     private void applyFriction(double friction) {
         Vec3 velocity = getDeltaMovement();
-        setDeltaMovement(velocity.x * friction, velocity.y - getDefaultGravity(), velocity.z * friction);
+        setDeltaMovement(velocity.x * friction, velocity.y, velocity.z * friction);
     }
 
     private void moveFork(int amt) {
