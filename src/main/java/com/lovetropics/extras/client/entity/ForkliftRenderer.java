@@ -19,7 +19,7 @@ import net.minecraft.world.phys.AABB;
 
 public class ForkliftRenderer extends EntityRenderer<ForkliftEntity, ForkliftRenderState> {
 
-    private static final ResourceLocation TEXTURE = LTExtras.location("textures/entity/forklift.png");
+    private static final ResourceLocation TEXTURE = LTExtras.location("textures/entity/forklift_new_new.png");
 
     private final ForkliftModel<ForkliftEntity> model;
 
