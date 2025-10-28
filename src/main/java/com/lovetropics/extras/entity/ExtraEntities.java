@@ -2,6 +2,7 @@ package com.lovetropics.extras.entity;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.block.entity.SeatEntity;
+import com.lovetropics.extras.client.entity.CleaningItemFrameRender;
 import com.lovetropics.extras.client.entity.CollectibleEntityRenderer;
 import com.lovetropics.extras.client.entity.ForkliftRenderer;
 import com.lovetropics.extras.client.entity.PartyBeamRenderer;
@@ -108,6 +109,18 @@ public class ExtraEntities {
             )
             .loot(noDrops())
             .renderer(() -> ForkliftRenderer::new)
+            .register();
+
+    public static final EntityEntry<CleaningItemFrame> CLEANING_ITEM_FRAME = REGISTRATE.entity("cleaning_item_frame", CleaningItemFrame::new, MobCategory.MISC)
+            .defaultLang()
+            .properties(builder -> builder
+                    .noLootTable()
+                    .sized(0.5F, 0.5F)
+                    .eyeHeight(0.0F)
+                    .clientTrackingRange(10)
+                    .updateInterval(Integer.MAX_VALUE)
+            )
+            .renderer(() -> CleaningItemFrameRender::new)
             .register();
 
     public static void init() {

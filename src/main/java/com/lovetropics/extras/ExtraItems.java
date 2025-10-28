@@ -3,6 +3,7 @@ package com.lovetropics.extras;
 import com.lovetropics.extras.client.item.CollectibleCompassAngle;
 import com.lovetropics.extras.client.item.HasUnseenCollectible;
 import com.lovetropics.extras.data.poi.MapConfig;
+import com.lovetropics.extras.item.CleaningItemFrameItem;
 import com.lovetropics.extras.item.CollectibleBasketItem;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.EntityWandItem;
@@ -136,6 +137,10 @@ public class ExtraItems {
             .register();
 
     public static final ItemEntry<ForkliftSpawnEggItem> FORKLIFT_SPAWN_EGG = REGISTRATE.item("forklift_spawn_egg", ForkliftSpawnEggItem::new)
+            .properties(p -> p.stacksTo(1))
+            .register();
+
+    public static final ItemEntry<CleaningItemFrameItem> CLEANING_ITEM_FRAME = REGISTRATE.item("cleaning_item_frame", CleaningItemFrameItem::new)
             .properties(p -> p.stacksTo(1))
             .register();
 
