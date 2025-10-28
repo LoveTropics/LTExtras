@@ -64,6 +64,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     public int driftCooldown = 0;
     public float driftStrength = 0.0f;
 
+    public float lastForkHeight;
+
     private final InterpolationHandler interpolation = new InterpolationHandler(this, 3);
 
     private boolean requiresCertification;
@@ -167,12 +169,17 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         ClientPacketDistributor.sendToServer(new ServerboundLiftForkliftPacket(true, MIN_FORK_HEIGHT, getId()));
     }
 
-    private void setForkHeightFromClient(final int height) {
+    private void sendForkHeightFromClient(final int height) {
         ClientPacketDistributor.sendToServer(new ServerboundLiftForkliftPacket(false, height, getId()));
     }
 
     public void setForkHeight(final int height) {
-        entityData.set(DATA_FORK_HEIGHT, Mth.clamp(height, MIN_FORK_HEIGHT, MAX_FORK_HEIGHT));
+        var h = Mth.clamp(height, MIN_FORK_HEIGHT, MAX_FORK_HEIGHT);
+        entityData.set(DATA_FORK_HEIGHT, h);
+    }
+
+    public float getForkHeight(float partialTick) {
+        return partialTick == 1.0F ? this.getForkHeight() : Mth.lerp(partialTick, this.lastForkHeight, this.getForkHeight());
     }
 
     public int getForkHeight() {
@@ -229,6 +236,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         super.tick();
 
         interpolation.interpolate();
+        this.lastForkHeight = this.getForkHeight();
 
         if (isLocalInstanceAuthoritative()) {
             applyGravity();
@@ -273,7 +281,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     }
 
     private void moveFork(int amt) {
-        setForkHeightFromClient(getForkHeight() + amt);
+        sendForkHeightFromClient(getForkHeight() + amt);
     }
 
     private void controlForklift() {

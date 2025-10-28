@@ -35,7 +35,7 @@ public class ForkliftRenderer extends EntityRenderer<ForkliftEntity, ForkliftRen
         super.extractRenderState(entity, state, partialTick);
         state.yRot = entity.getYRot(partialTick);
         state.velocity = entity.getDeltaMovement().lengthSqr();
-        state.forkHeight = entity.getForkHeight();
+        state.forkHeight = entity.getForkHeight(partialTick);
         state.pickupAABB = entity.getPickupAABB();
     }
 
