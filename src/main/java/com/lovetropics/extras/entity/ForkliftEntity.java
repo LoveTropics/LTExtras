@@ -64,7 +64,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     public static final int MAX_FORK_HEIGHT = 20;
     private static final float RIDER_X_OFFSET = 0.3f;
     private static final float RIDER_Z_OFFSET = 2.0f;
-    public static final float FORKLIFT_SCALE = 1.2f;
+    public static final float FORKLIFT_SCALE = 2.4f;
     public static final double FRICTION = 0.85f;
     public static final double DRIFT_FRICTION = 0.9f;
     public static final int DRIFT_TICKS = 50;
