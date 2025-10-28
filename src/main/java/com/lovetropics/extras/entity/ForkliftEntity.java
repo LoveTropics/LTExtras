@@ -174,16 +174,15 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     }
 
     public void setForkHeight(final int height) {
-        var h = Mth.clamp(height, MIN_FORK_HEIGHT, MAX_FORK_HEIGHT);
-        entityData.set(DATA_FORK_HEIGHT, h);
-    }
-
-    public float getForkHeight(float partialTick) {
-        return partialTick == 1.0F ? this.getForkHeight() : Mth.lerp(partialTick, this.lastForkHeight, this.getForkHeight());
+        entityData.set(DATA_FORK_HEIGHT, Mth.clamp(height, MIN_FORK_HEIGHT, MAX_FORK_HEIGHT));
     }
 
     public int getForkHeight() {
         return entityData.get(DATA_FORK_HEIGHT);
+    }
+
+    public float getForkHeight(float partialTick) {
+        return partialTick == 1.0F ? this.getForkHeight() : Mth.lerp(partialTick, this.lastForkHeight, this.getForkHeight());
     }
 
     public void setDrifting(final boolean drifting) {
