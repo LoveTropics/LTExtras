@@ -31,6 +31,7 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -358,5 +359,10 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             float boost = driftStrength / 10.f;
             setDeltaMovement(getDeltaMovement().add(-xVelocity * boost * DRIFT_FRICTION, 0.0F, zVelocity * boost * DRIFT_FRICTION));
         }
+    }
+
+    @Override
+    public final ItemStack getPickResult() {
+        return new ItemStack(ExtraItems.FORKLIFT_SPAWN_EGG.get());
     }
 }
