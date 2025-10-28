@@ -65,6 +65,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     public float driftStrength = 0.0f;
 
     public float lastForkHeight;
+    public float wheelRot;
+    public float lastWheelRot;
 
     private final InterpolationHandler interpolation = new InterpolationHandler(this, 3);
 
@@ -185,6 +187,10 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         return partialTick == 1.0F ? this.getForkHeight() : Mth.lerp(partialTick, this.lastForkHeight, this.getForkHeight());
     }
 
+    public float getWheelRot(float partialTick) {
+        return partialTick == 1.0F ? this.wheelRot : Mth.lerp(partialTick, this.lastWheelRot, this.wheelRot);
+    }
+
     public void setDrifting(final boolean drifting) {
         entityData.set(DATA_IS_DRIFTING, drifting);
     }
@@ -236,6 +242,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
         interpolation.interpolate();
         this.lastForkHeight = this.getForkHeight();
+        this.tickWheelRotation();
 
         if (isLocalInstanceAuthoritative()) {
             applyGravity();
@@ -256,9 +263,6 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
                 controlForklift();
             }
-
-            // TODO add gravity
-            //setDeltaMovement(getDeltaMovement().x, getDeltaMovement().y - getDefaultGravity(), getDeltaMovement().z);
         }
         else {
             setDeltaMovement(Vec3.ZERO);
@@ -267,6 +271,17 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         move(MoverType.SELF, getDeltaMovement());
 
         pickupEntitiesInFront();
+    }
+
+
+    public void tickWheelRotation() {
+        this.lastWheelRot = this.wheelRot;
+
+        float yRotRad = this.getYRot() * ((float)Math.PI / 180F);
+        float forwardX = -Mth.sin(yRotRad);
+        float forwardZ = Mth.cos(yRotRad);
+        float signedSpeed = (float)(this.getDeltaMovement().x * forwardX + this.getDeltaMovement().z * forwardZ);
+        this.wheelRot += Mth.clamp(signedSpeed, -360f, 360f);
     }
 
     @Override

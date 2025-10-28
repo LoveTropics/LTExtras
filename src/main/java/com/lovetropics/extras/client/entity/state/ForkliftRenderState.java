@@ -5,7 +5,7 @@ import net.minecraft.world.phys.AABB;
 
 public class ForkliftRenderState extends EntityRenderState {
     public float yRot;
-    public double velocity;
+    public float wheelRot;
     public float forkHeight;
     public AABB pickupAABB;
 }
