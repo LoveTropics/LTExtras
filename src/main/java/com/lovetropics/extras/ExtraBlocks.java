@@ -22,6 +22,7 @@ import com.lovetropics.extras.block.PassableBarrierBlock;
 import com.lovetropics.extras.block.PassableNoPlaceBarrierBlock;
 import com.lovetropics.extras.block.PianguasBlock;
 import com.lovetropics.extras.block.ReedsBlock;
+import com.lovetropics.extras.block.RoleBarrierBlock;
 import com.lovetropics.extras.block.RopeBlock;
 import com.lovetropics.extras.block.ScientificNameBlock;
 import com.lovetropics.extras.block.SeatBlock;
@@ -170,6 +171,19 @@ public class ExtraBlocks {
             .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), ResourceLocation.withDefaultNamespace("item/barrier")))
             .item()
             .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), Items.BARRIER, ModelTemplates.FLAT_ITEM))
+            .build()
+            .register();
+
+    public static final BlockEntry<RoleBarrierBlock> ROLE_BARRIER = REGISTRATE.block("role_barrier", RoleBarrierBlock::new)
+            .lang("Role Barrier")
+            .initialProperties(() -> Blocks.BARRIER)
+            .properties(p -> p.noLootTable())
+            .blockstate(() -> (ctx, prov)
+                    -> prov.createAirLikeBlock(ctx.get(), ResourceLocation.withDefaultNamespace("item/barrier")))
+            .simpleBlockEntity(RoleBarrierBlock.RoleBarrierBE::new)
+            .item()
+            .model(() -> (ctx, prov)
+                    -> prov.itemModelOutput.accept(ctx.get(), ItemModelUtils.tintedModel(prov.createFlatItemModel(Items.BARRIER, ModelTemplates.FLAT_ITEM), ItemModelUtils.constantTint(0x008000))))
             .build()
             .register();
 
