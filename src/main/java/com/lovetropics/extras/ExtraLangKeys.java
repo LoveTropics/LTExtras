@@ -28,7 +28,7 @@ public enum ExtraLangKeys {
     SERVER_CLOSED_AUTO_JOIN("screen", "server_closed.auto_join", "As soon as the server is back online, you will be joined back automatically."),
 
     MENU_CONNECT("screen", "menu_connect", "Connect to Love Tropics"),
-    MENU_DONATE("screen", "menu_donate", "Donate to Women's Earth Alliance"),
+    MENU_DONATE("screen", "menu_donate", "Donate to The Pachamama Alliance"),
 
     FORKLIFT_CERTIFICATION_MISSING("forklift", "certification.missing", "You must have a Forklift Certification to drive this forklift"),
     ;
