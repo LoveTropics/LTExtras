@@ -1,5 +1,6 @@
 package com.lovetropics.extras;
 
+import com.lovetropics.extras.block.AdjustableLampBlock;
 import com.lovetropics.extras.block.BoringEndRodBlock;
 import com.lovetropics.extras.block.CeilingCarpetBlock;
 import com.lovetropics.extras.block.CheckpointBlock;
@@ -64,6 +65,7 @@ import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.data.models.model.ModelInstance;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
@@ -141,6 +143,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -1203,6 +1206,17 @@ public class ExtraBlocks {
                 .blockstate(() -> Models::generateTallSeagrass);
     }
 
+    public static final BlockEntry<AdjustableLampBlock> ADJUSTABLE_LAMP = REGISTRATE.block("adjustable_lamp", AdjustableLampBlock::new)
+            .initialProperties(() -> Blocks.REDSTONE_LAMP)
+            .properties(p -> p.lightLevel(AdjustableLampBlock.LIGHT_EMISSION))
+            .blockstate(() -> (ctx, prov) -> {
+                MultiVariant multivariant = plainVariant(TexturedModel.CUBE.create(Blocks.REDSTONE_LAMP, prov.modelOutput));
+                MultiVariant multivariant1 = plainVariant(Models.createSuffixedVariant(Blocks.REDSTONE_LAMP, "_on", ModelTemplates.CUBE_ALL, TextureMapping::cube, prov.modelOutput));
+                prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get()).with(createBooleanModelDispatch(BlockStateProperties.LIT, multivariant1, multivariant)));
+            })
+            .item().model(() -> (ctx, prov) -> Models.generateBlockItem(ctx, prov, Blocks.REDSTONE_LAMP)).build()
+            .register();
+
     public static void init() {
     }
 
@@ -1274,6 +1288,10 @@ public class ExtraBlocks {
         public static final ModelTemplate PAPYRUS_STEM = new ModelTemplate(Optional.of(
                 ModelLocationUtils.decorateBlockModelLocation("ltextras:papyrus_stem")
         ), Optional.empty(), TextureSlot.ALL);
+
+        private static ResourceLocation createSuffixedVariant(Block block, String suffix, ModelTemplate modelTemplate, Function<ResourceLocation, TextureMapping> textureMappingGetter, BiConsumer<ResourceLocation, ModelInstance> modelOutput) {
+            return modelTemplate.createWithSuffix(block, suffix, textureMappingGetter.apply(TextureMapping.getBlockTexture(block, suffix)), modelOutput);
+        }
 
         private static void generateBlockItem(DataGenContext<Item, ? extends Item> ctx, RegistrateItemModelGenerator prov, Block donorBlock) {
             prov.itemModelOutput.accept(ctx.get(), ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(donorBlock)));
