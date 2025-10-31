@@ -2,6 +2,10 @@ package com.lovetropics.extras.item;
 
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.TriState;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -13,6 +17,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class ItemExtensions {
@@ -64,6 +69,11 @@ public class ItemExtensions {
         if (event.getEntity() instanceof ServerPlayer player) {
             ItemStack stack = event.getItem();
             applyCooldownOverride(player, stack);
+
+            InteractActionData actionData = stack.get(ExtraDataComponents.INTERACT_ACTION);
+            if (actionData != null) {
+                actionData.performCommands(player);
+            }
         }
     }
 
@@ -72,6 +82,25 @@ public class ItemExtensions {
         if (event.getEntity() instanceof ServerPlayer player) {
             ItemStack stack = event.getItem();
             applyCooldownOverride(player, stack);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onInteract(PlayerInteractEvent.RightClickItem event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            ItemStack itemStack = event.getItemStack();
+            // Food is handled above in LivingEntityUseItemEvent.Finish
+            if (itemStack.has(DataComponents.CONSUMABLE)) {
+                return;
+            }
+
+            InteractActionData actionData = itemStack.get(ExtraDataComponents.INTERACT_ACTION);
+            if (actionData != null) {
+                if (actionData.cancelEvent()) {
+                    event.setCanceled(true);
+                }
+                actionData.performCommands(player);
+            }
         }
     }
 }

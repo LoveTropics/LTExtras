@@ -4,6 +4,7 @@ import com.lovetropics.extras.collectible.CollectibleMarker;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.ImageData;
+import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.WalkAnimation;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
@@ -97,6 +98,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> ADJUST_HEIGHT = REGISTER.registerComponentType(
             "adjust_height",
             builder -> builder.persistent(Codec.floatRange(-2f, 2.0F)).networkSynchronized(ByteBufCodecs.FLOAT)
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<InteractActionData>> INTERACT_ACTION = REGISTER.registerComponentType(
+            "interact_action",
+            builder -> builder.persistent(InteractActionData.CODEC).cacheEncoding()
     );
 
     @SubscribeEvent

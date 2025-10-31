@@ -16,6 +16,7 @@
     "ForgeHooksMixin",
     "ItemEntityMixin",
     "ItemFrameMixin",
+    "LecternBlockMixin",
     "LivingEntityMixin",
     "MinecraftServerAccessor",
     "PlayerListMixin",
