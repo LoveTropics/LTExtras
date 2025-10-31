@@ -627,6 +627,17 @@ public class ExtraBlocks {
             .simpleItem()
             .register();
 
+    public static final BlockEntry<Block> FULL_PATH = REGISTRATE
+            .block("full_path", Block::new)
+            .initialProperties(() -> Blocks.DIRT_PATH)
+            .tag(BlockTags.MINEABLE_WITH_SHOVEL)
+            .blockstate(() -> (ctx, prov) ->
+                    prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE.updateTexture(textureMapping -> {
+                        textureMapping.put(TextureSlot.ALL, prov.mcLoc("block/dirt_path_top"));
+                    })))
+            .simpleItem()
+            .register();
+
     // Speedy blocks
 
     private static final VoxelShape PATH_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
@@ -642,7 +653,8 @@ public class ExtraBlocks {
             .add(Blocks.BLACK_CONCRETE_POWDER, SpeedyBlock::opaque)
             .add(Blocks.PACKED_MUD, SpeedyBlock::opaque)
             .add(Blocks.MUD_BRICKS, SpeedyBlock::opaque)
-            .add(ResourceLocation.fromNamespaceAndPath("tropicraft", "chunk"), SpeedyBlock::opaque);
+            .add(ResourceLocation.fromNamespaceAndPath("tropicraft", "chunk"), SpeedyBlock::opaque)
+            .add(FULL_PATH, SpeedyBlock::opaque);
 
     public static final Map<Holder<Block>, BlockEntry<? extends SpeedyBlock>> SPEEDY_BLOCKS = SPEEDY_BLOCK_TEMPLATES
             .build((object, factory) -> REGISTRATE
