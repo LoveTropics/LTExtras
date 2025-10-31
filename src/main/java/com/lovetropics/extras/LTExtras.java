@@ -18,6 +18,7 @@ import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
+import com.lovetropics.extras.entity.ExtraSerializers;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.world_effect.WorldEffectCommand;
 import com.mojang.brigadier.CommandDispatcher;
@@ -87,6 +88,7 @@ public class LTExtras {
         ExtraDataComponents.REGISTER.register(modBus);
         ExtraAttachments.REGISTER.register(modBus);
         ExtraSounds.REGISTER.register(modBus);
+        ExtraSerializers.REGISTER.register(modBus);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
