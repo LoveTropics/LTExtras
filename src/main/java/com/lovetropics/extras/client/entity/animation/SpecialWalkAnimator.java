@@ -22,6 +22,8 @@ public class SpecialWalkAnimator {
             applyFabulous(humanoidRenderState, humanoidModel);
         } else if (walkAnimation == WalkAnimation.FLAIL) {
             applyFlail(humanoidRenderState, humanoidModel);
+        } else if (walkAnimation == WalkAnimation.HOVERING) {
+            applyHovering(humanoidRenderState, humanoidModel);
         }
 
         if (humanoidRenderState.feetEquipment.is(ExtraItems.HIGH_HEELS)) {
@@ -65,5 +67,25 @@ public class SpecialWalkAnimator {
         model.leftArm.xRot = Mth.cos(walkPos * 0.6f) * 2.0f * scale;
         model.rightArm.zRot = (Mth.cos(walkPos * 0.2312f) + 1.0f) * scale;
         model.leftArm.zRot = (Mth.cos(walkPos * 0.2812f) - 1.0f) * scale;
+    }
+
+    private static void applyHovering(HumanoidRenderState renderState, HumanoidModel<?> model) {
+        float walkPos = renderState.walkAnimationPos;
+        float yOffset = Mth.cos(walkPos * 0.51f) - 5.0f;
+
+        model.body.y += yOffset;
+        model.leftLeg.y += yOffset;
+        model.leftLeg.xRot *= 0.0f;
+        model.leftLeg.yRot *= 0.0f;
+        model.rightLeg.y += yOffset;
+        model.rightLeg.xRot *= 0.0f;
+        model.rightLeg.yRot *= 0.0f;
+        model.head.y += yOffset;
+        model.leftArm.y += yOffset;
+        model.leftArm.xRot *= 0.0f;
+        model.leftArm.yRot *= 0.0f;
+        model.rightArm.y += yOffset;
+        model.rightArm.xRot *= 0.0f;
+        model.rightArm.yRot *= 0.0f;
     }
 }
