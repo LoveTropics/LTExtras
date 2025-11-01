@@ -9,13 +9,16 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Warden.class)
 public class WardenMixin extends Monster {
 
+    @Unique
     private boolean avoidsDarkness;
 
     protected WardenMixin(EntityType<? extends Monster> type, Level level) {
@@ -31,15 +34,13 @@ public class WardenMixin extends Monster {
         }
     }
 
-    @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    @Inject(method = "readAdditionalSaveData", at=@At("RETURN"))
+    protected void readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
         avoidsDarkness = input.getBooleanOr("AvoidsDarkness", false);
     }
 
-    @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    @Inject(method="addAdditionalSaveData", at=@At("RETURN"))
+    protected void addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
         output.putBoolean("AvoidsDarkness", avoidsDarkness);
     }
 }
