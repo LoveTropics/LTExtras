@@ -24,6 +24,7 @@
     "RideCommandMixin",
     "ScaffoldingBlockMixin",
     "ServerGamePacketListenerImplMixin",
+    "WardenMixin",
     "client.fix.ClientCommandHandlerMixin",
     "collectible.ItemStackMixin",
     "collectible.MerchantResultSlotMixin",
