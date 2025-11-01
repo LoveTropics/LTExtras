@@ -12,6 +12,7 @@ import java.util.function.IntFunction;
 public enum WalkAnimation implements StringRepresentable {
     DEFAULT(0, "default"),
     FABULOUS(1, "fabulous"),
+    FLAIL(2, "flail"),
     ;
 
     public static final Codec<WalkAnimation> CODEC = StringRepresentable.fromEnum(WalkAnimation::values);
