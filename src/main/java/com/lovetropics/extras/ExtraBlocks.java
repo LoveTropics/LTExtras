@@ -4,6 +4,7 @@ import com.lovetropics.extras.block.AdjustableLampBlock;
 import com.lovetropics.extras.block.BoringEndRodBlock;
 import com.lovetropics.extras.block.CeilingCarpetBlock;
 import com.lovetropics.extras.block.CheckpointBlock;
+import com.lovetropics.extras.block.ConveyorBeltBlock;
 import com.lovetropics.extras.block.CurtainBlock;
 import com.lovetropics.extras.block.CustomSeagrassBlock;
 import com.lovetropics.extras.block.CustomSugarCaneBlock;
@@ -347,6 +348,12 @@ public class ExtraBlocks {
             .simpleItem()
             .blockEntity(ParticleEmitterBlockEntity::new)
             .build()
+            .register();
+
+    public static final BlockEntry<ConveyorBeltBlock> CONVEYOR_BELT_BLOCK = REGISTRATE.block("conveyor_belt", ConveyorBeltBlock::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .blockstate(() -> Models::generateRotatedHorizontalBlock)
+            .simpleItem()
             .register();
 
     public static final BlockEntityEntry<ParticleEmitterBlockEntity> PARTICLE_EMITTER_BE = BlockEntityEntry.cast(PARTICLE_EMITTER.getSibling(Registries.BLOCK_ENTITY_TYPE));
@@ -1643,6 +1650,11 @@ public class ExtraBlocks {
         private static void generateInfertileVineItem(DataGenContext<Item, BlockItem> ctx, RegistrateItemModelGenerator prov) {
             ResourceLocation model = prov.generateLayeredItem(ctx.get(), ResourceLocation.withDefaultNamespace("block/vine"), ResourceLocation.withDefaultNamespace("item/barrier"));
             prov.generateTintedModel(ctx.get(), model, new Constant(FoliageColor.FOLIAGE_DEFAULT));
+        }
+
+        public static void generateRotatedHorizontalBlock(DataGenContext<Block, ConveyorBeltBlock> ctx, RegistrateBlockModelGenerator prov) {
+            MultiVariant multivariant =  plainVariant(TexturedModel.GLAZED_TERRACOTTA.create(ctx.get(), prov.modelOutput));
+            prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get(), multivariant).with(ROTATION_HORIZONTAL_FACING_ALT));
         }
 
         public interface TextureType {
