@@ -650,6 +650,7 @@ public class ExtraBlocks {
             .block("warehouse_parking_marking", CarpetBlock::new)
             .initialProperties(() -> Blocks.WHITE_CARPET)
             .properties(BlockBehaviour.Properties::noOcclusion)
+            .properties(BlockBehaviour.Properties::noCollission)
             .properties(BlockBehaviour.Properties::noLootTable)
             .simpleItem()
             .register();
