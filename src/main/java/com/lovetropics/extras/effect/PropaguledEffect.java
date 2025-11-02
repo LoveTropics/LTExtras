@@ -2,6 +2,7 @@ package com.lovetropics.extras.effect;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -24,6 +25,12 @@ public class PropaguledEffect extends MobEffect {
 
     public static class ClientExtensions implements IClientMobEffectExtensions {
         private static final ItemStack PROPAGULE_ITEMSTACK = Items.MANGROVE_PROPAGULE.getDefaultInstance();
+
+        @Override
+        public boolean renderInventoryIcon(MobEffectInstance instance, AbstractContainerScreen<?> screen, GuiGraphics guiGraphics, int x, int y, int blitOffset) {
+            guiGraphics.renderFakeItem(PROPAGULE_ITEMSTACK, x + 1, y + 6);
+            return true;
+        }
 
         @Override
         public boolean renderGuiIcon(MobEffectInstance instance, Gui gui, GuiGraphics guiGraphics, int x, int y, float z, float alpha) {
