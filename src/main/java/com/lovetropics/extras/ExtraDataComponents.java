@@ -5,6 +5,7 @@ import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.InteractActionData;
+import com.lovetropics.extras.item.PaintingOverlay;
 import com.lovetropics.extras.item.WalkAnimation;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
@@ -102,6 +103,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<InteractActionData>> INTERACT_ACTION = REGISTER.registerComponentType(
             "interact_action",
             builder -> builder.persistent(InteractActionData.CODEC).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<PaintingOverlay>> PAINTING_OVERLAY = REGISTER.registerComponentType(
+            "painting_overlay",
+            builder -> builder.persistent(PaintingOverlay.CODEC).cacheEncoding()
     );
 
     @SubscribeEvent
