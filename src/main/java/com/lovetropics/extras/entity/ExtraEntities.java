@@ -9,6 +9,7 @@ import com.lovetropics.extras.client.entity.ForkliftRenderer;
 import com.lovetropics.extras.client.entity.PartyBeamRenderer;
 import com.lovetropics.extras.client.entity.RaveKoaRenderer;
 import com.lovetropics.extras.client.entity.SeatRenderer;
+import com.lovetropics.extras.client.entity.SpinningSignRenderer;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntity;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDJ;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDance1;
@@ -134,6 +135,21 @@ public class ExtraEntities {
                     .clientTrackingRange(10)
             )
             .renderer(() -> FallingPropaguleRenderer::new)
+            .register();
+
+
+
+    public static final EntityEntry<SpinningSignEntity> SPINNING_SIGN = REGISTRATE.entity("spinning_sign", SpinningSignEntity::new, MobCategory.MISC)
+            .defaultLang()
+            .properties(builder -> builder
+                    .noLootTable()
+                    .sized(3F, 1F)
+                    .eyeHeight(0.0F)
+                    .clientTrackingRange(10)
+                    .updateInterval(3)
+            )
+            .loot(noDrops())
+            .renderer(() -> SpinningSignRenderer::new)
             .register();
 
     public static void init() {
