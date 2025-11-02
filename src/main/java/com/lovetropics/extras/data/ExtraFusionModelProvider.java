@@ -42,6 +42,8 @@ public class ExtraFusionModelProvider extends FusionModelProvider {
         createConnectedPiecedModel(ExtraBlocks.YELLOW_SHIPPING_CONTAINER.get(), null);
 
         createConnectedPiecedModel(ExtraBlocks.WAREHOUSE_ROAD.get(), null);
+
+        createConnectedSimpleGroundLayerModel(ExtraBlocks.WAREHOUSE_PARKING_MARKING.get(), null);
     }
 
     protected void createConnectedPiecedModel(Block block, @Nullable String texId) {
@@ -49,6 +51,19 @@ public class ExtraFusionModelProvider extends FusionModelProvider {
         ConnectingModelData modelData = ConnectingModelDataBuilder.builder()
                 .parent(ResourceLocation.withDefaultNamespace("block/cube_all"))
                 .texture("all", texture)
+                .connection(DefaultConnectionPredicates.isSameBlock())
+                .build();
+        addModel(
+                ModelLocationUtils.getModelLocation(block),
+                ModelInstance.of(DefaultModelTypes.CONNECTING, modelData)
+        );
+    }
+
+    protected void createConnectedSimpleGroundLayerModel(Block block, @Nullable String texId) {
+        ResourceLocation texture = texId == null ? TextureMapping.getBlockTexture(block) : LTExtras.location("block/" + texId);
+        ConnectingModelData modelData = ConnectingModelDataBuilder.builder()
+                .parent(LTExtras.location("block/ground_plane"))
+                .texture("up", texture)
                 .connection(DefaultConnectionPredicates.isSameBlock())
                 .build();
         addModel(

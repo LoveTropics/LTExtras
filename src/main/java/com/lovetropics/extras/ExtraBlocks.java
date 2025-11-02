@@ -105,6 +105,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseCoralFanBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
@@ -638,7 +639,13 @@ public class ExtraBlocks {
             .simpleItem()
             .register();
 
-
+    public static final BlockEntry<CarpetBlock> WAREHOUSE_PARKING_MARKING = REGISTRATE
+            .block("warehouse_parking_marking", CarpetBlock::new)
+            .initialProperties(() -> Blocks.WHITE_CARPET)
+            .properties(BlockBehaviour.Properties::noOcclusion)
+            .properties(BlockBehaviour.Properties::noLootTable)
+            .simpleItem()
+            .register();
 
     // Speedy blocks
 
