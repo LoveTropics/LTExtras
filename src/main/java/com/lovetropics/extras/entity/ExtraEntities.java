@@ -4,6 +4,7 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.block.entity.SeatEntity;
 import com.lovetropics.extras.client.entity.CleaningItemFrameRender;
 import com.lovetropics.extras.client.entity.CollectibleEntityRenderer;
+import com.lovetropics.extras.client.entity.FallingPropaguleRenderer;
 import com.lovetropics.extras.client.entity.ForkliftRenderer;
 import com.lovetropics.extras.client.entity.PartyBeamRenderer;
 import com.lovetropics.extras.client.entity.RaveKoaRenderer;
@@ -121,6 +122,18 @@ public class ExtraEntities {
                     .updateInterval(Integer.MAX_VALUE)
             )
             .renderer(() -> CleaningItemFrameRender::new)
+            .register();
+
+    public static final EntityEntry<FallingPropagule> FALLING_PROPAGULE = REGISTRATE.entity("falling_propagule", FallingPropagule::new, MobCategory.MISC)
+            .defaultLang()
+            .properties(builder -> builder
+                    .noLootTable()
+                    .sized(0.2F, 0.7F)
+                    .eyeHeight(0.0F)
+                    .updateInterval(3)
+                    .clientTrackingRange(10)
+            )
+            .renderer(() -> FallingPropaguleRenderer::new)
             .register();
 
     public static void init() {
