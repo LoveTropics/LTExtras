@@ -261,7 +261,9 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
         if (isLocalInstanceAuthoritative()) {
             applyGravity();
-            applyFriction(FRICTION);
+            if(!isDrifting()) {
+                applyFriction(FRICTION);
+            }
             if (level().isClientSide) {
                 if (isDrifting() && driftDuration == 0) {
                     ClientPacketDistributor.sendToServer(new ServerboundDriftForkliftPacket(false, getId()));
