@@ -24,6 +24,8 @@ public class SpecialWalkAnimator {
             applyFlail(humanoidRenderState, humanoidModel);
         } else if (walkAnimation == WalkAnimation.HOVERING) {
             applyHovering(humanoidRenderState, humanoidModel);
+        } else if (walkAnimation == WalkAnimation.SHUFFLE) {
+            applyShuffle(humanoidRenderState, humanoidModel);
         }
 
         if (humanoidRenderState.feetEquipment.is(ExtraItems.HIGH_HEELS)) {
@@ -34,6 +36,19 @@ public class SpecialWalkAnimator {
             humanoidModel.leftArm.y += HEELS_OFFSET;
             humanoidModel.rightArm.y += HEELS_OFFSET;
         }
+    }
+
+    private static void applyShuffle(HumanoidRenderState renderState, HumanoidModel<?> model) {
+        float walkPos = renderState.walkAnimationPos;
+        float scale = renderState.walkAnimationSpeed / renderState.speedValue;
+
+        float walkModifier = 1.6f;
+        float legSwing = AnimationUtils.squareSin(walkPos * walkModifier, 0.5f);
+        model.rightLeg.xRot = legSwing * 0.5f * scale;
+        model.leftLeg.xRot = -legSwing * 0.5f * scale;
+        float armSwing = AnimationUtils.squareSin(walkPos * walkModifier + Mth.PI, 0.5f);
+        model.rightArm.xRot = armSwing * 0.5f * scale;
+        model.leftArm.xRot = -armSwing * 0.5f * scale;
     }
 
     private static void applyFabulous(HumanoidRenderState renderState, HumanoidModel<?> model) {

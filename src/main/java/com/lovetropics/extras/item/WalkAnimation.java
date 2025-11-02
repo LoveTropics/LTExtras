@@ -14,6 +14,7 @@ public enum WalkAnimation implements StringRepresentable {
     FABULOUS(1, "fabulous"),
     FLAIL(2, "flail"),
     HOVERING(3, "hovering"),
+    SHUFFLE(4, "shuffle")
     ;
 
     public static final Codec<WalkAnimation> CODEC = StringRepresentable.fromEnum(WalkAnimation::values);
