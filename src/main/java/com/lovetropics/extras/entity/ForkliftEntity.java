@@ -91,7 +91,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         if (passenger.is(getControllingPassenger())) {
             return super.getDismountLocationForPassenger(passenger);
         }
-        return getPickupAABB().getCenter().add(0, 32 / 16f * FORKLIFT_SCALE, 0);
+        return getPickupAABB().getCenter().add(0, (20 - this.getForkHeight()) / 16f * FORKLIFT_SCALE, 0);
     }
 
     public AABB getPickupAABB() {
