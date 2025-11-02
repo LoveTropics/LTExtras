@@ -60,10 +60,10 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     private static final Component CERTIFICATION_MISSING = ExtraLangKeys.FORKLIFT_CERTIFICATION_MISSING.get().withStyle(ChatFormatting.RED);
 
     private static final int MAX_PASSENGERS = 3;
-    public static final int MIN_FORK_HEIGHT = -5;
-    public static final int MAX_FORK_HEIGHT = 20;
-    private static final float RIDER_X_OFFSET = 0.3f;
-    private static final float RIDER_Z_OFFSET = 2.0f;
+    public static final int MIN_FORK_HEIGHT = 0;
+    public static final int MAX_FORK_HEIGHT = 18;
+    private static final float RIDER_X_OFFSET = 0.8f;
+    private static final float RIDER_Z_OFFSET = 2.75f;
     public static final float FORKLIFT_SCALE = 2.4f;
     public static final double FRICTION = 0.85f;
     public static final double DRIFT_FRICTION = 0.9f;
@@ -139,7 +139,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
         final int riderIndex = getPassengers().indexOf(entity);
         final float forkHeight = FORKLIFT_SCALE * getForkHeight() / 16.0f;
-        final float forkRiderOffset = 1.8f - forkHeight;
+        final float forkRiderOffset = 2.8f - forkHeight;
         final float riderYRot = -getYRot() * ((float) Math.PI / 180F);
 
         if (riderIndex == 1) {
