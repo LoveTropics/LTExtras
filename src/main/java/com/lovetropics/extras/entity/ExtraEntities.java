@@ -148,7 +148,6 @@ public class ExtraEntities {
                     .clientTrackingRange(10)
                     .updateInterval(3)
             )
-            .loot(noDrops())
             .renderer(() -> SpinningSignRenderer::new)
             .register();
 
