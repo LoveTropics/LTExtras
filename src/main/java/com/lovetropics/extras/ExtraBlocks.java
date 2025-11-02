@@ -35,6 +35,7 @@ import com.lovetropics.extras.block.SpeedyZone;
 import com.lovetropics.extras.block.SubmergedLilyBlock;
 import com.lovetropics.extras.block.TeleportPadBlock;
 import com.lovetropics.extras.block.ThornStemBlock;
+import com.lovetropics.extras.block.WarehouseRoadBoosterBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.block.entity.JumpPadBlockEntity;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
@@ -666,11 +667,25 @@ public class ExtraBlocks {
 
     public static final BlockEntry<CarpetBlock> WAREHOUSE_PARKING_MARKING = REGISTRATE
             .block("warehouse_parking_marking", CarpetBlock::new)
-            .initialProperties(() -> Blocks.WHITE_CARPET)
             .properties(BlockBehaviour.Properties::noOcclusion)
             .properties(BlockBehaviour.Properties::noCollission)
             .properties(BlockBehaviour.Properties::noLootTable)
-            .simpleItem()
+            .properties(BlockBehaviour.Properties::noTerrainParticles)
+            .item()
+            .model(() -> (ctx, prov) -> prov.generateFlatBlockItem(ctx.get()))
+            .build()
+            .register();
+
+    public static final BlockEntry<WarehouseRoadBoosterBlock> WAREHOUSE_ROAD_BOOSTER = REGISTRATE
+            .block("warehouse_road_booster", WarehouseRoadBoosterBlock::new)
+            .properties(BlockBehaviour.Properties::noOcclusion)
+            .properties(BlockBehaviour.Properties::noCollission)
+            .properties(BlockBehaviour.Properties::noLootTable)
+            .properties(BlockBehaviour.Properties::noTerrainParticles)
+            .blockstate(() -> Models::generateWarehouseRoadBoosterBlock)
+            .item()
+            .model(() -> (ctx, prov) -> prov.generateFlatBlockItem(ctx.get()))
+            .build()
             .register();
 
     // Speedy blocks
@@ -1655,6 +1670,12 @@ public class ExtraBlocks {
         public static void generateRotatedHorizontalBlock(DataGenContext<Block, ConveyorBeltBlock> ctx, RegistrateBlockModelGenerator prov) {
             MultiVariant multivariant =  plainVariant(TexturedModel.GLAZED_TERRACOTTA.create(ctx.get(), prov.modelOutput));
             prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get(), multivariant).with(ROTATION_HORIZONTAL_FACING_ALT));
+        }
+
+        public static void generateWarehouseRoadBoosterBlock(DataGenContext<Block, WarehouseRoadBoosterBlock> ctx, RegistrateBlockModelGenerator prov) {
+            //MultiVariant variant =  plainVariant(TexturedModel.GLAZED_TERRACOTTA.create(ctx.get(), prov.modelOutput));
+            MultiVariant variant = plainVariant(ModelLocationUtils.getModelLocation(ctx.get()));
+            prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get(), variant).with(ROTATION_HORIZONTAL_FACING_ALT));
         }
 
         public interface TextureType {

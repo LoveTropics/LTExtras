@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "ltextras:block/warehouse_parking_marking"
+    "model": "ltextras:item/warehouse_parking_marking"
   }
 }
