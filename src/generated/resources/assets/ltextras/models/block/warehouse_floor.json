@@ -1,0 +1,8 @@
+{
+  "type": "fusion:base",
+  "parent": "minecraft:block/cube_all",
+  "loader": "fusion:model",
+  "textures": {
+    "all": "ltextras:block/warehouse_floor"
+  }
+}
