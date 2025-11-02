@@ -74,7 +74,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     public int driftCooldown = 0;
     public float driftStrength = 0.0f;
 
-    public float lastForkHeight;
+    public int lastForkHeight;
     public float wheelRot;
     public float lastWheelRot;
 
