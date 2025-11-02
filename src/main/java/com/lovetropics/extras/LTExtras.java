@@ -32,10 +32,12 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagEntry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -120,6 +122,13 @@ public class LTExtras {
 
                     TpCommand.addTranslations(p);
                     WarpCommand.addTranslations(p);
+                })
+                .addDataGenerator(ProviderType.BLOCK_TAGS, block -> {
+                    block.tag(ExtraTags.Blocks.PLUMBERS_TNT_EXPLODES)
+                            .add(Blocks.MUD, Blocks.PACKED_MUD, Blocks.DIRT)
+                            .add(TagEntry.optionalElement(ResourceLocation.fromNamespaceAndPath("tropicraft", "mud")))
+                            .add(TagEntry.optionalElement(ResourceLocation.fromNamespaceAndPath("tropicraft", "mud_with_pianguas")))
+                    ;
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
                         .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))

@@ -20,6 +20,7 @@ import com.tterrag.registrate.providers.loot.RegistrateEntityLootTables;
 import com.tterrag.registrate.util.entry.EntityEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.SharedConstants;
+import net.minecraft.client.renderer.entity.TntRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -149,6 +150,19 @@ public class ExtraEntities {
                     .updateInterval(3)
             )
             .renderer(() -> SpinningSignRenderer::new)
+            .register();
+
+    public static final EntityEntry<PrimedPlumbersTnt> PRIMED_PLUMBERS_TNT = REGISTRATE.entity("primed_plumbers_tnt", PrimedPlumbersTnt::new, MobCategory.MISC)
+            .defaultLang()
+            .properties(builder -> builder
+                    .noLootTable()
+                    .fireImmune()
+                    .sized(0.98F, 0.98F)
+                    .eyeHeight(0.15F)
+                    .clientTrackingRange(10)
+                    .updateInterval(10)
+            )
+            .renderer(() -> TntRenderer::new)
             .register();
 
     public static void init() {

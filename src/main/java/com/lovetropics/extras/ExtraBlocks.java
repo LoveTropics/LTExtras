@@ -22,6 +22,7 @@ import com.lovetropics.extras.block.ParticleEmitterBlock;
 import com.lovetropics.extras.block.PassableBarrierBlock;
 import com.lovetropics.extras.block.PassableNoPlaceBarrierBlock;
 import com.lovetropics.extras.block.PianguasBlock;
+import com.lovetropics.extras.block.PlumbersTntBlock;
 import com.lovetropics.extras.block.ReedsBlock;
 import com.lovetropics.extras.block.RoleBarrierBlock;
 import com.lovetropics.extras.block.RopeBlock;
@@ -45,6 +46,7 @@ import com.mojang.math.Quadrant;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
+import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
 import com.tterrag.registrate.providers.generators.RegistrateItemModelGenerator;
@@ -1269,6 +1271,16 @@ public class ExtraBlocks {
                 prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get()).with(createBooleanModelDispatch(BlockStateProperties.LIT, multivariant1, multivariant)));
             })
             .item().model(() -> (ctx, prov) -> Models.generateBlockItem(ctx, prov, Blocks.REDSTONE_LAMP)).build()
+            .register();
+
+    public static final BlockEntry<PlumbersTntBlock> PLUMBERS_TNT = REGISTRATE.block("plumbers_tnt", PlumbersTntBlock::new)
+            .initialProperties(() -> Blocks.TNT)
+            .lang("Plumbers' Tnt")
+            .properties(p -> p.mapColor(MapColor.COLOR_BLUE))
+            .blockstate(() -> (ctx, prov) -> {
+                prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE_TOP_BOTTOM);
+            })
+            .item().model(() -> (ctx, prov) -> Models.generateBlockItem(ctx, prov, ctx.get().getBlock())).build()
             .register();
 
     public static void init() {

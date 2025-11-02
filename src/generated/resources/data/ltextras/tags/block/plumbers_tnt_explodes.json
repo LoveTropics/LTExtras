@@ -1,0 +1,15 @@
+{
+  "values": [
+    "minecraft:mud",
+    "minecraft:packed_mud",
+    "minecraft:dirt",
+    {
+      "id": "tropicraft:mud",
+      "required": false
+    },
+    {
+      "id": "tropicraft:mud_with_pianguas",
+      "required": false
+    }
+  ]
+}
