@@ -6,6 +6,8 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SlabBlock;
@@ -45,6 +47,15 @@ public class SeatBlock extends SlabBlock {
         player.startRiding(seatEntity);
 
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
+        ItemStack itemstack = useContext.getItemInHand();
+        if (itemstack.is(this.asItem())) {
+            return false;
+        }
+        return super.canBeReplaced(state, useContext);
     }
 
     @Override

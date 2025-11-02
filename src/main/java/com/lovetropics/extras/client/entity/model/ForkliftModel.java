@@ -74,12 +74,10 @@ public class ForkliftModel<T extends Entity> extends EntityModel<ForkliftRenderS
     public void setupAnim(ForkliftRenderState state) {
         super.setupAnim(state);
 
-        float wheelRot = (float) Mth.clamp(state.velocity * state.ageInTicks % 360, -360, 360);
-
-        wheelBackLeft.xRot = wheelRot;
-        wheelBackRight.xRot = wheelRot;
-        wheelFrontRight.xRot = wheelRot;
-        wheelFrontLeft.xRot = wheelRot;
+        wheelBackLeft.xRot = state.wheelRot;
+        wheelBackRight.xRot = state.wheelRot;
+        wheelFrontRight.xRot = state.wheelRot;
+        wheelFrontLeft.xRot = state.wheelRot;
 
         forks.y = state.forkHeight;
     }

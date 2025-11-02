@@ -6,6 +6,7 @@ import com.lovetropics.extras.client.command.NameTagModeCommand;
 import com.lovetropics.extras.client.entity.model.ForkliftModel;
 import com.lovetropics.extras.client.entity.model.HighHeelsModel;
 import com.lovetropics.extras.client.entity.model.RaveKoaModel;
+import com.lovetropics.extras.client.entity.model.SpinningSignModel;
 import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
@@ -17,7 +18,9 @@ import com.lovetropics.extras.command.WarpCommand;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
+import com.lovetropics.extras.effect.PropaguledEffect;
 import com.lovetropics.extras.entity.ExtraEntities;
+import com.lovetropics.extras.entity.ExtraSerializers;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.world_effect.WorldEffectCommand;
 import com.mojang.brigadier.CommandDispatcher;
@@ -45,6 +48,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
@@ -87,6 +91,7 @@ public class LTExtras {
         ExtraDataComponents.REGISTER.register(modBus);
         ExtraAttachments.REGISTER.register(modBus);
         ExtraSounds.REGISTER.register(modBus);
+        ExtraSerializers.REGISTER.register(modBus);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
@@ -96,6 +101,7 @@ public class LTExtras {
         registrate()
                 .addDataGenerator(ProviderType.LANG, p -> {
                     p.add(ExtraEffects.FISH_EYE.get(), "Fish Eye");
+                    p.add(ExtraEffects.PROPAGULED.get(), "Propaguled!");
                     p.add("toast.collectible.title", "New Collectible!");
                     p.add("toast.collectible.item", " + %s");
 
@@ -161,6 +167,7 @@ public class LTExtras {
             event.registerLayerDefinition(RaveKoaModel.LAYER_LOCATION, RaveKoaModel::createBodyLayer);
             event.registerLayerDefinition(HighHeelsModel.LAYER_LOCATION, HighHeelsModel::createLayer);
             event.registerLayerDefinition(ForkliftModel.LAYER_LOCATION, ForkliftModel::createBodyLayer);
+            event.registerLayerDefinition(SpinningSignModel.LAYER_LOCATION, SpinningSignModel::createBodyLayer);
         }
 
         @SubscribeEvent
@@ -172,6 +179,11 @@ public class LTExtras {
         @SubscribeEvent
         public static void setupClient(final FMLClientSetupEvent event) {
             ForkliftKeybinds.init();
+        }
+
+        @SubscribeEvent
+        public static void registerMobEffectExtensions(RegisterClientExtensionsEvent event) {
+            event.registerMobEffect(new PropaguledEffect.ClientExtensions(), ExtraEffects.PROPAGULED);
         }
     }
 }

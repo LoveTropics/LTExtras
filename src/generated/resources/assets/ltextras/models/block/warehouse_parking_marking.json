@@ -1,0 +1,16 @@
+{
+  "type": "fusion:connecting",
+  "parent": "ltextras:block/ground_plane",
+  "connections": {
+    "type": "fusion:or",
+    "predicates": [
+      {
+        "type": "fusion:is_same_block"
+      }
+    ]
+  },
+  "loader": "fusion:model",
+  "textures": {
+    "up": "ltextras:block/warehouse_parking_marking"
+  }
+}

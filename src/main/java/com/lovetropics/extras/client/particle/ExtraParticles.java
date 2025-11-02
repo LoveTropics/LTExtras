@@ -15,4 +15,6 @@ public final class ExtraParticles {
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> EMITTED_PARTICLE = REGISTER.register("emitted_particle", () -> new SimpleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> EMITTED_FIRE_PARTICLE = REGISTER.register("emitted_fire_particle", () -> new SimpleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> EMITTED_HEARTS_PARTICLE = REGISTER.register("emitted_hearts_particle", () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> TEAM_CENTS_PARTICLE = REGISTER.register("team_cents", () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> TEAM_NO_CENTS_PARTICLE = REGISTER.register("team_no_cents", () -> new SimpleParticleType(false));
 }
