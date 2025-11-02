@@ -398,6 +398,7 @@
   "commands.warp.not_found": "Destination not found",
   "commands.warp.success": "Warped to %s",
   "effect.ltextras.fish_eye": "Fish Eye",
+  "effect.ltextras.propaguled": "Propaguled!",
   "entity.ltextras.cleaning_item_frame": "Cleaning Item Frame",
   "entity.ltextras.collectible": "Collectible",
   "entity.ltextras.falling_propagule": "Falling Propagule",

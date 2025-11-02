@@ -1,9 +1,13 @@
 package com.lovetropics.extras.entity;
 
+import com.lovetropics.extras.effect.ExtraEffects;
+import net.minecraft.SharedConstants;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -50,6 +54,10 @@ public class FallingPropagule extends AbstractHurtingProjectile {
             DamageSource source = damageSources().cactus();
             hitEntity.hurtServer(serverlevel, source, 2.0F);
             EnchantmentHelper.doPostAttackEffects(serverlevel, hitEntity, source);
+
+            if (hitEntity instanceof final LivingEntity livingEntity) {
+                livingEntity.addEffect(new MobEffectInstance(ExtraEffects.PROPAGULED, SharedConstants.TICKS_PER_SECOND * 10));
+            }
         }
     }
 }
