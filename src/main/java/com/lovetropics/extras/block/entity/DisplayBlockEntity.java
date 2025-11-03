@@ -124,6 +124,10 @@ public class DisplayBlockEntity extends BlockEntity {
         return displayItemStack;
     }
 
+    public ItemPredicate getFilter() {
+        return filter;
+    }
+
     public void setConversionProgress(int conversionProgress) {
         this.conversionProgress = conversionProgress;
         setChanged();

@@ -44,7 +44,7 @@ public class DisplayBlock extends BaseEntityBlock {
             if (blockEntity instanceof DisplayBlockEntity displayBlockEntity) {
                 ItemStack currentStack = displayBlockEntity.getItemStack();
                 if (currentStack.isEmpty()) {
-                    if (!heldStack.isEmpty()) {
+                    if (!heldStack.isEmpty() && displayBlockEntity.getFilter().test(heldStack)) {
                         ItemStack stackToInsert = heldStack.copy();
                         stackToInsert.setCount(1);
                         displayBlockEntity.setItemStack(stackToInsert);
