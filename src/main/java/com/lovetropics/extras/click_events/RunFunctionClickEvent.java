@@ -10,9 +10,12 @@ import net.minecraft.commands.execution.ExecutionContext;
 import net.minecraft.commands.functions.CommandFunction;
 import net.minecraft.commands.functions.InstantiatedFunction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+
+import java.util.function.Consumer;
 
 public record RunFunctionClickEvent(ResourceLocation function, CompoundTag args) implements ExtraClickEvent {
 
@@ -22,9 +25,8 @@ public record RunFunctionClickEvent(ResourceLocation function, CompoundTag args)
         ).apply(instance, RunFunctionClickEvent::new)
     );
 
-    // Todo Fix Error Handling
     @Override
-    public void handleAction(ServerPlayer serverPlayer) {
+    public void handleAction(ServerPlayer serverPlayer, Consumer<Component> errorHandler) {
         MinecraftServer server = serverPlayer.getServer();
         CommandFunction<CommandSourceStack> commandFunction = server.getFunctions().get(function).orElseThrow();
         try {
@@ -32,7 +34,7 @@ public record RunFunctionClickEvent(ResourceLocation function, CompoundTag args)
             CommandSourceStack commandSourceStack = serverPlayer.createCommandSourceStack();
             Commands.executeCommandInContext(commandSourceStack, executionContext -> ExecutionContext.queueInitialFunctionCall(executionContext, instantiate, commandSourceStack, CommandResultCallback.EMPTY));
         } catch (FunctionInstantiationException e) {
-            throw new RuntimeException(e);
+            errorHandler.accept(Component.literal(e.getMessage()));
         }
     }
 

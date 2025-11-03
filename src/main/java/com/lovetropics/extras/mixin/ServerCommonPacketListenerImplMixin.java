@@ -6,6 +6,7 @@ import net.minecraft.network.protocol.common.ServerboundCustomClickActionPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,7 +21,7 @@ public class ServerCommonPacketListenerImplMixin {
     @Final
     protected Connection connection;
 
-    @Inject(method = "handleCustomClickAction", at = @At("HEAD"))
+    @Inject(method = "handleCustomClickAction", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;handleCustomClickAction(Lnet/minecraft/resources/ResourceLocation;Ljava/util/Optional;)V"))
     private void onHandle(ServerboundCustomClickActionPacket packet, CallbackInfo ci) {
         ServerCommonPacketListenerImpl thisObj = (ServerCommonPacketListenerImpl) (Object) this;
         if (thisObj instanceof ServerGamePacketListenerImpl serverGamePacketListener) {
