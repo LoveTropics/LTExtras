@@ -34,7 +34,7 @@ public class ExtraClickEvents {
 
         Tag input = tag.orElse(new CompoundTag());
         try {
-            mapCodec.codec().parse(NbtOps.INSTANCE, input).getOrThrow().handleAction(serverPlayer, serverPlayer::sendSystemMessage);
+            mapCodec.codec().parse(NbtOps.INSTANCE, input).getOrThrow().handleAction(serverPlayer, input, serverPlayer::sendSystemMessage);
         } catch (Exception e) {
             sendErrorMessage(serverPlayer, "Failed to decode click action payload for action: " + location);
             LOGGER.error("Failed to decode click action payload for location: {}", location, e);

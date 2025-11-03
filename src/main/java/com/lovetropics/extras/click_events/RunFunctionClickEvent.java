@@ -10,6 +10,7 @@ import net.minecraft.commands.execution.ExecutionContext;
 import net.minecraft.commands.functions.CommandFunction;
 import net.minecraft.commands.functions.InstantiatedFunction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -17,20 +18,20 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.function.Consumer;
 
-public record RunFunctionClickEvent(ResourceLocation function, CompoundTag args) implements ExtraClickEvent {
+public record RunFunctionClickEvent(ResourceLocation function) implements ExtraClickEvent {
 
     public static final MapCodec<RunFunctionClickEvent> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("function").forGetter(RunFunctionClickEvent::function),
-                CompoundTag.CODEC.fieldOf("args").forGetter(RunFunctionClickEvent::args)
+                ResourceLocation.CODEC.fieldOf("function").forGetter(RunFunctionClickEvent::function)
         ).apply(instance, RunFunctionClickEvent::new)
     );
 
     @Override
-    public void handleAction(ServerPlayer serverPlayer, Consumer<Component> errorHandler) {
+    public void handleAction(ServerPlayer serverPlayer, Tag tag, Consumer<Component> errorHandler) {
         MinecraftServer server = serverPlayer.getServer();
         CommandFunction<CommandSourceStack> commandFunction = server.getFunctions().get(function).orElseThrow();
         try {
-            InstantiatedFunction<CommandSourceStack> instantiate = commandFunction.instantiate(args, server.getCommands().getDispatcher());
+            CompoundTag compound = tag.asCompound().orElse(new CompoundTag());
+            InstantiatedFunction<CommandSourceStack> instantiate = commandFunction.instantiate(compound, server.getCommands().getDispatcher());
             CommandSourceStack commandSourceStack = serverPlayer.createCommandSourceStack();
             Commands.executeCommandInContext(commandSourceStack, executionContext -> ExecutionContext.queueInitialFunctionCall(executionContext, instantiate, commandSourceStack, CommandResultCallback.EMPTY));
         } catch (FunctionInstantiationException e) {
