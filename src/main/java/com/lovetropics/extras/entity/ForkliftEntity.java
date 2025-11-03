@@ -62,6 +62,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     private static final int MAX_PASSENGERS = 3;
     public static final int MIN_FORK_HEIGHT = 0;
     public static final int MAX_FORK_HEIGHT = 18;
+    public static final int FORK_HEIGHT = MAX_FORK_HEIGHT - MIN_FORK_HEIGHT;
     private static final float RIDER_X_OFFSET = 0.8f;
     private static final float RIDER_Z_OFFSET = 2.75f;
     public static final float FORKLIFT_SCALE = 2.4f;
@@ -91,7 +92,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         if (passenger.is(getControllingPassenger())) {
             return super.getDismountLocationForPassenger(passenger);
         }
-        return getPickupAABB().getCenter().add(0, (20 - this.getForkHeight()) / 16f * FORKLIFT_SCALE, 0);
+        return getPickupAABB().getCenter().add(0, (2 + FORK_HEIGHT - this.getForkHeight()) / 16f * FORKLIFT_SCALE, 0);
     }
 
     public AABB getPickupAABB() {
@@ -178,7 +179,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         builder.define(DATA_COLLISION_PREDICATE, Optional.empty());
     }
 
-    private void eject() {
+    private void tryEject() {
         ClientPacketDistributor.sendToServer(new ServerboundLiftForkliftPacket(true, MIN_FORK_HEIGHT, getId()));
     }
 
@@ -326,7 +327,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
             // Must have enough space to eject
             if (eject_riders && getForkHeight() > MIN_FORK_HEIGHT) {
-                eject();
+                tryEject();
             }
 
             if (liftUp) {
