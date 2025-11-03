@@ -9,6 +9,7 @@ import com.lovetropics.extras.block.CurtainBlock;
 import com.lovetropics.extras.block.CustomSeagrassBlock;
 import com.lovetropics.extras.block.CustomSugarCaneBlock;
 import com.lovetropics.extras.block.CustomTallSeagrassBlock;
+import com.lovetropics.extras.block.DisplayBlock;
 import com.lovetropics.extras.block.FakeWaterBlock;
 import com.lovetropics.extras.block.GirderBlock;
 import com.lovetropics.extras.block.GlowSticksBlock;
@@ -37,6 +38,7 @@ import com.lovetropics.extras.block.TeleportPadBlock;
 import com.lovetropics.extras.block.ThornStemBlock;
 import com.lovetropics.extras.block.WarehouseRoadBoosterBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
+import com.lovetropics.extras.block.entity.DisplayBlockEntity;
 import com.lovetropics.extras.block.entity.JumpPadBlockEntity;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
@@ -1304,6 +1306,15 @@ public class ExtraBlocks {
             })
             .item().model(() -> (ctx, prov) -> Models.generateBlockItem(ctx, prov, ctx.get().getBlock())).build()
             .register();
+
+    public static final BlockEntry<DisplayBlock> DISPLAY_BLOCK = REGISTRATE.block("display_block", properties -> new DisplayBlock(properties))
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .simpleItem()
+            .blockEntity(DisplayBlockEntity::new)
+            .build()
+            .register();
+
+    public static final BlockEntityEntry<DisplayBlockEntity> DISPLAY_BLOCK_ENTITY = BlockEntityEntry.cast(DISPLAY_BLOCK.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
     public static void init() {
     }

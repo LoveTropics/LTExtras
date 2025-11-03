@@ -1,0 +1,48 @@
+package com.lovetropics.extras.client.block;
+
+import com.lovetropics.extras.block.entity.DisplayBlockEntity;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+
+import javax.annotation.Nullable;
+
+public class DisplayBlockRender implements BlockEntityRenderer<DisplayBlockEntity> {
+
+    private final ItemRenderer itemRenderer;
+
+    public DisplayBlockRender(BlockEntityRendererProvider.Context context) {
+        this.itemRenderer = context.getItemRenderer();
+    }
+
+    @Override
+    public void render(DisplayBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, Vec3 cameraPos) {
+        poseStack.pushPose();
+        poseStack.translate(0.5F, 1.15F, 0.5F);
+        int lightLevel = LevelRenderer.getLightColor(LevelRenderer.BrightnessGetter.DEFAULT, blockEntity.getLevel(), blockEntity.getBlockState(), blockEntity.getBlockPos().above());
+        if (blockEntity.getItemStack().isEmpty()) {
+            ItemStack transparentStack = blockEntity.getDisplayItemStack();
+            if (!transparentStack.isEmpty()) {
+                // Todo? render item with transparency
+                itemRenderer.renderStatic(transparentStack, ItemDisplayContext.GROUND, lightLevel, packedOverlay, poseStack, bufferSource, blockEntity.getLevel(), 0);
+            }
+        }else {
+            itemRenderer.renderStatic(blockEntity.getItemStack(), ItemDisplayContext.GROUND, lightLevel, packedOverlay, poseStack, bufferSource, blockEntity.getLevel(), 0);
+        }
+        poseStack.popPose();
+    }
+
+}
