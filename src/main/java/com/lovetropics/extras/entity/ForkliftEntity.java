@@ -290,6 +290,10 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
                 controlForklift();
             }
+
+            if (isDrifting() && level().isClientSide) {
+                spawnDriftingParticles();
+            }
         }
         else {
             setDeltaMovement(Vec3.ZERO);
@@ -401,7 +405,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
     @Override
     public float maxUpStep() {
-        return 1.0f;
+        return 0.5f;
     }
 
     private void executeDrift(Vec3 travelVector) {
@@ -412,6 +416,31 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             float zVelocity = Mth.cos(this.getYRot() * ((float)Math.PI / 180F));
             float boost = driftStrength / 10.f;
             setDeltaMovement(getDeltaMovement().add(-xVelocity * boost * DRIFT_FRICTION, 0.0F, zVelocity * boost * DRIFT_FRICTION));
+        }
+    }
+
+    public void spawnDriftingParticles() {
+        double yawRad = Math.toRadians(this.getYRot());
+        double forwardX = -Math.sin(yawRad);
+        double forwardZ = Math.cos(yawRad);
+        double perpX = Math.cos(yawRad);
+        double perpZ = Math.sin(yawRad);
+
+        double baseX = this.getX();
+        double baseY = this.getY() + 0.2D;
+        double baseZ = this.getZ();
+
+        double intensity = 1.0 + this.driftStrength * 2.0;
+
+        for (int i = 0; i < 2; i++) {
+            double sideOffset = (i == 0) ? -0.7D : 0.7D;
+            double px = baseX + forwardX * -1.2D + perpX * sideOffset;
+            double pz = baseZ + forwardZ * -1.2D + perpZ * sideOffset;
+
+            double vx = -getDeltaMovement().x * 0.5D + (level().random.nextDouble() - 0.5D) * 0.02D;
+            double vz = -getDeltaMovement().z * 0.5D + (level().random.nextDouble() - 0.5D) * 0.02D;
+
+            level().addParticle(ParticleTypes.CLOUD, px, baseY, pz, vx * intensity, 0.02D, vz * intensity);
         }
     }
 
