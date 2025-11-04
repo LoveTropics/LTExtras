@@ -30,6 +30,7 @@ import net.minecraft.world.entity.InterpolationHandler;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PlayerRideable;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
@@ -396,6 +397,11 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
                 localPlayer.connection.send(ServerboundMoveVehiclePacket.fromEntity(this));
             }
         }
+    }
+
+    @Override
+    public float maxUpStep() {
+        return 1.0f;
     }
 
     private void executeDrift(Vec3 travelVector) {
