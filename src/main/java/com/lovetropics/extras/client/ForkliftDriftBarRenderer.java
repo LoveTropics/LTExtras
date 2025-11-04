@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class ForkliftDriftBarRenderer {
     private static final ResourceLocation JUMP_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/jump_bar_background");
@@ -33,7 +34,8 @@ public class ForkliftDriftBarRenderer {
             guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JUMP_BAR_COOLDOWN_SPRITE, i, j, 182, 5);
         } else {
             if (forklift.driftBuildTicks > 0) {
-                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JUMP_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, i, j, forklift.driftBuildTicks * 10, 5);
+                int progressWidth = Mth.floor((float)forklift.driftBuildTicks / ForkliftEntity.DRIFT_TICKS * 182.0f);
+                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JUMP_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, i, j, progressWidth, 5);
             }
         }
     }
