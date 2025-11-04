@@ -30,13 +30,12 @@ public class ForkliftDriftBarRenderer {
         int i = left(minecraft.getWindow());
         int j = top(minecraft.getWindow());
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JUMP_BAR_BACKGROUND_SPRITE, i, j, 182, 5);
-        if (forklift.driftCooldown > 0) {
+        if (forklift.driftBuildTicks > 0) {
+            int progressWidth = Mth.floor((float)forklift.driftBuildTicks / ForkliftEntity.DRIFT_TICKS * 182.0f);
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JUMP_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, i, j, progressWidth, 5);
+        }
+        else if (forklift.driftCooldown > 0 || forklift.driftDuration > 0) {
             guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JUMP_BAR_COOLDOWN_SPRITE, i, j, 182, 5);
-        } else {
-            if (forklift.driftBuildTicks > 0) {
-                int progressWidth = Mth.floor((float)forklift.driftBuildTicks / ForkliftEntity.DRIFT_TICKS * 182.0f);
-                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JUMP_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, i, j, progressWidth, 5);
-            }
         }
     }
 }
