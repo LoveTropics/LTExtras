@@ -290,13 +290,13 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
                 controlForklift();
             }
-
-            if (isDrifting() && level().isClientSide) {
-                spawnDriftingParticles();
-            }
         }
         else {
             setDeltaMovement(Vec3.ZERO);
+        }
+
+        if (isDrifting() && level().isClientSide) {
+            spawnDriftingParticles();
         }
 
         move(MoverType.SELF, getDeltaMovement());
