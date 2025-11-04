@@ -12,10 +12,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
@@ -75,7 +73,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     public int driftCooldown = 0;
     public float driftStrength = 0.0f;
 
-    public int lastForkHeight;
+    public int renderForkHeight;
+    public int renderForkHeight0;
     public float wheelRot;
     public float lastWheelRot;
 
@@ -195,8 +194,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         return entityData.get(DATA_FORK_HEIGHT);
     }
 
-    public float getForkHeight(float partialTick) {
-        return partialTick == 1.0F ? this.getForkHeight() : Mth.lerp(partialTick, this.lastForkHeight, this.getForkHeight());
+    public float getRenderForkHeight(float partialTick) {
+        return partialTick == 1.0F ? this.getForkHeight() : Mth.lerp(partialTick, this.renderForkHeight0, this.renderForkHeight);
     }
 
     public float getWheelRot(float partialTick) {
@@ -255,7 +254,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         super.tick();
 
         interpolation.interpolate();
-        this.lastForkHeight = this.getForkHeight();
+        this.renderForkHeight0 = this.renderForkHeight;
+        this.renderForkHeight = this.getForkHeight();
         this.tickWheelRotation();
 
         if (isLocalInstanceAuthoritative()) {
@@ -309,7 +309,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     }
 
     private void moveFork(int amt) {
-        sendForkHeightFromClient(getForkHeight() + amt);
+        sendForkHeightFromClient(this.getForkHeight() + amt);
     }
 
     private void controlForklift() {
@@ -326,7 +326,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             boolean eject_riders = ForkliftKeybinds.EJECT_FORK_RIDERS.isDown();
 
             // Must have enough space to eject
-            if (eject_riders && getForkHeight() > MIN_FORK_HEIGHT) {
+            if (eject_riders && getForkHeight() > MIN_FORK_HEIGHT && !liftDown) {
                 tryEject();
             }
 
