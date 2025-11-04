@@ -1,5 +1,6 @@
 package com.lovetropics.extras;
 
+import com.lovetropics.extras.collectible.CollectibleDisplayInfo;
 import com.lovetropics.extras.collectible.CollectibleMarker;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleCompassItem;
@@ -108,6 +109,10 @@ public class ExtraDataComponents {
             "painting_overlay",
             builder -> builder.persistent(PaintingOverlay.CODEC).networkSynchronized(PaintingOverlay.STREAM_CODEC).cacheEncoding()
     );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleDisplayInfo>> COLLECTIBLE_LORE = REGISTER.registerComponentType(
+            "collectible_display_info",
+            builder -> builder.persistent(CollectibleDisplayInfo.CODEC).networkSynchronized(CollectibleDisplayInfo.STREAM_CODEC).cacheEncoding()
+    );
 
     @SubscribeEvent
     public static void addToTooltip(ItemTooltipEvent event) {
@@ -117,6 +122,11 @@ public class ExtraDataComponents {
         Holder<MapConfig> map = itemStack.get(ExtraDataComponents.MAP);
         if (map != null) {
             tooltip.add(ComponentUtils.mergeStyles(map.value().description().copy(), Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        }
+
+        CollectibleDisplayInfo collectibleLore = itemStack.get(ExtraDataComponents.COLLECTIBLE_LORE);
+        if (collectibleLore != null) {
+            tooltip.addAll(collectibleLore.getLore());
         }
     }
 }

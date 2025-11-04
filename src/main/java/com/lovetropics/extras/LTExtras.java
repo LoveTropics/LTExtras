@@ -10,6 +10,7 @@ import com.lovetropics.extras.client.entity.model.SpinningSignModel;
 import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
+import com.lovetropics.extras.collectible.GenerateCollectibleCommand;
 import com.lovetropics.extras.command.GenerateCommand;
 import com.lovetropics.extras.command.PoiCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
@@ -156,6 +157,7 @@ public class LTExtras {
         SetMaxPlayersCommand.register(dispatcher);
         GenerateCommand.register(dispatcher);
         CollectibleCommand.register(dispatcher, buildContext);
+        GenerateCollectibleCommand.register(dispatcher, buildContext);
         SpawnItemsCommand.register(dispatcher);
         TpCommand.register(dispatcher);
         WorldEffectCommand.register(dispatcher);
