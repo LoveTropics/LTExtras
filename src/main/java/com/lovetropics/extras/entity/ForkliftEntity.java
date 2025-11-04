@@ -39,6 +39,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
@@ -168,6 +169,17 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
+        if (this.isRemoved()) {
+            return true;
+        }
+
+        if(damageSource.getEntity() instanceof Player player && player.getAbilities().instabuild) {
+            this.markHurt();
+            this.gameEvent(GameEvent.ENTITY_DAMAGE, damageSource.getEntity());
+            this.discard();
+            return true;
+        }
+
         return false;
     }
 
@@ -410,7 +422,6 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
                         .matches(new BlockInWorld(level(), pos, false)))
                 .orElse(false);
     }
-
 
     @Override
     public final ItemStack getPickResult() {
