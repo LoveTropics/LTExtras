@@ -106,7 +106,7 @@ public class ExtraDataComponents {
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PaintingOverlay>> PAINTING_OVERLAY = REGISTER.registerComponentType(
             "painting_overlay",
-            builder -> builder.persistent(PaintingOverlay.CODEC).cacheEncoding()
+            builder -> builder.persistent(PaintingOverlay.CODEC).networkSynchronized(PaintingOverlay.STREAM_CODEC).cacheEncoding()
     );
 
     @SubscribeEvent
