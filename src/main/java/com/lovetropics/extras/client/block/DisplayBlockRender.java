@@ -33,13 +33,7 @@ public class DisplayBlockRender implements BlockEntityRenderer<DisplayBlockEntit
         poseStack.pushPose();
         poseStack.translate(0.5F, 1.15F, 0.5F);
         int lightLevel = LevelRenderer.getLightColor(LevelRenderer.BrightnessGetter.DEFAULT, blockEntity.getLevel(), blockEntity.getBlockState(), blockEntity.getBlockPos().above());
-        if (blockEntity.getItemStack().isEmpty()) {
-            ItemStack transparentStack = blockEntity.getDisplayItemStack();
-            if (!transparentStack.isEmpty()) {
-                // Todo? render item with transparency
-                itemRenderer.renderStatic(transparentStack, ItemDisplayContext.GROUND, lightLevel, packedOverlay, poseStack, bufferSource, blockEntity.getLevel(), 0);
-            }
-        }else {
+        if (!blockEntity.getItemStack().isEmpty()) {
             itemRenderer.renderStatic(blockEntity.getItemStack(), ItemDisplayContext.GROUND, lightLevel, packedOverlay, poseStack, bufferSource, blockEntity.getLevel(), 0);
         }
         poseStack.popPose();
