@@ -133,7 +133,15 @@ public class DisplayBlockEntity extends BlockEntity {
         ItemStack outputStack = itemStack.copy();
         for (DataComponentType<?> componentType : componentsToRemove) {
             outputStack.remove(componentType);
+            setDefault(outputStack, componentType);
         }
         return Optional.of(outputStack);
+    }
+    
+    private <T> void setDefault(ItemStack itemStack, DataComponentType<T> componentType) {
+        ItemStack defaultStack = new ItemStack(itemStack.getItem());
+        if (defaultStack.has(componentType)) {
+            itemStack.set(componentType, defaultStack.get(componentType));
+        }
     }
 }
