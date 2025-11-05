@@ -4,6 +4,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -19,6 +20,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 public class DisplayBlockEntity extends BlockEntity {
 
     private static final String ITEM = "item";
@@ -27,6 +33,7 @@ public class DisplayBlockEntity extends BlockEntity {
     private static final String TIME_TO_CONVERT = "time_to_convert";
     private static final String CONVERSION_PROGRESS = "conversion_progress";
     private static final String CONVERSION_OUTPUT = "conversion_output";
+    private static final String COMPONENTS_TO_REMOVE = "components_to_remove";
 
     private static final int DEFAULT_TIME_TO_CONVERT = SharedConstants.TICKS_PER_SECOND * 5;
 
@@ -36,6 +43,7 @@ public class DisplayBlockEntity extends BlockEntity {
     private int timeToConvert = DEFAULT_TIME_TO_CONVERT;
     private int conversionProgress = 0;
     private ItemStack conversionOutput = ItemStack.EMPTY;
+    private List<DataComponentType<?>> componentsToRemove = new ArrayList<>();
 
     public DisplayBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -46,7 +54,9 @@ public class DisplayBlockEntity extends BlockEntity {
             return;
         }
 
-        if (displayBlockEntity.itemStack.isEmpty() || displayBlockEntity.conversionOutput.isEmpty() || displayBlockEntity.itemStack.is(displayBlockEntity.conversionOutput.getItem())) {
+        // Todo cache this
+        Optional<ItemStack> outputItemOpt = displayBlockEntity.getOutputItem();
+        if (displayBlockEntity.itemStack.isEmpty() || outputItemOpt.isEmpty() || displayBlockEntity.itemStack.is(displayBlockEntity.conversionOutput.getItem())) {
             return;
         }
 
@@ -54,7 +64,7 @@ public class DisplayBlockEntity extends BlockEntity {
         BlockPos blockPos = displayBlockEntity.getBlockPos();
         serverLevel.sendParticles(ParticleTypes.SPLASH.getType(), blockPos.getX() + 0.5, blockPos.getY() + 1.25, blockPos.getZ() + 0.5, 5, 0.0D, 0.0D, 0.0D, 1);
         if (displayBlockEntity.conversionProgress >= displayBlockEntity.timeToConvert) {
-            displayBlockEntity.itemStack = displayBlockEntity.conversionOutput.copy();
+            displayBlockEntity.itemStack = outputItemOpt.get().copy();
             displayBlockEntity.conversionProgress = 0;
         }
         displayBlockEntity.level.sendBlockUpdated(displayBlockEntity.getBlockPos(), displayBlockEntity.getBlockState(), displayBlockEntity.getBlockState(), 3);
@@ -75,6 +85,8 @@ public class DisplayBlockEntity extends BlockEntity {
         if (!this.conversionOutput.isEmpty()) {
             compoundtag.store(DisplayBlockEntity.CONVERSION_OUTPUT, ItemStack.CODEC, registryops, this.conversionOutput);
         }
+        compoundtag.store(DisplayBlockEntity.FILTER, ItemPredicate.CODEC, registryops, this.filter);
+        compoundtag.store(DisplayBlockEntity.COMPONENTS_TO_REMOVE, DataComponentType.CODEC.listOf(), registryops, this.componentsToRemove);
 
         return compoundtag;
     }
@@ -88,10 +100,11 @@ public class DisplayBlockEntity extends BlockEntity {
         super.loadAdditional(input);
         this.itemStack = input.read(DisplayBlockEntity.ITEM, ItemStack.CODEC).orElse(ItemStack.EMPTY);
         this.displayItemStack = input.read(DisplayBlockEntity.DISPLAY_ITEM, ItemStack.CODEC).orElse(ItemStack.EMPTY);
-        this.timeToConvert = input.getIntOr(TIME_TO_CONVERT, DEFAULT_TIME_TO_CONVERT);
-        this.conversionProgress = input.getIntOr(CONVERSION_PROGRESS, 0);
-        this.conversionOutput = input.read(CONVERSION_OUTPUT, ItemStack.CODEC).orElse(ItemStack.EMPTY);
-        this.filter = input.read(FILTER, ItemPredicate.CODEC).orElse(ItemPredicate.Builder.item().build());
+        this.timeToConvert = input.getIntOr(DisplayBlockEntity.TIME_TO_CONVERT, DEFAULT_TIME_TO_CONVERT);
+        this.conversionProgress = input.getIntOr(DisplayBlockEntity.CONVERSION_PROGRESS, 0);
+        this.conversionOutput = input.read(DisplayBlockEntity.CONVERSION_OUTPUT, ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        this.filter = input.read(DisplayBlockEntity.FILTER, ItemPredicate.CODEC).orElse(ItemPredicate.Builder.item().build());
+        this.componentsToRemove = input.read(DisplayBlockEntity.COMPONENTS_TO_REMOVE, DataComponentType.CODEC.listOf()).orElse(Collections.emptyList());
     }
 
     @Override
@@ -132,5 +145,19 @@ public class DisplayBlockEntity extends BlockEntity {
         this.conversionProgress = conversionProgress;
         setChanged();
         level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+    }
+
+    public Optional<ItemStack> getOutputItem() {
+        if (!conversionOutput.isEmpty()) {
+            return Optional.of(conversionOutput);
+        }
+        if (componentsToRemove.isEmpty()) {
+            return Optional.empty();
+        }
+        ItemStack outputStack = itemStack.copy();
+        for (DataComponentType<?> componentType : componentsToRemove) {
+            outputStack.remove(componentType);
+        }
+        return Optional.of(outputStack);
     }
 }
