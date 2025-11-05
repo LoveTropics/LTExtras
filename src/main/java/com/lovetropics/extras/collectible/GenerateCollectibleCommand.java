@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.lovetropics.extras.ExtraDataComponents;
+import com.lovetropics.extras.registry.ExtraRegistries;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -21,9 +22,12 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.ComponentArgument;
 import net.minecraft.commands.arguments.ResourceArgument;
+import net.minecraft.commands.arguments.ResourceOrTagArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -34,6 +38,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.equipment.Equippable;
 import net.neoforged.neoforge.server.command.EnumArgument;
 
@@ -95,6 +100,18 @@ public class GenerateCollectibleCommand {
                                                         ResourceArgument.getResource(context, "entity", Registries.ENTITY_TYPE),
                                                         context.getArgument("type", CollectibleExtraDisplayType.class)
                                                 ))
+                                        )
+                                )
+                        )
+                        .then(literal("hide_components")
+                                .then(argument("components", ResourceOrTagArgument.resourceOrTag(buildContext, Registries.DATA_COMPONENT_TYPE))
+                                        .executes(context -> hideComponents(context, ResourceOrTagArgument.getResourceOrTag(context, "components", Registries.DATA_COMPONENT_TYPE))
+                                        )
+                                )
+                        )
+                        .then(literal("remove_components")
+                                .then(argument("components", ResourceOrTagArgument.resourceOrTag(buildContext, Registries.DATA_COMPONENT_TYPE))
+                                        .executes(context -> removeComponents(context, ResourceOrTagArgument.getResourceOrTag(context, "components", Registries.DATA_COMPONENT_TYPE))
                                         )
                                 )
                         )
@@ -238,6 +255,35 @@ public class GenerateCollectibleCommand {
         }
         throw NOT_CREATED.create();
     }
-    
+
+    private static int hideComponents(CommandContext<CommandSourceStack> context, ResourceOrTagArgument.Result<DataComponentType<?>> components) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        ItemStack heldItem = player.getMainHandItem();
+        List<DataComponentType<?>> typesToHide = new ArrayList<>();
+        for (Holder<DataComponentType<?>> dataComponentType : BuiltInRegistries.DATA_COMPONENT_TYPE.asHolderIdMap()) {
+            if (components.test(dataComponentType) && heldItem.has(dataComponentType.value())) {
+                typesToHide.add(dataComponentType.value());
+            }
+        }
+        TooltipDisplay tooltipDisplay = heldItem.has(DataComponents.TOOLTIP_DISPLAY) ? heldItem.get(DataComponents.TOOLTIP_DISPLAY) : TooltipDisplay.DEFAULT;
+        for (DataComponentType<?> dataComponentType : typesToHide) {
+            tooltipDisplay = tooltipDisplay.withHidden(dataComponentType, true);
+        }
+        heldItem.set(DataComponents.TOOLTIP_DISPLAY, tooltipDisplay);
+        context.getSource().sendSuccess(() -> Component.literal("Hid specified data components on held item."), true);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int removeComponents(CommandContext<CommandSourceStack> context, ResourceOrTagArgument.Result<DataComponentType<?>> components) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        ItemStack heldItem = player.getMainHandItem();
+        for (Holder<DataComponentType<?>> dataComponentType : BuiltInRegistries.DATA_COMPONENT_TYPE.asHolderIdMap()) {
+            if (components.test(dataComponentType) && heldItem.has(dataComponentType.value())) {
+                heldItem.remove(dataComponentType.value());
+            }
+        }
+        context.getSource().sendSuccess(() -> Component.literal("Removed specified data components on held item."), true);
+        return Command.SINGLE_SUCCESS;
+    }
 
 }
