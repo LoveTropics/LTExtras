@@ -137,7 +137,7 @@ public class DisplayBlockEntity extends BlockEntity {
         }
         return Optional.of(outputStack);
     }
-    
+
     private <T> void setDefault(ItemStack itemStack, DataComponentType<T> componentType) {
         ItemStack defaultStack = new ItemStack(itemStack.getItem());
         if (defaultStack.has(componentType)) {
