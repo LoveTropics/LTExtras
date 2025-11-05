@@ -65,6 +65,19 @@ public class ExtraItems {
 
     public static final ItemEntry<Item> TROPICOIN = REGISTRATE.item("tropicoin", Item::new).lang("TropiCoin").register();
 
+    public static final ItemEntry<Item> BLUE_KEY = REGISTRATE.item("blue_key", Item::new).register();
+    public static final ItemEntry<Item> RED_KEY = REGISTRATE.item("red_key", Item::new).register();
+    public static final ItemEntry<Item> WHITE_KEY = REGISTRATE.item("white_key", Item::new).register();
+    public static final ItemEntry<Item> YELLOW_KEY = REGISTRATE.item("yellow_key", Item::new).register();
+    public static final ItemEntry<Item> DENTED_CAN = REGISTRATE.item("dented_can", Item::new).register();
+    public static final ItemEntry<Item> FILLED_LUBRICANT_JAR = REGISTRATE.item("filled_lubricant_jar", Item::new).register();
+    public static final ItemEntry<Item> LUBRICANT_JAR = REGISTRATE.item("lubricant_jar", Item::new).register();
+    public static final ItemEntry<Item> PAPER_BAG = REGISTRATE.item("paper_bag", Item::new).register();
+    public static final ItemEntry<Item> PC_ENERGY = REGISTRATE.item("pc_energy", Item::new).lang("PCEnergy").register();
+    public static final ItemEntry<Item> TROPI_COOKIES = REGISTRATE.item("tropi_cookies", Item::new).register();
+    public static final ItemEntry<Item> GEGY_POTATO_CHIPS = REGISTRATE.item("gegy_potato_chips", Item::new).lang("Gegy's Potato Chips").register();
+
+
     public static final ItemEntry<Item> ORANGE_GLASSES = sunglasses("orange_glasses").register();
     public static final ItemEntry<Item> BLUE_GLASSES = sunglasses("blue_glasses").register();
 
