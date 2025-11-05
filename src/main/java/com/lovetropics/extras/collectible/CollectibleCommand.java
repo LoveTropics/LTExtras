@@ -6,6 +6,7 @@ import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.mixin.ResourceKeyArgumentAccessor;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.mojang.authlib.GameProfile;
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -16,6 +17,7 @@ import net.minecraft.Util;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.arguments.ResourceOrTagArgument;
 import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.core.Holder;
@@ -58,6 +60,13 @@ public class CollectibleCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         dispatcher.register(literal("collectible")
                 .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .then(literal("give_stack")
+                        .then(argument("target", players())
+                                .then(argument("collectible", ResourceArgument.resource(buildContext, ExtraRegistries.COLLECTIBLE))
+                                        .executes(c -> giveStack(c, getPlayers(c, "target"), ResourceArgument.getResource(c, "collectible", ExtraRegistries.COLLECTIBLE)))
+                                )
+                        )
+                )
                 .then(literal("give")
                         .then(argument("target", players())
                                 .then(literal("item")
@@ -112,6 +121,13 @@ public class CollectibleCommand {
     private static int give(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, ItemInput item) throws CommandSyntaxException {
         ItemStack stack = item.createItemStack(1, true);
         return giveSingle(ctx, players, Holder.direct(new Collectible(stack)));
+    }
+
+    private static int giveStack(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, Holder<Collectible> collectibleHolder) throws CommandSyntaxException {
+        ItemStack unmarkedItemStack = Collectible.createUnmarkedItemStack(collectibleHolder);
+        players.forEach(player -> player.getInventory().add(unmarkedItemStack));
+        ctx.getSource().sendSuccess(() -> Component.literal("Gave collectible item to" + players.size() + " players"), true);
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int give(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, ResourceOrTagArgument.Result<Collectible> collectibles) throws CommandSyntaxException {

@@ -20,18 +20,26 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.ComponentArgument;
+import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.equipment.Equippable;
 import net.neoforged.neoforge.server.command.EnumArgument;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static net.minecraft.commands.Commands.argument;
@@ -41,6 +49,8 @@ public class GenerateCollectibleCommand {
     private static final SimpleCommandExceptionType ALREADY_CREATED = new SimpleCommandExceptionType(Component.literal("Collectible data already created please use /generatecollectible modify"));
     private static final SimpleCommandExceptionType NOT_CREATED = new SimpleCommandExceptionType(Component.literal("Collectible data not found on held item. Please use \"/generatecollectible create\" first."));
     private static final SimpleCommandExceptionType NOT_A_COLLECTIBLE = new SimpleCommandExceptionType(Component.literal("The held item is not a collectible."));
+
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         // @formatter:off
@@ -70,6 +80,24 @@ public class GenerateCollectibleCommand {
                                    .executes(context -> setExtraLore(context, ComponentArgument.getResolvedComponent(context, "extra_lore")))
                                )
                         )
+                        .then(literal("name")
+                                .then(argument("name", StringArgumentType.word())
+                                        .executes(context -> setName(context, StringArgumentType.getString(context, "extra_lore")))
+                                )
+                        )
+                )
+                .then(literal("special")
+                        .then(literal("entity_named")
+                                .then(argument("entity", ResourceArgument.resource(buildContext, Registries.ENTITY_TYPE))
+                                        .then(argument("type", EnumArgument.enumArgument(CollectibleExtraDisplayType.class))
+                                                .executes(context -> setSpecialName(
+                                                        context,
+                                                        ResourceArgument.getResource(context, "entity", Registries.ENTITY_TYPE),
+                                                        context.getArgument("type", CollectibleExtraDisplayType.class)
+                                                ))
+                                        )
+                                )
+                        )
                 )
                 .then(literal("export")
                         .executes(GenerateCollectibleCommand::export)
@@ -86,9 +114,7 @@ public class GenerateCollectibleCommand {
             throw NOT_A_COLLECTIBLE.create();
         }
         Collectible collectible = new Collectible(heldItem);
-        JsonElement jsonElement = Collectible.DIRECT_CODEC.encodeStart(JsonOps.INSTANCE, collectible).getOrThrow();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(jsonElement);
+        String json = GSON.toJson(Collectible.DIRECT_CODEC.encodeStart(JsonOps.INSTANCE, collectible).getOrThrow());
         ctx.getSource().sendSystemMessage(Component.literal("Exported Click to Copy").withStyle(style -> style
                 .withClickEvent(new ClickEvent.CopyToClipboard(json))));
         return Command.SINGLE_SUCCESS;
@@ -101,12 +127,29 @@ public class GenerateCollectibleCommand {
         if (collectibleLore == null) {
             CollectibleDisplayInfo newLore = new CollectibleDisplayInfo(name, false, rarity, Optional.empty());
             heldItem.set(ExtraDataComponents.COLLECTIBLE_LORE, newLore);
-            heldItem.set(DataComponents.CUSTOM_NAME, Component.translatable("lt.collectible." + name + ".name")
-                    .withStyle(style -> style.withColor(TextColor.parseColor(rarity.getColor()).getOrThrow())));
+            heldItem.set(DataComponents.CUSTOM_NAME, newLore.getComponent(heldItem));
             ctx.getSource().sendSuccess(() -> Component.literal("Initialized Collectable " + name + " with rarity " + rarity), false);
             return Command.SINGLE_SUCCESS;
         }
         throw ALREADY_CREATED.create();
+    }
+
+    private static int setName(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        ItemStack heldItem = player.getMainHandItem();
+        CollectibleDisplayInfo collectibleLore = heldItem.get(ExtraDataComponents.COLLECTIBLE_LORE);
+        if (collectibleLore != null) {
+            CollectibleDisplayInfo newLore = new CollectibleDisplayInfo(
+                    name,
+                    collectibleLore.description(),
+                    collectibleLore.rarity(),
+                    collectibleLore.additionalLore()
+            );
+            heldItem.set(ExtraDataComponents.COLLECTIBLE_LORE, newLore);
+            ctx.getSource().sendSuccess(() -> Component.literal("Set collectible description to " + name + " on held item."), false);
+            return Command.SINGLE_SUCCESS;
+        }
+        throw NOT_CREATED.create();
     }
 
     private static int setExtraLore(CommandContext<CommandSourceStack> ctx, Component component) throws CommandSyntaxException {
@@ -118,14 +161,13 @@ public class GenerateCollectibleCommand {
                     collectibleLore.name(),
                     collectibleLore.description(),
                     collectibleLore.rarity(),
-                    Optional.of(component)
+                    Optional.of(List.of(component))
             );
             heldItem.set(ExtraDataComponents.COLLECTIBLE_LORE, newLore);
             ctx.getSource().sendSuccess(() -> Component.literal("Set collectible description to " + "" + " on held item."), false);
             return Command.SINGLE_SUCCESS;
         }
         throw NOT_CREATED.create();
-
     }
 
     private static int setDescription(CommandContext<CommandSourceStack> ctx, boolean description) throws CommandSyntaxException {
@@ -163,17 +205,39 @@ public class GenerateCollectibleCommand {
             return Command.SINGLE_SUCCESS;
         }
         throw NOT_CREATED.create();
-
     }
 
-    private static int generate(CommandContext<CommandSourceStack> ctx, Rarity rarity, boolean description, boolean modifier) throws CommandSyntaxException {
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
+    private static int setSpecialName(CommandContext<CommandSourceStack> context, Holder.Reference<EntityType<?>> entity, CollectibleExtraDisplayType type) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
         ItemStack heldItem = player.getMainHandItem();
-
-
-        DataComponentPatch componentsPatch = heldItem.getComponentsPatch();
-
-        return Command.SINGLE_SUCCESS;
+        CollectibleDisplayInfo collectibleLore = heldItem.get(ExtraDataComponents.COLLECTIBLE_LORE);
+        if (collectibleLore != null) {
+            EntityType<?> value = entity.value();
+            MutableComponent append = Component.empty().append(value.getDescription())
+                    .append(" ").append(type.getComponent())
+                    .withStyle(style -> {
+                        return style.withItalic(false).withColor(TextColor.parseColor(collectibleLore.rarity().getColor()).getOrThrow());
+                    });
+            heldItem.set(DataComponents.CUSTOM_NAME, append);
+            Equippable equippable = heldItem.get(DataComponents.EQUIPPABLE);
+            if (equippable != null) {
+                List<Component> extraLore = new ArrayList<>();
+                EquipmentSlot slot = equippable.slot();
+                MutableComponent translatable = Component.translatable("item.modifiers." + slot.getSerializedName());
+                extraLore.add(translatable.withStyle(ChatFormatting.GRAY));
+                extraLore.addAll(type.getAdditionalLore(value));
+                CollectibleDisplayInfo newLore = new CollectibleDisplayInfo(
+                        collectibleLore.name(),
+                        collectibleLore.description(),
+                        collectibleLore.rarity(),
+                        Optional.of(extraLore));
+                heldItem.set(ExtraDataComponents.COLLECTIBLE_LORE, newLore);
+                context.getSource().sendSuccess(() -> Component.literal("Set special collectible name for entity " + value.getDescription().getString() + " on held item."), false);
+            }
+            return Command.SINGLE_SUCCESS;
+        }
+        throw NOT_CREATED.create();
     }
+    
 
 }
