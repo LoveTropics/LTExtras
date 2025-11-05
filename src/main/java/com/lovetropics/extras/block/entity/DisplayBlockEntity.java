@@ -14,6 +14,7 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -122,6 +123,7 @@ public class DisplayBlockEntity extends BlockEntity {
         output.putInt(CONVERSION_PROGRESS, this.conversionProgress);
         output.store(FILTER, ItemPredicate.CODEC, this.filter);
         output.putInt(TIME_TO_CONVERT, this.timeToConvert);
+        output.store(COMPONENTS_TO_REMOVE, DataComponentType.CODEC.listOf(), this.componentsToRemove);
     }
 
     public ItemStack getItemStack() {
@@ -130,7 +132,7 @@ public class DisplayBlockEntity extends BlockEntity {
 
     public void setItemStack(ItemStack itemStack) {
         this.itemStack = itemStack;
-        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     public ItemStack getDisplayItemStack() {
@@ -144,7 +146,7 @@ public class DisplayBlockEntity extends BlockEntity {
     public void setConversionProgress(int conversionProgress) {
         this.conversionProgress = conversionProgress;
         setChanged();
-        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     public Optional<ItemStack> getOutputItem() {
