@@ -43,6 +43,7 @@ public class ExtraFusionModelProvider extends FusionModelProvider {
         createConnectedPiecedModel(ExtraBlocks.RED_SHIPPING_CONTAINER.get(), null);
         createConnectedPiecedModel(ExtraBlocks.BLUE_SHIPPING_CONTAINER.get(), null);
         createConnectedPiecedModel(ExtraBlocks.YELLOW_SHIPPING_CONTAINER.get(), null);
+        createConnectedPiecedModel(ExtraBlocks.GREEN_SHIPPING_CONTAINER.get(), null);
 
         createConnectedPiecedModel(ExtraBlocks.WAREHOUSE_ROAD.get(), null);
 

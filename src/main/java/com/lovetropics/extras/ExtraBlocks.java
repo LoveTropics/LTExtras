@@ -653,6 +653,13 @@ public class ExtraBlocks {
             .simpleItem()
             .register();
 
+    public static final BlockEntry<Block> GREEN_SHIPPING_CONTAINER = REGISTRATE
+            .block("green_shipping_container", Block::new)
+            .initialProperties(() -> Blocks.BEDROCK)
+            .properties(BlockBehaviour.Properties::noLootTable)
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> WAREHOUSE_ROAD = REGISTRATE
             .block("warehouse_road", Block::new)
             .initialProperties(() -> Blocks.BEDROCK)
