@@ -91,17 +91,13 @@ public class WarehouseRoadBoosterBlock extends Block {
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
         if (entity instanceof LivingEntity livingEntity && !livingEntity.isSteppingCarefully()) {
-            livingEntity.addEffect(new MobEffectInstance(ExtraEffects.FORKLIFT_BOOST, FORKLIFT_BOOST_TICKS, 1, false, false, true));
+            Entity vehicle = entity.getVehicle();
+            if (vehicle instanceof ForkliftEntity forkliftEntity) {
+                forkliftEntity.applySpeedBoost(FORKLIFT_BOOST_TICKS);
+                livingEntity.addEffect(new MobEffectInstance(ExtraEffects.FORKLIFT_BOOST, FORKLIFT_BOOST_TICKS, 1, false, false, true));
+            }
         }
-    }
-    @Override
 
-    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-        if (level.isClientSide()) return;
-        if (entity instanceof LivingEntity livingEntity) {
-            livingEntity.addEffect(new MobEffectInstance(ExtraEffects.FORKLIFT_BOOST, FORKLIFT_BOOST_TICKS));
-        }
-        super.stepOn(level, pos, state, entity);
     }
 
     static {
