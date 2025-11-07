@@ -3,11 +3,14 @@ package com.lovetropics.extras.data.attachment;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsStore;
+import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import java.util.Collections;
 
 public class ExtraAttachments {
     public static final DeferredRegister<AttachmentType<?>> REGISTER = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, LTExtras.MODID);
@@ -22,5 +25,12 @@ public class ExtraAttachments {
 
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<SpawnItemsStore>> SPAWN_ITEMS_STORE = REGISTER.register(
             "spawn_items_store", () -> AttachmentType.builder(SpawnItemsStore::new).serialize(SpawnItemsStore.MAP_CODEC).build()
+    );
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<ModelModifierStore>> MODEL_MODIFIERS = REGISTER.register(
+            "model_modifiers", () -> AttachmentType.builder(() -> ModelModifierStore.of(Collections.emptyList()))
+                    .serialize(ModelModifierStore.MAP_CODEC)
+                    .sync(ModelModifierStore.STREAM_CODEC)
+                    .build()
     );
 }

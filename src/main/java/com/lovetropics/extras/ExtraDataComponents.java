@@ -7,7 +7,7 @@ import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.PaintingOverlay;
-import com.lovetropics.extras.item.WalkAnimation;
+import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
 import com.mojang.serialization.Codec;
@@ -89,9 +89,9 @@ public class ExtraDataComponents {
             "gravity",
             builder -> builder.persistent(Codec.floatRange(-10.0f, 10.0f)).networkSynchronized(ByteBufCodecs.FLOAT)
     );
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<WalkAnimation>> WALK_ANIMATION = REGISTER.registerComponentType(
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ModelModifierType>> WALK_ANIMATION = REGISTER.registerComponentType(
             "walk_animation",
-            builder -> builder.persistent(WalkAnimation.CODEC).networkSynchronized(WalkAnimation.STREAM_CODEC)
+            builder -> builder.persistent(ModelModifierType.CODEC).networkSynchronized(ModelModifierType.STREAM_CODEC)
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<WalkSound>> WALK_SOUND = REGISTER.registerComponentType(
             "walk_sound",
