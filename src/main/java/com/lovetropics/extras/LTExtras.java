@@ -11,7 +11,9 @@ import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
 import com.lovetropics.extras.collectible.GenerateCollectibleCommand;
+import com.lovetropics.extras.command.ExtraCommandArguments;
 import com.lovetropics.extras.command.GenerateCommand;
+import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.command.PoiCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
 import com.lovetropics.extras.command.TpCommand;
@@ -95,6 +97,7 @@ public class LTExtras {
         ExtraAttachments.REGISTER.register(modBus);
         ExtraSounds.REGISTER.register(modBus);
         ExtraSerializers.REGISTER.register(modBus);
+        ExtraCommandArguments.REGISTER.register(modBus);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
@@ -163,6 +166,7 @@ public class LTExtras {
         WorldEffectCommand.register(dispatcher);
         WarpCommand.register(dispatcher);
         PoiCommand.register(dispatcher, buildContext);
+        ModelModifierCommand.register(dispatcher);
     }
 
     private void onRegisterClientCommands(RegisterClientCommandsEvent event) {

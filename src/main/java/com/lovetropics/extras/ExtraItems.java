@@ -13,7 +13,7 @@ import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
 import com.lovetropics.extras.item.TropicMapItem;
-import com.lovetropics.extras.item.WalkAnimation;
+import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.lovetropics.extras.sounds.ExtraSounds;
@@ -137,7 +137,7 @@ public class ExtraItems {
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.FEET)
                             .setAsset(PLACEHOLDER_EQUIPMENT_ASSET)
                             .build())
-                    .component(ExtraDataComponents.WALK_ANIMATION, WalkAnimation.FABULOUS)
+                    .component(ExtraDataComponents.WALK_ANIMATION, ModelModifierType.FABULOUS)
                     .component(ExtraDataComponents.WALK_SOUND, WalkSound.builder().soundEvent(ExtraSounds.HEELS_STEP).cooldown(0.9f).volume(.5f).build())
                     .component(ExtraDataComponents.ADJUST_HEIGHT, 0.2F)
             )
