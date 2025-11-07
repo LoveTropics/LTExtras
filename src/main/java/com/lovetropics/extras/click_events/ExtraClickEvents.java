@@ -22,6 +22,7 @@ public class ExtraClickEvents {
 
     private static final CodecRegistry<ResourceLocation, MapCodec<? extends ExtraClickEvent>> REGISTRY = Util.make(CodecRegistry.resourceLocationKeys(), registry -> {
         registry.register(LTExtras.location("run_function"), RunFunctionClickEvent.CODEC);
+        registry.register(LTExtras.location("mount_entity"), MountClickEvent.CODEC);
     });
 
     public static void handleCustomClickAction(ServerPlayer serverPlayer, ResourceLocation location, Optional<Tag> tag) {

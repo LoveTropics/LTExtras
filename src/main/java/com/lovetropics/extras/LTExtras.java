@@ -24,6 +24,7 @@ import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.effect.PropaguledEffect;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
+import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.world_effect.WorldEffectCommand;
 import com.mojang.brigadier.CommandDispatcher;
@@ -167,6 +168,7 @@ public class LTExtras {
         WarpCommand.register(dispatcher);
         PoiCommand.register(dispatcher, buildContext);
         ModelModifierCommand.register(dispatcher);
+        MountCommand.register(dispatcher, buildContext);
     }
 
     private void onRegisterClientCommands(RegisterClientCommandsEvent event) {
