@@ -16,7 +16,9 @@ public enum ModelModifierType implements StringRepresentable {
     FLAIL(2, "flail"),
     HOVERING(3, "hovering"),
     SHUFFLE(4, "shuffle"),
-    UPSIDEDOWN(5, "upsidedown")
+    UPSIDEDOWN(5, "upsidedown"),
+    SHRUNK(6, "shrunk"),
+    ENLARGED(7, "enlarged")
     ;
 
     public static final StringRepresentable.EnumCodec<ModelModifierType> CODEC = StringRepresentable.fromEnum(ModelModifierType::values);

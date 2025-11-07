@@ -3,9 +3,11 @@ package com.lovetropics.extras.client.model_modifer;
 import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.client.model_modifer.types.FabulousWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.FlailWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.HoveringWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.ShuffleWalkModifier;
+import com.lovetropics.extras.client.model_modifer.types.SpecialScaleModifier;
 import com.lovetropics.extras.client.model_modifer.types.UpsidedownModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
@@ -29,10 +31,13 @@ public class ModelModifierClient {
 
     private static final Map<ModelModifierType, ModelModifier> CLIENT_MODEL_DATA = Map.of(
             ModelModifierType.DEFAULT, ModelModifier.NO_OP,
+            ModelModifierType.FABULOUS, new FabulousWalkModifier(),
             ModelModifierType.FLAIL, new FlailWalkModifier(),
             ModelModifierType.HOVERING, new HoveringWalkModifier(),
             ModelModifierType.SHUFFLE, new ShuffleWalkModifier(),
-            ModelModifierType.UPSIDEDOWN, new UpsidedownModifier()
+            ModelModifierType.UPSIDEDOWN, new UpsidedownModifier(),
+            ModelModifierType.SHRUNK, new SpecialScaleModifier(0.8f, -4f),
+            ModelModifierType.ENLARGED, new SpecialScaleModifier(1.2f, 5.7f)
     );
 
     public static final ContextKey<List<ModelModifier>> MODIFIERS = new ContextKey<>(LTExtras.location("modifiers"));

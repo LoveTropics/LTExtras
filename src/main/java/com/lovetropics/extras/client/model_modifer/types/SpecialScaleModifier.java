@@ -6,11 +6,9 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.world.entity.LivingEntity;
 
 public record SpecialScaleModifier(float yScale, float yOffset) implements ModelModifier {
-
-
+    
     @Override
     public void modify(HumanoidRenderState renderState, HumanoidModel<?> model) {
-        float yScale = 1.2f;
         model.body.yScale *= yScale;
         model.leftLeg.yScale *= yScale;
         model.rightLeg.yScale *= yScale;
@@ -25,7 +23,7 @@ public record SpecialScaleModifier(float yScale, float yOffset) implements Model
         model.leftArm.y *= yScale;
         model.rightArm.y *= yScale;
 
-        float y = 5f;
+        float y = yOffset;
         model.body.y -= y;
         model.leftLeg.y -= y;
         model.rightLeg.y -= y;
