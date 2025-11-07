@@ -20,11 +20,10 @@ public class SpecialWalkAnimator {
         }
 
         List<ModelModifier> renderData = renderState.getRenderData(ModelModifierClient.MODIFIERS);
-        if (renderData == null) {
-            return;
-        }
-        for (ModelModifier modifier : renderData) {
-            modifier.modify(humanoidRenderState, humanoidModel);
+        if (renderData != null) {
+            for (ModelModifier modifier : renderData) {
+                modifier.modify(humanoidRenderState, humanoidModel);
+            }
         }
 
         if (humanoidRenderState.feetEquipment.is(ExtraItems.HIGH_HEELS)) {

@@ -9,8 +9,7 @@ public interface ModelModifier {
     void modify(HumanoidRenderState renderState, HumanoidModel<?> model);
 
     void preApply(LivingEntity livingEntity, HumanoidRenderState state);
-
-
+    
     ModelModifier NO_OP = new ModelModifier() {
         @Override
         public void modify(HumanoidRenderState renderState, HumanoidModel<?> model) {}
