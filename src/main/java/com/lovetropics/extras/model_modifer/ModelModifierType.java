@@ -1,6 +1,5 @@
 package com.lovetropics.extras.model_modifer;
 
-import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -20,7 +19,7 @@ public enum ModelModifierType implements StringRepresentable {
     UPSIDEDOWN(5, "upsidedown")
     ;
 
-    public static final Codec<ModelModifierType> CODEC = StringRepresentable.fromEnum(ModelModifierType::values);
+    public static final StringRepresentable.EnumCodec<ModelModifierType> CODEC = StringRepresentable.fromEnum(ModelModifierType::values);
 
     public static final IntFunction<ModelModifierType> BY_ID = ByIdMap.continuous(i -> i.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
     public static final StreamCodec<ByteBuf, ModelModifierType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, i -> i.id);
@@ -36,12 +35,7 @@ public enum ModelModifierType implements StringRepresentable {
     }
 
     public static ModelModifierType fromName(String name) {
-        for (ModelModifierType type : values()) {
-            if (type.name.equalsIgnoreCase(name)) {
-                return type;
-            }
-        }
-        return DEFAULT;
+        return CODEC.byName(name, DEFAULT);
     }
 
     @Override
