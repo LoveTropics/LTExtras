@@ -10,7 +10,10 @@ import com.lovetropics.extras.client.entity.model.SpinningSignModel;
 import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
+import com.lovetropics.extras.collectible.GenerateCollectibleCommand;
+import com.lovetropics.extras.command.ExtraCommandArguments;
 import com.lovetropics.extras.command.GenerateCommand;
+import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.command.PoiCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
 import com.lovetropics.extras.command.TpCommand;
@@ -21,6 +24,7 @@ import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.effect.PropaguledEffect;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
+import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.world_effect.WorldEffectCommand;
 import com.mojang.brigadier.CommandDispatcher;
@@ -32,10 +36,12 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagEntry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -92,6 +98,7 @@ public class LTExtras {
         ExtraAttachments.REGISTER.register(modBus);
         ExtraSounds.REGISTER.register(modBus);
         ExtraSerializers.REGISTER.register(modBus);
+        ExtraCommandArguments.REGISTER.register(modBus);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
@@ -111,8 +118,22 @@ public class LTExtras {
 
                     p.add("ltextras.friction", "Friction");
 
+                    String keybindBase = "key." + MODID + ".";
+                    p.add("key.categories." + MODID + ".lobby" , "Forklift Controls");
+                    p.add(keybindBase + "forklift_raise", "Raise Forklift");
+                    p.add(keybindBase + "forklift_lower", "Lower Forklift");
+                    p.add(keybindBase + "forklift_drift", "Drift");
+                    p.add(keybindBase + "eject_fork_riders", "Eject Riders");
+
                     TpCommand.addTranslations(p);
                     WarpCommand.addTranslations(p);
+                })
+                .addDataGenerator(ProviderType.BLOCK_TAGS, block -> {
+                    block.tag(ExtraTags.Blocks.PLUMBERS_TNT_EXPLODES)
+                            .add(Blocks.MUD, Blocks.PACKED_MUD, Blocks.DIRT)
+                            .add(TagEntry.optionalElement(ResourceLocation.fromNamespaceAndPath("tropicraft", "mud")))
+                            .add(TagEntry.optionalElement(ResourceLocation.fromNamespaceAndPath("tropicraft", "mud_with_pianguas")))
+                    ;
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
                         .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))
@@ -140,11 +161,14 @@ public class LTExtras {
         SetMaxPlayersCommand.register(dispatcher);
         GenerateCommand.register(dispatcher);
         CollectibleCommand.register(dispatcher, buildContext);
+        GenerateCollectibleCommand.register(dispatcher, buildContext);
         SpawnItemsCommand.register(dispatcher);
         TpCommand.register(dispatcher);
         WorldEffectCommand.register(dispatcher);
         WarpCommand.register(dispatcher);
         PoiCommand.register(dispatcher, buildContext);
+        ModelModifierCommand.register(dispatcher);
+        MountCommand.register(dispatcher, buildContext);
     }
 
     private void onRegisterClientCommands(RegisterClientCommandsEvent event) {

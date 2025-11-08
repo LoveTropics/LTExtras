@@ -13,7 +13,7 @@ import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
 import com.lovetropics.extras.item.TropicMapItem;
-import com.lovetropics.extras.item.WalkAnimation;
+import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.lovetropics.extras.sounds.ExtraSounds;
@@ -64,6 +64,19 @@ public class ExtraItems {
             .register();
 
     public static final ItemEntry<Item> TROPICOIN = REGISTRATE.item("tropicoin", Item::new).lang("TropiCoin").register();
+
+    public static final ItemEntry<Item> BLUE_KEY = REGISTRATE.item("blue_key", Item::new).register();
+    public static final ItemEntry<Item> RED_KEY = REGISTRATE.item("red_key", Item::new).register();
+    public static final ItemEntry<Item> WHITE_KEY = REGISTRATE.item("white_key", Item::new).register();
+    public static final ItemEntry<Item> YELLOW_KEY = REGISTRATE.item("yellow_key", Item::new).register();
+    public static final ItemEntry<Item> DENTED_CAN = REGISTRATE.item("dented_can", Item::new).register();
+    public static final ItemEntry<Item> FILLED_LUBRICANT_JAR = REGISTRATE.item("filled_lubricant_jar", Item::new).register();
+    public static final ItemEntry<Item> LUBRICANT_JAR = REGISTRATE.item("lubricant_jar", Item::new).register();
+    public static final ItemEntry<Item> PAPER_BAG = REGISTRATE.item("paper_bag", Item::new).register();
+    public static final ItemEntry<Item> PC_ENERGY = REGISTRATE.item("pc_energy", Item::new).lang("PCEnergy").register();
+    public static final ItemEntry<Item> TROPI_COOKIES = REGISTRATE.item("tropi_cookies", Item::new).register();
+    public static final ItemEntry<Item> GEGY_POTATO_CHIPS = REGISTRATE.item("gegy_potato_chips", Item::new).lang("Gegy's Potato Chips").register();
+
 
     public static final ItemEntry<Item> ORANGE_GLASSES = sunglasses("orange_glasses").register();
     public static final ItemEntry<Item> BLUE_GLASSES = sunglasses("blue_glasses").register();
@@ -124,7 +137,7 @@ public class ExtraItems {
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.FEET)
                             .setAsset(PLACEHOLDER_EQUIPMENT_ASSET)
                             .build())
-                    .component(ExtraDataComponents.WALK_ANIMATION, WalkAnimation.FABULOUS)
+                    .component(ExtraDataComponents.WALK_ANIMATION, ModelModifierType.FABULOUS)
                     .component(ExtraDataComponents.WALK_SOUND, WalkSound.builder().soundEvent(ExtraSounds.HEELS_STEP).cooldown(0.9f).volume(.5f).build())
                     .component(ExtraDataComponents.ADJUST_HEIGHT, 0.2F)
             )

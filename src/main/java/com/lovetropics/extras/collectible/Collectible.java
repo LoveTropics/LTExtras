@@ -73,9 +73,14 @@ public class Collectible implements DataComponentHolder {
     }
 
     public static ItemStack createItemStack(Holder<Collectible> collectible, UUID player) {
+        ItemStack stack = createUnmarkedItemStack(collectible);
+        addMarkerTo(player, collectible, stack);
+        return stack;
+    }
+
+    public static ItemStack createUnmarkedItemStack(Holder<Collectible> collectible) {
         ItemStack stack = new ItemStack(collectible.value().item());
         stack.applyComponents(collectible.value().components());
-        addMarkerTo(player, collectible, stack);
         return stack;
     }
 

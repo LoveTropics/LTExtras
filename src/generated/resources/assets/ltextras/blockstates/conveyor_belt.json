@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "ltextras:block/conveyor_belt",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "ltextras:block/conveyor_belt",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "ltextras:block/conveyor_belt"
+    },
+    "facing=west": {
+      "model": "ltextras:block/conveyor_belt",
+      "y": 90
+    }
+  }
+}

@@ -4,12 +4,15 @@ import com.lovetropics.extras.ExtraBlocks;
 import com.lovetropics.extras.LTExtras;
 import com.supermartijn642.fusion.api.model.DefaultModelTypes;
 import com.supermartijn642.fusion.api.model.ModelInstance;
+import com.supermartijn642.fusion.api.model.ModelType;
+import com.supermartijn642.fusion.api.model.data.BaseModelData;
 import com.supermartijn642.fusion.api.model.data.ConnectingModelData;
 import com.supermartijn642.fusion.api.model.data.ConnectingModelDataBuilder;
 import com.supermartijn642.fusion.api.predicate.DefaultConnectionPredicates;
 import com.supermartijn642.fusion.api.provider.FusionModelProvider;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -40,10 +43,12 @@ public class ExtraFusionModelProvider extends FusionModelProvider {
         createConnectedPiecedModel(ExtraBlocks.RED_SHIPPING_CONTAINER.get(), null);
         createConnectedPiecedModel(ExtraBlocks.BLUE_SHIPPING_CONTAINER.get(), null);
         createConnectedPiecedModel(ExtraBlocks.YELLOW_SHIPPING_CONTAINER.get(), null);
+        createConnectedPiecedModel(ExtraBlocks.GREEN_SHIPPING_CONTAINER.get(), null);
 
         createConnectedPiecedModel(ExtraBlocks.WAREHOUSE_ROAD.get(), null);
 
-        createConnectedSimpleGroundLayerModel(ExtraBlocks.WAREHOUSE_PARKING_MARKING.get(), null);
+        createGroundLayerModel(ExtraBlocks.WAREHOUSE_PARKING_MARKING.get(), DefaultModelTypes.CONNECTING, null);
+        //createGroundLayerModel(ExtraBlocks.WAREHOUSE_ROAD_BOOSTER.get(), DefaultModelTypes.BASE, null);
 
         createBaseModel(ExtraBlocks.WAREHOUSE_FLOOR.get(), null, null);
     }
@@ -74,7 +79,7 @@ public class ExtraFusionModelProvider extends FusionModelProvider {
         );
     }
 
-    protected void createConnectedSimpleGroundLayerModel(Block block, @Nullable String texId) {
+    protected void createGroundLayerModel(Block block, @Nullable ModelType modelType, @Nullable String texId) {
         ResourceLocation texture = texId == null ? TextureMapping.getBlockTexture(block) : LTExtras.location("block/" + texId);
         ConnectingModelData modelData = ConnectingModelDataBuilder.builder()
                 .parent(LTExtras.location("block/ground_plane"))
@@ -83,7 +88,7 @@ public class ExtraFusionModelProvider extends FusionModelProvider {
                 .build();
         addModel(
                 ModelLocationUtils.getModelLocation(block),
-                ModelInstance.of(DefaultModelTypes.CONNECTING, modelData)
+                ModelInstance.of(modelType == null ? DefaultModelTypes.BASE : modelType, modelData)
         );
     }
 }

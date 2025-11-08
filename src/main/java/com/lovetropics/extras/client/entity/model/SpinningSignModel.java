@@ -71,7 +71,7 @@ public class SpinningSignModel extends EntityModel<SpinningSignRenderState> {
 
         PartDefinition sign_panel8 = angle_panels.addOrReplaceChild("sign_panel8", CubeListBuilder.create().texOffs(0, 0).addBox(-34.0F, -32.0F, -79.125F, 68.0F, 32.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -2.3562F, 0.0F));
 
-        return LayerDefinition.create(meshdefinition, 128, 128);
+        return LayerDefinition.create(meshdefinition, 256, 256);
     }
 
 

@@ -9,5 +9,13 @@
       "ltextras:heels_step/5",
       "ltextras:heels_step/6"
     ]
+  },
+  "forklift_boost_start": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      "ltextras:forklift_boost_start/1",
+      "ltextras:forklift_boost_start/2",
+      "ltextras:forklift_boost_start/3"
+    ]
   }
 }

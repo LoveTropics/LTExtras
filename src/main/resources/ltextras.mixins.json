@@ -23,6 +23,7 @@
     "ResourceKeyArgumentAccessor",
     "RideCommandMixin",
     "ScaffoldingBlockMixin",
+    "ServerCommonPacketListenerImplMixin",
     "ServerGamePacketListenerImplMixin",
     "WardenMixin",
     "client.fix.ClientCommandHandlerMixin",

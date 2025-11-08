@@ -43,8 +43,15 @@ public record ServerboundLiftForkliftPacket(boolean eject, int forkHeight, int e
                     passenger.stopRiding();
                     passenger.hasImpulse = true;
 
-                    float force = heightChanged / 25.f;
-                    passenger.setDeltaMovement(0, level.random.triangle(force, 0.1f + force), 0);
+                    float force = (float) heightChanged / ForkliftEntity.FORK_HEIGHT;
+                    double ejectY = level.random.triangle(force, 0.1f + force);
+
+                    final var forkMotion = forklift.getKnownMovement();
+                    double newVelX = forkMotion.x;
+                    double newVelY = (forklift.onGround() ? 0.0 : forkMotion.y) + ejectY;
+                    double newVelZ = forkMotion.z;
+
+                    passenger.setDeltaMovement(newVelX, newVelY, newVelZ);
                 }
                 level.playSound(forklift, forklift.blockPosition(), SoundEvents.BREEZE_JUMP, SoundSource.NEUTRAL, 1, 1);
             }

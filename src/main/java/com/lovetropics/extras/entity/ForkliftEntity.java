@@ -12,10 +12,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
@@ -33,6 +31,7 @@ import net.minecraft.world.entity.InterpolationHandler;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PlayerRideable;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
@@ -42,6 +41,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
@@ -56,16 +56,22 @@ import java.util.function.Predicate;
 public class ForkliftEntity extends Entity implements PlayerRideable {
     private static final EntityDataAccessor<Integer> DATA_FORK_HEIGHT = SynchedEntityData.defineId(ForkliftEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_IS_DRIFTING = SynchedEntityData.defineId(ForkliftEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> SPEED_BOOST_TICKS = SynchedEntityData.defineId(ForkliftEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> SPEED_BOOST_STRENGTH = SynchedEntityData.defineId(ForkliftEntity.class, EntityDataSerializers.FLOAT);
+
     private static final EntityDataAccessor<Optional<BlockPredicate>> DATA_COLLISION_PREDICATE = SynchedEntityData.defineId(ForkliftEntity.class, ExtraSerializers.BLOCK_PREDICATE.get());
+
 
     private static final Component CERTIFICATION_MISSING = ExtraLangKeys.FORKLIFT_CERTIFICATION_MISSING.get().withStyle(ChatFormatting.RED);
 
+    private static final float DEFAULT_SPEED_BOOST_STRENGTH = 0.05f;
     private static final int MAX_PASSENGERS = 3;
-    public static final int MIN_FORK_HEIGHT = -5;
-    public static final int MAX_FORK_HEIGHT = 20;
-    private static final float RIDER_X_OFFSET = 0.3f;
-    private static final float RIDER_Z_OFFSET = 2.0f;
-    public static final float FORKLIFT_SCALE = 1.2f;
+    public static final int MIN_FORK_HEIGHT = 0;
+    public static final int MAX_FORK_HEIGHT = 18;
+    public static final int FORK_HEIGHT = MAX_FORK_HEIGHT - MIN_FORK_HEIGHT;
+    private static final float RIDER_X_OFFSET = 0.8f;
+    private static final float RIDER_Z_OFFSET = 2.75f;
+    public static final float FORKLIFT_SCALE = 2.4f;
     public static final double FRICTION = 0.85f;
     public static final double DRIFT_FRICTION = 0.9f;
     public static final int DRIFT_TICKS = 50;
@@ -76,7 +82,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     public float driftStrength = 0.0f;
     private float deltaRotation;
 
-    public float lastForkHeight;
+    public int renderForkHeight;
+    public int renderForkHeight0;
     public float wheelRot;
     public float lastWheelRot;
 
@@ -93,7 +100,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         if (passenger.is(getControllingPassenger())) {
             return super.getDismountLocationForPassenger(passenger);
         }
-        return getPickupAABB().getCenter().add(0, 32 / 16f * FORKLIFT_SCALE, 0);
+        return getPickupAABB().getCenter().add(0, (2 + FORK_HEIGHT - this.getForkHeight()) / 16f * FORKLIFT_SCALE, 0);
     }
 
     public AABB getPickupAABB() {
@@ -141,7 +148,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
         final int riderIndex = getPassengers().indexOf(entity);
         final float forkHeight = FORKLIFT_SCALE * getForkHeight() / 16.0f;
-        final float forkRiderOffset = 1.8f - forkHeight;
+        final float forkRiderOffset = 2.8f - forkHeight;
         final float riderYRot = -getYRot() * ((float) Math.PI / 180F);
 
         if (riderIndex == 1) {
@@ -170,6 +177,17 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
+        if (this.isRemoved()) {
+            return true;
+        }
+
+        if(damageSource.getEntity() instanceof Player player && player.getAbilities().instabuild) {
+            this.markHurt();
+            this.gameEvent(GameEvent.ENTITY_DAMAGE, damageSource.getEntity());
+            this.discard();
+            return true;
+        }
+
         return false;
     }
 
@@ -178,9 +196,11 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         builder.define(DATA_FORK_HEIGHT, 0);
         builder.define(DATA_IS_DRIFTING, false);
         builder.define(DATA_COLLISION_PREDICATE, Optional.empty());
+        builder.define(SPEED_BOOST_TICKS, 0);
+        builder.define(SPEED_BOOST_STRENGTH, DEFAULT_SPEED_BOOST_STRENGTH);
     }
 
-    private void eject() {
+    private void tryEject() {
         ClientPacketDistributor.sendToServer(new ServerboundLiftForkliftPacket(true, MIN_FORK_HEIGHT, getId()));
     }
 
@@ -196,8 +216,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         return entityData.get(DATA_FORK_HEIGHT);
     }
 
-    public float getForkHeight(float partialTick) {
-        return partialTick == 1.0F ? this.getForkHeight() : Mth.lerp(partialTick, this.lastForkHeight, this.getForkHeight());
+    public float getRenderForkHeight(float partialTick) {
+        return partialTick == 1.0F ? this.getForkHeight() : Mth.lerp(partialTick, this.renderForkHeight0, this.renderForkHeight);
     }
 
     public float getWheelRot(float partialTick) {
@@ -217,6 +237,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         requiresCertification = input.read("RequiresCertification", Codec.BOOL).orElse(false);
         driftDuration = input.read("DriftDuration", Codec.INT).orElse(0);
         entityData.set(DATA_COLLISION_PREDICATE, input.read("CollisionPredicate", BlockPredicate.CODEC));
+        entityData.set(SPEED_BOOST_TICKS, input.read("SpeedBoostTicks", Codec.INT).orElse(0));
+        entityData.set(SPEED_BOOST_STRENGTH, input.read("SpeedBoostStrength", Codec.FLOAT).orElse(DEFAULT_SPEED_BOOST_STRENGTH));
     }
 
     @Override
@@ -224,6 +246,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         output.putBoolean("RequiresCertification", requiresCertification);
         output.putInt("DriftDuration", driftDuration);
         output.storeNullable("CollisionPredicate", BlockPredicate.CODEC, entityData.get(DATA_COLLISION_PREDICATE).orElse(null));
+        output.putInt("SpeedBoostTicks", entityData.get(SPEED_BOOST_TICKS));
+        output.putFloat("SpeedBoostStrength", entityData.get(SPEED_BOOST_STRENGTH));
     }
 
     @Override
@@ -256,14 +280,23 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         super.tick();
 
         interpolation.interpolate();
-        this.lastForkHeight = this.getForkHeight();
+        this.renderForkHeight0 = this.renderForkHeight;
+        this.renderForkHeight = this.getForkHeight();
         this.tickWheelRotation();
 
         if (isLocalInstanceAuthoritative()) {
             applyGravity();
+
             if(!isDrifting()) {
                 applyFriction(FRICTION);
             }
+
+            int speedBoostTicks = entityData.get(SPEED_BOOST_TICKS);
+            if (speedBoostTicks > 0) {
+                speedBoostTicks--;
+                entityData.set(SPEED_BOOST_TICKS, speedBoostTicks);
+            }
+
             if (level().isClientSide) {
                 if (isDrifting() && driftDuration == 0) {
                     ClientPacketDistributor.sendToServer(new ServerboundDriftForkliftPacket(false, getId()));
@@ -283,6 +316,10 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         }
         else {
             setDeltaMovement(Vec3.ZERO);
+        }
+
+        if (isDrifting() && level().isClientSide) {
+            spawnDriftingParticles();
         }
 
         move(MoverType.SELF, getDeltaMovement());
@@ -313,7 +350,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     }
 
     private void moveFork(int amt) {
-        sendForkHeightFromClient(getForkHeight() + amt);
+        sendForkHeightFromClient(this.getForkHeight() + amt);
     }
 
     private void controlForklift() {
@@ -330,8 +367,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             boolean eject_riders = ForkliftKeybinds.EJECT_FORK_RIDERS.isDown();
 
             // Must have enough space to eject
-            if (eject_riders && getForkHeight() > MIN_FORK_HEIGHT) {
-                eject();
+            if (eject_riders && getForkHeight() > MIN_FORK_HEIGHT && !liftDown) {
+                tryEject();
             }
 
             if (liftUp) {
@@ -363,6 +400,12 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
                 f -= 0.05F;
             }
 
+            int speedBoostTicks = entityData.get(SPEED_BOOST_TICKS);
+            if (speedBoostTicks > 0) {
+                float speedBoostStrength = entityData.get(SPEED_BOOST_STRENGTH);
+                f += speedBoostStrength;
+            }
+
             final boolean buildingDrift = driftCooldown == 0 && !isDrifting() && drift && ((inputUp && inputRight) || (inputDown && inputRight) || (inputUp && inputLeft) || (inputDown && inputLeft));
             if (buildingDrift) {
                 driftBuildTicks++;
@@ -390,33 +433,6 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         }
     }
 
-    @Override
-    protected void positionRider(Entity entity, Entity.MoveFunction callback) {
-        super.positionRider(entity, callback);
-        // use the same tag as boats because it's essentially the same thing
-        if (!entity.getType().is(EntityTypeTags.CAN_TURN_IN_BOATS)) {
-            entity.setYRot(entity.getYRot() + this.deltaRotation);
-            entity.setYHeadRot(entity.getYHeadRot() + this.deltaRotation);
-            this.refreshAndClampRotationIfDriver(entity);
-        }
-    }
-
-    @Override
-    public void onPassengerTurned(Entity entity) {
-        // this prevents the client from having some sort of lag on rotation?
-        this.refreshAndClampRotationIfDriver(entity);
-    }
-
-    protected void refreshAndClampRotationIfDriver(Entity entity) {
-        entity.setYBodyRot(this.getYRot());
-        float f = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
-        float f1 = getControllingPassenger() == entity ? Mth.clamp(f, -105.0F, 105.0F) : f;
-        f = f1 - f;
-        entity.yRotO += f;
-        entity.setYRot(entity.getYRot() + f);
-        entity.setYHeadRot(entity.getYRot());
-    }
-
     private void executeDrift(Vec3 travelVector) {
         hasImpulse = true;
 
@@ -425,6 +441,31 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             float zVelocity = Mth.cos(this.getYRot() * ((float)Math.PI / 180F));
             float boost = driftStrength / 10.f;
             setDeltaMovement(getDeltaMovement().add(-xVelocity * boost * DRIFT_FRICTION, 0.0F, zVelocity * boost * DRIFT_FRICTION));
+        }
+    }
+
+    public void spawnDriftingParticles() {
+        double yawRad = Math.toRadians(this.getYRot());
+        double forwardX = -Math.sin(yawRad);
+        double forwardZ = Math.cos(yawRad);
+        double perpX = Math.cos(yawRad);
+        double perpZ = Math.sin(yawRad);
+
+        double baseX = this.getX();
+        double baseY = this.getY() + 0.2D;
+        double baseZ = this.getZ();
+
+        double intensity = 1.0 + this.driftStrength * 2.0;
+
+        for (int i = 0; i < 2; i++) {
+            double sideOffset = (i == 0) ? -0.7D : 0.7D;
+            double px = baseX + forwardX * -1.2D + perpX * sideOffset;
+            double pz = baseZ + forwardZ * -1.2D + perpZ * sideOffset;
+
+            double vx = -getDeltaMovement().x * 0.5D + (level().random.nextDouble() - 0.5D) * 0.02D;
+            double vz = -getDeltaMovement().z * 0.5D + (level().random.nextDouble() - 0.5D) * 0.02D;
+
+            level().addParticle(ParticleTypes.CLOUD, px, baseY, pz, vx * intensity, 0.02D, vz * intensity);
         }
     }
 
@@ -442,6 +483,9 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
                 .orElse(false);
     }
 
+    public void applySpeedBoost(int ticks) {
+        entityData.set(SPEED_BOOST_TICKS, ticks);
+    }
 
     @Override
     public final ItemStack getPickResult() {

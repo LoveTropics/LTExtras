@@ -1,0 +1,6 @@
+{
+  "parent": "ltextras:block/ground_plane",
+  "textures": {
+    "up": "ltextras:block/warehouse_road_booster"
+  }
+}

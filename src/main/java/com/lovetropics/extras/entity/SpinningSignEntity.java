@@ -85,6 +85,12 @@ public class SpinningSignEntity extends Entity {
 
     @Override
     protected AABB makeBoundingBox(Vec3 position) {
-        return AABB.ofSize(position, 3f * getScale(), getScale(), 3f * getScale());
+        return AABB.ofSize(position, 0.1f, 0.1f, 0.1f);
+    }
+
+    @Override
+    public boolean shouldRenderAtSqrDistance(double distance) {
+        // This is bad but we will accept it for now :)
+        return true;
     }
 }

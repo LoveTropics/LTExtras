@@ -4,10 +4,12 @@ import com.lovetropics.extras.block.AdjustableLampBlock;
 import com.lovetropics.extras.block.BoringEndRodBlock;
 import com.lovetropics.extras.block.CeilingCarpetBlock;
 import com.lovetropics.extras.block.CheckpointBlock;
+import com.lovetropics.extras.block.ConveyorBeltBlock;
 import com.lovetropics.extras.block.CurtainBlock;
 import com.lovetropics.extras.block.CustomSeagrassBlock;
 import com.lovetropics.extras.block.CustomSugarCaneBlock;
 import com.lovetropics.extras.block.CustomTallSeagrassBlock;
+import com.lovetropics.extras.block.DisplayBlock;
 import com.lovetropics.extras.block.FakeWaterBlock;
 import com.lovetropics.extras.block.GirderBlock;
 import com.lovetropics.extras.block.GlowSticksBlock;
@@ -22,6 +24,7 @@ import com.lovetropics.extras.block.ParticleEmitterBlock;
 import com.lovetropics.extras.block.PassableBarrierBlock;
 import com.lovetropics.extras.block.PassableNoPlaceBarrierBlock;
 import com.lovetropics.extras.block.PianguasBlock;
+import com.lovetropics.extras.block.PlumbersTntBlock;
 import com.lovetropics.extras.block.ReedsBlock;
 import com.lovetropics.extras.block.RoleBarrierBlock;
 import com.lovetropics.extras.block.RopeBlock;
@@ -33,7 +36,9 @@ import com.lovetropics.extras.block.SpeedyZone;
 import com.lovetropics.extras.block.SubmergedLilyBlock;
 import com.lovetropics.extras.block.TeleportPadBlock;
 import com.lovetropics.extras.block.ThornStemBlock;
+import com.lovetropics.extras.block.WarehouseRoadBoosterBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
+import com.lovetropics.extras.block.entity.DisplayBlockEntity;
 import com.lovetropics.extras.block.entity.JumpPadBlockEntity;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
@@ -45,6 +50,7 @@ import com.mojang.math.Quadrant;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
+import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
 import com.tterrag.registrate.providers.generators.RegistrateItemModelGenerator;
@@ -347,6 +353,12 @@ public class ExtraBlocks {
             .build()
             .register();
 
+    public static final BlockEntry<ConveyorBeltBlock> CONVEYOR_BELT_BLOCK = REGISTRATE.block("conveyor_belt", ConveyorBeltBlock::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .blockstate(() -> Models::generateRotatedHorizontalBlock)
+            .simpleItem()
+            .register();
+
     public static final BlockEntityEntry<ParticleEmitterBlockEntity> PARTICLE_EMITTER_BE = BlockEntityEntry.cast(PARTICLE_EMITTER.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
     // TODO: It's the same as the imposter block, remove and datafix
@@ -641,6 +653,13 @@ public class ExtraBlocks {
             .simpleItem()
             .register();
 
+    public static final BlockEntry<Block> GREEN_SHIPPING_CONTAINER = REGISTRATE
+            .block("green_shipping_container", Block::new)
+            .initialProperties(() -> Blocks.BEDROCK)
+            .properties(BlockBehaviour.Properties::noLootTable)
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> WAREHOUSE_ROAD = REGISTRATE
             .block("warehouse_road", Block::new)
             .initialProperties(() -> Blocks.BEDROCK)
@@ -657,11 +676,25 @@ public class ExtraBlocks {
 
     public static final BlockEntry<CarpetBlock> WAREHOUSE_PARKING_MARKING = REGISTRATE
             .block("warehouse_parking_marking", CarpetBlock::new)
-            .initialProperties(() -> Blocks.WHITE_CARPET)
             .properties(BlockBehaviour.Properties::noOcclusion)
             .properties(BlockBehaviour.Properties::noCollission)
             .properties(BlockBehaviour.Properties::noLootTable)
-            .simpleItem()
+            .properties(BlockBehaviour.Properties::noTerrainParticles)
+            .item()
+            .model(() -> (ctx, prov) -> prov.generateFlatBlockItem(ctx.get()))
+            .build()
+            .register();
+
+    public static final BlockEntry<WarehouseRoadBoosterBlock> WAREHOUSE_ROAD_BOOSTER = REGISTRATE
+            .block("warehouse_road_booster", WarehouseRoadBoosterBlock::new)
+            .properties(BlockBehaviour.Properties::noOcclusion)
+            .properties(BlockBehaviour.Properties::noCollission)
+            .properties(BlockBehaviour.Properties::noLootTable)
+            .properties(BlockBehaviour.Properties::noTerrainParticles)
+            .blockstate(() -> Models::generateWarehouseRoadBoosterBlock)
+            .item()
+            .model(() -> (ctx, prov) -> prov.generateFlatBlockItem(ctx.get()))
+            .build()
             .register();
 
     // Speedy blocks
@@ -1271,6 +1304,25 @@ public class ExtraBlocks {
             .item().model(() -> (ctx, prov) -> Models.generateBlockItem(ctx, prov, Blocks.REDSTONE_LAMP)).build()
             .register();
 
+    public static final BlockEntry<PlumbersTntBlock> PLUMBERS_TNT = REGISTRATE.block("plumbers_tnt", PlumbersTntBlock::new)
+            .initialProperties(() -> Blocks.TNT)
+            .lang("Plumbers' Tnt")
+            .properties(p -> p.mapColor(MapColor.COLOR_BLUE))
+            .blockstate(() -> (ctx, prov) -> {
+                prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE_TOP_BOTTOM);
+            })
+            .item().model(() -> (ctx, prov) -> Models.generateBlockItem(ctx, prov, ctx.get().getBlock())).build()
+            .register();
+
+    public static final BlockEntry<DisplayBlock> DISPLAY_BLOCK = REGISTRATE.block("display_block", properties -> new DisplayBlock(properties))
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .simpleItem()
+            .blockEntity(DisplayBlockEntity::new)
+            .build()
+            .register();
+
+    public static final BlockEntityEntry<DisplayBlockEntity> DISPLAY_BLOCK_ENTITY = BlockEntityEntry.cast(DISPLAY_BLOCK.getSibling(Registries.BLOCK_ENTITY_TYPE));
+
     public static void init() {
     }
 
@@ -1631,6 +1683,17 @@ public class ExtraBlocks {
         private static void generateInfertileVineItem(DataGenContext<Item, BlockItem> ctx, RegistrateItemModelGenerator prov) {
             ResourceLocation model = prov.generateLayeredItem(ctx.get(), ResourceLocation.withDefaultNamespace("block/vine"), ResourceLocation.withDefaultNamespace("item/barrier"));
             prov.generateTintedModel(ctx.get(), model, new Constant(FoliageColor.FOLIAGE_DEFAULT));
+        }
+
+        public static void generateRotatedHorizontalBlock(DataGenContext<Block, ConveyorBeltBlock> ctx, RegistrateBlockModelGenerator prov) {
+            MultiVariant multivariant =  plainVariant(TexturedModel.GLAZED_TERRACOTTA.create(ctx.get(), prov.modelOutput));
+            prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get(), multivariant).with(ROTATION_HORIZONTAL_FACING_ALT));
+        }
+
+        public static void generateWarehouseRoadBoosterBlock(DataGenContext<Block, WarehouseRoadBoosterBlock> ctx, RegistrateBlockModelGenerator prov) {
+            //MultiVariant variant =  plainVariant(TexturedModel.GLAZED_TERRACOTTA.create(ctx.get(), prov.modelOutput));
+            MultiVariant variant = plainVariant(ModelLocationUtils.getModelLocation(ctx.get()));
+            prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get(), variant).with(ROTATION_HORIZONTAL_FACING_ALT));
         }
 
         public interface TextureType {
