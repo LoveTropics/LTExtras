@@ -18,7 +18,7 @@ public enum ExtraLangKeys {
     CLUB_INVITE_2_BOTTOM("invite", "club_2.bottom", "I hear the Limeade's good."),
 
     TRANSLATION_PROMPT_TITLE("screen", "translation_prompt.title", "Chat Translation"),
-    TRANSLATION_PROMPT("screen", "translation_prompt.message", "Love Tropics is multi-lingual! We will try our best to translate chat for you - but to do this, we need to know what language you will be speaking and would like to see.\n\nIn-game content is translated for English, Spanish, and French."),
+    TRANSLATION_PROMPT("screen", "translation_prompt.message", "Love Tropics is multi-lingual! We will try our best to translate chat for you - but to do this, we need to know what language you will be speaking and would like to see.\n\nIn-game content is translated for English, Spanish, French, and German."),
 
     SERVER_CLOSED_TITLE("screen", "server_closed.title", "Disconnected from server"),
     SERVER_CLOSED_UNEXPECTED("screen", "server_closed.unexpected", "The server unexpectedly shut down, or you lost connection:\n%s"),

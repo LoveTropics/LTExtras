@@ -464,7 +464,7 @@
   "screen.ltextras.server_closed.restart": "The server has shut down for a quick restart - it should be back in a few moments!",
   "screen.ltextras.server_closed.title": "Disconnected from server",
   "screen.ltextras.server_closed.unexpected": "The server unexpectedly shut down, or you lost connection:\n%s",
-  "screen.ltextras.translation_prompt.message": "Love Tropics is multi-lingual! We will try our best to translate chat for you - but to do this, we need to know what language you will be speaking and would like to see.\n\nIn-game content is translated for English, Spanish, and French.",
+  "screen.ltextras.translation_prompt.message": "Love Tropics is multi-lingual! We will try our best to translate chat for you - but to do this, we need to know what language you will be speaking and would like to see.\n\nIn-game content is translated for English, Spanish, French, and German.",
   "screen.ltextras.translation_prompt.title": "Chat Translation",
   "spawnitems.restored_successfully": "Items restored!",
   "spawnitems.set_not_restorable": "The spawn item set %s cannot be restored!",
