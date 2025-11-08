@@ -444,6 +444,33 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         }
     }
 
+    @Override
+    protected void positionRider(Entity entity, Entity.MoveFunction callback) {
+        super.positionRider(entity, callback);
+        // use the same tag as boats because it's essentially the same thing
+        if (!entity.getType().is(EntityTypeTags.CAN_TURN_IN_BOATS)) {
+            entity.setYRot(entity.getYRot() + this.deltaRotation);
+            entity.setYHeadRot(entity.getYHeadRot() + this.deltaRotation);
+            this.refreshAndClampRotationIfDriver(entity);
+        }
+    }
+
+    @Override
+    public void onPassengerTurned(Entity entity) {
+        // this prevents the client from having some sort of lag on rotation?
+        this.refreshAndClampRotationIfDriver(entity);
+    }
+
+    protected void refreshAndClampRotationIfDriver(Entity entity) {
+        entity.setYBodyRot(this.getYRot());
+        float f = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+        float f1 = getControllingPassenger() == entity ? Mth.clamp(f, -105.0F, 105.0F) : f;
+        f = f1 - f;
+        entity.yRotO += f;
+        entity.setYRot(entity.getYRot() + f);
+        entity.setYHeadRot(entity.getYRot());
+    }
+
     public void spawnDriftingParticles() {
         double yawRad = Math.toRadians(this.getYRot());
         double forwardX = -Math.sin(yawRad);
