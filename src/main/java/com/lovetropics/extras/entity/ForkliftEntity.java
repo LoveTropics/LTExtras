@@ -31,7 +31,6 @@ import net.minecraft.world.entity.InterpolationHandler;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PlayerRideable;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
@@ -193,7 +192,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(DATA_FORK_HEIGHT, 0);
+        builder.define(DATA_FORK_HEIGHT, MAX_FORK_HEIGHT);
         builder.define(DATA_IS_DRIFTING, false);
         builder.define(DATA_COLLISION_PREDICATE, Optional.empty());
         builder.define(SPEED_BOOST_TICKS, 0);
@@ -239,6 +238,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         entityData.set(DATA_COLLISION_PREDICATE, input.read("CollisionPredicate", BlockPredicate.CODEC));
         entityData.set(SPEED_BOOST_TICKS, input.read("SpeedBoostTicks", Codec.INT).orElse(0));
         entityData.set(SPEED_BOOST_STRENGTH, input.read("SpeedBoostStrength", Codec.FLOAT).orElse(DEFAULT_SPEED_BOOST_STRENGTH));
+        entityData.set(DATA_FORK_HEIGHT, input.read("ForkHeight", Codec.INT).orElse(MAX_FORK_HEIGHT));
     }
 
     @Override
@@ -248,6 +248,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         output.storeNullable("CollisionPredicate", BlockPredicate.CODEC, entityData.get(DATA_COLLISION_PREDICATE).orElse(null));
         output.putInt("SpeedBoostTicks", entityData.get(SPEED_BOOST_TICKS));
         output.putFloat("SpeedBoostStrength", entityData.get(SPEED_BOOST_STRENGTH));
+        output.putInt("ForkHeight", entityData.get(DATA_FORK_HEIGHT));
     }
 
     @Override
