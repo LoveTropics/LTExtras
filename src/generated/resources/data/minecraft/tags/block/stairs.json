@@ -73,6 +73,8 @@
     "ltextras:calcite_stairs",
     "ltextras:soul_soil_stairs",
     "ltextras:tuff_stairs",
+    "ltextras:honey_block_stairs",
+    "ltextras:honeycomb_block_stairs",
     "ltextras:gold_block_slab",
     "ltextras:cracked_stone_bricks_slab",
     "ltextras:white_concrete_powder_slab",
@@ -144,6 +146,8 @@
     "ltextras:black_glazed_terracotta_slab",
     "ltextras:calcite_slab",
     "ltextras:soul_soil_slab",
-    "ltextras:tuff_slab"
+    "ltextras:tuff_slab",
+    "ltextras:honey_block_slab",
+    "ltextras:honeycomb_block_slab"
   ]
 }

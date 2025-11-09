@@ -50,7 +50,6 @@ import com.mojang.math.Quadrant;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
 import com.tterrag.registrate.providers.generators.RegistrateItemModelGenerator;
@@ -895,7 +894,9 @@ public class ExtraBlocks {
             .add(TERRACOTTA_BLOCKS, Models.TextureType.normal())
             .add(Blocks.CALCITE, Models.TextureType.normal())
             .add(Blocks.SOUL_SOIL, Models.TextureType.normal())
-            .add(Blocks.TUFF, Models.TextureType.normal());
+            .add(Blocks.TUFF, Models.TextureType.normal())
+            .add(Blocks.HONEY_BLOCK, Models.TextureType.sideTopSuffix())
+            .add(Blocks.HONEYCOMB_BLOCK, Models.TextureType.normal());
 
     private static final TemplateBuilder<SlabBlock, Models.TextureType> SLAB_TEMPLATES = new TemplateBuilder<SlabBlock, Models.TextureType>()
             .add(Blocks.GOLD_BLOCK, Models.TextureType.normal())
@@ -907,7 +908,9 @@ public class ExtraBlocks {
             .add(TERRACOTTA_BLOCKS, Models.TextureType.normal())
             .add(Blocks.CALCITE, Models.TextureType.normal())
             .add(Blocks.SOUL_SOIL, Models.TextureType.normal())
-            .add(Blocks.TUFF, Models.TextureType.normal());
+            .add(Blocks.TUFF, Models.TextureType.normal())
+            .add(Blocks.HONEY_BLOCK, Models.TextureType.sideTopSuffix())
+            .add(Blocks.HONEYCOMB_BLOCK, Models.TextureType.normal());
 
     private static final TemplateBuilder<FenceBlock, Models.TextureType> FENCE_TEMPLATES = new TemplateBuilder<FenceBlock, Models.TextureType>()
             .add(Blocks.GOLD_BLOCK, Models.TextureType.normal())
