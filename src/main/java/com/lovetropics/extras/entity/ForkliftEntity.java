@@ -344,6 +344,11 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         return 0.04;
     }
 
+    @Override
+    public float maxUpStep() {
+        return 0.5f;
+    }
+
     private void applyFriction(double friction) {
         Vec3 velocity = getDeltaMovement();
         setDeltaMovement(velocity.x * friction, velocity.y, velocity.z * friction);
