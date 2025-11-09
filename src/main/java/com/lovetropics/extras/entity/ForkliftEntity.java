@@ -18,6 +18,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -79,6 +80,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     public int driftDuration = 0;
     public int driftCooldown = 0;
     public float driftStrength = 0.0f;
+    private float deltaRotation;
 
     public int renderForkHeight;
     public int renderForkHeight0;
@@ -285,6 +287,10 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         if (isLocalInstanceAuthoritative()) {
             applyGravity();
 
+            if(!isDrifting()) {
+                applyFriction(FRICTION);
+            }
+
             int speedBoostTicks = entityData.get(SPEED_BOOST_TICKS);
             if (speedBoostTicks > 0) {
                 speedBoostTicks--;
@@ -340,6 +346,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     private void applyFriction(double friction) {
         Vec3 velocity = getDeltaMovement();
         setDeltaMovement(velocity.x * friction, velocity.y, velocity.z * friction);
+        this.deltaRotation *= friction;
     }
 
     private void moveFork(int amt) {
@@ -373,17 +380,18 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             }
 
             if (inputLeft) {
-                setYRot(getYRot() - 5f);
+                this.deltaRotation--;
             }
 
             if (inputRight) {
-                setYRot(getYRot() + 5f);
+                this.deltaRotation++;
             }
 
             if (inputRight != inputLeft && !inputUp && !inputDown) {
                 f += 0.005F;
             }
 
+            this.setYRot(this.getYRot() + this.deltaRotation);
             if (inputUp) {
                 f += 0.05F;
             }
@@ -416,7 +424,6 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             if (isDrifting()) {
                 executeDrift(getDeltaMovement());
             } else {
-                applyFriction(FRICTION);
                 setDeltaMovement(getDeltaMovement().add(Mth.sin(-this.getYRot() * ((float)Math.PI / 180F)) * f, 0.0F, Mth.cos(this.getYRot() * ((float)Math.PI / 180F)) * f));
             }
 
@@ -424,11 +431,6 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
                 localPlayer.connection.send(ServerboundMoveVehiclePacket.fromEntity(this));
             }
         }
-    }
-
-    @Override
-    public float maxUpStep() {
-        return 0.5f;
     }
 
     private void executeDrift(Vec3 travelVector) {
@@ -440,6 +442,33 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             float boost = driftStrength / 10.f;
             setDeltaMovement(getDeltaMovement().add(-xVelocity * boost * DRIFT_FRICTION, 0.0F, zVelocity * boost * DRIFT_FRICTION));
         }
+    }
+
+    @Override
+    protected void positionRider(Entity entity, Entity.MoveFunction callback) {
+        super.positionRider(entity, callback);
+        // use the same tag as boats because it's essentially the same thing
+        if (!entity.getType().is(EntityTypeTags.CAN_TURN_IN_BOATS)) {
+            entity.setYRot(entity.getYRot() + this.deltaRotation);
+            entity.setYHeadRot(entity.getYHeadRot() + this.deltaRotation);
+            this.refreshAndClampRotationIfDriver(entity);
+        }
+    }
+
+    @Override
+    public void onPassengerTurned(Entity entity) {
+        // this prevents the client from having some sort of lag on rotation?
+        this.refreshAndClampRotationIfDriver(entity);
+    }
+
+    protected void refreshAndClampRotationIfDriver(Entity entity) {
+        entity.setYBodyRot(this.getYRot());
+        float f = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+        float f1 = getControllingPassenger() == entity ? Mth.clamp(f, -105.0F, 105.0F) : f;
+        f = f1 - f;
+        entity.yRotO += f;
+        entity.setYRot(entity.getYRot() + f);
+        entity.setYHeadRot(entity.getYRot());
     }
 
     public void spawnDriftingParticles() {
