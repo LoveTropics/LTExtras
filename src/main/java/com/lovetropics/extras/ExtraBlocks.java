@@ -44,6 +44,7 @@ import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
 import com.lovetropics.extras.block.entity.TeleportPadBlockEntity;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
+import com.lovetropics.extras.item.FireExtinguisher;
 import com.lovetropics.extras.item.FireExtinguisherItem;
 import com.lovetropics.extras.mixin.BlockPropertiesMixin;
 import com.lovetropics.lib.block.CustomShapeBlock;
@@ -247,7 +248,7 @@ public class ExtraBlocks {
                     p))
             .properties(p -> p.instabreak())
             .blockstate(() -> (ctx, prov) -> prov.create(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get())))
-            .item(FireExtinguisherItem::new).build()
+            .item(FireExtinguisherItem::new).properties(p -> p.durability(300).stacksTo(1).component(ExtraDataComponents.FIRE_EXTINGUISHER, FireExtinguisher.getDefault())).build()
             .register();
 
     public static final BlockEntry<PanelBlock> GLASS_PANEL = REGISTRATE.block("glass_panel", PanelBlock::new)

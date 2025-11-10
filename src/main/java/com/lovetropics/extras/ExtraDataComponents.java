@@ -4,6 +4,7 @@ import com.lovetropics.extras.collectible.CollectibleDisplayInfo;
 import com.lovetropics.extras.collectible.CollectibleMarker;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleCompassItem;
+import com.lovetropics.extras.item.FireExtinguisher;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.PaintingOverlay;
@@ -112,6 +113,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleDisplayInfo>> COLLECTIBLE_LORE = REGISTER.registerComponentType(
             "collectible_display_info",
             builder -> builder.persistent(CollectibleDisplayInfo.CODEC).networkSynchronized(CollectibleDisplayInfo.STREAM_CODEC).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<FireExtinguisher>> FIRE_EXTINGUISHER = REGISTER.registerComponentType(
+            "fire_extinguisher",
+            builder -> builder.persistent(FireExtinguisher.CODEC).networkSynchronized(FireExtinguisher.STREAM_CODEC).cacheEncoding()
     );
 
     @SubscribeEvent
