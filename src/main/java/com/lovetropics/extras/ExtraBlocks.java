@@ -7,6 +7,7 @@ import com.lovetropics.extras.block.CheckpointBlock;
 import com.lovetropics.extras.block.ConveyorBeltBlock;
 import com.lovetropics.extras.block.CurtainBlock;
 import com.lovetropics.extras.block.CustomSeagrassBlock;
+import com.lovetropics.extras.block.HoneyBlossomBlock;
 import com.lovetropics.extras.block.CustomSugarCaneBlock;
 import com.lovetropics.extras.block.CustomTallSeagrassBlock;
 import com.lovetropics.extras.block.DisplayBlock;
@@ -1331,6 +1332,15 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.IRON_BLOCK)
             .simpleItem()
             .blockEntity(DisplayBlockEntity::new)
+            .build()
+            .register();
+
+    public static final BlockEntry<HoneyBlossomBlock> HONEY_BLOSSOM = REGISTRATE.block("honey_blossom", HoneyBlossomBlock::new)
+            .initialProperties(() -> Blocks.SPORE_BLOSSOM)
+            .blockstate(() -> (ctx, prov) -> prov.create(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get())))
+            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
+            .lang("Honey Blossom")
+            .item()
             .build()
             .register();
 
