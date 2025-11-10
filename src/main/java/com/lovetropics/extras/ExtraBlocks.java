@@ -242,9 +242,7 @@ public class ExtraBlocks {
             .register();
 
     public static final BlockEntry<CustomShapeBlock> FIRE_EXTINGUISHER = REGISTRATE.block("fire_extinguisher", p -> new CustomShapeBlock(
-                    Shapes.or(
-                            Block.box(2, 0, 2, 14, 3, 14),
-                            Block.box(3, 3, 3, 13, 14, 13)),
+                    Shapes.box(6 / 16f, 0, 6 / 16f, 11 / 16f, 12 / 16f, 11 / 16f),
                     p))
             .properties(p -> p.instabreak())
             .blockstate(() -> (ctx, prov) -> prov.create(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get())))
