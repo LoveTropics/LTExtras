@@ -39,11 +39,13 @@ import com.lovetropics.extras.block.TeleportPadBlock;
 import com.lovetropics.extras.block.ThornStemBlock;
 import com.lovetropics.extras.block.WarehouseRoadBoosterBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
+import com.lovetropics.extras.block.WordBoxBlock;
 import com.lovetropics.extras.block.entity.DisplayBlockEntity;
 import com.lovetropics.extras.block.entity.JumpPadBlockEntity;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
 import com.lovetropics.extras.block.entity.TeleportPadBlockEntity;
+import com.lovetropics.extras.block.entity.WordBoxBlockEntity;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
 import com.lovetropics.extras.item.FireExtinguisher;
 import com.lovetropics.extras.item.FireExtinguisherItem;
@@ -87,9 +89,11 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -138,6 +142,11 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -1344,7 +1353,19 @@ public class ExtraBlocks {
             .build()
             .register();
 
+    public static final BlockEntry<WordBoxBlock> WORD_BOX = REGISTRATE.block("word_box", WordBoxBlock::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .blockstate(() -> Models::generateWordBox)
+            .loot((registrateBlockLootTables, block) -> registrateBlockLootTables.add(block,
+                    LootTable.lootTable().withPool(registrateBlockLootTables.applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(block).apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY).include(DataComponents.CUSTOM_NAME)))))
+            ))
+            .item().properties(p -> p.component(DataComponents.CUSTOM_NAME, Component.literal(""))).build()
+            .blockEntity(WordBoxBlockEntity::new)
+            .build()
+            .register();
+
     public static final BlockEntityEntry<DisplayBlockEntity> DISPLAY_BLOCK_ENTITY = BlockEntityEntry.cast(DISPLAY_BLOCK.getSibling(Registries.BLOCK_ENTITY_TYPE));
+    public static final BlockEntityEntry<WordBoxBlockEntity> WORD_BOX_BLOCK_ENTITY = BlockEntityEntry.cast(WORD_BOX.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
     public static void init() {
     }
@@ -1717,6 +1738,18 @@ public class ExtraBlocks {
             //MultiVariant variant =  plainVariant(TexturedModel.GLAZED_TERRACOTTA.create(ctx.get(), prov.modelOutput));
             MultiVariant variant = plainVariant(ModelLocationUtils.getModelLocation(ctx.get()));
             prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get(), variant).with(ROTATION_HORIZONTAL_FACING_ALT));
+        }
+
+        private static void generateWordBox(DataGenContext<Block, WordBoxBlock> ctx, RegistrateBlockModelGenerator prov) {
+            TextureMapping texturemapping = new TextureMapping()
+                    .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(ctx.get(), "_front"))
+                    .put(TextureSlot.DOWN, TextureMapping.getBlockTexture(ctx.get(), "_bottom"))
+                    .put(TextureSlot.UP, TextureMapping.getBlockTexture(ctx.get(), "_top"))
+                    .put(TextureSlot.NORTH, TextureMapping.getBlockTexture(ctx.get(), "_side"))
+                    .put(TextureSlot.SOUTH, TextureMapping.getBlockTexture(ctx.get(), "_side"))
+                    .put(TextureSlot.EAST, TextureMapping.getBlockTexture(ctx.get(), "_front"))
+                    .put(TextureSlot.WEST, TextureMapping.getBlockTexture(ctx.get(), "_front"));
+            prov.generateWithTemplate(ctx.get(), ModelTemplates.CUBE, texturemapping);
         }
 
         public interface TextureType {

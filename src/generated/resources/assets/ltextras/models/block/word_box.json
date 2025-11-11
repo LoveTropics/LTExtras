@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "ltextras:block/word_box_bottom",
+    "east": "ltextras:block/word_box_front",
+    "north": "ltextras:block/word_box_side",
+    "particle": "ltextras:block/word_box_front",
+    "south": "ltextras:block/word_box_side",
+    "up": "ltextras:block/word_box_top",
+    "west": "ltextras:block/word_box_front"
+  }
+}
