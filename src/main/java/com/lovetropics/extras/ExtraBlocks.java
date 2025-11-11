@@ -5,6 +5,7 @@ import com.lovetropics.extras.block.BoringEndRodBlock;
 import com.lovetropics.extras.block.CeilingCarpetBlock;
 import com.lovetropics.extras.block.CheckpointBlock;
 import com.lovetropics.extras.block.ConveyorBeltBlock;
+import com.lovetropics.extras.block.CubedRepeaterBlock;
 import com.lovetropics.extras.block.CurtainBlock;
 import com.lovetropics.extras.block.CustomSeagrassBlock;
 import com.lovetropics.extras.block.HoneyBlossomBlock;
@@ -1367,6 +1368,13 @@ public class ExtraBlocks {
     public static final BlockEntityEntry<DisplayBlockEntity> DISPLAY_BLOCK_ENTITY = BlockEntityEntry.cast(DISPLAY_BLOCK.getSibling(Registries.BLOCK_ENTITY_TYPE));
     public static final BlockEntityEntry<WordBoxBlockEntity> WORD_BOX_BLOCK_ENTITY = BlockEntityEntry.cast(WORD_BOX.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
+    public static final BlockEntry<CubedRepeaterBlock> CUBED_REPEATER = REGISTRATE.block("cubed_repeater", CubedRepeaterBlock::new)
+            .initialProperties(() -> Blocks.REPEATER)
+            .properties(p -> p.sound(SoundType.STONE))
+            .blockstate(() -> Models::generateCubedRepeater)
+            .simpleItem()
+            .register();
+
     public static void init() {
     }
 
@@ -1729,9 +1737,28 @@ public class ExtraBlocks {
             prov.generateTintedModel(ctx.get(), model, new Constant(FoliageColor.FOLIAGE_DEFAULT));
         }
 
-        public static void generateRotatedHorizontalBlock(DataGenContext<Block, ConveyorBeltBlock> ctx, RegistrateBlockModelGenerator prov) {
+        public static <T extends net.minecraft.world.level.block.Block> void generateRotatedHorizontalBlock(DataGenContext<Block, T> ctx, RegistrateBlockModelGenerator prov) {
             MultiVariant multivariant =  plainVariant(TexturedModel.GLAZED_TERRACOTTA.create(ctx.get(), prov.modelOutput));
             prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get(), multivariant).with(ROTATION_HORIZONTAL_FACING_ALT));
+        }
+
+        public static void generateCubedRepeater(DataGenContext<Block, CubedRepeaterBlock> ctx, RegistrateBlockModelGenerator prov){
+            prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get())
+                    .with(PropertyDispatch.initial(CubedRepeaterBlock.POWERED).generate((isPowered) -> {
+                        StringBuilder stringbuilder = new StringBuilder();
+                        if (isPowered) {
+                            stringbuilder.append("_on");
+                        }
+
+                        return plainVariant(createSuffixedVariant(ctx.get(),
+                                stringbuilder.toString(),
+                                ModelTemplates.COMMAND_BLOCK,
+                                (unused) -> new TextureMapping()
+                                        .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(ctx.get(), "_side"))
+                                        .put(TextureSlot.FRONT, TextureMapping.getBlockTexture(ctx.get(), stringbuilder + "_front"))
+                                        .put(TextureSlot.BACK, TextureMapping.getBlockTexture(ctx.get(), stringbuilder + "_back")),
+                                prov.modelOutput));
+                    })).with(ROTATION_HORIZONTAL_FACING_ALT));
         }
 
         public static void generateWarehouseRoadBoosterBlock(DataGenContext<Block, WarehouseRoadBoosterBlock> ctx, RegistrateBlockModelGenerator prov) {

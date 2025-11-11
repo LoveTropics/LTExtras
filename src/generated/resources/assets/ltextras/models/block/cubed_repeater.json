@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/template_command_block",
+  "textures": {
+    "back": "ltextras:block/cubed_repeater_back",
+    "front": "ltextras:block/cubed_repeater_front",
+    "side": "ltextras:block/cubed_repeater_side"
+  }
+}
