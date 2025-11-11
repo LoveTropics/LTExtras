@@ -1355,17 +1355,7 @@ public class ExtraBlocks {
 
     public static final BlockEntry<WordBoxBlock> WORD_BOX = REGISTRATE.block("word_box", WordBoxBlock::new)
             .initialProperties(() -> Blocks.IRON_BLOCK)
-            .blockstate(() -> (ctx, prov) -> {
-                TextureMapping texturemapping = new TextureMapping()
-                        .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(ctx.get(), "_front"))
-                        .put(TextureSlot.DOWN, TextureMapping.getBlockTexture(ctx.get(), "_bottom"))
-                        .put(TextureSlot.UP, TextureMapping.getBlockTexture(ctx.get(), "_top"))
-                        .put(TextureSlot.NORTH, TextureMapping.getBlockTexture(ctx.get(), "_side"))
-                        .put(TextureSlot.SOUTH, TextureMapping.getBlockTexture(ctx.get(), "_side"))
-                        .put(TextureSlot.EAST, TextureMapping.getBlockTexture(ctx.get(), "_front"))
-                        .put(TextureSlot.WEST, TextureMapping.getBlockTexture(ctx.get(), "_front"));
-                prov.generateWithTemplate(ctx.get(), ModelTemplates.CUBE, texturemapping);
-            })
+            .blockstate(() -> Models::generateWordBox)
             .loot((registrateBlockLootTables, block) -> registrateBlockLootTables.add(block,
                     LootTable.lootTable().withPool(registrateBlockLootTables.applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(block).apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY).include(DataComponents.CUSTOM_NAME)))))
             ))
@@ -1748,6 +1738,18 @@ public class ExtraBlocks {
             //MultiVariant variant =  plainVariant(TexturedModel.GLAZED_TERRACOTTA.create(ctx.get(), prov.modelOutput));
             MultiVariant variant = plainVariant(ModelLocationUtils.getModelLocation(ctx.get()));
             prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get(), variant).with(ROTATION_HORIZONTAL_FACING_ALT));
+        }
+
+        private static void generateWordBox(DataGenContext<Block, WordBoxBlock> ctx, RegistrateBlockModelGenerator prov) {
+            TextureMapping texturemapping = new TextureMapping()
+                    .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(ctx.get(), "_front"))
+                    .put(TextureSlot.DOWN, TextureMapping.getBlockTexture(ctx.get(), "_bottom"))
+                    .put(TextureSlot.UP, TextureMapping.getBlockTexture(ctx.get(), "_top"))
+                    .put(TextureSlot.NORTH, TextureMapping.getBlockTexture(ctx.get(), "_side"))
+                    .put(TextureSlot.SOUTH, TextureMapping.getBlockTexture(ctx.get(), "_side"))
+                    .put(TextureSlot.EAST, TextureMapping.getBlockTexture(ctx.get(), "_front"))
+                    .put(TextureSlot.WEST, TextureMapping.getBlockTexture(ctx.get(), "_front"));
+            prov.generateWithTemplate(ctx.get(), ModelTemplates.CUBE, texturemapping);
         }
 
         public interface TextureType {
