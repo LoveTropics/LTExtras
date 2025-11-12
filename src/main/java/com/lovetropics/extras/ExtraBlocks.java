@@ -38,6 +38,7 @@ import com.lovetropics.extras.block.SpeedyZone;
 import com.lovetropics.extras.block.SubmergedLilyBlock;
 import com.lovetropics.extras.block.TeleportPadBlock;
 import com.lovetropics.extras.block.ThornStemBlock;
+import com.lovetropics.extras.block.TransparentLeavesBlock;
 import com.lovetropics.extras.block.WarehouseRoadBoosterBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.block.WordBoxBlock;
@@ -1374,6 +1375,23 @@ public class ExtraBlocks {
             .blockstate(() -> Models::generateCubedRepeater)
             .simpleItem()
             .register();
+
+    private static final TemplateBuilder<TransparentLeavesBlock, BlockFactory<TransparentLeavesBlock>> TRANSPARENT_LEAVES_TEMPLATES = new TemplateBuilder<TransparentLeavesBlock, BlockFactory<TransparentLeavesBlock>>()
+            .add(ResourceLocation.fromNamespaceAndPath("tropicraft", "kapok_leaves"), TransparentLeavesBlock::tropicsLeaves)
+            .add(ResourceLocation.fromNamespaceAndPath("tropicraft", "palm_leaves"), TransparentLeavesBlock::tropicsLeaves);
+
+    public static final Map<Holder<Block>, BlockEntry<? extends TransparentLeavesBlock>> TRANSPARENT_LEAVES = TRANSPARENT_LEAVES_TEMPLATES
+            .build((object, factory) -> REGISTRATE
+                    .block("transparent_" + getName(object), factory)
+                    .initialProperties(object::value)
+                    .blockstate(() -> (ctx, prov) -> {
+                        MultiVariant model = plainVariant(ModelLocationUtils.getModelLocation(object.value()));
+                        prov.blockStateOutput.accept(createSimpleBlock(ctx.get(), model));
+                    })
+                    .addLayer(() -> () -> ChunkSectionLayer.CUTOUT_MIPPED)
+                    .simpleItem()
+                    .register()
+            );
 
     public static void init() {
     }
