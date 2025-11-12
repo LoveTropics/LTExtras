@@ -12,6 +12,7 @@ authors = "The Love Tropics Team"
 description = '''
 Extra content for the LoveTropics map build.
 '''
+enumExtensions="META-INF/enumextensions.json"
 
 [[mixins]]
 config = "ltextras.mixins.json"

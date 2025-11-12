@@ -48,6 +48,7 @@ import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
 import com.lovetropics.extras.block.entity.TeleportPadBlockEntity;
 import com.lovetropics.extras.block.entity.WordBoxBlockEntity;
+import com.lovetropics.extras.client.item.BoxClientExtensions;
 import com.lovetropics.extras.client.item.WordBoxSpecialRenderer;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
 import com.lovetropics.extras.item.FireExtinguisher;
@@ -1371,6 +1372,7 @@ public class ExtraBlocks {
             .blockEntity(WordBoxBlockEntity::new)
             .build()
             .item()
+            .clientExtension(() -> BoxClientExtensions::new)
             .model(() -> Models::generateWordBoxItem)
             .build()
             .register();
@@ -1795,15 +1797,7 @@ public class ExtraBlocks {
         }
 
         private static void generateWordBox(DataGenContext<Block, WordBoxBlock> ctx, RegistrateBlockModelGenerator prov) {
-            TextureMapping texturemapping = new TextureMapping()
-                    .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(ctx.get(), "_front"))
-                    .put(TextureSlot.DOWN, TextureMapping.getBlockTexture(ctx.get(), "_bottom"))
-                    .put(TextureSlot.UP, TextureMapping.getBlockTexture(ctx.get(), "_top"))
-                    .put(TextureSlot.NORTH, TextureMapping.getBlockTexture(ctx.get(), "_side"))
-                    .put(TextureSlot.SOUTH, TextureMapping.getBlockTexture(ctx.get(), "_side"))
-                    .put(TextureSlot.EAST, TextureMapping.getBlockTexture(ctx.get(), "_front"))
-                    .put(TextureSlot.WEST, TextureMapping.getBlockTexture(ctx.get(), "_front"));
-            prov.generateWithTemplate(ctx.get(), ModelTemplates.CUBE, texturemapping);
+            prov.create(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get()));
         }
 
         private static void generateWordBoxItem(DataGenContext<Item, BlockItem> ctx, RegistrateItemModelGenerator prov) {

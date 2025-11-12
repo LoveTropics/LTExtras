@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/cube",
+  "display": {
+    "gui": {
+      "rotation": [ 30, 225, 0 ],
+      "translation": [ 0, 0, 0],
+      "scale":[ 0.625, 0.625, 0.625 ]
+    },
+    "ground": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 3, 0],
+      "scale":[ 0.25, 0.25, 0.25 ]
+    },
+    "fixed": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 0, 0],
+      "scale":[ 0.5, 0.5, 0.5 ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [56, 0, 0],
+      "translation": [-6, 2.25, 1],
+      "scale": [0.6, 0.6, 0.6]
+    },
+    "firstperson_righthand": {
+      "rotation": [-40, 0, 0],
+      "translation": [-8.75, -2.5, -8]
+    },
+    "firstperson_lefthand": {
+      "rotation": [-40, 0, 0],
+      "translation": [-8.75, -2.5, -8]
+    }
+  },
+  "textures": {
+    "down": "ltextras:block/word_box_bottom",
+    "east": "ltextras:block/word_box_front",
+    "north": "ltextras:block/word_box_side",
+    "particle": "ltextras:block/word_box_front",
+    "south": "ltextras:block/word_box_side",
+    "up": "ltextras:block/word_box_top",
+    "west": "ltextras:block/word_box_front"
+  }
+}
