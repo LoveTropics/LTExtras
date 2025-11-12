@@ -8,13 +8,13 @@ import com.lovetropics.extras.block.ConveyorBeltBlock;
 import com.lovetropics.extras.block.CubedRepeaterBlock;
 import com.lovetropics.extras.block.CurtainBlock;
 import com.lovetropics.extras.block.CustomSeagrassBlock;
-import com.lovetropics.extras.block.HoneyBlossomBlock;
 import com.lovetropics.extras.block.CustomSugarCaneBlock;
 import com.lovetropics.extras.block.CustomTallSeagrassBlock;
 import com.lovetropics.extras.block.DisplayBlock;
 import com.lovetropics.extras.block.FakeWaterBlock;
 import com.lovetropics.extras.block.GirderBlock;
 import com.lovetropics.extras.block.GlowSticksBlock;
+import com.lovetropics.extras.block.HoneyBlossomBlock;
 import com.lovetropics.extras.block.ImposterCoralBlock;
 import com.lovetropics.extras.block.JumpPadBlock;
 import com.lovetropics.extras.block.LightweightBarrierBlock;
@@ -48,6 +48,7 @@ import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
 import com.lovetropics.extras.block.entity.ParticleEmitterBlockEntity;
 import com.lovetropics.extras.block.entity.TeleportPadBlockEntity;
 import com.lovetropics.extras.block.entity.WordBoxBlockEntity;
+import com.lovetropics.extras.client.item.WordBoxSpecialRenderer;
 import com.lovetropics.extras.data.ImposterBlockTemplate;
 import com.lovetropics.extras.item.FireExtinguisher;
 import com.lovetropics.extras.item.FireExtinguisherItem;
@@ -95,7 +96,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -145,10 +145,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -172,6 +169,10 @@ import java.util.stream.Stream;
 
 import static net.minecraft.client.data.models.BlockModelGenerators.*;
 import static net.minecraft.client.data.models.blockstates.MultiVariantGenerator.dispatch;
+import static net.minecraft.world.level.storage.loot.LootTable.lootTable;
+import static net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem;
+import static net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction.copyComponents;
+import static net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly;
 
 public class ExtraBlocks {
 
@@ -1358,11 +1359,19 @@ public class ExtraBlocks {
     public static final BlockEntry<WordBoxBlock> WORD_BOX = REGISTRATE.block("word_box", WordBoxBlock::new)
             .initialProperties(() -> Blocks.IRON_BLOCK)
             .blockstate(() -> Models::generateWordBox)
-            .loot((registrateBlockLootTables, block) -> registrateBlockLootTables.add(block,
-                    LootTable.lootTable().withPool(registrateBlockLootTables.applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(block).apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY).include(DataComponents.CUSTOM_NAME)))))
+            .loot((lootTables, block) -> lootTables.add(block,
+                    lootTable().withPool(lootTables.applyExplosionCondition(block, LootPool.lootPool()
+                            .setRolls(exactly(1))
+                            .add(lootTableItem(block).apply(
+                                    copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+                                            .include(DataComponents.CUSTOM_NAME))
+                            )
+                    ))
             ))
-            .item().properties(p -> p.component(DataComponents.CUSTOM_NAME, Component.literal(""))).build()
             .blockEntity(WordBoxBlockEntity::new)
+            .build()
+            .item()
+            .model(() -> Models::generateWordBoxItem)
             .build()
             .register();
 
@@ -1795,6 +1804,14 @@ public class ExtraBlocks {
                     .put(TextureSlot.EAST, TextureMapping.getBlockTexture(ctx.get(), "_front"))
                     .put(TextureSlot.WEST, TextureMapping.getBlockTexture(ctx.get(), "_front"));
             prov.generateWithTemplate(ctx.get(), ModelTemplates.CUBE, texturemapping);
+        }
+
+        private static void generateWordBoxItem(DataGenContext<Item, BlockItem> ctx, RegistrateItemModelGenerator prov) {
+            ResourceLocation blockModel = ModelLocationUtils.getModelLocation(ctx.get().getBlock());
+            prov.itemModelOutput.accept(ctx.get(), ItemModelUtils.composite(
+                    ItemModelUtils.plainModel(blockModel),
+                    ItemModelUtils.specialModel(blockModel, new WordBoxSpecialRenderer.Unbaked())
+            ));
         }
 
         public interface TextureType {

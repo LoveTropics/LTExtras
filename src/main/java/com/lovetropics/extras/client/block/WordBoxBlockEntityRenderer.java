@@ -4,64 +4,66 @@ import com.lovetropics.extras.block.entity.WordBoxBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.ComponentRenderUtils;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 
 import java.util.List;
 
 public class WordBoxBlockEntityRenderer implements BlockEntityRenderer<WordBoxBlockEntity> {
-
     public static final float OFFSET = 0.01f;
     public static final float Y_OFFSET = 0.5f;
 
-    public WordBoxBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+    private static final int PADDING = 5;
+    private static final int TEXT_COLOR = 0xff161107;
 
+    private static final float TEXT_SCALE = 0.0121f;
+
+    private final Font font;
+
+    public WordBoxBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+        font = context.getFont();
     }
 
     @Override
     public void render(WordBoxBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, Vec3 cameraPos) {
-        final Component text = blockEntity.components().getOrDefault(DataComponents.CUSTOM_NAME, Component.literal("BOX")).copy().withStyle(ChatFormatting.BOLD);
+        renderText(poseStack, bufferSource, font, packedLight, blockEntity.components().getOrDefault(DataComponents.CUSTOM_NAME, WordBoxBlockEntity.DEFAULT_TEXT));
+    }
 
-        for (final Direction direction : Direction.Plane.HORIZONTAL) {
-            poseStack.pushPose();
-            if (direction == Direction.SOUTH) {
-                poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
-                poseStack.translate(direction.getStepX(), Y_OFFSET, -direction.getStepZ() - OFFSET);
-            } else if (direction == Direction.NORTH) {
-                poseStack.translate(1, Y_OFFSET, -OFFSET);
-            } else {
-                poseStack.popPose();
-                continue;
-            }
+    public static void renderText(PoseStack poseStack, MultiBufferSource bufferSource, Font font, int packedLight, Component unstyledText) {
+        Component text = unstyledText.copy().withStyle(ChatFormatting.BOLD);
 
-            int lightLevel = LevelRenderer.getLightColor(LevelRenderer.BrightnessGetter.DEFAULT, blockEntity.getLevel(), blockEntity.getBlockState(), blockEntity.getBlockPos().above());
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0f));
+        poseStack.translate(0.0f, Y_OFFSET, -1.0f - OFFSET);
+        renderFaceText(poseStack, bufferSource, font, packedLight, text);
+        poseStack.popPose();
 
-            // Orient text
-            poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+        poseStack.pushPose();
+        poseStack.translate(1.0f, Y_OFFSET, -OFFSET);
+        renderFaceText(poseStack, bufferSource, font, packedLight, text);
+        poseStack.popPose();
+    }
 
-            // Scale text way down
-            final float scale = 0.0121f;
-            poseStack.scale(scale, scale, scale);
+    private static void renderFaceText(PoseStack poseStack, MultiBufferSource bufferSource, Font font, int packedLight, Component text) {
+        poseStack.scale(-TEXT_SCALE, -TEXT_SCALE, TEXT_SCALE);
 
-            List<FormattedCharSequence> list = ComponentRenderUtils.wrapComponents(text, (int) (1 / scale) - 10, Minecraft.getInstance().font);
-            final int numLines = list.size();
-            int i = 0;
-            for (FormattedCharSequence c : list) {
-                Minecraft.getInstance().font.drawInBatch(c, 5, (i - numLines / 2f - 0.5f) * Minecraft.getInstance().font.lineHeight + 1, 0xff161107, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, lightLevel);
-                i++;
-            }
+        Matrix4f pose = poseStack.last().pose();
+        List<FormattedCharSequence> lines = ComponentRenderUtils.wrapComponents(text, Mth.floor(1.0f / TEXT_SCALE) - PADDING * 2, font);
 
-            poseStack.popPose();
+        int i = 0;
+        for (FormattedCharSequence line : lines) {
+            float lineY = (i - lines.size() / 2.0f - 0.5f) * font.lineHeight + 1;
+            font.drawInBatch(line, PADDING, lineY, TEXT_COLOR, false, pose, bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
+            i++;
         }
     }
 }

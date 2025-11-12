@@ -1,6 +1,18 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "ltextras:block/word_box"
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "ltextras:block/word_box"
+      },
+      {
+        "type": "minecraft:special",
+        "base": "ltextras:block/word_box",
+        "model": {
+          "type": "ltextras:word_box"
+        }
+      }
+    ]
   }
 }
