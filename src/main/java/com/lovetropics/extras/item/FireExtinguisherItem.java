@@ -112,14 +112,20 @@ public class FireExtinguisherItem extends BlockItem {
             }
         }
 
-        if (level.isClientSide) {
-            final float scale = hit ? extinguisherComponent.impulseOnHit() : extinguisherComponent.impulseOnMiss();
-            livingEntity.hasImpulse = true;
-            livingEntity.setDeltaMovement(lookVec.reverse().scale(scale));
+        final float scale = hit ? extinguisherComponent.impulseOnHit() : extinguisherComponent.impulseOnMiss();
+        if(livingEntity.getVehicle() != null && !level.isClientSide){
+            livingEntity.getVehicle().hasImpulse = true;
+            livingEntity.getVehicle().setDeltaMovement(lookVec.reverse().scale(scale));
         } else {
-            EquipmentSlot slot = stack.equals(livingEntity.getItemBySlot(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-            stack.hurtAndBreak(extinguisherComponent.durabilityLossPerTick(), livingEntity, slot);
+            if (level.isClientSide) {
+                livingEntity.hasImpulse = true;
+                livingEntity.setDeltaMovement(lookVec.reverse().scale(scale));
+            } else {
+                EquipmentSlot slot = stack.equals(livingEntity.getItemBySlot(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+                stack.hurtAndBreak(extinguisherComponent.durabilityLossPerTick(), livingEntity, slot);
+            }
         }
+
 
         if (livingEntity.tickCount % 2 == 0) {
             level.playSound(livingEntity, pos.x, pos.y, pos.z, SoundEvents.CANDLE_EXTINGUISH, SoundSource.PLAYERS, 1f, 1f);
