@@ -13,14 +13,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(FallingBlockRenderer.class)
+@Mixin(value = FallingBlockRenderer.class, priority = 100)
 public class FallingBlockRendererMixin {
 
-    @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/FallingBlockRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at=@At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/ModelBlockRenderer;tesselateBlock(Lnet/minecraft/world/level/BlockAndTintGetter;Ljava/util/List;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/util/function/Function;ZI)V"))
+    @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/FallingBlockRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at=@At(value = "RETURN"))
     public void onRender(FallingBlockRenderState renderState, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, CallbackInfo ci){
         if(renderState.blockState.is(ExtraBlocks.WORD_BOX)){
+            poseStack.pushPose();
+            poseStack.translate(-0.5, 0.0, -0.5);
             WordBoxBlockEntityRenderer.renderText(poseStack, bufferSource, Minecraft.getInstance().font,
                     packedLight, renderState.getRenderDataOrDefault(WordBoxBlockEntityRenderer.KEY_COMPONENT, WordBoxBlockEntity.DEFAULT_TEXT));
+            poseStack.popPose();
         }
     }
 }
