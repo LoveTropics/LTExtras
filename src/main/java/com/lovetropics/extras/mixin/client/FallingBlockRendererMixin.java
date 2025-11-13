@@ -2,7 +2,6 @@ package com.lovetropics.extras.mixin.client;
 
 import com.lovetropics.extras.ExtraBlocks;
 import com.lovetropics.extras.block.entity.WordBoxBlockEntity;
-import com.lovetropics.extras.client.ClientRegisterEvents;
 import com.lovetropics.extras.client.block.WordBoxBlockEntityRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
