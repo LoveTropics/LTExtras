@@ -42,6 +42,7 @@
     "client.AbstractWidgetAccess",
     "client.CapeLayerMixin",
     "client.ClientPacketListenerMixin",
+    "client.FallingBlockRendererMixin",
     "client.GameRendererMixin",
     "client.IconSetMixin",
     "client.LivingEntityRendererMixin",
