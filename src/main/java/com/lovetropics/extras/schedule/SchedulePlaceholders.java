@@ -38,8 +38,7 @@ public class SchedulePlaceholders {
 
     private static void registerForEntry(boolean next) {
         String prefix = next ? "next" : "current";
-        registerPlaceholder(prefix + "/short_description", next, (ctx, entry) -> PlaceholderResult.value(entry.shortDescription()));
-        registerPlaceholder(prefix + "/long_description", next, (ctx, entry) -> PlaceholderResult.value(entry.longDescription()));
+        registerPlaceholder(prefix + "/description", next, (ctx, entry) -> PlaceholderResult.value(entry.description()));
         registerPlaceholder(prefix + "/hosts", next, (ctx, entry) -> formatHosts(entry));
         registerPlaceholder(prefix + "/start", next, (ctx, entry) -> formatLocalTime(ctx, entry.startTime()));
         registerPlaceholder(prefix + "/end", next, (ctx, entry) -> formatLocalTime(ctx, entry.endTime()));

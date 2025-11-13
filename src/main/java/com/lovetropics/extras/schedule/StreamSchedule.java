@@ -3,12 +3,12 @@ package com.lovetropics.extras.schedule;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.lovetropics.extras.ExtrasConfig;
-import com.lovetropics.lib.codec.MoreCodecs;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.Util;
+import net.minecraft.util.ExtraCodecs;
 import org.apache.http.HttpHeaders;
 import org.slf4j.Logger;
 
@@ -19,8 +19,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -78,17 +76,13 @@ public record StreamSchedule(List<Entry> entries) {
         return null;
     }
 
-    public record Entry(String shortDescription, String longDescription, Instant startTime, Instant endTime, List<Host> hosts) {
-        private static final Codec<Instant> TIME_CODEC = MoreCodecs.localDateTime(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).xmap(
-                localTime -> localTime.atOffset(ZoneOffset.UTC).toInstant(),
-                instant -> instant.atOffset(ZoneOffset.UTC).toLocalDateTime()
-        );
-
+    public record Entry(String description, Optional<URI> imageUrl, Instant startTime, Instant endTime, List<Host> hosts) {
         public static final Codec<Entry> CODEC = RecordCodecBuilder.create(i -> i.group(
-                Codec.STRING.fieldOf("short_desc").forGetter(Entry::shortDescription),
-                Codec.STRING.optionalFieldOf("long_desc", "").forGetter(Entry::longDescription),
-                TIME_CODEC.fieldOf("time").forGetter(Entry::startTime),
-                TIME_CODEC.fieldOf("end_time").forGetter(Entry::endTime),
+                Codec.STRING.fieldOf("desc").forGetter(Entry::description),
+                // No URL is an empty string
+                ExtraCodecs.UNTRUSTED_URI.lenientOptionalFieldOf("image_url").forGetter(Entry::imageUrl),
+                ExtraCodecs.INSTANT_ISO8601.fieldOf("start_time").forGetter(Entry::startTime),
+                ExtraCodecs.INSTANT_ISO8601.fieldOf("end_time").forGetter(Entry::endTime),
                 Host.CODEC.listOf().fieldOf("hosts").forGetter(Entry::hosts)
         ).apply(i, Entry::new));
     }
