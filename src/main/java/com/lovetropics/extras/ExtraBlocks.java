@@ -41,6 +41,7 @@ import com.lovetropics.extras.block.ThornStemBlock;
 import com.lovetropics.extras.block.TransparentLeavesBlock;
 import com.lovetropics.extras.block.WarehouseRoadBoosterBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
+import com.lovetropics.extras.block.WaterLoggableCarpet;
 import com.lovetropics.extras.block.WordBoxBlock;
 import com.lovetropics.extras.block.entity.DisplayBlockEntity;
 import com.lovetropics.extras.block.entity.JumpPadBlockEntity;
@@ -1272,6 +1273,18 @@ public class ExtraBlocks {
                     .register()
             );
 
+
+    private static final TemplateBuilder<WaterLoggableCarpet, BlockFactory<WaterLoggableCarpet>> WATER_LOGGABLE_CARPET_TEMPLATES = new TemplateBuilder<WaterLoggableCarpet, BlockFactory<WaterLoggableCarpet>>()
+            .add(Blocks.MOSS_BLOCK, WaterLoggableCarpet::new);
+
+    public static final Map<Holder<Block>, BlockEntry<? extends WaterLoggableCarpet>> WATER_LOGGABLE_CARPET_BLOCKS = WATER_LOGGABLE_CARPET_TEMPLATES
+            .build((object, factory) -> REGISTRATE.block(getName(object) + "_water_loggable_carpet", WaterLoggableCarpet::new)
+                    .initialProperties(() -> Blocks.WHITE_CARPET)
+                    .blockstate(() -> (ctx, prov) -> Models.generateWaterLoggableCarpet(object, ctx, prov))
+                    .simpleItem()
+                    .register()
+            );
+
     public static final Set<BlockEntry<SeatBlock>> SEAT_BLOCKS = Stream.of(DyeColor.values())
             .map(ExtraBlocks::seat)
             .collect(Collectors.toSet());
@@ -1733,6 +1746,24 @@ public class ExtraBlocks {
                             .element(elementBuilder -> {
                                 elementBuilder.from(0, 16, 0)
                                         .to(16, 16, 16)
+                                        .face(Direction.DOWN, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 0, 16, 16).cullface(Direction.DOWN).tintindex(0))
+                                        .face(Direction.UP, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 0, 16, 16).cullface(Direction.UP).tintindex(0))
+                                        .face(Direction.NORTH, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 15, 16, 16).cullface(Direction.NORTH).tintindex(0))
+                                        .face(Direction.SOUTH, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 15, 16, 16).cullface(Direction.SOUTH).tintindex(0))
+                                        .face(Direction.WEST, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 15, 16, 16).cullface(Direction.WEST).tintindex(0))
+                                        .face(Direction.EAST, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 15, 16, 16).cullface(Direction.EAST).tintindex(0));
+                            }))
+                    .texture(TextureSlot.PARTICLE, ModelLocationUtils.getModelLocation(object.value()))
+                    .build(ctx.get());
+            prov.create(ctx.get(), model);
+        }
+
+        private static void generateWaterLoggableCarpet(Holder<Block> object, DataGenContext<Block, WaterLoggableCarpet> ctx, RegistrateBlockModelGenerator prov) {
+            ResourceLocation model = prov.getBuilder()
+                    .transformTemplate(template -> template.parent(prov.mcLoc("block/thin_block"))
+                            .element(elementBuilder -> {
+                                elementBuilder.from(0, 0, 0)
+                                        .to(16, 1, 16)
                                         .face(Direction.DOWN, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 0, 16, 16).cullface(Direction.DOWN).tintindex(0))
                                         .face(Direction.UP, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 0, 16, 16).cullface(Direction.UP).tintindex(0))
                                         .face(Direction.NORTH, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 15, 16, 16).cullface(Direction.NORTH).tintindex(0))
