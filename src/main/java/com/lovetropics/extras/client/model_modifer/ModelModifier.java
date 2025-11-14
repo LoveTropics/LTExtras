@@ -1,20 +1,20 @@
 package com.lovetropics.extras.client.model_modifer;
 
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.entity.LivingEntity;
 
+@FunctionalInterface
 public interface ModelModifier {
+    void applyToModel(LivingEntityRenderState state, EntityModel<?> model);
 
-    void modify(HumanoidRenderState renderState, HumanoidModel<?> model);
+    default void applyToTransforms(PoseStack poseStack, LivingEntityRenderState state) {
+    }
 
-    void preApply(LivingEntity livingEntity, HumanoidRenderState state);
-    
-    ModelModifier NO_OP = new ModelModifier() {
-        @Override
-        public void modify(HumanoidRenderState renderState, HumanoidModel<?> model) {}
+    default void extractRenderState(LivingEntity livingEntity, LivingEntityRenderState state) {
+    }
 
-        @Override
-        public void preApply(LivingEntity livingEntity, HumanoidRenderState state) {}
+    ModelModifier NO_OP = (renderState, model) -> {
     };
 }

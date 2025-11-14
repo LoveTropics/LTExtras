@@ -90,9 +90,9 @@ public class ExtraDataComponents {
             "gravity",
             builder -> builder.persistent(Codec.floatRange(-10.0f, 10.0f)).networkSynchronized(ByteBufCodecs.FLOAT)
     );
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ModelModifierType>> WALK_ANIMATION = REGISTER.registerComponentType(
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ModelModifierType>>> WALK_ANIMATION = REGISTER.registerComponentType(
             "walk_animation",
-            builder -> builder.persistent(ModelModifierType.CODEC).networkSynchronized(ModelModifierType.STREAM_CODEC)
+            builder -> builder.persistent(ExtraCodecs.compactListCodec(ModelModifierType.CODEC)).networkSynchronized(ModelModifierType.STREAM_CODEC.apply(ByteBufCodecs.list()))
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<WalkSound>> WALK_SOUND = REGISTER.registerComponentType(
             "walk_sound",

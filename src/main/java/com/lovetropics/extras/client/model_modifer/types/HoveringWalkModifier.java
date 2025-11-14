@@ -1,36 +1,35 @@
 package com.lovetropics.extras.client.model_modifer.types;
 
 import com.lovetropics.extras.client.model_modifer.ModelModifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
 
-public class HoveringWalkModifier implements ModelModifier {
-
+public record HoveringWalkModifier() implements ModelModifier {
     @Override
-    public void modify(HumanoidRenderState renderState, HumanoidModel<?> model) {
-        float walkPos = renderState.walkAnimationPos;
-        float yOffset = Mth.cos(walkPos * 0.51f) - 5.0f;
-
-        model.body.y += yOffset;
-        model.leftLeg.y += yOffset;
-        model.leftLeg.xRot *= 0.0f;
-        model.leftLeg.yRot *= 0.0f;
-        model.rightLeg.y += yOffset;
-        model.rightLeg.xRot *= 0.0f;
-        model.rightLeg.yRot *= 0.0f;
-        model.head.y += yOffset;
-        model.leftArm.y += yOffset;
-        model.leftArm.xRot *= 0.0f;
-        model.leftArm.yRot *= 0.0f;
-        model.rightArm.y += yOffset;
-        model.rightArm.xRot *= 0.0f;
-        model.rightArm.yRot *= 0.0f;
+    public void applyToModel(LivingEntityRenderState state, EntityModel<?> model) {
+        if (!(model instanceof HumanoidModel<?> humanoidModel)) {
+            return;
+        }
+        humanoidModel.leftLeg.xRot = 0.0f;
+        humanoidModel.leftLeg.yRot = 0.0f;
+        humanoidModel.rightLeg.xRot = 0.0f;
+        humanoidModel.rightLeg.yRot = 0.0f;
+        humanoidModel.leftArm.xRot = 0.0f;
+        humanoidModel.leftArm.yRot = 0.0f;
+        humanoidModel.rightArm.xRot = 0.0f;
+        humanoidModel.rightArm.yRot = 0.0f;
     }
 
     @Override
-    public void preApply(LivingEntity livingEntity, HumanoidRenderState state) {
+    public void applyToTransforms(PoseStack poseStack, LivingEntityRenderState state) {
+        poseStack.translate(0.0f, getYOffset(state) / 16.0f, 0.0f);
+    }
 
+    private float getYOffset(LivingEntityRenderState state) {
+        float walkPos = state.walkAnimationPos;
+        return Mth.cos(walkPos * 0.51f) - 5.0f;
     }
 }

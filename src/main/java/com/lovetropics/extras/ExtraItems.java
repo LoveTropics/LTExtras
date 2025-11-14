@@ -137,7 +137,7 @@ public class ExtraItems {
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.FEET)
                             .setAsset(PLACEHOLDER_EQUIPMENT_ASSET)
                             .build())
-                    .component(ExtraDataComponents.WALK_ANIMATION, ModelModifierType.FABULOUS)
+                    .component(ExtraDataComponents.WALK_ANIMATION, List.of(ModelModifierType.FABULOUS, ModelModifierType.RAISED_HIGH_HEELS))
                     .component(ExtraDataComponents.WALK_SOUND, WalkSound.builder().soundEvent(ExtraSounds.HEELS_STEP).cooldown(0.9f).volume(.5f).build())
                     .component(ExtraDataComponents.ADJUST_HEIGHT, 0.2F)
             )

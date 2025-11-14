@@ -6,20 +6,27 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.model_modifer.types.FabulousWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.FlailWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.HoveringWalkModifier;
+import com.lovetropics.extras.client.model_modifer.types.OffsetModifier;
+import com.lovetropics.extras.client.model_modifer.types.ScaleModifier;
 import com.lovetropics.extras.client.model_modifer.types.ShuffleWalkModifier;
-import com.lovetropics.extras.client.model_modifer.types.SpecialScaleModifier;
 import com.lovetropics.extras.client.model_modifer.types.UpsidedownModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.context.ContextKey;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 
 import java.util.ArrayList;
@@ -28,7 +35,6 @@ import java.util.Map;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ModelModifierClient {
-
     private static final Map<ModelModifierType, ModelModifier> CLIENT_MODEL_DATA = Map.of(
             ModelModifierType.DEFAULT, ModelModifier.NO_OP,
             ModelModifierType.FABULOUS, new FabulousWalkModifier(),
@@ -36,8 +42,9 @@ public class ModelModifierClient {
             ModelModifierType.HOVERING, new HoveringWalkModifier(),
             ModelModifierType.SHUFFLE, new ShuffleWalkModifier(),
             ModelModifierType.UPSIDEDOWN, new UpsidedownModifier(),
-            ModelModifierType.SHRUNK, new SpecialScaleModifier(0.8f, -4f),
-            ModelModifierType.ENLARGED, new SpecialScaleModifier(1.2f, 5.7f)
+            ModelModifierType.SHRUNK, new ScaleModifier(1.0f, 0.8f, 1.0f),
+            ModelModifierType.ENLARGED, new ScaleModifier(1.0f, 1.2f, 1.0f),
+            ModelModifierType.RAISED_HIGH_HEELS, new OffsetModifier(0.0f, 4.0f, 0.0f)
     );
 
     public static final ContextKey<List<ModelModifier>> MODIFIERS = new ContextKey<>(LTExtras.location("modifiers"));
@@ -45,41 +52,72 @@ public class ModelModifierClient {
     @SubscribeEvent
     public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
         TypeToken<LivingEntityRenderer<LivingEntity, LivingEntityRenderState, ?>> token = new TypeToken<>() {};
-        event.registerEntityModifier(token, (livingEntity, livingEntityRenderState) -> {
-            if (livingEntityRenderState instanceof HumanoidRenderState renderState) {
-                List<ModelModifier> modifiers = new ArrayList<>();
 
-                addModifierFromStack(modifiers, renderState.headEquipment);
-                addModifierFromStack(modifiers, renderState.chestEquipment);
-                addModifierFromStack(modifiers, renderState.legsEquipment);
-                addModifierFromStack(modifiers, renderState.feetEquipment);
-
-                List<ModelModifierType> modelModifierTypes = ModelModifierStore.getOrDefault(livingEntity).appliedModifiers();
-                for (ModelModifierType modelModifierType : modelModifierTypes) {
-                    ModelModifier modifier = CLIENT_MODEL_DATA.get(modelModifierType);
-                    if (modifier != null) {
-                        modifiers.add(modifier);
-                    }
-                }
-
-                livingEntityRenderState.setRenderData(MODIFIERS, modifiers);
-
-                for (ModelModifier modifier : modifiers) {
-                    modifier.preApply(livingEntity, renderState);
+        List<ModelModifier> scratchModifiers = new ArrayList<>();
+        event.registerEntityModifier(token, (entity, renderState) -> {
+            for (EquipmentSlot slot : EquipmentSlot.VALUES) {
+                ItemStack itemStack = entity.getItemBySlot(slot);
+                if (entity.getEquipmentSlotForItem(itemStack) == slot) {
+                    addModifiersFromStack(scratchModifiers, itemStack);
                 }
             }
 
+            for (ModelModifierType modelModifierType : ModelModifierStore.getOrDefault(entity).appliedModifiers()) {
+                ModelModifier modifier = CLIENT_MODEL_DATA.get(modelModifierType);
+                if (modifier != null) {
+                    scratchModifiers.add(modifier);
+                }
+            }
+
+            if (!scratchModifiers.isEmpty()) {
+                List<ModelModifier> modifiers = List.copyOf(scratchModifiers);
+                renderState.setRenderData(MODIFIERS, modifiers);
+                for (ModelModifier modifier : modifiers) {
+                    modifier.extractRenderState(entity, renderState);
+                }
+            }
+
+            scratchModifiers.clear();
         });
     }
 
-    private static void addModifierFromStack(List<ModelModifier> modifiers, ItemStack stack) {
-        ModelModifierType modelModifierType = stack.get(ExtraDataComponents.WALK_ANIMATION);
-        if (modelModifierType != null) {
-            ModelModifier modifier = CLIENT_MODEL_DATA.get(modelModifierType);
+    private static void addModifiersFromStack(List<ModelModifier> modifiers, ItemStack stack) {
+        List<ModelModifierType> modifierTypes = stack.getOrDefault(ExtraDataComponents.WALK_ANIMATION, List.of());
+        for (ModelModifierType modifierType : modifierTypes) {
+            ModelModifier modifier = CLIENT_MODEL_DATA.get(modifierType);
             if (modifier != null) {
                 modifiers.add(modifier);
             }
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?, ?> event) {
+        List<ModelModifier> modifiers = event.getRenderState().getRenderData(MODIFIERS);
+        if (modifiers != null) {
+            PoseStack poseStack = event.getPoseStack();
+            poseStack.pushPose();
+            for (ModelModifier modifier : modifiers) {
+                modifier.applyToTransforms(poseStack, event.getRenderState());
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onRenderLivingPost(RenderLivingEvent.Post<?, ?, ?> event) {
+        List<ModelModifier> modifiers = event.getRenderState().getRenderData(MODIFIERS);
+        if (modifiers != null) {
+            PoseStack poseStack = event.getPoseStack();
+            poseStack.popPose();
+        }
+    }
+
+    public static void applyToModel(LivingEntityRenderState renderState, EntityModel<?> model) {
+        List<ModelModifier> renderData = renderState.getRenderData(MODIFIERS);
+        if (renderData != null) {
+            for (ModelModifier modifier : renderData) {
+                modifier.applyToModel(renderState, model);
+            }
+        }
+    }
 }
