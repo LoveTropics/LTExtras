@@ -2,6 +2,7 @@ package com.lovetropics.extras.entity;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.block.entity.SeatEntity;
+import com.lovetropics.extras.client.entity.AmazonRiverDolphinRenderer;
 import com.lovetropics.extras.client.entity.CleaningItemFrameRender;
 import com.lovetropics.extras.client.entity.CollectibleEntityRenderer;
 import com.lovetropics.extras.client.entity.FallingPropaguleRenderer;
@@ -114,6 +115,17 @@ public class ExtraEntities {
             .renderer(() -> ForkliftRenderer::new)
             .register();
 
+    public static final EntityEntry<AmazonRiverDolphin> AMAZON_RIVER_DOLPHIN = REGISTRATE.entity("amazon_river_dolphin", AmazonRiverDolphin::new, MobCategory.MISC)
+            .defaultLang()
+            .properties(builder -> builder
+                    .sized(0.9F, 0.6F)
+                    .eyeHeight(0.3F)
+            )
+            .loot(noDrops())
+            .renderer(() -> AmazonRiverDolphinRenderer::new)
+            .attributes(AmazonRiverDolphin::createAttributes)
+            .register();
+
     public static final EntityEntry<CleaningItemFrame> CLEANING_ITEM_FRAME = REGISTRATE.entity("cleaning_item_frame", CleaningItemFrame::new, MobCategory.MISC)
             .defaultLang()
             .properties(builder -> builder
@@ -137,8 +149,6 @@ public class ExtraEntities {
             )
             .renderer(() -> FallingPropaguleRenderer::new)
             .register();
-
-
 
     public static final EntityEntry<SpinningSignEntity> SPINNING_SIGN = REGISTRATE.entity("spinning_sign", SpinningSignEntity::new, MobCategory.MISC)
             .defaultLang()

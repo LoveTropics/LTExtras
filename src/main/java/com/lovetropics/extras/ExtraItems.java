@@ -3,6 +3,7 @@ package com.lovetropics.extras;
 import com.lovetropics.extras.client.item.CollectibleCompassAngle;
 import com.lovetropics.extras.client.item.HasUnseenCollectible;
 import com.lovetropics.extras.data.poi.MapConfig;
+import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.item.CleaningItemFrameItem;
 import com.lovetropics.extras.item.CollectibleBasketItem;
 import com.lovetropics.extras.item.CollectibleCompassItem;
@@ -42,6 +43,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.item.equipment.EquipmentAssets;
 import net.minecraft.world.item.equipment.Equippable;
@@ -76,7 +78,6 @@ public class ExtraItems {
     public static final ItemEntry<Item> PC_ENERGY = REGISTRATE.item("pc_energy", Item::new).lang("PCEnergy").register();
     public static final ItemEntry<Item> TROPI_COOKIES = REGISTRATE.item("tropi_cookies", Item::new).register();
     public static final ItemEntry<Item> GEGY_POTATO_CHIPS = REGISTRATE.item("gegy_potato_chips", Item::new).lang("Gegy's Potato Chips").register();
-
 
     public static final ItemEntry<Item> ORANGE_GLASSES = sunglasses("orange_glasses").register();
     public static final ItemEntry<Item> BLUE_GLASSES = sunglasses("blue_glasses").register();
@@ -151,6 +152,9 @@ public class ExtraItems {
 
     public static final ItemEntry<ForkliftSpawnEggItem> FORKLIFT_SPAWN_EGG = REGISTRATE.item("forklift_spawn_egg", ForkliftSpawnEggItem::new)
             .properties(p -> p.stacksTo(1))
+            .register();
+
+    public static final ItemEntry<SpawnEggItem> AMAZON_RIVER_DOLPHIN_SPAWN_EGG = REGISTRATE.item("amazon_river_dolphin_spawn_egg", p -> new SpawnEggItem(ExtraEntities.AMAZON_RIVER_DOLPHIN.get(), p))
             .register();
 
     public static final ItemEntry<CleaningItemFrameItem> CLEANING_ITEM_FRAME = REGISTRATE.item("cleaning_item_frame", CleaningItemFrameItem::new)

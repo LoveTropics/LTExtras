@@ -3,6 +3,7 @@ package com.lovetropics.extras;
 import com.lovetropics.extras.client.ClientPlayerForkliftHUD;
 import com.lovetropics.extras.client.ClientPlayerSensorEffects;
 import com.lovetropics.extras.client.command.NameTagModeCommand;
+import com.lovetropics.extras.client.entity.model.AmazonRiverDolphinModel;
 import com.lovetropics.extras.client.entity.model.ForkliftModel;
 import com.lovetropics.extras.client.entity.model.HighHeelsModel;
 import com.lovetropics.extras.client.entity.model.RaveKoaModel;
@@ -119,7 +120,7 @@ public class LTExtras {
                     p.add("ltextras.friction", "Friction");
 
                     String keybindBase = "key." + MODID + ".";
-                    p.add("key.categories." + MODID + ".lobby" , "Forklift Controls");
+                    p.add("key.categories." + MODID + ".lobby", "Forklift Controls");
                     p.add(keybindBase + "forklift_raise", "Raise Forklift");
                     p.add(keybindBase + "forklift_lower", "Lower Forklift");
                     p.add(keybindBase + "forklift_drift", "Drift");
@@ -192,6 +193,8 @@ public class LTExtras {
             event.registerLayerDefinition(HighHeelsModel.LAYER_LOCATION, HighHeelsModel::createLayer);
             event.registerLayerDefinition(ForkliftModel.LAYER_LOCATION, ForkliftModel::createBodyLayer);
             event.registerLayerDefinition(SpinningSignModel.LAYER_LOCATION, SpinningSignModel::createBodyLayer);
+            event.registerLayerDefinition(AmazonRiverDolphinModel.LAYER, AmazonRiverDolphinModel::createBodyLayer);
+            event.registerLayerDefinition(AmazonRiverDolphinModel.BABY_LAYER, () -> AmazonRiverDolphinModel.createBodyLayer().apply(AmazonRiverDolphinModel.BABY_TRANSFORMER));
         }
 
         @SubscribeEvent
