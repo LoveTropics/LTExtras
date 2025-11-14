@@ -29,9 +29,9 @@ public class WaterLoggableCarpet extends CarpetBlock implements SimpleWaterlogge
                         .setValue(WATERLOGGED, false)
         );
     }
-    
+
     @Override
-    protected VoxelShape getOcclusionShape(BlockState p_380234_) {
+    protected VoxelShape getOcclusionShape(BlockState state) {
         return Shapes.empty();
     }
 

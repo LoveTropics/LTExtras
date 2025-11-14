@@ -1354,9 +1354,34 @@ public class ExtraBlocks {
             .item().model(() -> (ctx, prov) -> Models.generateBlockItem(ctx, prov, ctx.get().getBlock())).build()
             .register();
 
-    public static final BlockEntry<DisplayBlock> DISPLAY_BLOCK = REGISTRATE.block("display_block", properties -> new DisplayBlock(properties))
+    // Todo remove - kept for now to not break world
+    public static final BlockEntry<DisplayBlock> DISPLAY_BLOCK = REGISTRATE.block("display_block", DisplayBlock::new)
             .initialProperties(() -> Blocks.IRON_BLOCK)
             .simpleItem()
+            .blockEntity(DisplayBlockEntity::new)
+            .build()
+            .register();
+
+    public static final BlockEntry<DisplayBlock> RED_DISPLAY_BLOCK = REGISTRATE.block("red_display_block", DisplayBlock::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .blockstate(() -> (ctx, prov) -> prov.create(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get())))
+            .simpleItem()
+            .blockEntity(DisplayBlockEntity::new)
+            .build()
+            .register();
+
+    public static final BlockEntry<DisplayBlock> GREEN_DISPLAY_BLOCK = REGISTRATE.block("green_display_block", DisplayBlock::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .blockstate(() -> (ctx, prov) -> prov.create(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get())))
+            .simpleItem()
+            .blockEntity(DisplayBlockEntity::new)
+            .build()
+            .register();
+
+    public static final BlockEntry<DisplayBlock> BROWN_DISPLAY_BLOCK = REGISTRATE.block("brown_display_block", DisplayBlock::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .simpleItem()
+            .blockstate(() -> (ctx, prov) -> prov.create(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get())))
             .blockEntity(DisplayBlockEntity::new)
             .build()
             .register();
@@ -1390,7 +1415,10 @@ public class ExtraBlocks {
             .build()
             .register();
 
-    public static final BlockEntityEntry<DisplayBlockEntity> DISPLAY_BLOCK_ENTITY = BlockEntityEntry.cast(DISPLAY_BLOCK.getSibling(Registries.BLOCK_ENTITY_TYPE));
+    public static final BlockEntityEntry<DisplayBlockEntity> DISPLAY_BLOCK_ENTITY = REGISTRATE.blockEntity("display_block", DisplayBlockEntity::new)
+            .validBlocks(DISPLAY_BLOCK, RED_DISPLAY_BLOCK, GREEN_DISPLAY_BLOCK, BROWN_DISPLAY_BLOCK)
+            .register();
+
     public static final BlockEntityEntry<WordBoxBlockEntity> WORD_BOX_BLOCK_ENTITY = BlockEntityEntry.cast(WORD_BOX.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
     public static final BlockEntry<CubedRepeaterBlock> CUBED_REPEATER = REGISTRATE.block("cubed_repeater", CubedRepeaterBlock::new)
