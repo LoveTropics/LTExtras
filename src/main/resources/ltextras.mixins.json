@@ -25,6 +25,8 @@
     "ScaffoldingBlockMixin",
     "ServerCommonPacketListenerImplMixin",
     "ServerGamePacketListenerImplMixin",
+    "ShulkerMixin",
+    "ShulkerRendererMixin",
     "WardenMixin",
     "client.fix.ClientCommandHandlerMixin",
     "collectible.ItemStackMixin",

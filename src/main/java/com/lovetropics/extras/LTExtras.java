@@ -42,6 +42,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -135,6 +136,11 @@ public class LTExtras {
                             .add(TagEntry.optionalElement(ResourceLocation.fromNamespaceAndPath("tropicraft", "mud")))
                             .add(TagEntry.optionalElement(ResourceLocation.fromNamespaceAndPath("tropicraft", "mud_with_pianguas")))
                     ;
+                })
+                .addDataGenerator(ProviderType.ITEM_TAGS, item -> {
+                    item.tag(ExtraTags.Items.HONIES)
+                            .add(Items.HONEY_BOTTLE)
+                            ;
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
                         .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))

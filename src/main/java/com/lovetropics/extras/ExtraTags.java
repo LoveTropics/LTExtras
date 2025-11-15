@@ -30,6 +30,7 @@ public class ExtraTags {
 
     public static class Items extends ExtraTags {
         public static final TagKey<Item> LIME = tag(TROPICRAFT_ID, "lime");
+        public static final TagKey<Item> HONIES = modTag("honies");
 
         static TagKey<Item> tag(String modid, String name) {
             return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(modid, name));

@@ -3,7 +3,9 @@ package com.lovetropics.extras.client;
 import com.lovetropics.extras.ExtraBlocks;
 import com.lovetropics.extras.client.block.DisplayBlockRender;
 import com.lovetropics.extras.client.block.WordBoxBlockEntityRenderer;
+import com.lovetropics.extras.client.entity.state.HoniedShulkerRenderState;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
+import net.minecraft.client.renderer.entity.ShulkerRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -22,6 +24,7 @@ public class ClientRegisterEvents {
     @SubscribeEvent
     public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
         event.registerEntityModifier(FallingBlockRenderer.class, WordBoxBlockEntityRenderer::updateFallingBlockRenderState);
+        event.registerEntityModifier(ShulkerRenderer.class, HoniedShulkerRenderState::updateHoniedRenderState);
     }
 
 }

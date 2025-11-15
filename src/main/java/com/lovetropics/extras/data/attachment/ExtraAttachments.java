@@ -5,6 +5,8 @@ import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsStore;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
+import com.mojang.serialization.Codec;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -31,6 +33,13 @@ public class ExtraAttachments {
             "model_modifiers", () -> AttachmentType.builder(() -> ModelModifierStore.of(Collections.emptyList()))
                     .serialize(ModelModifierStore.MAP_CODEC)
                     .sync(ModelModifierStore.STREAM_CODEC)
+                    .build()
+    );
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Boolean>> HONIED = REGISTER.register(
+            "honied", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL.fieldOf("honied"))
+                    .sync(ByteBufCodecs.BOOL)
                     .build()
     );
 }
