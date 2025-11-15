@@ -20,6 +20,8 @@ public enum ModelModifierType implements StringRepresentable {
     SHRUNK(6, "shrunk"),
     ENLARGED(7, "enlarged"),
     RAISED_HIGH_HEELS(8, "raised_high_heels"),
+    SMALL_ARMS(9, "small_arms"),
+    LONG_ARMS(10, "long_arms")
     ;
 
     public static final StringRepresentable.EnumCodec<ModelModifierType> CODEC = StringRepresentable.fromEnum(ModelModifierType::values);
