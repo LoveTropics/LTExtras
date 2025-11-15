@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public enum CollectibleRarity implements StringRepresentable {
     PURCHASED("#BFEA00"),
-    REWARD("005958"),
+    REWARD("#005958"),
     SECRET("#5ABDA3"),
     MILESTONE("#005958"),
     QUEST("#E5B106");
