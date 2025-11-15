@@ -5,6 +5,7 @@ import com.lovetropics.extras.client.ClientPlayerSensorEffects;
 import com.lovetropics.extras.client.command.NameTagModeCommand;
 import com.lovetropics.extras.client.entity.model.AmazonRiverDolphinModel;
 import com.lovetropics.extras.client.entity.model.ForkliftModel;
+import com.lovetropics.extras.client.entity.model.GlassFrogModel;
 import com.lovetropics.extras.client.entity.model.HighHeelsModel;
 import com.lovetropics.extras.client.entity.model.RaveKoaModel;
 import com.lovetropics.extras.client.entity.model.SpinningSignModel;
@@ -210,6 +211,7 @@ public class LTExtras {
             event.registerLayerDefinition(SpinningSignModel.LAYER_LOCATION, SpinningSignModel::createBodyLayer);
             event.registerLayerDefinition(AmazonRiverDolphinModel.LAYER, AmazonRiverDolphinModel::createBodyLayer);
             event.registerLayerDefinition(AmazonRiverDolphinModel.BABY_LAYER, () -> AmazonRiverDolphinModel.createBodyLayer().apply(AmazonRiverDolphinModel.BABY_TRANSFORMER));
+            event.registerLayerDefinition(GlassFrogModel.LAYER, GlassFrogModel::createBodyLayer);
         }
 
         @SubscribeEvent
