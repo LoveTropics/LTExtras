@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 public class AmazonRiverDolphin extends Dolphin {
     private static final EntityDataAccessor<Boolean> MOUTH_OPEN = SynchedEntityData.defineId(AmazonRiverDolphin.class, EntityDataSerializers.BOOLEAN);
 
-    public AmazonRiverDolphin(EntityType<? extends Dolphin> type, Level level) {
+    public AmazonRiverDolphin(EntityType<? extends AmazonRiverDolphin> type, Level level) {
         super(type, level);
     }
 

@@ -176,6 +176,9 @@ public class ExtraItems {
     public static final ItemEntry<SpawnEggItem> AMAZON_RIVER_DOLPHIN_SPAWN_EGG = REGISTRATE.item("amazon_river_dolphin_spawn_egg", p -> new SpawnEggItem(ExtraEntities.AMAZON_RIVER_DOLPHIN.get(), p))
             .register();
 
+    public static final ItemEntry<SpawnEggItem> GLASS_FROG_SPAWN_EGG = REGISTRATE.item("glass_frog_spawn_egg", p -> new SpawnEggItem(ExtraEntities.GLASS_FROG.get(), p))
+            .register();
+
     public static final ItemEntry<CleaningItemFrameItem> CLEANING_ITEM_FRAME = REGISTRATE.item("cleaning_item_frame", CleaningItemFrameItem::new)
             .properties(p -> p.stacksTo(1))
             .register();

@@ -116,7 +116,5 @@ public class GlassFrogModel extends EntityModel<GlassFrogRenderState> {
 
     public void setupAnim(GlassFrogRenderState state) {
         super.setupAnim(state);
-        this.root.xRot = state.xRot * (float) (Math.PI / 180.0);
-        this.root.yRot = state.yRot * (float) (Math.PI / 180.0);
     }
 }
