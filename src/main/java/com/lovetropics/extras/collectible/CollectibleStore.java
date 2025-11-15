@@ -5,8 +5,11 @@ import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.equipment.Equippable;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -69,6 +72,7 @@ public class CollectibleStore {
 
     public boolean give(Holder<Collectible> collectible) {
         if (!collectibles.contains(collectible)) {
+            maybeEquip(collectible);
             collectibles.add(collectible);
             hasUnseen = true;
             sendToClient(false);
@@ -114,6 +118,17 @@ public class CollectibleStore {
     private void sendToClient(boolean silent) {
         if (player != null) {
             PacketDistributor.sendToPlayer(player, new ClientboundCollectiblesListPacket(collectibles, silent, hasUnseen));
+        }
+    }
+
+    private void maybeEquip(Holder<Collectible> collectible) {
+        if (player != null) {
+            Collectible value = collectible.value();
+            Equippable equippable = value.get(DataComponents.EQUIPPABLE);
+            if (equippable != null) {
+                EquipmentSlot slot = equippable.slot();
+                player.setItemSlot(slot, Collectible.createItemStack(collectible, player.getUUID()));
+            }
         }
     }
 }

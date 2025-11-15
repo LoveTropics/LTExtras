@@ -26,13 +26,15 @@ import java.util.UUID;
 public class Collectible implements DataComponentHolder {
     public static final Codec<Collectible> DIRECT_CODEC = RecordCodecBuilder.create(i -> i.group(
             BuiltInRegistries.ITEM.holderByNameCodec().fieldOf("item").forGetter(c -> c.item),
-            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(c -> c.components)
+            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(c -> c.components),
+            Codec.BOOL.fieldOf("auto_equip").orElse(false).forGetter(c -> c.autoEquip)
     ).apply(i, Collectible::new));
     public static final Codec<Holder<Collectible>> CODEC = RegistryFileCodec.create(ExtraRegistries.COLLECTIBLE, DIRECT_CODEC);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Collectible> DIRECT_STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.holderRegistry(Registries.ITEM), c -> c.item,
             DataComponentPatch.STREAM_CODEC, c -> c.components,
+            ByteBufCodecs.BOOL, c -> c.autoEquip,
             Collectible::new
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<Collectible>> STREAM_CODEC = ByteBufCodecs.holder(ExtraRegistries.COLLECTIBLE, DIRECT_STREAM_CODEC);
@@ -40,15 +42,17 @@ public class Collectible implements DataComponentHolder {
     private final Holder<Item> item;
     private final DataComponentPatch components;
     private final DataComponentMap combinedComponents;
+    private final boolean autoEquip;
 
-    private Collectible(Holder<Item> item, DataComponentPatch components) {
+    private Collectible(Holder<Item> item, DataComponentPatch components, boolean autoEquip) {
         this.item = item;
         this.components = components;
-        combinedComponents = PatchedDataComponentMap.fromPatch(item.value().components(), components);
+        this.combinedComponents = PatchedDataComponentMap.fromPatch(item.value().components(), components);
+        this.autoEquip = autoEquip;
     }
 
     public Collectible(ItemStack stack) {
-        this(stack.getItemHolder(), componentsWithoutMarker(stack.getComponentsPatch()));
+        this(stack.getItemHolder(), componentsWithoutMarker(stack.getComponentsPatch()), false);
     }
 
     @Nullable
