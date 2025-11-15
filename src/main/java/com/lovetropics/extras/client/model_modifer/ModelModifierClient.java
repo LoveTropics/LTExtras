@@ -6,9 +6,11 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.model_modifer.types.FabulousWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.FlailWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.HoveringWalkModifier;
+import com.lovetropics.extras.client.model_modifer.types.LongArmsModifier;
 import com.lovetropics.extras.client.model_modifer.types.OffsetModifier;
 import com.lovetropics.extras.client.model_modifer.types.ScaleModifier;
 import com.lovetropics.extras.client.model_modifer.types.ShuffleWalkModifier;
+import com.lovetropics.extras.client.model_modifer.types.SmallArmsModifier;
 import com.lovetropics.extras.client.model_modifer.types.UpsidedownModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
@@ -30,22 +32,27 @@ import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ModelModifierClient {
-    private static final Map<ModelModifierType, ModelModifier> CLIENT_MODEL_DATA = Map.of(
-            ModelModifierType.DEFAULT, ModelModifier.NO_OP,
-            ModelModifierType.FABULOUS, new FabulousWalkModifier(),
-            ModelModifierType.FLAIL, new FlailWalkModifier(),
-            ModelModifierType.HOVERING, new HoveringWalkModifier(),
-            ModelModifierType.SHUFFLE, new ShuffleWalkModifier(),
-            ModelModifierType.UPSIDEDOWN, new UpsidedownModifier(),
-            ModelModifierType.SHRUNK, new ScaleModifier(1.0f, 0.8f, 1.0f),
-            ModelModifierType.ENLARGED, new ScaleModifier(1.0f, 1.2f, 1.0f),
-            ModelModifierType.RAISED_HIGH_HEELS, new OffsetModifier(0.0f, 4.0f, 0.0f)
-    );
+    private static final Map<ModelModifierType, ModelModifier> CLIENT_MODEL_DATA = new HashMap<>();
+
+    static {
+        CLIENT_MODEL_DATA.put(ModelModifierType.DEFAULT, ModelModifier.NO_OP);
+        CLIENT_MODEL_DATA.put(ModelModifierType.FABULOUS, new FabulousWalkModifier());
+        CLIENT_MODEL_DATA.put(ModelModifierType.FLAIL, new FlailWalkModifier());
+        CLIENT_MODEL_DATA.put(ModelModifierType.HOVERING, new HoveringWalkModifier());
+        CLIENT_MODEL_DATA.put(ModelModifierType.SHUFFLE, new ShuffleWalkModifier());
+        CLIENT_MODEL_DATA.put(ModelModifierType.UPSIDEDOWN, new UpsidedownModifier());
+        CLIENT_MODEL_DATA.put(ModelModifierType.SHRUNK, new ScaleModifier(1.0f, 0.8f, 1.0f));
+        CLIENT_MODEL_DATA.put(ModelModifierType.ENLARGED, new ScaleModifier(1.0f, 1.2f, 1.0f));
+        CLIENT_MODEL_DATA.put(ModelModifierType.RAISED_HIGH_HEELS, new OffsetModifier(0.0f, 4.0f, 0.0f));
+        CLIENT_MODEL_DATA.put(ModelModifierType.SMALL_ARMS, new SmallArmsModifier());
+        CLIENT_MODEL_DATA.put(ModelModifierType.LONG_ARMS, new LongArmsModifier());
+    }
 
     public static final ContextKey<List<ModelModifier>> MODIFIERS = new ContextKey<>(LTExtras.location("modifiers"));
 
