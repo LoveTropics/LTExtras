@@ -1,5 +1,6 @@
 package com.lovetropics.extras.collectible;
 
+import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
@@ -8,7 +9,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.Equippable;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -126,6 +129,16 @@ public class CollectibleStore {
             Collectible value = collectible.value();
             Equippable equippable = value.get(DataComponents.EQUIPPABLE);
             if (equippable != null) {
+                ItemStack currentItem = player.getItemBySlot(equippable.slot());
+                if (!currentItem.has(ExtraDataComponents.COLLECTIBLE)) {
+                    if (!player.addItem(currentItem)) {
+                        ItemEntity drop = player.drop(currentItem, false);
+                        if (drop != null) {
+                            drop.setNoPickUpDelay();
+                            drop.setTarget(player.getUUID());
+                        }
+                    }
+                }
                 EquipmentSlot slot = equippable.slot();
                 player.setItemSlot(slot, Collectible.createItemStack(collectible, player.getUUID()));
             }
