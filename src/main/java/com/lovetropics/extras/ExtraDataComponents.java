@@ -11,6 +11,7 @@ import com.lovetropics.extras.item.PaintingOverlay;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
+import com.lovetropics.lib.codec.MoreCodecs;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -106,9 +107,9 @@ public class ExtraDataComponents {
             "interact_action",
             builder -> builder.persistent(InteractActionData.CODEC).cacheEncoding()
     );
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<PaintingOverlay>> PAINTING_OVERLAY = REGISTER.registerComponentType(
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<PaintingOverlay>>> PAINTING_OVERLAY = REGISTER.registerComponentType(
             "painting_overlay",
-            builder -> builder.persistent(PaintingOverlay.CODEC).networkSynchronized(PaintingOverlay.STREAM_CODEC).cacheEncoding()
+            builder -> builder.persistent(ExtraCodecs.compactListCodec(PaintingOverlay.CODEC)).networkSynchronized(PaintingOverlay.STREAM_CODEC.apply(ByteBufCodecs.list())).cacheEncoding()
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleDisplayInfo>> COLLECTIBLE_LORE = REGISTER.registerComponentType(
             "collectible_display_info",
