@@ -79,6 +79,7 @@ public class ExtraItems {
     public static final ItemEntry<Item> PC_ENERGY = REGISTRATE.item("pc_energy", Item::new).lang("PCEnergy").register();
     public static final ItemEntry<Item> TROPI_COOKIES = REGISTRATE.item("tropi_cookies", Item::new).register();
     public static final ItemEntry<Item> GEGY_POTATO_CHIPS = REGISTRATE.item("gegy_potato_chips", Item::new).lang("Gegy's Potato Chips").register();
+    public static final ItemEntry<Item> OIL_CAN = REGISTRATE.item("oil_can", Item::new).register();
 
     public static final ItemEntry<Item> ORANGE_GLASSES = sunglasses("orange_glasses").register();
     public static final ItemEntry<Item> BLUE_GLASSES = sunglasses("blue_glasses").register();
