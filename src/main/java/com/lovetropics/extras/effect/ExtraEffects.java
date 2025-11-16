@@ -6,6 +6,7 @@ import com.lovetropics.extras.model_modifer.ModelModifierType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -41,9 +42,17 @@ public class ExtraEffects {
 
     @SubscribeEvent
     public static void onEffectRemoved(MobEffectEvent.Remove event) {
-        MobEffect value = event.getEffect().value();
-        if (value instanceof ModelEffect modelEffect) {
-            ModelModifierStore.removeModifier(event.getEntity(), modelEffect.getType());
+        removeModelModifiers(event.getEffect().value(), event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void onEffectRemoved(MobEffectEvent.Expired event) {
+        removeModelModifiers(event.getEffectInstance().getEffect().value(), event.getEntity());
+    }
+
+    private static void removeModelModifiers(MobEffect mobEffect, LivingEntity entity) {
+        if (mobEffect instanceof ModelEffect modelEffect) {
+            ModelModifierStore.removeModifier(entity, modelEffect.getType());
         }
     }
 }
