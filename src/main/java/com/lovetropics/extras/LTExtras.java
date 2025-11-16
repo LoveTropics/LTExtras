@@ -25,6 +25,7 @@ import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.effect.PropaguledEffect;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
+import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.world_effect.WorldEffectCommand;
@@ -129,6 +130,9 @@ public class LTExtras {
 
                     TpCommand.addTranslations(p);
                     WarpCommand.addTranslations(p);
+
+                    ExtraEffects.MODEL_EFFECTS.forEach((modifier, effect) ->
+                            p.add(effect.value(), modifier.getEffectName()));
                 })
                 .addDataGenerator(ProviderType.BLOCK_TAGS, block -> {
                     block.tag(ExtraTags.Blocks.PLUMBERS_TNT_EXPLODES)

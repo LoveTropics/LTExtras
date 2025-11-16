@@ -14,6 +14,7 @@ import com.lovetropics.extras.client.model_modifer.types.ShuffleWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.SmallArmsModifier;
 import com.lovetropics.extras.client.model_modifer.types.StiffLegsModifier;
 import com.lovetropics.extras.client.model_modifer.types.UpsidedownModifier;
+import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -76,6 +77,15 @@ public class ModelModifierClient {
                     scratchModifiers.add(modifier);
                 }
             }
+
+            ExtraEffects.MODEL_EFFECTS.forEach((modifier, effect) -> {
+                if (entity.hasEffect(effect)) {
+                    ModelModifier modelModifier = CLIENT_MODEL_DATA.get(modifier);
+                    if (modelModifier != null) {
+                        scratchModifiers.add(modelModifier);
+                    }
+                }
+            });
 
             if (!scratchModifiers.isEmpty()) {
                 List<ModelModifier> modifiers = List.copyOf(scratchModifiers);
