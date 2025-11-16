@@ -78,15 +78,6 @@ public class ModelModifierClient {
                 }
             }
 
-            ExtraEffects.MODEL_EFFECTS.forEach((modifier, effect) -> {
-                if (entity.hasEffect(effect)) {
-                    ModelModifier modelModifier = CLIENT_MODEL_DATA.get(modifier);
-                    if (modelModifier != null) {
-                        scratchModifiers.add(modelModifier);
-                    }
-                }
-            });
-
             if (!scratchModifiers.isEmpty()) {
                 List<ModelModifier> modifiers = List.copyOf(scratchModifiers);
                 renderState.setRenderData(MODIFIERS, modifiers);

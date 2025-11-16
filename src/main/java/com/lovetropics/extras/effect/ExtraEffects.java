@@ -1,21 +1,23 @@
 package com.lovetropics.extras.effect;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.client.model_modifer.ModelModifier;
+import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+@EventBusSubscriber
 public class ExtraEffects {
     public static final DeferredRegister<MobEffect> REGISTER = DeferredRegister.create(Registries.MOB_EFFECT, LTExtras.MODID);
 
@@ -25,14 +27,23 @@ public class ExtraEffects {
 
     public static final DeferredHolder<MobEffect, PropaguledEffect> PROPAGULED = REGISTER.register("propaguled", () -> new PropaguledEffect(MobEffectCategory.HARMFUL, 0x00ddcc).addAttributeModifier(Attributes.MOVEMENT_SPEED, LTExtras.location("effects.propaguled"), -0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
-    public static final Map<ModelModifierType, DeferredHolder<MobEffect, EmptyEffect>> MODEL_EFFECTS = new HashMap<>();
+    public static final Map<ModelModifierType, DeferredHolder<MobEffect, ModelEffect>> MODEL_EFFECTS = new HashMap<>();
 
     static {
         for (ModelModifierType value : ModelModifierType.values()) {
             if (value.getEffectName() == null) {
                 continue;
             }
-            MODEL_EFFECTS.put(value, REGISTER.register("mm_" + value.getSerializedName(), () -> new EmptyEffect(MobEffectCategory.NEUTRAL, 0x000000)));
+            MODEL_EFFECTS.put(value, REGISTER.register("mm_" + value.getSerializedName(), () -> new ModelEffect(MobEffectCategory.NEUTRAL, 0x000000, value)));
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void onEffectRemoved(MobEffectEvent.Remove event) {
+        MobEffect value = event.getEffect().value();
+        if (value instanceof ModelEffect modelEffect) {
+            ModelModifierStore.removeModifier(event.getEntity(), modelEffect.getType());
         }
     }
 }
