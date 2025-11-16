@@ -14,7 +14,6 @@ import com.lovetropics.extras.client.model_modifer.types.ShuffleWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.SmallArmsModifier;
 import com.lovetropics.extras.client.model_modifer.types.StiffLegsModifier;
 import com.lovetropics.extras.client.model_modifer.types.UpsidedownModifier;
-import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -50,8 +49,8 @@ public class ModelModifierClient {
         CLIENT_MODEL_DATA.put(ModelModifierType.UPSIDEDOWN, new UpsidedownModifier());
         CLIENT_MODEL_DATA.put(ModelModifierType.SHRUNK, new ScaleModifier(1.0f, 0.8f, 1.0f));
         CLIENT_MODEL_DATA.put(ModelModifierType.ENLARGED, new ScaleModifier(1.0f, 1.2f, 1.0f));
-        CLIENT_MODEL_DATA.put(ModelModifierType.SMALL_ARMS, new SmallArmsModifier());
-        CLIENT_MODEL_DATA.put(ModelModifierType.LONG_ARMS, new LongArmsModifier());
+        CLIENT_MODEL_DATA.put(ModelModifierType.SHRUGGY_ARMS, new SmallArmsModifier());
+        CLIENT_MODEL_DATA.put(ModelModifierType.ENDER_ARMS, new LongArmsModifier());
         CLIENT_MODEL_DATA.put(ModelModifierType.STIFF_LEGS, new StiffLegsModifier());
         CLIENT_MODEL_DATA.put(ModelModifierType.HOP_WALK, new HopWalkModifier());
     }

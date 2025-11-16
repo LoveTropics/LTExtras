@@ -21,8 +21,8 @@ public enum ModelModifierType implements StringRepresentable {
     SHRUNK(6, "shrunk", "Shrunk"),
     ENLARGED(7, "enlarged", "Enlarged"),
     RAISED_HIGH_HEELS(8, "raised_high_heels"),
-    SMALL_ARMS(9, "small_arms", "Small Arms"),
-    LONG_ARMS(10, "long_arms", "Long Arms"),
+    SHRUGGY_ARMS(9, "shruggy_arms", "Shruggy Arms"),
+    ENDER_ARMS(10, "ender_arms", "Ender Arms"),
     STIFF_LEGS(11, "stiff_legs", "Stiff Legs"),
     HOP_WALK(12, "hop_walk", "Hop Walk")
     ;
