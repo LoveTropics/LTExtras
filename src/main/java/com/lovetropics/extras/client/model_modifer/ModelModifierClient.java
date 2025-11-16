@@ -5,21 +5,21 @@ import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.model_modifer.types.FabulousWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.FlailWalkModifier;
+import com.lovetropics.extras.client.model_modifer.types.HopWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.HoveringWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.LongArmsModifier;
 import com.lovetropics.extras.client.model_modifer.types.OffsetModifier;
 import com.lovetropics.extras.client.model_modifer.types.ScaleModifier;
 import com.lovetropics.extras.client.model_modifer.types.ShuffleWalkModifier;
 import com.lovetropics.extras.client.model_modifer.types.SmallArmsModifier;
+import com.lovetropics.extras.client.model_modifer.types.StiffLegsModifier;
 import com.lovetropics.extras.client.model_modifer.types.UpsidedownModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,9 +49,10 @@ public class ModelModifierClient {
         CLIENT_MODEL_DATA.put(ModelModifierType.UPSIDEDOWN, new UpsidedownModifier());
         CLIENT_MODEL_DATA.put(ModelModifierType.SHRUNK, new ScaleModifier(1.0f, 0.8f, 1.0f));
         CLIENT_MODEL_DATA.put(ModelModifierType.ENLARGED, new ScaleModifier(1.0f, 1.2f, 1.0f));
-        CLIENT_MODEL_DATA.put(ModelModifierType.RAISED_HIGH_HEELS, new OffsetModifier(0.0f, 4.0f, 0.0f));
         CLIENT_MODEL_DATA.put(ModelModifierType.SMALL_ARMS, new SmallArmsModifier());
         CLIENT_MODEL_DATA.put(ModelModifierType.LONG_ARMS, new LongArmsModifier());
+        CLIENT_MODEL_DATA.put(ModelModifierType.STIFF_LEGS, new StiffLegsModifier());
+        CLIENT_MODEL_DATA.put(ModelModifierType.HOP_WALK, new HopWalkModifier());
     }
 
     public static final ContextKey<List<ModelModifier>> MODIFIERS = new ContextKey<>(LTExtras.location("modifiers"));
@@ -95,6 +96,10 @@ public class ModelModifierClient {
             if (modifier != null) {
                 modifiers.add(modifier);
             }
+        }
+        float adjustHeight = stack.getOrDefault(ExtraDataComponents.ADJUST_HEIGHT, 0.0f);
+        if (adjustHeight != 0.0F) {
+            modifiers.add(new OffsetModifier(0.0f, adjustHeight * 20, 0.0f));
         }
     }
 

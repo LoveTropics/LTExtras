@@ -4,6 +4,7 @@ import com.lovetropics.extras.client.item.CollectibleCompassAngle;
 import com.lovetropics.extras.client.item.HasUnseenCollectible;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.entity.ExtraEntities;
+import com.lovetropics.extras.item.CustomBootsItem;
 import com.lovetropics.extras.item.CleaningItemFrameItem;
 import com.lovetropics.extras.item.CollectibleBasketItem;
 import com.lovetropics.extras.item.CollectibleCompassItem;
@@ -138,12 +139,23 @@ public class ExtraItems {
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.FEET)
                             .setAsset(PLACEHOLDER_EQUIPMENT_ASSET)
                             .build())
-                    .component(ExtraDataComponents.WALK_ANIMATION, List.of(ModelModifierType.FABULOUS, ModelModifierType.RAISED_HIGH_HEELS))
+                    .component(ExtraDataComponents.WALK_ANIMATION, List.of(ModelModifierType.FABULOUS))
                     .component(ExtraDataComponents.WALK_SOUND, WalkSound.builder().soundEvent(ExtraSounds.HEELS_STEP).cooldown(0.9f).volume(.5f).build())
                     .component(ExtraDataComponents.ADJUST_HEIGHT, 0.2F)
             )
             .clientExtension(() -> HighHeelsItem.ClientExtensions::new)
             .defaultModel()
+            .register();
+
+    public static final ItemEntry<CustomBootsItem> BIG_BOOT = REGISTRATE.item("big_boot", CustomBootsItem::new)
+            .properties(p -> p.stacksTo(1)
+                    .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.FEET)
+                            .setAsset(PLACEHOLDER_EQUIPMENT_ASSET)
+                            .build())
+                    .component(ExtraDataComponents.WALK_ANIMATION, List.of(ModelModifierType.STIFF_LEGS, ModelModifierType.HOP_WALK))
+                    .component(ExtraDataComponents.ADJUST_HEIGHT, 0.45F)
+            )
+            .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.location("item/big_boot")))
             .register();
 
     public static final ItemEntry<Item> FORKLIFT_CERTIFICATION = REGISTRATE.item("forklift_certification", Item::new)

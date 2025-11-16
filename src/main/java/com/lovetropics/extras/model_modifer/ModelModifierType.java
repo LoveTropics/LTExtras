@@ -19,10 +19,10 @@ public enum ModelModifierType implements StringRepresentable {
     UPSIDEDOWN(5, "upsidedown"),
     SHRUNK(6, "shrunk"),
     ENLARGED(7, "enlarged"),
-    RAISED_HIGH_HEELS(8, "raised_high_heels"),
-    SMALL_ARMS(9, "small_arms"),
-    LONG_ARMS(10, "long_arms")
-    ;
+    SMALL_ARMS(8, "small_arms"),
+    LONG_ARMS(9, "long_arms"),
+    STIFF_LEGS(10, "stiff_legs"),
+    HOP_WALK(11, "hop_walk");
 
     public static final StringRepresentable.EnumCodec<ModelModifierType> CODEC = StringRepresentable.fromEnum(ModelModifierType::values);
 
