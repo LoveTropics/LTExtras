@@ -14,7 +14,6 @@ import com.lovetropics.extras.collectible.CollectibleCommand;
 import com.lovetropics.extras.collectible.GenerateCollectibleCommand;
 import com.lovetropics.extras.command.ExtraCommandArguments;
 import com.lovetropics.extras.command.GenerateCommand;
-import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.command.PoiCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
 import com.lovetropics.extras.command.TpCommand;
@@ -25,9 +24,10 @@ import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.effect.PropaguledEffect;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
-import com.lovetropics.extras.model_modifer.ModelModifierType;
+import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.sounds.ExtraSounds;
+import com.lovetropics.extras.techstack.VideoImporter;
 import com.lovetropics.extras.world_effect.WorldEffectCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
@@ -105,6 +105,7 @@ public class LTExtras {
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
+        NeoForge.EVENT_BUS.addListener(VideoImporter.get()::onServerStarted);
         modBus.addListener(this::onModifyAttributes);
 
         ExtraLangKeys.init(registrate());

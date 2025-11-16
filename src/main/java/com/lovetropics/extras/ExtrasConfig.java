@@ -1,5 +1,6 @@
 package com.lovetropics.extras;
 
+import com.lovetropics.extras.techstack.ExtrasTechstackSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -46,6 +47,7 @@ public class ExtrasConfig {
         public final ModConfigSpec.ConfigValue<String> authKey;
         public final ModConfigSpec.ConfigValue<String> scheduleUrl;
         public final ModConfigSpec.ConfigValue<String> translationUrl;
+        public final ModConfigSpec.ConfigValue<String> webSocketUrl;
 
         private CategoryTechStack() {
             COMMON_BUILDER.comment("Connection to the tech stack").push("techStack");
@@ -61,6 +63,10 @@ public class ExtrasConfig {
             translationUrl = COMMON_BUILDER
                     .comment("API URL to request translations from")
                     .define("translationUrl", "");
+
+            webSocketUrl = COMMON_BUILDER
+                    .comment("URL the web socket is running on")
+                    .define("webSocketUrl", "wss://localhost:443/ws");
 
             COMMON_BUILDER.pop();
         }
@@ -83,9 +89,19 @@ public class ExtrasConfig {
 
     @SubscribeEvent
     public static void configLoad(ModConfigEvent.Loading event) {
+        if (event.getConfig().getSpec() == COMMON_CONFIG) {
+            onCommonConfigLoad();
+        }
     }
 
     @SubscribeEvent
     public static void configReload(ModConfigEvent.Reloading event) {
+        if (event.getConfig().getSpec() == COMMON_CONFIG) {
+            onCommonConfigLoad();
+        }
+    }
+
+    private static void onCommonConfigLoad() {
+        ExtrasTechstackSubscriber.updateConfig(TECH_STACK.webSocketUrl.get(), TECH_STACK.authKey.get());
     }
 }
