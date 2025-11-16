@@ -80,9 +80,12 @@ public class VideoImporter {
 
         executor.schedule(() -> {
             importedVideos.add(new ImportedVideo(id, url, duration));
-            try (BufferedWriter writer = Files.newBufferedWriter(storeFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
-                JsonElement json = ImportedVideo.CODEC.listOf().encodeStart(JsonOps.INSTANCE, importedVideos).getOrThrow();
-                GSON.toJson(json, writer);
+            try {
+                Files.createDirectories(storeFile.getParent());
+                try (BufferedWriter writer = Files.newBufferedWriter(storeFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                    JsonElement json = ImportedVideo.CODEC.listOf().encodeStart(JsonOps.INSTANCE, importedVideos).getOrThrow();
+                    GSON.toJson(json, writer);
+                }
             } catch (IOException e) {
                 LOGGER.error("Failed to write imported videos", e);
             }

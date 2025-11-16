@@ -51,7 +51,7 @@ public class ExtrasTechstackSubscriber {
     }
 
     private static void addEventSubscriptions(TechstackEventSubscriber.Builder subscriber) {
-        subscriber.subscribe(Crud.CREATE, "video_upload", VideoUpload.CODEC, video ->
+        subscriber.subscribe(Crud.CREATE, "video_upload_game", VideoUpload.CODEC, video ->
                 VideoImporter.get().importVideo(video.title, video.url, video.duration)
         );
     }
