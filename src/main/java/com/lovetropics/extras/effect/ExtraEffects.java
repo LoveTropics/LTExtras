@@ -35,7 +35,15 @@ public class ExtraEffects {
             if (value.getEffectName() == null) {
                 continue;
             }
-            MODEL_EFFECTS.put(value, REGISTER.register("mm_" + value.getSerializedName(), () -> new ModelEffect(MobEffectCategory.NEUTRAL, 0x000000, value)));
+            ModelEffect modelEffect = new ModelEffect(MobEffectCategory.NEUTRAL, 0x000000, value);
+            if (value == ModelModifierType.SMALL_ARMS) {
+                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.location("small_arms_block_range"), -3, AttributeModifier.Operation.ADD_VALUE);
+                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.location("small_arms_entity_range"), -3, AttributeModifier.Operation.ADD_VALUE);
+            } else if (value == ModelModifierType.LONG_ARMS) {
+                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.location("long_arms_block_range"), 3, AttributeModifier.Operation.ADD_VALUE);
+                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.location("long_arms_entity_range"), 3, AttributeModifier.Operation.ADD_VALUE);
+            }
+            MODEL_EFFECTS.put(value, REGISTER.register("mm_" + value.getSerializedName(), () -> modelEffect));
         }
     }
 
