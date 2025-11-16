@@ -82,6 +82,7 @@ public class ExtraItems {
 
     public static final ItemEntry<Item> ORANGE_GLASSES = sunglasses("orange_glasses").register();
     public static final ItemEntry<Item> BLUE_GLASSES = sunglasses("blue_glasses").register();
+    public static final ItemEntry<Item> GREEN_GLASSES = sunglasses("green_glasses").register();
 
     private static ItemBuilder<Item, Registrate> sunglasses(String name) {
         return REGISTRATE.item(name, Item::new)
