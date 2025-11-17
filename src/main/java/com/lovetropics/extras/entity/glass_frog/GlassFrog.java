@@ -66,6 +66,7 @@ public class GlassFrog extends Animal {
             MemoryModuleType.IS_IN_WATER,
             MemoryModuleType.IS_PANICKING
     );
+    public int jumpDelay = 0;
 
     public GlassFrog(EntityType<? extends GlassFrog> type, Level level) {
         super(type, level);
@@ -76,7 +77,7 @@ public class GlassFrog extends Animal {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createAnimalAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 1.5)
+                .add(Attributes.MOVEMENT_SPEED, 2.5)
                 .add(Attributes.MAX_HEALTH, 4.0)
                 .add(Attributes.ATTACK_DAMAGE, 6.0)
                 .add(Attributes.STEP_HEIGHT, 1.0);
@@ -133,6 +134,23 @@ public class GlassFrog extends Animal {
         this.getBrain().tick(level, this);
         GlassFrogAi.updateActivity(this);
         super.customServerAiStep(level);
+
+        if ((!this.getNavigation().isDone() || this.getTarget() != null) && (this.onGround() || this.isInWater())) {
+            if (this.jumpDelay > 0) {
+                --this.jumpDelay;
+            }
+
+            if (this.jumpDelay <= 0) {
+                this.jumpDelay = 5 + this.random.nextInt(4);
+                Vec3 motion = this.getDeltaMovement();
+                if (motion.horizontalDistanceSqr() > 4.0E-4) {
+                    double motionY = motion.y + 0.3;
+                    double motionX = motion.x * 1.1;
+                    double motionZ = motion.z * 1.1;
+                    this.setDeltaMovement(motionX, motionY, motionZ);
+                }
+            }
+        }
     }
 
     @Override

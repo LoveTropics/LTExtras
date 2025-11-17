@@ -1,8 +1,11 @@
 package com.lovetropics.extras.client.entity.model;
 
 import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.client.entity.animation.GlassFrogAnimation;
 import com.lovetropics.extras.client.entity.state.AmazonRiverDolphinRenderState;
 import com.lovetropics.extras.client.entity.state.GlassFrogRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
+import net.minecraft.client.animation.definitions.CamelAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -42,6 +45,8 @@ public class GlassFrogModel extends EntityModel<GlassFrogRenderState> {
     private final ModelPart eye_left;
     private final ModelPart eye_right;
 
+    private final KeyframeAnimation walkAnimation;
+
     public GlassFrogModel(ModelPart root) {
         super(root);
         this.body_base = root.getChild("body_base");
@@ -64,6 +69,8 @@ public class GlassFrogModel extends EntityModel<GlassFrogRenderState> {
         this.ribbit_bag = this.head.getChild("ribbit_bag");
         this.eye_left = this.head.getChild("eye_left");
         this.eye_right = this.head.getChild("eye_right");
+
+        this.walkAnimation = GlassFrogAnimation.HOP.bake(root);
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -116,5 +123,6 @@ public class GlassFrogModel extends EntityModel<GlassFrogRenderState> {
 
     public void setupAnim(GlassFrogRenderState state) {
         super.setupAnim(state);
+        this.walkAnimation.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 3.0F, 2.5F);
     }
 }
