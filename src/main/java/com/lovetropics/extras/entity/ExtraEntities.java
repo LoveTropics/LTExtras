@@ -148,6 +148,7 @@ public class ExtraEntities {
                     .passengerAttachments(new Vec3(0.0, 0.25, -0.25))
                     .clientTrackingRange(10)
             )
+            .loot(noDrops())
             .renderer(() -> GlassFrogRenderer::new)
             .attributes(GlassFrog::createAttributes)
             .register();
