@@ -921,7 +921,8 @@ public class ExtraBlocks {
             .add(Blocks.SOUL_SOIL, Models.TextureType.normal())
             .add(Blocks.TUFF, Models.TextureType.normal())
             .add(Blocks.HONEY_BLOCK, Models.TextureType.sideTopSuffix())
-            .add(Blocks.HONEYCOMB_BLOCK, Models.TextureType.normal());
+            .add(Blocks.HONEYCOMB_BLOCK, Models.TextureType.normal())
+            .add(Blocks.DRIPSTONE_BLOCK, Models.TextureType.normal());
 
     private static final TemplateBuilder<SlabBlock, Models.TextureType> SLAB_TEMPLATES = new TemplateBuilder<SlabBlock, Models.TextureType>()
             .add(Blocks.GOLD_BLOCK, Models.TextureType.normal())
