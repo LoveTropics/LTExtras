@@ -95,6 +95,10 @@ public class Collectible implements DataComponentHolder {
         ));
     }
 
+    public boolean autoEquip() {
+        return autoEquip;
+    }
+
     public Holder<Item> item() {
         return item;
     }
