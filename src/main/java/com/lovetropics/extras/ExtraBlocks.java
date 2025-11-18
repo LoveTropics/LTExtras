@@ -28,6 +28,7 @@ import com.lovetropics.extras.block.PassableNoPlaceBarrierBlock;
 import com.lovetropics.extras.block.PianguasBlock;
 import com.lovetropics.extras.block.PlumbersTntBlock;
 import com.lovetropics.extras.block.ReedsBlock;
+import com.lovetropics.extras.block.RoatedDisplayBlock;
 import com.lovetropics.extras.block.RoleBarrierBlock;
 import com.lovetropics.extras.block.RopeBlock;
 import com.lovetropics.extras.block.ScientificNameBlock;
@@ -1355,8 +1356,7 @@ public class ExtraBlocks {
             .item().model(() -> (ctx, prov) -> Models.generateBlockItem(ctx, prov, ctx.get().getBlock())).build()
             .register();
 
-    // Todo remove - kept for now to not break world
-    public static final BlockEntry<DisplayBlock> DISPLAY_BLOCK = REGISTRATE.block("display_block", DisplayBlock::new)
+    public static final BlockEntry<RoatedDisplayBlock> ROTATED_DISPLAY_BLOCK = REGISTRATE.block("display_block", RoatedDisplayBlock::new)
             .initialProperties(() -> Blocks.IRON_BLOCK)
             .simpleItem()
             .blockEntity(DisplayBlockEntity::new)
@@ -1417,7 +1417,7 @@ public class ExtraBlocks {
             .register();
 
     public static final BlockEntityEntry<DisplayBlockEntity> DISPLAY_BLOCK_ENTITY = REGISTRATE.blockEntity("display_block", DisplayBlockEntity::new)
-            .validBlocks(DISPLAY_BLOCK, RED_DISPLAY_BLOCK, GREEN_DISPLAY_BLOCK, BROWN_DISPLAY_BLOCK)
+            .validBlocks(ROTATED_DISPLAY_BLOCK, RED_DISPLAY_BLOCK, GREEN_DISPLAY_BLOCK, BROWN_DISPLAY_BLOCK)
             .register();
 
     public static final BlockEntityEntry<WordBoxBlockEntity> WORD_BOX_BLOCK_ENTITY = BlockEntityEntry.cast(WORD_BOX.getSibling(Registries.BLOCK_ENTITY_TYPE));
