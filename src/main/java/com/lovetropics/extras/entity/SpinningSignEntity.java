@@ -27,6 +27,7 @@ public class SpinningSignEntity extends Entity {
 
     public SpinningSignEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
+        noPhysics = true;
     }
 
 
@@ -35,6 +36,14 @@ public class SpinningSignEntity extends Entity {
         builder.define(DATA_SCALE, 1F);
         builder.define(DATA_TEXT, Optional.empty());
         builder.define(DATA_ITEM, ItemStack.EMPTY);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (DATA_SCALE.equals(key)) {
+            refreshDimensions();
+        }
     }
 
     @Override
@@ -80,12 +89,14 @@ public class SpinningSignEntity extends Entity {
 
     @Override
     public boolean isPickable() {
-        return true;
+        return false;
     }
 
     @Override
     protected AABB makeBoundingBox(Vec3 position) {
-        return AABB.ofSize(position, 0.1f, 0.1f, 0.1f);
+        float sizeXZ = getScale() * 3.35f;
+        float sizeY = getScale() * 0.75f;
+        return AABB.ofSize(position, sizeXZ, sizeY, sizeXZ);
     }
 
     @Override

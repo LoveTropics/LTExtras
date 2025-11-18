@@ -47,10 +47,9 @@ public class SpinningSignRenderer extends EntityRenderer<SpinningSignEntity, Spi
     public void render(SpinningSignRenderState renderState, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         poseStack.pushPose();
         poseStack.scale(-1.0F, -1.0F, 1.0F);
-        poseStack.translate(0.0F, EntityModel.MODEL_Y_OFFSET, 0.0F);
         poseStack.scale(0.3f, 0.3f, 0.3f);
-        poseStack.translate(0.0F, 2.7f, 0.0F);
         poseStack.scale(renderState.scale, renderState.scale, renderState.scale);
+        poseStack.translate(0.0F, -0.5f, 0.0F);
         poseStack.mulPose(Axis.YP.rotationDegrees(180f));
 
         model.setupAnim(renderState);
