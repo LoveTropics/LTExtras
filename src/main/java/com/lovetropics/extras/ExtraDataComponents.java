@@ -11,7 +11,6 @@ import com.lovetropics.extras.item.PaintingOverlay;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
-import com.lovetropics.lib.codec.MoreCodecs;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -118,6 +117,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<FireExtinguisher>> FIRE_EXTINGUISHER = REGISTER.registerComponentType(
             "fire_extinguisher",
             builder -> builder.persistent(FireExtinguisher.CODEC).networkSynchronized(FireExtinguisher.STREAM_CODEC).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MAX_PICKED_UP = REGISTER.registerComponentType(
+            "max_picked_up",
+            builder -> builder.persistent(ExtraCodecs.POSITIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT)
     );
 
     @SubscribeEvent

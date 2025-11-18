@@ -37,6 +37,20 @@ public class ItemExtensions {
             stack.setCount(0);
             event.getItemEntity().discard();
             event.setCanPickup(TriState.FALSE);
+            return;
+        }
+
+        Integer maxPickedUp = stack.get(ExtraDataComponents.MAX_PICKED_UP);
+        if (maxPickedUp != null) {
+            Player player = event.getPlayer();
+            int inventoryCount = player.getInventory().clearOrCountMatchingItems(
+                    inventoryStack -> ItemStack.isSameItemSameComponents(stack, inventoryStack),
+                    0,
+                    player.inventoryMenu.getCraftSlots()
+            );
+            if (inventoryCount + stack.getCount() > maxPickedUp) {
+                event.setCanPickup(TriState.FALSE);
+            }
         }
     }
 
