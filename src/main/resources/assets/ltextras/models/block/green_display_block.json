@@ -3,7 +3,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [113, 74],
   "textures": {
-    "0": "ltextras:block/green_bucket"
+    "0": "ltextras:block/green_bucket",
+    "particle": "minecraft:block/iron_block"
   },
 	"elements": [
 		{
