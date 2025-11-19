@@ -31,6 +31,9 @@ public enum ExtraLangKeys {
     MENU_DONATE("screen", "menu_donate", "Donate to Pachamama Alliance"),
 
     FORKLIFT_CERTIFICATION_MISSING("forklift", "certification.missing", "You must have a Forklift Certification to drive this forklift"),
+
+    WATER_COOLER_POTION_NAME("item", "water_cooler_potion.name", "Suspicious Water"),
+    WATER_COOLER_POTION_LORE("item", "water_cooler_potion.lore", "It's lukewarm and smells like .. battery acid?")
     ;
 
     private final String key;

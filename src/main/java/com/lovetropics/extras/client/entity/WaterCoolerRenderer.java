@@ -45,7 +45,7 @@ public class WaterCoolerRenderer extends EntityRenderer<WaterCoolerEntity, Water
 
         poseStack.pushPose();
         poseStack.scale(-1.0f, -1.0f, 1.0f);
-        poseStack.translate(0.0f, WaterCoolerModel.MODEL_Y_OFFSET, 0.0f);
+        poseStack.translate(0.0f, -1.28f, 0.0f);
         poseStack.mulPose(Axis.YP.rotationDegrees(state.yRot));
         model.setupAnim(state);
 

@@ -1,28 +1,41 @@
 package com.lovetropics.extras.entity;
 
 import com.lovetropics.extras.ExtraItems;
+import com.lovetropics.extras.ExtraLangKeys;
+import com.lovetropics.extras.effect.ExtraEffects;
+import com.lovetropics.extras.model_modifer.ModelModifierType;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.HoneyBlock;
-import net.minecraft.world.level.block.TintedGlassBlock;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * LTExtras
@@ -30,8 +43,20 @@ import org.jetbrains.annotations.Nullable;
  */
 public class WaterCoolerEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_SHAKE_TIME = SynchedEntityData.defineId(WaterCoolerEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> DATA_DISPENSE_TIME = SynchedEntityData.defineId(WaterCoolerEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SHAKE_TYPE = SynchedEntityData.defineId(WaterCoolerEntity.class, EntityDataSerializers.INT);
+
+    private static final RandomSource random = RandomSource.create();
+    private static final ModelModifierType[] MODIFIER_TYPES = {
+            ModelModifierType.FABULOUS,
+            ModelModifierType.FLAIL,
+            ModelModifierType.HOVERING,
+            ModelModifierType.SHUFFLE,
+            ModelModifierType.UPSIDEDOWN,
+            ModelModifierType.SHRUNK,
+            ModelModifierType.ENLARGED,
+            ModelModifierType.SHRUGGY_ARMS,
+            ModelModifierType.ENDER_ARMS,
+    };
 
     public final AnimationState shake1AnimationState = new AnimationState();
     public final AnimationState shake2AnimationState = new AnimationState();
@@ -45,7 +70,6 @@ public class WaterCoolerEntity extends Entity {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_SHAKE_TIME, 0);
-        builder.define(DATA_DISPENSE_TIME, 0);
         builder.define(SHAKE_TYPE, 0);
     }
 
@@ -60,9 +84,6 @@ public class WaterCoolerEntity extends Entity {
         if (this.isShaking()) {
             entityData.set(DATA_SHAKE_TIME, this.getShakeTime() - 1);
         }
-        if (this.isDispensing()) {
-            entityData.set(DATA_DISPENSE_TIME, this.getDispenseTime() - 1);
-        }
     }
 
     @Override
@@ -73,25 +94,28 @@ public class WaterCoolerEntity extends Entity {
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (level().isClientSide) return InteractionResult.SUCCESS;
-        if (!this.isShaking() && !this.isDispensing()) {
-            if (player.isCrouching()) {
-                this.tryDispense();
+        if (!this.isShaking()) {
+            if (random.nextInt(100) >= 90) {
+                dispense(level());
             } else {
-                this.tryShake();
+                shake();
             }
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.FAIL;
     }
 
-    public void tryShake() {
+    public void shake() {
         int random = getRandom().nextInt(3);
         entityData.set(SHAKE_TYPE, random);
         entityData.set(DATA_SHAKE_TIME, 5);
     }
 
-    public void tryDispense() {
-        entityData.set(DATA_DISPENSE_TIME, 5);
+    public void dispense(Level level) {
+        entityData.set(SHAKE_TYPE, 3);
+        entityData.set(DATA_SHAKE_TIME, 6);
+        final ItemEntity itemEntity = new ItemEntity(level, getX(), getY()+1.25f, getZ(), getPotionDrop());
+        level.addFreshEntity(itemEntity);
     }
 
     private void setupAnimationStates() {
@@ -99,26 +123,24 @@ public class WaterCoolerEntity extends Entity {
         this.shake1AnimationState.animateWhen(shakeType == 0 && this.isShaking(), this.tickCount);
         this.shake2AnimationState.animateWhen(shakeType == 1 && this.isShaking(), this.tickCount);
         this.shake3AnimationState.animateWhen(shakeType == 2 && this.isShaking(), this.tickCount);
-        this.shakeDispenseAnimationState.animateWhen(this.isDispensing(), this.tickCount);
+        this.shakeDispenseAnimationState.animateWhen(shakeType == 3 && this.isShaking(), this.tickCount);
     }
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         entityData.set(DATA_SHAKE_TIME, input.getIntOr("shake_time", 0));
-        entityData.set(DATA_DISPENSE_TIME, input.getIntOr("dispense_time", 0));
         entityData.set(SHAKE_TYPE, input.getIntOr("shake_type", 0));
     }
 
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         output.putInt("shake_time", this.getShakeTime());
-        output.putInt("dispense_time", this.getDispenseTime());
         output.putInt("shake_type", this.entityData.get(SHAKE_TYPE));
     }
 
     @Override
     public boolean canBeCollidedWith(@Nullable Entity entity) {
-        return true;
+        return false;
     }
 
     public int getShakeTime() {
@@ -129,14 +151,19 @@ public class WaterCoolerEntity extends Entity {
         return getShakeTime() > 0;
     }
 
-    public int getDispenseTime() {
-        return this.getEntityData().get(DATA_DISPENSE_TIME);
+    private static ItemStack getPotionDrop() {
+        MobEffectInstance mobEffect = new MobEffectInstance(ExtraEffects.MODEL_EFFECTS.get(Util.getRandom(MODIFIER_TYPES, random)), 15 * 20, 1);
+        PotionContents potionContents = new PotionContents(Optional.empty(), Optional.of(0x5A8DD6), List.of(), Optional.of(ExtraLangKeys.WATER_COOLER_POTION_NAME.get().toString())).withEffectAdded(mobEffect);
+        ItemStack itemStack = new ItemStack(Items.POTION, 1);
+        itemStack.set(DataComponents.POTION_CONTENTS, potionContents);
+        itemStack.set(DataComponents.CUSTOM_NAME, ExtraLangKeys.WATER_COOLER_POTION_NAME.get());
+        itemStack.set(DataComponents.LORE, ItemLore.EMPTY.withLineAdded(ExtraLangKeys.WATER_COOLER_POTION_LORE.get().withColor(ChatFormatting.GRAY.getColor())));
+        itemStack.set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT
+                .withHidden(DataComponents.ATTRIBUTE_MODIFIERS, true)
+                .withHidden(DataComponents.POTION_CONTENTS, true)
+        );
+        return itemStack;
     }
-
-    public boolean isDispensing() {
-        return getDispenseTime() > 0;
-    }
-
 
     @Override
     protected AABB makeBoundingBox(Vec3 position) {
