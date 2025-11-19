@@ -32,6 +32,8 @@ public class WaterCoolerRenderer extends EntityRenderer<WaterCoolerEntity, Water
     public void extractRenderState(WaterCoolerEntity entity, WaterCoolerRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);
         state.shake1AnimationState.copyFrom(entity.shake1AnimationState);
+        state.shake2AnimationState.copyFrom(entity.shake2AnimationState);
+        state.shake3AnimationState.copyFrom(entity.shake3AnimationState);
         state.shakeDispenseAnimationState.copyFrom(entity.shakeDispenseAnimationState);
         state.yRot = entity.getYRot(partialTick);
         state.shakeTime = entity.getShakeTime();

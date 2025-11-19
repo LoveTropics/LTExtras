@@ -9,6 +9,8 @@ import net.minecraft.world.entity.AnimationState;
  */
 public class WaterCoolerRenderState extends EntityRenderState {
     public final AnimationState shake1AnimationState = new AnimationState();
+    public final AnimationState shake2AnimationState = new AnimationState();
+    public final AnimationState shake3AnimationState = new AnimationState();
     public final AnimationState shakeDispenseAnimationState = new AnimationState();
     public float bodyRot;
     public float yRot;

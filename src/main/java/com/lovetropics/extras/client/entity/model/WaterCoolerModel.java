@@ -26,6 +26,8 @@ public class WaterCoolerModel<T extends Entity> extends EntityModel<WaterCoolerR
 	private final ModelPart water_jug;
 
     private final KeyframeAnimation shake1Animation;
+    private final KeyframeAnimation shake2Animation;
+    private final KeyframeAnimation shake3Animation;
     private final KeyframeAnimation shakeDispenseAnimation;
 
 	public WaterCoolerModel(ModelPart root) {
@@ -33,7 +35,10 @@ public class WaterCoolerModel<T extends Entity> extends EntityModel<WaterCoolerR
         this.root = root.getChild("root");
 		this.water_jug = this.root.getChild("water_jug");
         this.shake1Animation = WaterCoolerAnimation.SHAKE_1.bake(root);
+        this.shake2Animation = WaterCoolerAnimation.SHAKE_2.bake(root);
+        this.shake3Animation = WaterCoolerAnimation.SHAKE_3.bake(root);
         this.shakeDispenseAnimation = WaterCoolerAnimation.SHAKE_DISPENSE.bake(root);
+
 	}
 
 	public static LayerDefinition createBodyLayer() {

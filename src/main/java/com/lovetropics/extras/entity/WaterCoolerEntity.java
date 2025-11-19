@@ -31,9 +31,7 @@ import org.jetbrains.annotations.Nullable;
 public class WaterCoolerEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_SHAKE_TIME = SynchedEntityData.defineId(WaterCoolerEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_DISPENSE_TIME = SynchedEntityData.defineId(WaterCoolerEntity.class, EntityDataSerializers.INT);
-
-    private int shakeAnimationRemainingTicks;
-    private int dispenseAnimationRemainingTicks;
+    private static final EntityDataAccessor<Integer> SHAKE_TYPE = SynchedEntityData.defineId(WaterCoolerEntity.class, EntityDataSerializers.INT);
 
     public final AnimationState shake1AnimationState = new AnimationState();
     public final AnimationState shake2AnimationState = new AnimationState();
@@ -48,28 +46,22 @@ public class WaterCoolerEntity extends Entity {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_SHAKE_TIME, 0);
         builder.define(DATA_DISPENSE_TIME, 0);
+        builder.define(SHAKE_TYPE, 0);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (this.shakeAnimationRemainingTicks > 0) {
-            shake1AnimationState.startIfStopped(tickCount);
-            this.shakeAnimationRemainingTicks--;
-            entityData.set(DATA_SHAKE_TIME, this.shakeAnimationRemainingTicks);
-        }
-
-        if (this.dispenseAnimationRemainingTicks > 0) {
-            shakeDispenseAnimationState.startIfStopped(tickCount);
-            this.dispenseAnimationRemainingTicks--;
-            entityData.set(DATA_DISPENSE_TIME, this.dispenseAnimationRemainingTicks);
-        } else {
-            shakeDispenseAnimationState.stop();
-        }
-
         if (this.level().isClientSide) {
             this.setupAnimationStates();
+        }
+
+        if (this.isShaking()) {
+            entityData.set(DATA_SHAKE_TIME, this.getShakeTime() - 1);
+        }
+        if (this.isDispensing()) {
+            entityData.set(DATA_DISPENSE_TIME, this.getDispenseTime() - 1);
         }
     }
 
@@ -82,39 +74,48 @@ public class WaterCoolerEntity extends Entity {
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (level().isClientSide) return InteractionResult.SUCCESS;
         if (!this.isShaking() && !this.isDispensing()) {
-            this.tryShake();
+            if (player.isCrouching()) {
+                this.tryDispense();
+            } else {
+                this.tryShake();
+            }
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.FAIL;
     }
 
     public void tryShake() {
-        this.shakeAnimationRemainingTicks = 50;
-        entityData.set(DATA_SHAKE_TIME, 50);
+        int random = getRandom().nextInt(3);
+        entityData.set(SHAKE_TYPE, random);
+        entityData.set(DATA_SHAKE_TIME, 5);
     }
 
     public void tryDispense() {
-        this.dispenseAnimationRemainingTicks = 6;
         entityData.set(DATA_DISPENSE_TIME, 6);
     }
 
     private void setupAnimationStates() {
-        this.shake1AnimationState.animateWhen(this.shakeAnimationRemainingTicks > 0, this.shakeAnimationRemainingTicks);
-        //this.shake2AnimationState
-        //this.shake3AnimationState
-        this.shakeDispenseAnimationState.animateWhen(this.dispenseAnimationRemainingTicks > 0, this.tickCount);
+        int shakeType = this.entityData.get(SHAKE_TYPE);
+        switch (shakeType) {
+            case 0 -> this.shake1AnimationState.animateWhen(this.isShaking(), this.tickCount);
+            case 1 -> this.shake2AnimationState.animateWhen(this.isShaking(), this.tickCount);
+            case 2 -> this.shake3AnimationState.animateWhen(this.isShaking(), this.tickCount);
+        }
+        this.shakeDispenseAnimationState.animateWhen(this.isDispensing(), this.tickCount);
     }
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         entityData.set(DATA_SHAKE_TIME, input.getIntOr("shake_time", 0));
         entityData.set(DATA_DISPENSE_TIME, input.getIntOr("dispense_time", 0));
+        entityData.set(SHAKE_TYPE, input.getIntOr("shake_type", 0));
     }
 
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
-        output.putInt("shake_time", entityData.get(DATA_SHAKE_TIME));
-        output.putInt("dispense_time", entityData.get(DATA_DISPENSE_TIME));
+        output.putInt("shake_time", this.getShakeTime());
+        output.putInt("dispense_time", this.getDispenseTime());
+        output.putInt("shake_type", this.entityData.get(SHAKE_TYPE));
     }
 
     @Override
@@ -122,21 +123,22 @@ public class WaterCoolerEntity extends Entity {
         return true;
     }
 
-    public boolean isShaking() {
-        return this.getEntityData().get(DATA_SHAKE_TIME) > 0;
-    }
-
     public int getShakeTime() {
         return this.getEntityData().get(DATA_SHAKE_TIME);
     }
 
-    public boolean isDispensing() {
-        return this.getEntityData().get(DATA_DISPENSE_TIME) > 0;
+    public boolean isShaking() {
+        return getShakeTime() > 0;
     }
 
     public int getDispenseTime() {
         return this.getEntityData().get(DATA_DISPENSE_TIME);
     }
+
+    public boolean isDispensing() {
+        return getDispenseTime() > 0;
+    }
+
 
     @Override
     protected AABB makeBoundingBox(Vec3 position) {
