@@ -127,20 +127,25 @@ public class CollectibleStore {
     private void maybeEquip(Holder<Collectible> collectible) {
         if (player != null) {
             Collectible value = collectible.value();
-            Equippable equippable = value.get(DataComponents.EQUIPPABLE);
-            if (value.autoEquip() && equippable != null) {
-                ItemStack currentItem = player.getItemBySlot(equippable.slot());
-                if (!currentItem.has(ExtraDataComponents.COLLECTIBLE)) {
-                    if (!player.addItem(currentItem)) {
-                        ItemEntity drop = player.drop(currentItem, false);
-                        if (drop != null) {
-                            drop.setNoPickUpDelay();
-                            drop.setTarget(player.getUUID());
+            if (value.autoEquip()) {
+                Equippable equippable = value.get(DataComponents.EQUIPPABLE);
+                if (equippable != null) {
+                    ItemStack currentItem = player.getItemBySlot(equippable.slot());
+                    if (!currentItem.has(ExtraDataComponents.COLLECTIBLE)) {
+                        if (!player.addItem(currentItem)) {
+                            ItemEntity drop = player.drop(currentItem, false);
+                            if (drop != null) {
+                                drop.setNoPickUpDelay();
+                                drop.setTarget(player.getUUID());
+                            }
                         }
                     }
+                    EquipmentSlot slot = equippable.slot();
+                    player.setItemSlot(slot, Collectible.createItemStack(collectible, player.getUUID()));
+                }else {
+                    // We don't care to drop if it is a collectible
+                    player.addItem(Collectible.createItemStack(collectible, player.getUUID()));
                 }
-                EquipmentSlot slot = equippable.slot();
-                player.setItemSlot(slot, Collectible.createItemStack(collectible, player.getUUID()));
             }
         }
     }
