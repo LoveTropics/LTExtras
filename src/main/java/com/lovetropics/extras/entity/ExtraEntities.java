@@ -122,7 +122,6 @@ public class ExtraEntities {
             .defaultLang()
             .properties(builder -> builder
                     .sized(1.4f, 2.1f)
-                    .clientTrackingRange(8)
                     .passengerAttachments(new Vec3(0.0f, 0.8f, 0.0f), new Vec3(1.0f, 1.0f, 1.0f), new Vec3(-1.0f, 1.0f, 1.0f))
                     .updateInterval(3)
             )
@@ -146,7 +145,6 @@ public class ExtraEntities {
             .properties(builder -> builder
                     .sized(0.3F, 0.15F)
                     .passengerAttachments(new Vec3(0.0, 0.25, -0.25))
-                    .clientTrackingRange(10)
             )
             .loot(noDrops())
             .renderer(() -> GlassFrogRenderer::new)
@@ -159,7 +157,6 @@ public class ExtraEntities {
                     .noLootTable()
                     .sized(0.5F, 0.5F)
                     .eyeHeight(0.0F)
-                    .clientTrackingRange(10)
                     .updateInterval(Integer.MAX_VALUE)
             )
             .renderer(() -> CleaningItemFrameRender::new)
@@ -172,7 +169,6 @@ public class ExtraEntities {
                     .sized(0.2F, 0.7F)
                     .eyeHeight(0.0F)
                     .updateInterval(3)
-                    .clientTrackingRange(10)
             )
             .renderer(() -> FallingPropaguleRenderer::new)
             .register();
@@ -196,7 +192,6 @@ public class ExtraEntities {
                     .fireImmune()
                     .sized(0.98F, 0.98F)
                     .eyeHeight(0.15F)
-                    .clientTrackingRange(10)
                     .updateInterval(10)
             )
             .renderer(() -> TntRenderer::new)
