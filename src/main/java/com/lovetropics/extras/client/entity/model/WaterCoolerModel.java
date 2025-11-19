@@ -66,6 +66,8 @@ public class WaterCoolerModel<T extends Entity> extends EntityModel<WaterCoolerR
         super.setupAnim(state);
 
         this.shake1Animation.apply(state.shake1AnimationState, state.ageInTicks);
+        this.shake2Animation.apply(state.shake2AnimationState, state.ageInTicks);
+        this.shake3Animation.apply(state.shake3AnimationState, state.ageInTicks);
         this.shakeDispenseAnimation.apply(state.shakeDispenseAnimationState, state.ageInTicks);
     }
 }

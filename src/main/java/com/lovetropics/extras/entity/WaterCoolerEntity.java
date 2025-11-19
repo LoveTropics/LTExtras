@@ -91,16 +91,14 @@ public class WaterCoolerEntity extends Entity {
     }
 
     public void tryDispense() {
-        entityData.set(DATA_DISPENSE_TIME, 6);
+        entityData.set(DATA_DISPENSE_TIME, 5);
     }
 
     private void setupAnimationStates() {
         int shakeType = this.entityData.get(SHAKE_TYPE);
-        switch (shakeType) {
-            case 0 -> this.shake1AnimationState.animateWhen(this.isShaking(), this.tickCount);
-            case 1 -> this.shake2AnimationState.animateWhen(this.isShaking(), this.tickCount);
-            case 2 -> this.shake3AnimationState.animateWhen(this.isShaking(), this.tickCount);
-        }
+        this.shake1AnimationState.animateWhen(shakeType == 0 && this.isShaking(), this.tickCount);
+        this.shake2AnimationState.animateWhen(shakeType == 1 && this.isShaking(), this.tickCount);
+        this.shake3AnimationState.animateWhen(shakeType == 2 && this.isShaking(), this.tickCount);
         this.shakeDispenseAnimationState.animateWhen(this.isDispensing(), this.tickCount);
     }
 
