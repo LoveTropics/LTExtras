@@ -7,11 +7,13 @@ import com.lovetropics.extras.client.entity.CleaningItemFrameRender;
 import com.lovetropics.extras.client.entity.CollectibleEntityRenderer;
 import com.lovetropics.extras.client.entity.FallingPropaguleRenderer;
 import com.lovetropics.extras.client.entity.ForkliftRenderer;
+import com.lovetropics.extras.client.entity.GlassFrogRenderer;
 import com.lovetropics.extras.client.entity.PartyBeamRenderer;
 import com.lovetropics.extras.client.entity.RaveKoaRenderer;
 import com.lovetropics.extras.client.entity.SeatRenderer;
 import com.lovetropics.extras.client.entity.SpinningSignRenderer;
 import com.lovetropics.extras.client.entity.WaterCoolerRenderer;
+import com.lovetropics.extras.entity.glass_frog.GlassFrog;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntity;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDJ;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDance1;
@@ -137,6 +139,18 @@ public class ExtraEntities {
             .loot(noDrops())
             .renderer(() -> AmazonRiverDolphinRenderer::new)
             .attributes(AmazonRiverDolphin::createAttributes)
+            .register();
+
+    public static final EntityEntry<GlassFrog> GLASS_FROG = REGISTRATE.entity("glass_frog", GlassFrog::new, MobCategory.CREATURE)
+            .defaultLang()
+            .properties(builder -> builder
+                    .sized(0.3F, 0.15F)
+                    .passengerAttachments(new Vec3(0.0, 0.25, -0.25))
+                    .clientTrackingRange(10)
+            )
+            .loot(noDrops())
+            .renderer(() -> GlassFrogRenderer::new)
+            .attributes(GlassFrog::createAttributes)
             .register();
 
     public static final EntityEntry<CleaningItemFrame> CLEANING_ITEM_FRAME = REGISTRATE.entity("cleaning_item_frame", CleaningItemFrame::new, MobCategory.MISC)
