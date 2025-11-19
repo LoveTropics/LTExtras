@@ -44,6 +44,7 @@ import com.lovetropics.extras.block.TransparentLeavesBlock;
 import com.lovetropics.extras.block.WarehouseRoadBoosterBlock;
 import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.block.WaterLoggableCarpet;
+import com.lovetropics.extras.block.WaterloggableButtonBlock;
 import com.lovetropics.extras.block.WordBoxBlock;
 import com.lovetropics.extras.block.entity.DisplayBlockEntity;
 import com.lovetropics.extras.block.entity.JumpPadBlockEntity;
@@ -62,6 +63,7 @@ import com.mojang.math.Quadrant;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
+import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
 import com.tterrag.registrate.providers.generators.RegistrateItemModelGenerator;
@@ -710,6 +712,24 @@ public class ExtraBlocks {
             .tag(BlockTags.MINEABLE_WITH_AXE)
             .item()
             .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), ModelTemplates.FLAT_ITEM))
+            .build()
+            .register();
+
+    public static final BlockEntry<WaterloggableButtonBlock> WATERLOGGABLE_OAK_BUTTON = REGISTRATE
+            .block("waterloggable_oak_button", p -> new WaterloggableButtonBlock(BlockSetType.OAK, 30, p.overrideDescription(Blocks.OAK_BUTTON.getDescriptionId())))
+            .initialProperties(() -> Blocks.OAK_BUTTON)
+            .setData(ProviderType.LANG, (ctx, prov) -> {
+            })
+            .blockstate(() -> (ctx, prov) -> {
+                TextureMapping textures = TextureMapping.defaultTexture(prov.blockTexture(Blocks.OAK_PLANKS));
+                MultiVariant button = plainVariant(ModelTemplates.BUTTON.create(Blocks.OAK_BUTTON, textures, prov.modelOutput));
+                MultiVariant buttonPressed = plainVariant(ModelTemplates.BUTTON_PRESSED.create(Blocks.OAK_BUTTON, textures, prov.modelOutput));
+                prov.generateButtonBlock(ctx.get(), button, buttonPressed);
+            })
+            .tag(BlockTags.WOODEN_BUTTONS, BlockTags.MINEABLE_WITH_AXE)
+            .item((block, p) -> new BlockItem(block, p.overrideDescription(Blocks.OAK_BUTTON.getDescriptionId())))
+            .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), TextureMapping.getBlockTexture(Blocks.OAK_BUTTON, "_inventory")))
+            .tag(ItemTags.WOODEN_BUTTONS)
             .build()
             .register();
 
