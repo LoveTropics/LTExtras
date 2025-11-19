@@ -8,6 +8,7 @@ import com.lovetropics.extras.client.entity.model.ForkliftModel;
 import com.lovetropics.extras.client.entity.model.HighHeelsModel;
 import com.lovetropics.extras.client.entity.model.RaveKoaModel;
 import com.lovetropics.extras.client.entity.model.SpinningSignModel;
+import com.lovetropics.extras.client.entity.model.WaterCoolerModel;
 import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
@@ -203,6 +204,7 @@ public class LTExtras {
             event.registerLayerDefinition(RaveKoaModel.LAYER_LOCATION, RaveKoaModel::createBodyLayer);
             event.registerLayerDefinition(HighHeelsModel.LAYER_LOCATION, HighHeelsModel::createLayer);
             event.registerLayerDefinition(ForkliftModel.LAYER_LOCATION, ForkliftModel::createBodyLayer);
+            event.registerLayerDefinition(WaterCoolerModel.LAYER_LOCATION, WaterCoolerModel::createBodyLayer);
             event.registerLayerDefinition(SpinningSignModel.LAYER_LOCATION, SpinningSignModel::createBodyLayer);
             event.registerLayerDefinition(AmazonRiverDolphinModel.LAYER, AmazonRiverDolphinModel::createBodyLayer);
             event.registerLayerDefinition(AmazonRiverDolphinModel.BABY_LAYER, () -> AmazonRiverDolphinModel.createBodyLayer().apply(AmazonRiverDolphinModel.BABY_TRANSFORMER));

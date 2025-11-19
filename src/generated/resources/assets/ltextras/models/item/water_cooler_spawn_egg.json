@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ltextras:item/water_cooler_spawn_egg"
+  }
+}
