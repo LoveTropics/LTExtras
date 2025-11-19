@@ -185,6 +185,9 @@ public class ExtraItems {
 
     public static final ItemEntry<Item> BLOODWOOD_SAP = REGISTRATE.item("bloodwood_sap", Item::new).register();
 
+    public static final ItemEntry<Item> GUAYUSA_LEAF = REGISTRATE.item("guayusa_leaf", Item::new).register();
+    public static final ItemEntry<Item> GUAYUSA_TEA = REGISTRATE.item("guayusa_tea", Item::new).register();
+
     public static void init() {
     }
 
