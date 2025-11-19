@@ -661,7 +661,9 @@ public class ExtraBlocks {
             .properties(p -> Blocks.logProperties(Blocks.RED_CONCRETE.defaultMapColor(), Blocks.PALE_OAK_WOOD.defaultMapColor(), SoundType.WOOD))
             .tag(BlockTags.LOGS, BlockTags.LOGS_THAT_BURN, BlockTags.MINEABLE_WITH_AXE)
             .blockstate(() -> (ctx, prov) -> prov.generateLogBlock(ctx.get()))
-            .simpleItem()
+            .item()
+            .tag(ItemTags.LOGS, ItemTags.LOGS_THAT_BURN)
+            .build()
             .register();
 
     public static final BlockEntry<RotatedPillarBlock> BLOODWOOD_WOOD = REGISTRATE
