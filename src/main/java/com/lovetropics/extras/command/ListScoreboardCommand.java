@@ -1,5 +1,6 @@
 package com.lovetropics.extras.command;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -13,6 +14,10 @@ import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.ReadOnlyScoreInfo;
 import net.minecraft.world.scores.ScoreHolder;
 import net.minecraft.world.scores.Scoreboard;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static net.minecraft.commands.Commands.literal;
 
@@ -37,14 +42,14 @@ public class ListScoreboardCommand {
     private static int listPlayers(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         Objective objective = ObjectiveArgument.getObjective(ctx, "objective");
         Scoreboard scoreboard = objective.getScoreboard();
-        MutableComponent message = Component.literal("Players with score for ").append(objective.getDisplayName()).append(" ");
+        List<String> names = new ArrayList<>();
         for (ScoreHolder trackedPlayer : scoreboard.getTrackedPlayers()) {
             ReadOnlyScoreInfo playerScoreInfo = scoreboard.getPlayerScoreInfo(trackedPlayer, objective);
             if (playerScoreInfo != null) {
-                message.append(trackedPlayer.getScoreboardName()).append(", ");
+                names.add(trackedPlayer.getScoreboardName());
             }
         }
-        ctx.getSource().sendSuccess(() -> message, false);
+        ctx.getSource().sendSuccess(() -> Component.literal("Players with score for ").append(objective.getDisplayName()).append(String.join(", ", names)), false);
         return Command.SINGLE_SUCCESS;
     }
 
