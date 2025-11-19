@@ -62,7 +62,10 @@ public class SpinningSignEntity extends Entity {
     protected void addAdditionalSaveData(ValueOutput output) {
         output.putFloat("Scale", entityData.get(DATA_SCALE));
         output.storeNullable("Text", ComponentSerialization.CODEC, entityData.get(DATA_TEXT).orElse(null));
-        output.storeNullable("Item", ItemStack.CODEC, entityData.get(DATA_ITEM));
+        ItemStack item = entityData.get(DATA_ITEM);
+        if (!item.isEmpty()) {
+            output.store("Item", ItemStack.CODEC, item);
+        }
     }
 
     @Override
