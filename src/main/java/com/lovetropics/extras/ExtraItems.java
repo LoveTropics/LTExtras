@@ -4,10 +4,10 @@ import com.lovetropics.extras.client.item.CollectibleCompassAngle;
 import com.lovetropics.extras.client.item.HasUnseenCollectible;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.entity.ExtraEntities;
-import com.lovetropics.extras.item.CustomBootsItem;
 import com.lovetropics.extras.item.CleaningItemFrameItem;
 import com.lovetropics.extras.item.CollectibleBasketItem;
 import com.lovetropics.extras.item.CollectibleCompassItem;
+import com.lovetropics.extras.item.CustomBootsItem;
 import com.lovetropics.extras.item.EntityWandItem;
 import com.lovetropics.extras.item.ForkliftSpawnEggItem;
 import com.lovetropics.extras.item.HighHeelsItem;
@@ -15,9 +15,9 @@ import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
 import com.lovetropics.extras.item.TropicMapItem;
+import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.WaterCoolerSpawnEggItem;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
-import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.tterrag.registrate.Registrate;
@@ -182,6 +182,8 @@ public class ExtraItems {
     public static final ItemEntry<CleaningItemFrameItem> CLEANING_ITEM_FRAME = REGISTRATE.item("cleaning_item_frame", CleaningItemFrameItem::new)
             .properties(p -> p.stacksTo(1))
             .register();
+
+    public static final ItemEntry<Item> BLOODWOOD_SAP = REGISTRATE.item("bloodwood_sap", Item::new).register();
 
     public static void init() {
     }

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "ltextras:block/bloodwood_wood",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "ltextras:block/bloodwood_wood"
+    },
+    "axis=z": {
+      "model": "ltextras:block/bloodwood_wood",
+      "x": 90
+    }
+  }
+}
