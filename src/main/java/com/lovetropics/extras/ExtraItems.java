@@ -15,6 +15,7 @@ import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
 import com.lovetropics.extras.item.TropicMapItem;
+import com.lovetropics.extras.item.WaterCoolerSpawnEggItem;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.registry.ExtraRegistries;
@@ -165,6 +166,10 @@ public class ExtraItems {
             .register();
 
     public static final ItemEntry<ForkliftSpawnEggItem> FORKLIFT_SPAWN_EGG = REGISTRATE.item("forklift_spawn_egg", ForkliftSpawnEggItem::new)
+            .properties(p -> p.stacksTo(1))
+            .register();
+
+    public static final ItemEntry<WaterCoolerSpawnEggItem> WATER_COOLER_SPAWN_EGG = REGISTRATE.item("water_cooler_spawn_egg", WaterCoolerSpawnEggItem::new)
             .properties(p -> p.stacksTo(1))
             .register();
 

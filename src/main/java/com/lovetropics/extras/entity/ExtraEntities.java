@@ -11,6 +11,7 @@ import com.lovetropics.extras.client.entity.PartyBeamRenderer;
 import com.lovetropics.extras.client.entity.RaveKoaRenderer;
 import com.lovetropics.extras.client.entity.SeatRenderer;
 import com.lovetropics.extras.client.entity.SpinningSignRenderer;
+import com.lovetropics.extras.client.entity.WaterCoolerRenderer;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntity;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDJ;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDance1;
@@ -113,6 +114,18 @@ public class ExtraEntities {
             )
             .loot(noDrops())
             .renderer(() -> ForkliftRenderer::new)
+            .register();
+
+    public static final EntityEntry<WaterCoolerEntity> WATER_COOLER = REGISTRATE.entity("water_cooler", WaterCoolerEntity::new, MobCategory.MISC)
+            .defaultLang()
+            .properties(builder -> builder
+                    .sized(1.4f, 2.1f)
+                    .clientTrackingRange(8)
+                    .passengerAttachments(new Vec3(0.0f, 0.8f, 0.0f), new Vec3(1.0f, 1.0f, 1.0f), new Vec3(-1.0f, 1.0f, 1.0f))
+                    .updateInterval(3)
+            )
+            .loot(noDrops())
+            .renderer(() -> WaterCoolerRenderer::new)
             .register();
 
     public static final EntityEntry<AmazonRiverDolphin> AMAZON_RIVER_DOLPHIN = REGISTRATE.entity("amazon_river_dolphin", AmazonRiverDolphin::new, MobCategory.MISC)
