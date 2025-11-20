@@ -17,7 +17,6 @@ import net.minecraft.world.scores.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static net.minecraft.commands.Commands.literal;
 

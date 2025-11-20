@@ -16,6 +16,7 @@ import com.lovetropics.extras.collectible.CollectibleCommand;
 import com.lovetropics.extras.collectible.GenerateCollectibleCommand;
 import com.lovetropics.extras.command.ExtraCommandArguments;
 import com.lovetropics.extras.command.GenerateCommand;
+import com.lovetropics.extras.command.HandCommand;
 import com.lovetropics.extras.command.ListScoreboardCommand;
 import com.lovetropics.extras.command.PoiCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
@@ -187,6 +188,7 @@ public class LTExtras {
         PoiCommand.register(dispatcher, buildContext);
         ModelModifierCommand.register(dispatcher);
         MountCommand.register(dispatcher, buildContext);
+        HandCommand.register(dispatcher);
     }
 
     private void onRegisterClientCommands(RegisterClientCommandsEvent event) {
