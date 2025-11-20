@@ -86,6 +86,17 @@ public class ExtraItems {
     public static final ItemEntry<Item> BLUE_GLASSES = sunglasses("blue_glasses").register();
     public static final ItemEntry<Item> GREEN_GLASSES = sunglasses("green_glasses").register();
 
+    public static final ItemEntry<Item> WRENCH = REGISTRATE.item("wrench", Item::new).lang("Wrench").register();
+    public static final ItemEntry<Item> STEERING_WHEEL = REGISTRATE.item("steering_wheel", Item::new).lang("Steering Wheel").register();
+    public static final ItemEntry<Item> PUMP = REGISTRATE.item("pump", Item::new).lang("Pump").register();
+    public static final ItemEntry<Item> PLASTIC_SHEETS = REGISTRATE.item("plastic_sheets", Item::new).lang("Plastic Sheets").register();
+    public static final ItemEntry<Item> HOSE = REGISTRATE.item("hose", Item::new).lang("Hose").register();
+    public static final ItemEntry<Item> GEARBOX = REGISTRATE.item("gearbox", Item::new).lang("Gearbox").register();
+    public static final ItemEntry<Item> FORKLIFT_FORKS = REGISTRATE.item("forklift_forks", Item::new).lang("Forklift Forks").register();
+    public static final ItemEntry<Item> FOOT_PEDAL = REGISTRATE.item("foot_pedal", Item::new).lang("Foot Pedal").register();
+    public static final ItemEntry<Item> BOLT = REGISTRATE.item("bolt", Item::new).lang("Bolt").register();
+    public static final ItemEntry<Item> BATTERY = REGISTRATE.item("battery", Item::new).lang("Battery").register();
+
     private static ItemBuilder<Item, Registrate> sunglasses(String name) {
         return REGISTRATE.item(name, Item::new)
                 .properties(p -> p.stacksTo(1).equippable(EquipmentSlot.HEAD))
