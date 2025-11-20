@@ -59,7 +59,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     private static final EntityDataAccessor<Float> SPEED_BOOST_STRENGTH = SynchedEntityData.defineId(ForkliftEntity.class, EntityDataSerializers.FLOAT);
 
     private static final EntityDataAccessor<Optional<BlockPredicate>> DATA_COLLISION_PREDICATE = SynchedEntityData.defineId(ForkliftEntity.class, ExtraSerializers.BLOCK_PREDICATE.get());
-
+    private static final EntityDataAccessor<Optional<BlockPredicate>> DATA_SLOW_PREDICATE = SynchedEntityData.defineId(ForkliftEntity.class, ExtraSerializers.BLOCK_PREDICATE.get());
+    private static final EntityDataAccessor<Float> DATA_SLOW_MULTIPLIER = SynchedEntityData.defineId(ForkliftEntity.class, EntityDataSerializers.FLOAT);
 
     private static final Component CERTIFICATION_MISSING = ExtraLangKeys.FORKLIFT_CERTIFICATION_MISSING.get().withStyle(ChatFormatting.RED);
 
@@ -197,6 +198,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         builder.define(DATA_COLLISION_PREDICATE, Optional.empty());
         builder.define(SPEED_BOOST_TICKS, 0);
         builder.define(SPEED_BOOST_STRENGTH, DEFAULT_SPEED_BOOST_STRENGTH);
+        builder.define(DATA_SLOW_PREDICATE, Optional.empty());
+        builder.define(DATA_SLOW_MULTIPLIER, 0.5f);
     }
 
     private void tryEject() {
@@ -239,6 +242,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         entityData.set(SPEED_BOOST_TICKS, input.read("SpeedBoostTicks", Codec.INT).orElse(0));
         entityData.set(SPEED_BOOST_STRENGTH, input.read("SpeedBoostStrength", Codec.FLOAT).orElse(DEFAULT_SPEED_BOOST_STRENGTH));
         entityData.set(DATA_FORK_HEIGHT, input.read("ForkHeight", Codec.INT).orElse(MAX_FORK_HEIGHT));
+        entityData.set(DATA_SLOW_PREDICATE, input.read("SlowPredicate", BlockPredicate.CODEC));
+        entityData.set(DATA_SLOW_MULTIPLIER, input.read("SlowMultiplier", Codec.FLOAT).orElse(0.5f));
     }
 
     @Override
@@ -249,6 +254,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         output.putInt("SpeedBoostTicks", entityData.get(SPEED_BOOST_TICKS));
         output.putFloat("SpeedBoostStrength", entityData.get(SPEED_BOOST_STRENGTH));
         output.putInt("ForkHeight", entityData.get(DATA_FORK_HEIGHT));
+        output.storeNullable("SlowPredicate", BlockPredicate.CODEC, entityData.get(DATA_SLOW_PREDICATE).orElse(null));
+        output.putFloat("SlowMultiplier", entityData.get(DATA_SLOW_MULTIPLIER));
     }
 
     @Override
@@ -410,6 +417,12 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             if (speedBoostTicks > 0) {
                 float speedBoostStrength = entityData.get(SPEED_BOOST_STRENGTH);
                 f += speedBoostStrength;
+            }
+
+            Optional<BlockPredicate> blockPredicate = entityData.get(DATA_SLOW_PREDICATE);
+            if (blockPredicate.isPresent() && blockPredicate.get().matches(new BlockInWorld(level(), getOnPos(), false))) {
+                float slowMultiplier = entityData.get(DATA_SLOW_MULTIPLIER);
+                f *= slowMultiplier;
             }
 
             final boolean buildingDrift = driftCooldown == 0 && !isDrifting() && drift && ((inputUp && inputRight) || (inputDown && inputRight) || (inputUp && inputLeft) || (inputDown && inputLeft));
