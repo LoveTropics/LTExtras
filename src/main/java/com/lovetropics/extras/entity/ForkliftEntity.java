@@ -3,8 +3,10 @@ package com.lovetropics.extras.entity;
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
+import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.network.message.ServerboundDriftForkliftPacket;
 import com.lovetropics.extras.network.message.ServerboundLiftForkliftPacket;
+import com.lovetropics.extras.sounds.ExtraSounds;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.BlockPredicate;
@@ -18,6 +20,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -330,6 +333,10 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             spawnDriftingParticles();
         }
 
+        if(getKnownMovement().dot(getViewVector(1F)) < 0 && tickCount % 20 == 0) {
+            level().playSound(null, getX(), getY(), getZ(), ExtraSounds.FORKLIFT_REVERSE.value(), getSoundSource());
+        }
+
         move(MoverType.SELF, getDeltaMovement());
 
         pickupEntitiesInFront();
@@ -410,7 +417,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             }
 
             if (inputDown) {
-                f -= 0.05F;
+                f -= 0.02F;
             }
 
             int speedBoostTicks = entityData.get(SPEED_BOOST_TICKS);
@@ -511,7 +518,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             double vx = -getDeltaMovement().x * 0.5D + (level().random.nextDouble() - 0.5D) * 0.02D;
             double vz = -getDeltaMovement().z * 0.5D + (level().random.nextDouble() - 0.5D) * 0.02D;
 
-            level().addParticle(ParticleTypes.CLOUD, px, baseY, pz, vx * intensity, 0.02D, vz * intensity);
+            level().addParticle(ExtraParticles.FORK_LIFT_DRIFT_PARTICLE.get(), px, baseY, pz, vx * intensity, 0.02D, vz * intensity);
         }
     }
 

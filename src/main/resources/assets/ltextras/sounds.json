@@ -17,5 +17,11 @@
       "ltextras:forklift_boost_start/2",
       "ltextras:forklift_boost_start/3"
     ]
+  },
+  "forklift_reverse": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      "ltextras:reverse_beep"
+    ]
   }
 }

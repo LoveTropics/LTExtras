@@ -12,6 +12,7 @@ public class ExtraSounds {
     public static final Holder<SoundEvent> HEELS_STEP = register("heels_step");
 
     public static final Holder<SoundEvent> FORKLIFT_BOOST_START = register("forklift_boost_start");
+    public static final Holder<SoundEvent> FORKLIFT_REVERSE = register("forklift_reverse");
 
     private static Holder<SoundEvent> register(String name) {
         return REGISTER.register(name, () -> SoundEvent.createVariableRangeEvent(LTExtras.location(name)));
