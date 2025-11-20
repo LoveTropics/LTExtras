@@ -1442,7 +1442,7 @@ public class ExtraBlocks {
 
     public static final BlockEntry<PlumbersTntBlock> PLUMBERS_TNT = REGISTRATE.block("plumbers_tnt", PlumbersTntBlock::new)
             .initialProperties(() -> Blocks.TNT)
-            .lang("Plumbers' Tnt")
+            .lang("Plumbers' TNT")
             .properties(p -> p.mapColor(MapColor.COLOR_BLUE))
             .blockstate(() -> (ctx, prov) -> {
                 prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE_TOP_BOTTOM);

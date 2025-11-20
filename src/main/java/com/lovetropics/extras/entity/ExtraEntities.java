@@ -186,7 +186,7 @@ public class ExtraEntities {
             .register();
 
     public static final EntityEntry<PrimedPlumbersTnt> PRIMED_PLUMBERS_TNT = REGISTRATE.entity("primed_plumbers_tnt", PrimedPlumbersTnt::new, MobCategory.MISC)
-            .defaultLang()
+            .lang("Primed Plumbers' TNT")
             .properties(builder -> builder
                     .noLootTable()
                     .fireImmune()
