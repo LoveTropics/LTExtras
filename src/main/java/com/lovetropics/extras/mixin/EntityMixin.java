@@ -33,6 +33,8 @@ public class EntityMixin {
     private FluidType forgeFluidTypeOnEyes;
     @Unique
     private static final String lTExtras$UNTOUCHABLE = "Untouchable";
+    @Unique
+    private static final String lTExtras$NOPUSH = "NoPush";
 
     @Inject(method = "kill", at = @At("HEAD"), cancellable = true)
     public void kill(CallbackInfo ci) {
@@ -103,5 +105,12 @@ public class EntityMixin {
     @ModifyExpressionValue(method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;canSerialize()Z"))
     private boolean skipChecks(boolean original) {
         return true;
+    }
+
+    @Inject(method = "isPushable", at= @At("HEAD"), cancellable = true)
+    private void isPushable(CallbackInfoReturnable<Boolean> cir) {
+        if(this.tags.contains(lTExtras$NOPUSH)) {
+            cir.setReturnValue(false);
+        }
     }
 }
