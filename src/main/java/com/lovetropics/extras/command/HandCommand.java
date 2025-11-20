@@ -10,8 +10,11 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -38,7 +41,8 @@ public class HandCommand {
     private static int json(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         ItemStack heldItem = player.getMainHandItem();
-        String json = GSON.toJson(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, heldItem).getOrThrow());
+        RegistryOps<Tag> registryops = player.getServer().registryAccess().createSerializationContext(NbtOps.INSTANCE);
+        String json = GSON.toJson(ItemStack.CODEC.encodeStart(registryops, heldItem).getOrThrow());
         ctx.getSource().sendSystemMessage(Component.literal("Exported Click to Copy").withStyle(style -> style
                 .withClickEvent(new ClickEvent.CopyToClipboard(json))));
         return Command.SINGLE_SUCCESS;
