@@ -13,8 +13,12 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -50,5 +54,12 @@ public abstract class LivingEntityMixin extends Entity {
             return false;
         }
         return super.isPushedByFluid(type);
+    }
+
+    @Inject(method = "isPushable", at= @At("HEAD"), cancellable = true)
+    private void isPushable(CallbackInfoReturnable<Boolean> cir) {
+        if(this.getTags().contains(ExtraTags.NO_PUSH)) {
+            cir.setReturnValue(false);
+        }
     }
 }

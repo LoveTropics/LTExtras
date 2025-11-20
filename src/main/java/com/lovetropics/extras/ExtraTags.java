@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.Block;
 public class ExtraTags {
     private static final String CREATE_MODID = "create";
     private static final String TROPICRAFT_ID = "tropicraft";
+    public static final String NO_PUSH = "NoPush";
 
     public static class Blocks extends ExtraTags {
         public static final TagKey<Block> STEEL_GIRDERS = modTag("steel_girders");

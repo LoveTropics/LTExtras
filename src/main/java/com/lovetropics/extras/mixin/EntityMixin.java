@@ -2,6 +2,7 @@ package com.lovetropics.extras.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.lovetropics.extras.ExtraDataComponents;
+import com.lovetropics.extras.ExtraTags;
 import com.lovetropics.extras.effect.ExtraEffects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -34,7 +35,6 @@ public class EntityMixin {
     @Unique
     private static final String lTExtras$UNTOUCHABLE = "Untouchable";
     @Unique
-    private static final String lTExtras$NOPUSH = "NoPush";
 
     @Inject(method = "kill", at = @At("HEAD"), cancellable = true)
     public void kill(CallbackInfo ci) {
@@ -109,7 +109,7 @@ public class EntityMixin {
 
     @Inject(method = "isPushable", at= @At("HEAD"), cancellable = true)
     private void isPushable(CallbackInfoReturnable<Boolean> cir) {
-        if(this.tags.contains(lTExtras$NOPUSH)) {
+        if(this.tags.contains(ExtraTags.NO_PUSH)) {
             cir.setReturnValue(false);
         }
     }
