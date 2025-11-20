@@ -1031,7 +1031,8 @@ public class ExtraBlocks {
             .add(Blocks.SOUL_SOIL, Models.TextureType.normal())
             .add(Blocks.TUFF, Models.TextureType.normal())
             .add(Blocks.HONEY_BLOCK, Models.TextureType.sideTopSuffix())
-            .add(Blocks.HONEYCOMB_BLOCK, Models.TextureType.normal());
+            .add(Blocks.HONEYCOMB_BLOCK, Models.TextureType.normal())
+            .add(Blocks.SCULK, Models.TextureType.normal());
 
     private static final TemplateBuilder<FenceBlock, Models.TextureType> FENCE_TEMPLATES = new TemplateBuilder<FenceBlock, Models.TextureType>()
             .add(Blocks.GOLD_BLOCK, Models.TextureType.normal())
@@ -1073,10 +1074,10 @@ public class ExtraBlocks {
             .build((object, textureType) -> REGISTRATE
                     .block(getName(object) + "_slab", SlabBlock::new)
                     .initialProperties(object::value)
-                    .tag(BlockTags.STAIRS)
+                    .tag(BlockTags.SLABS)
                     .blockstate(() -> Models.slabBlock(object, textureType))
                     .item()
-                    .tag(ItemTags.STAIRS)
+                    .tag(ItemTags.SLABS)
                     .build()
                     .register()
             );
