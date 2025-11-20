@@ -29,6 +29,7 @@ import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
 import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.mounts.MountCommand;
+import com.lovetropics.extras.placeholder.ExtraPlaceholders;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.techstack.VideoImporter;
 import com.lovetropics.extras.world_effect.WorldEffectCommand;
@@ -97,6 +98,7 @@ public class LTExtras {
         ExtraBlocks.init();
         ExtraItems.init();
         ExtraEntities.init();
+        ExtraPlaceholders.init();
 
         ExtraParticles.REGISTER.register(modBus);
         ExtraEffects.REGISTER.register(modBus);
