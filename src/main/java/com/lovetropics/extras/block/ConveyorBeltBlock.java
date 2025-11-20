@@ -17,7 +17,7 @@ public class ConveyorBeltBlock extends HorizontalDirectionalBlock {
     public static final MapCodec<ConveyorBeltBlock> CODEC = simpleCodec(ConveyorBeltBlock::new);
 
 
-    private static final float SPEED = 0.1f;
+    private static final float SPEED = 0.25f;
     private static final float CENTERING_FACTOR = 0.2f;
     private static final float THRESHOLD = 0.02f;
 
