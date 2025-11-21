@@ -39,6 +39,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
@@ -145,6 +146,25 @@ public class ExtraItems {
                     modifier.accept(stack);
                 });
             })
+            .defaultModel()
+            .register();
+
+    public static final ItemEntry<Item> HARD_HAT = REGISTRATE.item("hard_hat", Item::new)
+            .properties(p -> p.stacksTo(1)
+                    .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                            .setEquipSound(SoundEvents.ARMOR_EQUIP_GENERIC)
+                            .build())
+            )
+            .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.location("item/hard_hat")))
+            .register();
+
+    public static final ItemEntry<Item> REFLECTIVE_VEST = REGISTRATE.item("reflective_vest", Item::new)
+            .properties(p -> p.stacksTo(1)
+                    .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.CHEST)
+                            .setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER)
+                            .setAsset(ResourceKey.create(EquipmentAssets.ROOT_ID, LTExtras.location("reflective_vest")))
+                            .build())
+            )
             .defaultModel()
             .register();
 

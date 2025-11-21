@@ -1,0 +1,9 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "ltextras:reflective_vest"
+      }
+    ]
+  }
+}
