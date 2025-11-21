@@ -536,18 +536,6 @@ public class ExtraBlocks {
             .build()
             .register();
 
-    public static final BlockEntry<DoorBlock> HEAVY_SPRUCE_DOOR = REGISTRATE.block("heavy_spruce_door", p -> new DoorBlock(BlockSetType.IRON, p))
-            .initialProperties(() -> Blocks.SPRUCE_DOOR)
-            .blockstate(() -> (ctx, prov) ->
-                    prov.generateDoorBlock(ctx.get(), prov.blockTexture(Blocks.SPRUCE_DOOR, "_bottom"), prov.blockTexture(Blocks.SPRUCE_DOOR, "_top"))
-            )
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
-            .tag(BlockTags.MINEABLE_WITH_AXE)
-            .item()
-            .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), Items.SPRUCE_DOOR, ModelTemplates.FLAT_ITEM))
-            .build()
-            .register();
-
     public static final BlockEntry<ThornStemBlock> THORN_STEM = REGISTRATE.block("thorn_stem", ThornStemBlock::new)
             .initialProperties(() -> Blocks.ACACIA_LEAVES)
             .properties(p -> p.noOcclusion().isRedstoneConductor((state, world, pos) -> false))
@@ -1114,6 +1102,23 @@ public class ExtraBlocks {
                     .build()
                     .register()
             );
+
+    private static final TemplateBuilder<DoorBlock, Models.TextureType> HEAVY_DOOR_TEMPLATES = new TemplateBuilder<DoorBlock, Models.TextureType>()
+            .add(Blocks.SPRUCE_DOOR, Models.TextureType.normal())
+            .add(ResourceLocation.fromNamespaceAndPath("tropicraft", "thatch_door"), Models.TextureType.normal());
+
+    public static final Map<Holder<Block>, BlockEntry<? extends DoorBlock>> HEAVY_DOORS = HEAVY_DOOR_TEMPLATES
+            .build((block, textureType) -> REGISTRATE.block("heavy_" + getName(block), p -> new DoorBlock(BlockSetType.IRON, p))
+                    .initialProperties(() -> Blocks.SPRUCE_DOOR)
+                    .blockstate(() -> (ctx, prov) ->
+                            prov.generateDoorBlock(ctx.get(), prov.blockTexture(block.value(), "_bottom"), prov.blockTexture(block.value(), "_top"))
+                    )
+                    .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
+                    .tag(BlockTags.MINEABLE_WITH_AXE)
+                    .item()
+                    .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), block.value().asItem(), ModelTemplates.FLAT_ITEM))
+                    .build()
+                    .register());
 
     public static final BlockEntry<Block> GREEN_ANEMONE = anemoneBlock("green_anemone");
     public static final BlockEntry<Block> PURPLE_ANEMONE = anemoneBlock("purple_anemone");

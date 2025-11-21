@@ -1,10 +1,11 @@
 {
   "values": [
-    "ltextras:heavy_spruce_door",
     "ltextras:bloodwood_log",
     "ltextras:bloodwood_wood",
     "ltextras:walking_palm_root",
     "ltextras:kapok_seed",
-    "ltextras:waterloggable_oak_button"
+    "ltextras:waterloggable_oak_button",
+    "ltextras:heavy_spruce_door",
+    "ltextras:heavy_thatch_door"
   ]
 }
