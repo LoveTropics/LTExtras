@@ -34,6 +34,12 @@ public class TropiCoinsStore {
     }
 
     @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        // Force it initialised so that we don't synchronise on initialisation and mispredict
+        event.getEntity().getData(ExtraAttachments.TROPICOINS_STORE);
+    }
+
+    @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         Player original = event.getOriginal();
         Player player = event.getEntity();
