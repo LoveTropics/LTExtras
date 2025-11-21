@@ -122,6 +122,10 @@ public class ExtraDataComponents {
             "max_picked_up",
             builder -> builder.persistent(ExtraCodecs.POSITIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT)
     );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> INFINITE = REGISTER.registerComponentType(
+            "infinite",
+            builder -> builder.persistent(Codec.unit(Unit.INSTANCE)).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
+    );
 
     @SubscribeEvent
     public static void addToTooltip(ItemTooltipEvent event) {

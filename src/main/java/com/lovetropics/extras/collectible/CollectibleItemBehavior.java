@@ -1,6 +1,7 @@
 package com.lovetropics.extras.collectible;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
@@ -78,7 +79,7 @@ public class CollectibleItemBehavior {
     public static void onDestroyItem(PlayerDestroyItemEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             ItemStack item = event.getOriginal();
-            if (Collectible.isCollectible(item)) {
+            if (Collectible.isCollectible(item) || item.has(ExtraDataComponents.INFINITE)) {
                 player.addItem(item);
             }
         }
@@ -87,13 +88,13 @@ public class CollectibleItemBehavior {
     @SubscribeEvent
     public static void onFinishUsingItem(LivingEntityUseItemEvent.Finish event) {
         ItemStack stack = event.getItem();
-        if (Collectible.isCollectible(stack) && event.getResultStack().isEmpty()) {
+        if ((Collectible.isCollectible(stack) || stack.has(ExtraDataComponents.INFINITE)) && event.getResultStack().isEmpty() ) {
             event.setResultStack(stack);
         }
     }
 
     public static InteractionResult wrapUse(ItemStack stack, Level level, Player player, InteractionHand hand, Operation<InteractionResult> original) {
-        if (Collectible.isCollectible(stack)) {
+        if (Collectible.isCollectible(stack) || stack.has(ExtraDataComponents.INFINITE)) {
             int count = stack.getCount();
             ItemStack oldStack = stack.copy();
             InteractionResult result = original.call(stack.getItem(), level, player, hand);
@@ -106,7 +107,7 @@ public class CollectibleItemBehavior {
     }
 
     public static InteractionResult wrapUseOn(ItemStack stack, UseOnContext context) {
-        if (Collectible.isCollectible(stack)) {
+        if (Collectible.isCollectible(stack) || stack.has(ExtraDataComponents.INFINITE)) {
             int count = stack.getCount();
             InteractionResult result = stack.useOn(context);
             stack.setCount(count);
