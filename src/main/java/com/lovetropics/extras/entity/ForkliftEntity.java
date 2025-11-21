@@ -9,6 +9,7 @@ import com.lovetropics.extras.network.message.ServerboundLiftForkliftPacket;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
+import net.minecraft.SharedConstants;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -333,7 +334,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             spawnDriftingParticles();
         }
 
-        if(getKnownMovement().dot(getViewVector(1F)) < 0 && tickCount % 20 == 0) {
+        if (getControllingPassenger() instanceof ServerPlayer player && player.getLastClientInput().backward() && tickCount % SharedConstants.TICKS_PER_SECOND == 0) {
             level().playSound(null, getX(), getY(), getZ(), ExtraSounds.FORKLIFT_REVERSE.value(), getSoundSource());
         }
 

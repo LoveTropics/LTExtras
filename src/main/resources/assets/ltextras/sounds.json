@@ -21,7 +21,10 @@
   "forklift_reverse": {
     "subtitle": "subtitles.block.generic.footsteps",
     "sounds": [
-      "ltextras:reverse_beep"
+      {
+        "name": "ltextras:reverse_beep",
+        "volume": 0.4
+      }
     ]
   }
 }
