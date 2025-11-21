@@ -193,15 +193,12 @@ public class ExtraItems {
             .register();
 
     public static final ItemEntry<Item> FORKLIFT_CERTIFICATION = REGISTRATE.item("forklift_certification", Item::new)
-            .properties(p -> p.stacksTo(1))
             .register();
 
     public static final ItemEntry<ForkliftSpawnEggItem> FORKLIFT_SPAWN_EGG = REGISTRATE.item("forklift_spawn_egg", ForkliftSpawnEggItem::new)
-            .properties(p -> p.stacksTo(1))
             .register();
 
     public static final ItemEntry<WaterCoolerSpawnEggItem> WATER_COOLER_SPAWN_EGG = REGISTRATE.item("water_cooler_spawn_egg", WaterCoolerSpawnEggItem::new)
-            .properties(p -> p.stacksTo(1))
             .register();
 
     public static final ItemEntry<SpawnEggItem> AMAZON_RIVER_DOLPHIN_SPAWN_EGG = REGISTRATE.item("amazon_river_dolphin_spawn_egg", p -> new SpawnEggItem(ExtraEntities.AMAZON_RIVER_DOLPHIN.get(), p))
@@ -211,7 +208,6 @@ public class ExtraItems {
             .register();
 
     public static final ItemEntry<CleaningItemFrameItem> CLEANING_ITEM_FRAME = REGISTRATE.item("cleaning_item_frame", CleaningItemFrameItem::new)
-            .properties(p -> p.stacksTo(1))
             .register();
 
     public static final ItemEntry<Item> BLOODWOOD_SAP = REGISTRATE.item("bloodwood_sap", Item::new).register();
