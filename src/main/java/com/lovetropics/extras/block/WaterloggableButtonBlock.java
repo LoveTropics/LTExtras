@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -23,7 +24,13 @@ public class WaterloggableButtonBlock extends ButtonBlock implements SimpleWater
 
     public WaterloggableButtonBlock(BlockSetType type, int ticksToStayPressed, BlockBehaviour.Properties properties) {
         super(type, ticksToStayPressed, properties);
-        registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
+        this.registerDefaultState(
+                this.stateDefinition.any()
+                        .setValue(FACING, Direction.NORTH)
+                        .setValue(POWERED, false)
+                        .setValue(FACE, AttachFace.WALL)
+                        .setValue(WATERLOGGED, false)
+        );
     }
 
     @Override
