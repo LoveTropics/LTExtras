@@ -18,16 +18,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 
 public class ForkliftRenderer extends EntityRenderer<ForkliftEntity, ForkliftRenderState> {
-
     private static final ResourceLocation TEXTURE = LTExtras.location("textures/entity/forklift.png");
+    private static final RenderType LIGHTS = RenderType.eyes(LTExtras.location("textures/entity/forklift_lights.png"));
 
-    private final ForkliftModel<ForkliftEntity> model;
+    private final ForkliftModel model;
 
     private static final boolean FORKLIFT_PICKUP_DEBUG = false;
 
     public ForkliftRenderer(EntityRendererProvider.Context context) {
         super(context);
-        model = new ForkliftModel<>(context.bakeLayer(ForkliftModel.LAYER_LOCATION));
+        model = new ForkliftModel(context.bakeLayer(ForkliftModel.LAYER_LOCATION));
     }
 
     @Override
@@ -54,6 +54,8 @@ public class ForkliftRenderer extends EntityRenderer<ForkliftEntity, ForkliftRen
 
         VertexConsumer builder = bufferSource.getBuffer(model.renderType(TEXTURE));
         model.renderToBuffer(poseStack, builder, packedLight, OverlayTexture.NO_OVERLAY);
+        VertexConsumer builder2 = bufferSource.getBuffer(LIGHTS);
+        model.renderToBuffer(poseStack, builder2, packedLight, OverlayTexture.NO_OVERLAY);
 
         poseStack.popPose();
 
