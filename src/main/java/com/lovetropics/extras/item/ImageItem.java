@@ -23,7 +23,8 @@ public class ImageItem extends Item {
             imageWithWidth("Group School", "group_school", 2.0f, 400, 267),
             imageWithWidth("Longhouse Meet", "longhouse_meet", 2.0f, 400, 300),
             imageWithWidth("Student Seated", "students_seated", 2.0f, 350, 234),
-            imageWithWidth("Tree Planting", "tree_planting", 2.0f, 300, 200)
+            imageWithWidth("Tree Planting", "tree_planting", 2.0f, 300, 200),
+            imageWithWidth("Longhouse Meal", "longhouse_meal", 2.0f, 300, 225)
     );
 
     private static ImageData imageWithWidth(String name, String path, float blockWidth, int textureWidth, int textureHeight) {
