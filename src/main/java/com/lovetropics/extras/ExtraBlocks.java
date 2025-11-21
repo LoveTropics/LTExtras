@@ -1009,6 +1009,7 @@ public class ExtraBlocks {
 
     private static final TemplateBuilder<SlabBlock, Models.TextureType> SLAB_TEMPLATES = new TemplateBuilder<SlabBlock, Models.TextureType>()
             .add(Blocks.GOLD_BLOCK, Models.TextureType.normal())
+            .add(Blocks.IRON_BLOCK, Models.TextureType.normal())
             .add(Blocks.CRACKED_STONE_BRICKS, Models.TextureType.normal())
             .add(CONCRETE_POWDERS, Models.TextureType.normal())
             .add(CONCRETES, Models.TextureType.normal())
