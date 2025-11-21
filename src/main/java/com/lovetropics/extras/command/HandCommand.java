@@ -2,6 +2,7 @@ package com.lovetropics.extras.command;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -41,7 +42,7 @@ public class HandCommand {
     private static int json(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         ItemStack heldItem = player.getMainHandItem();
-        RegistryOps<Tag> registryops = player.getServer().registryAccess().createSerializationContext(NbtOps.INSTANCE);
+        RegistryOps<JsonElement> registryops = player.getServer().registryAccess().createSerializationContext(JsonOps.INSTANCE);
         String json = GSON.toJson(ItemStack.CODEC.encodeStart(registryops, heldItem).getOrThrow());
         ctx.getSource().sendSystemMessage(Component.literal("Exported Click to Copy").withStyle(style -> style
                 .withClickEvent(new ClickEvent.CopyToClipboard(json))));
