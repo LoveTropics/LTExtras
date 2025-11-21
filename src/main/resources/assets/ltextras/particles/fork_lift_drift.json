@@ -1,5 +1,12 @@
 {
   "textures": [
-    "ltextras:fork_lift_drift"
+    "ltextras:fork_lift_drift_1",
+    "ltextras:fork_lift_drift_2",
+    "ltextras:fork_lift_drift_3",
+    "ltextras:fork_lift_drift_4",
+    "ltextras:fork_lift_drift_5",
+    "ltextras:fork_lift_drift_6",
+    "ltextras:fork_lift_drift_7",
+    "ltextras:fork_lift_drift_8"
   ]
 }
