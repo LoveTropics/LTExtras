@@ -36,6 +36,9 @@ public class PrimedPlumbersTnt extends PrimedTnt {
         }
 
         public Optional<Float> getBlockExplosionResistance(Explosion explosion, BlockGetter level, BlockPos pos, BlockState state, FluidState fluidState) {
+            if (state.is(Blocks.WATER)) {
+                return Optional.empty(); // mmm water
+            }
             return state.is(Blocks.NETHER_PORTAL) ? Optional.empty() : super.getBlockExplosionResistance(explosion, level, pos, state, fluidState);
         }
     };
