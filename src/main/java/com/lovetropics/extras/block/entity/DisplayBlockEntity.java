@@ -34,7 +34,7 @@ public class DisplayBlockEntity extends BlockEntity {
     private static final String CONVERSION_PROGRESS = "conversion_progress";
     private static final String COMPONENTS_TO_REMOVE = "components_to_remove";
 
-    private static final int DEFAULT_TIME_TO_CONVERT = SharedConstants.TICKS_PER_SECOND * 5;
+    private static final int DEFAULT_TIME_TO_CONVERT = SharedConstants.TICKS_PER_SECOND * 2;
 
     private ItemStack itemStack = ItemStack.EMPTY;
     private ItemPredicate filter = ItemPredicate.Builder.item().build();
