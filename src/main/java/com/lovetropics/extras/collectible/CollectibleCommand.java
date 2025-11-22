@@ -161,20 +161,25 @@ public class CollectibleCommand {
     private static int giveTag(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, HolderSet.Named<Collectible> collectiblesToGive) throws CommandSyntaxException {
         int result = 0;
         for (ServerPlayer player : players) {
+            boolean gaveAny = false;
             CollectibleStore collectibles = CollectibleStore.get(player);
             for (Holder<Collectible> collectible : collectiblesToGive) {
                 if (collectibles.give(collectible)) {
-                    result++;
+                    gaveAny = true;
                 }
+            }
+            if(gaveAny) {
+                result++;
             }
         }
 
         if (result == 0) {
             throw GAVE_TO_NO_PLAYERS.create();
         }
+        int collectiblesGiven = collectiblesToGive.size();
 
         int finalResult = result;
-        ctx.getSource().sendSuccess(() -> Component.translatable("Gave %s to %s players", Component.translationArg(collectiblesToGive.key().location()), finalResult), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("Gave %s (%s collectibles) to %s players", Component.translationArg(collectiblesToGive.key().location()), collectiblesGiven, finalResult), false);
 
         return result;
     }
