@@ -33,16 +33,14 @@ public class PaintingOverlayRenderer {
             for (PaintingOverlay paintingOverlay : paintingOverlays) {
                 if (renderState.variant != null && paintingOverlay != null && paintingOverlay.painting().value() == renderState.variant) {
                     poseStack.pushPose();
+                    poseStack.mulPose(Axis.YP.rotationDegrees(180 - renderState.direction.get2DDataValue() * 90));
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(180));
 
                     final float scaleAdjust = renderState.variant.width() / 50f + Mth.sin(player.tickCount % 32 * Mth.PI / 32) / 20f;
 
                     if (paintingOverlay.text().isPresent()) {
                         final Component textComponent = paintingOverlay.text().get();
                         final int textLength = textComponent.getString().length();
-
-                        // Position text to be oriented with the painting
-                        poseStack.mulPose(Axis.YP.rotationDegrees(180 - renderState.direction.get2DDataValue() * 90));
-                        poseStack.mulPose(Axis.ZP.rotationDegrees(180));
 
                         // Bring text in front of painting
                         poseStack.translate(0, 0, -0.1f);
@@ -52,10 +50,6 @@ public class PaintingOverlayRenderer {
 
                         Minecraft.getInstance().font.drawInBatch(textComponent, -textLength * 2, -3, -1, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, LightTexture.lightCoordsWithEmission(packedLight, 2));
                     } else if (paintingOverlay.itemStack().isPresent()) {
-                        poseStack.translate(-0.5f, 0, 0.f);
-                        // Nice spin, but makes people think they need to walk into it to pick it up?
-                        //poseStack.mulPose(Axis.YP.rotationDegrees(2 * Mth.clamp(player.tickCount % 360, 0, 360)));
-                        poseStack.mulPose(Axis.YP.rotationDegrees(90));
                         final float scale = 1.f + scaleAdjust;
                         poseStack.scale(scale, scale, scale);
 
