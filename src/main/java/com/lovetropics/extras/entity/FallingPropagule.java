@@ -42,7 +42,7 @@ public class FallingPropagule extends AbstractHurtingProjectile {
         super.onHit(result);
         if (level() instanceof ServerLevel serverlevel) {
             boolean flag = EventHooks.canEntityGrief(serverlevel, getOwner());
-            serverlevel.explode(this, getX(), getY(), getZ(), 0.1f, flag, Level.ExplosionInteraction.MOB);
+            serverlevel.explode(this, getX(), getY(), getZ(), 0.2f, flag, Level.ExplosionInteraction.MOB);
             discard();
         }
     }
@@ -52,7 +52,7 @@ public class FallingPropagule extends AbstractHurtingProjectile {
         if (level() instanceof ServerLevel serverlevel) {
             Entity hitEntity = result.getEntity();
             DamageSource source = damageSources().cactus();
-            hitEntity.hurtServer(serverlevel, source, 2.0F);
+            hitEntity.hurtServer(serverlevel, source, 6.0F);
             EnchantmentHelper.doPostAttackEffects(serverlevel, hitEntity, source);
 
             if (hitEntity instanceof final LivingEntity livingEntity) {
