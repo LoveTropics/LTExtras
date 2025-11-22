@@ -25,6 +25,7 @@ import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.generators.RegistrateItemModelGenerator;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplate;
@@ -41,12 +42,18 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.component.Consumables;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.item.equipment.EquipmentAssets;
 import net.minecraft.world.item.equipment.Equippable;
@@ -61,6 +68,13 @@ import static net.minecraft.client.data.models.model.ItemModelUtils.*;
 
 public class ExtraItems {
     private static final Registrate REGISTRATE = LTExtras.registrate();
+
+    public static final FoodProperties PC_ENERGY_FOOD = (new FoodProperties.Builder()).nutrition(2).saturationModifier(0.2F).alwaysEdible().build();
+    public static final FoodProperties TROPI_COOKIES_FOOD = (new FoodProperties.Builder()).nutrition(3).saturationModifier(0.2F).alwaysEdible().build();
+    public static final FoodProperties GEGY_CHIPS_FOOD = (new FoodProperties.Builder()).nutrition(2).saturationModifier(0.1F).alwaysEdible().build();
+    public static final Consumable PC_ENERGY_CONSUME = Consumables.defaultDrink()
+            .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.SPEED, 10 * SharedConstants.TICKS_PER_SECOND, 0)))
+            .build();
 
     private static final ResourceKey<EquipmentAsset> PLACEHOLDER_EQUIPMENT_ASSET = EquipmentAssets.LEATHER;
 
@@ -78,9 +92,17 @@ public class ExtraItems {
     public static final ItemEntry<Item> FILLED_LUBRICANT_JAR = REGISTRATE.item("filled_lubricant_jar", Item::new).register();
     public static final ItemEntry<Item> LUBRICANT_JAR = REGISTRATE.item("lubricant_jar", Item::new).register();
     public static final ItemEntry<Item> PAPER_BAG = REGISTRATE.item("paper_bag", Item::new).register();
-    public static final ItemEntry<Item> PC_ENERGY = REGISTRATE.item("pc_energy", Item::new).lang("PCEnergy").register();
-    public static final ItemEntry<Item> TROPI_COOKIES = REGISTRATE.item("tropi_cookies", Item::new).register();
-    public static final ItemEntry<Item> GEGY_POTATO_CHIPS = REGISTRATE.item("gegy_potato_chips", Item::new).lang("Gegy's Potato Chips").register();
+    public static final ItemEntry<Item> PC_ENERGY = REGISTRATE.item("pc_energy", Item::new)
+            .properties(p -> p.food(PC_ENERGY_FOOD).component(DataComponents.CONSUMABLE, PC_ENERGY_CONSUME))
+            .lang("PCEnergy")
+            .register();
+    public static final ItemEntry<Item> TROPI_COOKIES = REGISTRATE.item("tropi_cookies", Item::new)
+            .properties(p -> p.food(TROPI_COOKIES_FOOD).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD))
+            .register();
+    public static final ItemEntry<Item> GEGY_POTATO_CHIPS = REGISTRATE.item("gegy_potato_chips", Item::new)
+            .properties(p -> p.food(GEGY_CHIPS_FOOD).component(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD))
+            .lang("Gegy's Potato Chips")
+            .register();
     public static final ItemEntry<Item> OIL_CAN = REGISTRATE.item("oil_can", Item::new).register();
 
     public static final ItemEntry<Item> ORANGE_GLASSES = sunglasses("orange_glasses").register();
