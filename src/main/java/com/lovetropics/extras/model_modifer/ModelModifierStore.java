@@ -35,9 +35,9 @@ public record ModelModifierStore(List<ModelModifierType> appliedModifiers) {
 
     public static void addModifier(Entity entity, ModelModifierType modifier) {
         ModelModifierStore store = getOrDefault(entity);
-        if (store.appliedModifiers.contains(modifier)) {
+        /*if (store.appliedModifiers.contains(modifier)) {
             return;
-        }
+        }*/
         store.appliedModifiers.add(modifier);
         entity.syncData(ExtraAttachments.MODEL_MODIFIERS);
     }
