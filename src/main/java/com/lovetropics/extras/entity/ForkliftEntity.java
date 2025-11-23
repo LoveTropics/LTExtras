@@ -90,6 +90,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     public int renderForkHeight0;
     public float wheelRot;
     public float lastWheelRot;
+    public boolean shouldPickupEntities = true;
 
     private final InterpolationHandler interpolation = new InterpolationHandler(this, 3);
 
@@ -248,6 +249,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         entityData.set(DATA_FORK_HEIGHT, input.read("ForkHeight", Codec.INT).orElse(MAX_FORK_HEIGHT));
         entityData.set(DATA_SLOW_PREDICATE, input.read("SlowPredicate", BlockPredicate.CODEC));
         entityData.set(DATA_SLOW_MULTIPLIER, input.read("SlowMultiplier", Codec.FLOAT).orElse(0.5f));
+        shouldPickupEntities = input.read("ShouldPickupEntities", Codec.BOOL).orElse(true);
     }
 
     @Override
@@ -260,6 +262,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
         output.putInt("ForkHeight", entityData.get(DATA_FORK_HEIGHT));
         output.storeNullable("SlowPredicate", BlockPredicate.CODEC, entityData.get(DATA_SLOW_PREDICATE).orElse(null));
         output.putFloat("SlowMultiplier", entityData.get(DATA_SLOW_MULTIPLIER));
+        output.putBoolean("ShouldPickupEntities", shouldPickupEntities);
     }
 
     @Override
@@ -340,7 +343,9 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
 
         move(MoverType.SELF, getDeltaMovement());
 
-        pickupEntitiesInFront();
+        if (shouldPickupEntities) {
+            pickupEntitiesInFront();
+        }
     }
 
 
