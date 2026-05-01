@@ -1,16 +1,6 @@
 {
-  "type": "fusion:connecting",
-  "parent": "ltextras:block/ground_plane",
-  "connections": {
-    "type": "fusion:or",
-    "predicates": [
-      {
-        "type": "fusion:is_same_block"
-      }
-    ]
-  },
-  "loader": "fusion:model",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "up": "ltextras:block/warehouse_parking_marking"
+    "all": "ltextras:block/warehouse_parking_marking"
   }
 }

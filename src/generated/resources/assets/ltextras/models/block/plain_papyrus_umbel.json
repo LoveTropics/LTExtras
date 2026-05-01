@@ -1,7 +1,6 @@
 {
   "parent": "minecraft:block/sugar_cane",
-  "render_type": "minecraft:cutout",
   "textures": {
-    "cross": "ltextras:block/papyrus/plain_papyrus_umbel"
+    "cross": "ltextras:block/papyrus"
   }
 }

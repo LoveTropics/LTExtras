@@ -1,6 +1,5 @@
 {
   "parent": "ltextras:block/glow_sticks",
-  "render_type": "minecraft:translucent",
   "textures": {
     "glow_sticks": "ltextras:block/glow_sticks/cyan"
   }
