@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.item.properties.numeric.CompassAngle;
 import net.minecraft.client.renderer.item.properties.numeric.CompassAngleState;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,8 +23,8 @@ public class CollectibleCompassAngle implements RangeSelectItemModelProperty {
     private final CompassAngle recoveryDelegate = new CompassAngle(true, CompassAngleState.CompassTarget.RECOVERY);
 
     @Override
-    public float get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
-        if (entity instanceof Player player) {
+    public float get(ItemStack stack, @Nullable ClientLevel level, @Nullable ItemOwner owner, int seed) {
+        if (owner instanceof Player player) {
             CollectibleCompassItem.Target target = stack.get(ExtraDataComponents.COLLECTIBLE_TARGET);
             if (target != null) {
                 // Totally worth it to avoid copying a few lines of code, right? :)
@@ -34,7 +35,7 @@ public class CollectibleCompassAngle implements RangeSelectItemModelProperty {
                 return angle;
             }
         }
-        return missingDelegate.get(stack, level, entity, seed);
+        return missingDelegate.get(stack, level, owner, seed);
     }
 
     @Override

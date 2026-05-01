@@ -9,13 +9,16 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import org.jspecify.annotations.Nullable;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class EmittedFireParticle extends EmittedRaisingParticle {
+
     EmittedFireParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
         super(world, x, y, z, sprites);
     }
@@ -33,10 +36,10 @@ public class EmittedFireParticle extends EmittedRaisingParticle {
     }
 
     @Override
-    public int getLightColor(float pPartialTick) {
+    public int getLightCoords(float pPartialTick) {
         float f = ((float) age + pPartialTick) / (float) lifetime;
         f = Mth.clamp(f, 0.0F, 1.0F);
-        int i = super.getLightColor(pPartialTick);
+        int i = super.getLightCoords(pPartialTick);
         int j = i & 255;
         int k = i >> 16 & 255;
         j += (int) (f * 15.0F * 16.0F);
@@ -49,24 +52,18 @@ public class EmittedFireParticle extends EmittedRaisingParticle {
 
     @SubscribeEvent
     public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-        Minecraft.getInstance().particleEngine.register(ExtraParticles.EMITTED_FIRE_PARTICLE.get(), EmittedFireParticle.Factory::new);
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    protected Layer getLayer() {
+        return Layer.OPAQUE;
     }
 
-    public static class Factory implements ParticleProvider<SimpleParticleType> {
-        private final SpriteSet sprites;
-
-        public Factory(SpriteSet pSprites) {
-            sprites = pSprites;
-        }
+    record Factory(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {
 
         @Override
-        public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-            return new EmittedFireParticle(pLevel, pX, pY, pZ, sprites);
+        public Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double xAux, double yAux, double zAux, RandomSource random) {
+            return new EmittedFireParticle(level, x, y, z, spriteSet);
         }
     }
 }

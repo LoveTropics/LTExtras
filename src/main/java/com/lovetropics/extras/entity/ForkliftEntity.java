@@ -10,7 +10,7 @@ import com.lovetropics.extras.sounds.ExtraSounds;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
-import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.criterion.BlockPredicate;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -114,7 +114,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     }
 
     private void pickupEntitiesInFront() {
-        if (!level().isClientSide && hasControllingPassenger() && getPassengers().size() < MAX_PASSENGERS && getKnownMovement().lengthSqr() > 0) {
+        if (!level().isClientSide() && hasControllingPassenger() && getPassengers().size() < MAX_PASSENGERS && getKnownMovement().lengthSqr() > 0) {
             Predicate<Entity> predicate = EntitySelector.NO_SPECTATORS.and(this::canCollideWith).and(p -> p != getControllingPassenger() && !p.isPassenger());
             List<Entity> list = level().getEntities(this, getPickupAABB(), predicate);
             if (!list.isEmpty()) {
@@ -134,8 +134,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
-        if (!level().isClientSide && !player.isShiftKeyDown()) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+        if (!level().isClientSide() && !player.isShiftKeyDown()) {
             if (!requiresCertification || hasItem(player, ExtraItems.FORKLIFT_CERTIFICATION.asItem())) {
                 player.startRiding(this);
                 return InteractionResult.SUCCESS;
@@ -312,7 +312,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
                 entityData.set(SPEED_BOOST_TICKS, speedBoostTicks);
             }
 
-            if (level().isClientSide) {
+            if (level().isClientSide()) {
                 if (isDrifting() && driftDuration == 0) {
                     ClientPacketDistributor.sendToServer(new ServerboundDriftForkliftPacket(false, getId()));
                     driftCooldown = DRIFT_TICKS;
@@ -333,7 +333,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             setDeltaMovement(Vec3.ZERO);
         }
 
-        if (isDrifting() && level().isClientSide) {
+        if (isDrifting() && level().isClientSide()) {
             spawnDriftingParticles();
         }
 
@@ -466,7 +466,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     }
 
     private void executeDrift(Vec3 travelVector) {
-        hasImpulse = true;
+        needsSync = true;
 
         if (travelVector.lengthSqr() > Mth.EPSILON) {
             float xVelocity = Mth.sin(this.getYRot() * ((float)Math.PI / 180F));
@@ -480,7 +480,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     protected void positionRider(Entity entity, Entity.MoveFunction callback) {
         super.positionRider(entity, callback);
         // use the same tag as boats because it's essentially the same thing
-        if (!entity.getType().is(EntityTypeTags.CAN_TURN_IN_BOATS)) {
+        if (!entity.is(EntityTypeTags.CAN_TURN_IN_BOATS)) {
             entity.setYRot(entity.getYRot() + this.deltaRotation);
             entity.setYHeadRot(entity.getYHeadRot() + this.deltaRotation);
             this.refreshAndClampRotationIfDriver(entity);
@@ -521,8 +521,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
             double px = baseX + forwardX * -1.2D + perpX * sideOffset;
             double pz = baseZ + forwardZ * -1.2D + perpZ * sideOffset;
 
-            double vx = -getDeltaMovement().x * 0.5D + (level().random.nextDouble() - 0.5D) * 0.02D;
-            double vz = -getDeltaMovement().z * 0.5D + (level().random.nextDouble() - 0.5D) * 0.02D;
+            double vx = -getDeltaMovement().x * 0.5D + (level().getRandom().nextDouble() - 0.5D) * 0.02D;
+            double vz = -getDeltaMovement().z * 0.5D + (level().getRandom().nextDouble() - 0.5D) * 0.02D;
 
             level().addParticle(ExtraParticles.FORK_LIFT_DRIFT_PARTICLE.get(), px, baseY, pz, vx * intensity, 0.02D, vz * intensity);
         }

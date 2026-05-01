@@ -10,6 +10,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.FloatProvider;
+import net.minecraft.util.valueproviders.FloatProviders;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -33,17 +34,17 @@ public record WalkSound(
 
     public static final Codec<WalkSound> CODEC = RecordCodecBuilder.create(i -> i.group(
             SoundEvent.CODEC.fieldOf("sound").forGetter(WalkSound::soundEvent),
-            FloatProvider.CODEC.optionalFieldOf("cooldown", DEFAULT_COOLDOWN).forGetter(WalkSound::cooldown),
-            FloatProvider.CODEC.optionalFieldOf("volume", DEFAULT_VOLUME).forGetter(WalkSound::volume),
-            FloatProvider.CODEC.optionalFieldOf("pitch", DEFAULT_PITCH).forGetter(WalkSound::pitch),
+            FloatProviders.CODEC.optionalFieldOf("cooldown", DEFAULT_COOLDOWN).forGetter(WalkSound::cooldown),
+            FloatProviders.CODEC.optionalFieldOf("volume", DEFAULT_VOLUME).forGetter(WalkSound::volume),
+            FloatProviders.CODEC.optionalFieldOf("pitch", DEFAULT_PITCH).forGetter(WalkSound::pitch),
             Codec.BOOL.optionalFieldOf("play_other_sounds", DEFAULT_PLAY_OTHER_SOUNDS).forGetter(WalkSound::playOtherSounds)
     ).apply(i, WalkSound::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, WalkSound> STREAM_CODEC = StreamCodec.composite(
             SoundEvent.STREAM_CODEC, WalkSound::soundEvent,
-            ByteBufCodecs.fromCodec(FloatProvider.CODEC), WalkSound::cooldown,
-            ByteBufCodecs.fromCodec(FloatProvider.CODEC), WalkSound::volume,
-            ByteBufCodecs.fromCodec(FloatProvider.CODEC), WalkSound::pitch,
+            ByteBufCodecs.fromCodec(FloatProviders.CODEC), WalkSound::cooldown,
+            ByteBufCodecs.fromCodec(FloatProviders.CODEC), WalkSound::volume,
+            ByteBufCodecs.fromCodec(FloatProviders.CODEC), WalkSound::pitch,
             ByteBufCodecs.fromCodec(Codec.BOOL), WalkSound::playOtherSounds,
             WalkSound::new
     );

@@ -4,16 +4,16 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.List;
 import java.util.Optional;
 
-public record ImageData(Optional<Component> name, ResourceLocation texture, float width, float height, float offsetX, float offsetY, List<TextElement> text) {
+public record ImageData(Optional<Component> name, Identifier texture, float width, float height, float offsetX, float offsetY, List<TextElement> text) {
     public static final Codec<ImageData> CODEC = RecordCodecBuilder.create(i -> i.group(
             ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(ImageData::name),
-            ResourceLocation.CODEC.fieldOf("texture").forGetter(ImageData::texture),
+            Identifier.CODEC.fieldOf("texture").forGetter(ImageData::texture),
             Codec.FLOAT.fieldOf("width").forGetter(ImageData::width),
             Codec.FLOAT.fieldOf("height").forGetter(ImageData::height),
             Codec.FLOAT.optionalFieldOf("offset_x", 0.0f).forGetter(ImageData::offsetX),
@@ -21,11 +21,11 @@ public record ImageData(Optional<Component> name, ResourceLocation texture, floa
             TextElement.CODEC.listOf().optionalFieldOf("text", List.of()).forGetter(ImageData::text)
     ).apply(i, ImageData::new));
 
-    public ImageData(Component name, ResourceLocation texture, float width, float height, List<TextElement> text) {
+    public ImageData(Component name, Identifier texture, float width, float height, List<TextElement> text) {
         this(Optional.of(name), texture, width, height, 0.0f, 0.0f, text);
     }
 
-    public ImageData(Component name, ResourceLocation texture, float width, float height) {
+    public ImageData(Component name, Identifier texture, float width, float height) {
         this(Optional.of(name), texture, width, height, 0.0f, 0.0f, List.of());
     }
 

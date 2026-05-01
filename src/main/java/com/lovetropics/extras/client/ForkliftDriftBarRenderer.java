@@ -3,15 +3,15 @@ package com.lovetropics.extras.client;
 import com.lovetropics.extras.entity.ForkliftEntity;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class ForkliftDriftBarRenderer {
-    private static final ResourceLocation JUMP_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/jump_bar_background");
-    private static final ResourceLocation JUMP_BAR_COOLDOWN_SPRITE = ResourceLocation.withDefaultNamespace("hud/jump_bar_cooldown");
-    private static final ResourceLocation JUMP_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/jump_bar_progress");
+    private static final Identifier JUMP_BAR_BACKGROUND_SPRITE = Identifier.withDefaultNamespace("hud/jump_bar_background");
+    private static final Identifier JUMP_BAR_COOLDOWN_SPRITE = Identifier.withDefaultNamespace("hud/jump_bar_cooldown");
+    private static final Identifier JUMP_BAR_PROGRESS_SPRITE = Identifier.withDefaultNamespace("hud/jump_bar_progress");
     private final Minecraft minecraft;
 
     public ForkliftDriftBarRenderer(Minecraft minecraft) {
@@ -26,7 +26,7 @@ public class ForkliftDriftBarRenderer {
         return window.getGuiScaledHeight() - 24 - 5;
     }
 
-    public void render(GuiGraphics guiGraphics, ForkliftEntity forklift) {
+    public void render(GuiGraphicsExtractor guiGraphics, ForkliftEntity forklift) {
         int i = left(minecraft.getWindow());
         int j = top(minecraft.getWindow());
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JUMP_BAR_BACKGROUND_SPRITE, i, j, 182, 5);

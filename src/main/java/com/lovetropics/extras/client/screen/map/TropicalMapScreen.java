@@ -4,7 +4,7 @@ import com.lovetropics.extras.client.map.ClientPoi;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.data.poi.MapManager;
 import com.lovetropics.extras.data.poi.PoiConfig;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -54,9 +54,7 @@ public class TropicalMapScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
-
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         int h = (height - MapManager.MAP_SIZE) / 2;
         int w = (width - MapManager.MAP_SIZE) / 2;
 
@@ -65,7 +63,7 @@ public class TropicalMapScreen extends Screen {
 
     private void doWarp(ResourceKey<PoiConfig> id) {
         if (player instanceof LocalPlayer localPlayer) {
-            localPlayer.connection.sendUnattendedCommand("warp " + id.location(), null);
+            localPlayer.connection.sendUnattendedCommand("warp " + id.identifier(), null);
             onClose();
         }
     }

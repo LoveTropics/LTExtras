@@ -33,9 +33,9 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
     private static final FluidState WATERLOGGED_FLUID = createNoDripState(Fluids.WATER.getSource(false));
 
     private static FluidState createNoDripState(FluidState parent) {
-        FluidState state = new FluidState(parent.getType(), (Reference2ObjectArrayMap<Property<?>, Comparable<?>>) parent.getValues(), parent.propertiesCodec);
-        ((ExtendedFluidState) (Object) state).setNoDripParticles();
-        return state;
+//        FluidState state = new FluidState(parent.getType(), (Reference2ObjectArrayMap<Property<?>, Comparable<?>>) parent.getValues(), parent.propertiesCodec);
+        ((ExtendedFluidState) (Object) parent).setNoDripParticles();
+        return parent; // Todo 26.1 - Check this code
     }
 
     public WaterBarrierBlock(Properties properties) {
@@ -75,11 +75,11 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest, FluidState fluid) {
         // Copied from super
         asBlock().playerWillDestroy(level, pos, state, player);
         // Changed to set air instead of the fluid state
-        return level.setBlock(pos, Blocks.AIR.defaultBlockState(), level.isClientSide ? 11 : 3);
+        return level.setBlock(pos, Blocks.AIR.defaultBlockState(), level.isClientSide() ? Block.UPDATE_ALL_IMMEDIATE : Block.UPDATE_ALL);
     }
 
     @Override

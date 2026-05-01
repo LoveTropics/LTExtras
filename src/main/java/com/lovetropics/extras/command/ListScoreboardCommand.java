@@ -25,7 +25,7 @@ public class ListScoreboardCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         // @formatter:off
         dispatcher.register(
-                literal("listscoreboard").requires(source -> source.hasPermission(4))
+                literal("listscoreboard").requires(Commands.hasPermission(Commands.LEVEL_OWNERS))
                 .then(Commands.argument("objective", ObjectiveArgument.objective())
                    .then(literal("players")
                        .executes(ListScoreboardCommand::listPlayers)

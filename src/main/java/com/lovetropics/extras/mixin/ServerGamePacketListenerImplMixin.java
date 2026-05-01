@@ -41,7 +41,7 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
         return instance.getRootVehicle();
     }
 
-    @Redirect(method="tick", at= @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;getRootVehicle()Lnet/minecraft/world/entity/Entity;"))
+    @Redirect(method="tickPlayer", at= @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;getRootVehicle()Lnet/minecraft/world/entity/Entity;"))
     public Entity handleTick(ServerPlayer instance) {
         if (instance.getVehicle() instanceof ForkliftEntity) {
             return instance.getVehicle();

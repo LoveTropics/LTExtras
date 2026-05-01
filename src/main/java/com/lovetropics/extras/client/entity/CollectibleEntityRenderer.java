@@ -5,9 +5,11 @@ import com.lovetropics.extras.entity.CollectibleEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -43,7 +45,7 @@ public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity,
     }
 
     @Override
-    public void render(CollectibleEntityRenderState state, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void submit(CollectibleEntityRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
         if (state.displayedItemState.isEmpty()) {
             return;
         }
@@ -55,14 +57,14 @@ public class CollectibleEntityRenderer extends EntityRenderer<CollectibleEntity,
         float offset = (1.0f / 16.0f) - (float) boundingBox.minY;
         float bob = (Mth.sin(state.ageInTicks / 10.0f) + 1.0f) * 0.05f;
         poseStack.translate(0.0F, bob + offset, 0.0F);
-        poseStack.mulPose(Mth.rotationAroundAxis(Mth.Y_AXIS, entityRenderDispatcher.cameraOrientation(), new Quaternionf()));
+        poseStack.mulPose(Mth.rotationAroundAxis(Mth.Y_AXIS, camera.orientation, new Quaternionf()));
         poseStack.scale(2.0f, 2.0f, 2.0f);
 
-        state.displayedItemState.render(poseStack, bufferSource, packedLight, OverlayTexture.NO_OVERLAY);
+        state.displayedItemState.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 
         poseStack.popPose();
 
-        super.render(state, poseStack, bufferSource, packedLight);
+        super.submit(state, poseStack, submitNodeCollector, camera);
     }
 
     @Override

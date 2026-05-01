@@ -9,7 +9,7 @@ import net.neoforged.neoforge.client.IArmPoseTransformer;
 
 public class ExtraArmPoses {
     public static final EnumProxy<HumanoidModel.ArmPose> BOX_PROXY = new EnumProxy<>(HumanoidModel.ArmPose.class,
-            true, (IArmPoseTransformer) ExtraArmPoses::applyBoxTransform
+            true, true, (IArmPoseTransformer) ExtraArmPoses::applyBoxTransform
     );
 
     private static void applyBoxTransform(HumanoidModel<?> model, HumanoidRenderState humanoidRenderState, HumanoidArm humanoidArm) {

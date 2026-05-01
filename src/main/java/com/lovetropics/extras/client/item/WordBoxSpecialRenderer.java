@@ -6,18 +6,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.Objects;
-import java.util.Set;
+import java.util.function.Consumer;
 
 public class WordBoxSpecialRenderer implements SpecialModelRenderer<Component> {
     private final Font font;
@@ -27,12 +25,12 @@ public class WordBoxSpecialRenderer implements SpecialModelRenderer<Component> {
     }
 
     @Override
-    public void render(@Nullable Component text, ItemDisplayContext context, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, boolean hasFoilType) {
-        WordBoxBlockEntityRenderer.renderText(poseStack, bufferSource, font, packedLight, Objects.requireNonNullElse(text, WordBoxBlockEntity.DEFAULT_TEXT));
+    public void submit(@org.jspecify.annotations.Nullable Component text, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, int overlayCoords, boolean hasFoil, int outlineColor) {
+        WordBoxBlockEntityRenderer.submitText(poseStack, submitNodeCollector, font, lightCoords, Objects.requireNonNullElse(text, WordBoxBlockEntity.DEFAULT_TEXT));
     }
 
     @Override
-    public void getExtents(Set<Vector3f> vertices) {
+    public void getExtents(Consumer<Vector3fc> output) {
         // The actual model will populate these
     }
 
@@ -41,11 +39,11 @@ public class WordBoxSpecialRenderer implements SpecialModelRenderer<Component> {
         return itemStack.get(DataComponents.CUSTOM_NAME);
     }
 
-    public record Unbaked() implements SpecialModelRenderer.Unbaked {
+    public record Unbaked() implements SpecialModelRenderer.Unbaked<Component> {
         public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(Unbaked::new);
 
         @Override
-        public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
+        public @org.jspecify.annotations.Nullable SpecialModelRenderer<Component> bake(BakingContext context) {
             return new WordBoxSpecialRenderer(Minecraft.getInstance().font);
         }
 

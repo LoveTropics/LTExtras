@@ -17,12 +17,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import javax.annotation.Nullable;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class PartyBeamEntity extends EndCrystal {
-    private static final EntityDataAccessor<Vector3f> DATA_COLOR = SynchedEntityData.defineId(PartyBeamEntity.class, EntityDataSerializers.VECTOR3);
+    private static final EntityDataAccessor<Vector3fc> DATA_COLOR = SynchedEntityData.defineId(PartyBeamEntity.class, EntityDataSerializers.VECTOR3);
 
     @Nullable
     private BlockPos targetPos = null;
@@ -35,7 +36,7 @@ public class PartyBeamEntity extends EndCrystal {
     public void tick() {
         super.tick();
 
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             if (targetPos != null && level().getGameTime() % 100 == 0) {
                 random.setSeed(level().getGameTime());
 
@@ -68,11 +69,11 @@ public class PartyBeamEntity extends EndCrystal {
         setColor(input.read("TargetColor", ExtraCodecs.VECTOR3F).orElse(new Vector3f()));
     }
 
-    public void setColor(Vector3f color) {
+    public void setColor(Vector3fc color) {
         getEntityData().set(DATA_COLOR, color);
     }
 
-    public Vector3f getColor() {
+    public Vector3fc getColor() {
         return getEntityData().get(DATA_COLOR);
     }
 

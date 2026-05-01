@@ -14,8 +14,8 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
@@ -34,7 +34,7 @@ public class SpinningSignModel extends EntityModel<SpinningSignRenderState> {
     private final ModelPart sign_panel8;
 
     public SpinningSignModel(ModelPart root) {
-        super(root, RenderType::entityTranslucent);
+        super(root, RenderTypes::entityTranslucent);
         this.root = root.getChild("root");
         this.sign_panel = this.root.getChild("sign_panel");
         this.sign_panel2 = this.root.getChild("sign_panel2");

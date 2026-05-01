@@ -55,13 +55,13 @@ public class PrimedPlumbersTnt extends PrimedTnt {
     public static PrimedPlumbersTnt create(final Level level, final double x, final double y, final double z, @Nullable final LivingEntity optionalOwner) {
         PrimedPlumbersTnt primed = new PrimedPlumbersTnt(ExtraEntities.PRIMED_PLUMBERS_TNT.get(), level);
         primed.setPos(x, y, z);
-        double d0 = level.random.nextDouble() * (double)((float)Math.PI * 2F);
+        double d0 = level.getRandom().nextDouble() * (double)((float)Math.PI * 2F);
         primed.setDeltaMovement(-Math.sin(d0) * 0.02, 0.2, -Math.cos(d0) * 0.02);
         primed.setFuse(80);
         primed.xo = x;
         primed.yo = y;
         primed.zo = z;
-        primed.owner = optionalOwner != null ? new EntityReference(optionalOwner) : null;
+        primed.owner = EntityReference.of(optionalOwner);
         return primed;
     }
 

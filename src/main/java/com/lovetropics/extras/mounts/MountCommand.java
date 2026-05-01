@@ -38,7 +38,7 @@ public class MountCommand {
     private static int summonMount(CommandSourceStack source, Holder.Reference<EntityType<?>> entity, CompoundTag nbt) throws CommandSyntaxException {
         Entity commandEntity = source.getEntityOrException();
         Entity spawnEntity = SummonCommand.createEntity(source, entity, source.getPosition(), nbt, false);
-        commandEntity.startRiding(spawnEntity, true);
+        commandEntity.startRiding(spawnEntity, true, false);
         spawnEntity.addTag(ExtraMountController.KILL_DISMOUNT);
         return Command.SINGLE_SUCCESS;
     }

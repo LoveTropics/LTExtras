@@ -3,16 +3,16 @@ package com.lovetropics.extras.client;
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.collectible.Collectible;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonColors;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
 
 public class CollectibleToast implements Toast {
@@ -22,7 +22,7 @@ public class CollectibleToast implements Toast {
     private static final int WIDTH = 160;
     private static final int HEIGHT = 32;
 
-    private static final ResourceLocation SPRITE = ResourceLocation.withDefaultNamespace("toast/recipe");
+    private static final Identifier SPRITE = Identifier.withDefaultNamespace("toast/recipe");
 
     private final ItemStack stack;
     private final Component name;
@@ -44,14 +44,14 @@ public class CollectibleToast implements Toast {
     }
 
     @Override
-    public void render(GuiGraphics graphics, Font font, long visibilityTime) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, Font font, long fullyVisibleForMs) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITE, 0, 0, WIDTH, HEIGHT);
-        graphics.renderFakeItem(new ItemStack(ExtraItems.COLLECTIBLE_BASKET.asItem()), 11, 12);
-        graphics.renderFakeItem(stack, 5, 4);
+        graphics.fakeItem(new ItemStack(ExtraItems.COLLECTIBLE_BASKET.asItem()), 11, 12);
+        graphics.fakeItem(stack, 5, 4);
 
         final int textLeft = 30;
-        graphics.drawString(font, TITLE, textLeft, 7, CommonColors.BLACK, false);
-        graphics.drawString(font, Component.translatable("toast.collectible.item", name), textLeft, 18, CommonColors.BLACK, false);
+        graphics.text(font, TITLE, textLeft, 7, CommonColors.BLACK, false);
+        graphics.text(font, Component.translatable("toast.collectible.item", name), textLeft, 18, CommonColors.BLACK, false);
     }
 
     @Override

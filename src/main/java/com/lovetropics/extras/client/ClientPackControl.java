@@ -8,10 +8,10 @@ import com.google.gson.JsonParser;
 import com.lovetropics.extras.data.packcontrol.PackControl;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
+import net.minecraft.util.Util;
 import net.neoforged.fml.loading.FMLLoader;
 import org.slf4j.Logger;
 
@@ -30,7 +30,7 @@ import java.util.concurrent.CompletionException;
 public class ClientPackControl {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static final Path STATE_PATH = FMLLoader.getGamePath().resolve("config/client_pack_control.json");
+    private static final Path STATE_PATH = FMLLoader.getCurrent().getGameDir().resolve("config/client_pack_control.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static CompletableFuture<PackControl.State> stateFuture;

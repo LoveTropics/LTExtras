@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.FluidType;
+import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,11 +31,10 @@ public class EntityMixin {
     @Final
     private Set<String> tags;
 
-    @Shadow
-    private FluidType forgeFluidTypeOnEyes;
+//    @Shadow
+//    private FluidType forgeFluidTypeOnEyes;
     @Unique
     private static final String lTExtras$UNTOUCHABLE = "Untouchable";
-    @Unique
 
     @Inject(method = "kill", at = @At("HEAD"), cancellable = true)
     public void kill(CallbackInfo ci) {
@@ -71,12 +71,13 @@ public class EntityMixin {
         }
     }
 
-    @Inject(method = "updateFluidOnEyes", at = @At("RETURN"))
-    private void updateFluidOnEyes(CallbackInfo ci) {
-        if ((Object) this instanceof LivingEntity livingEntity && livingEntity.hasEffect(ExtraEffects.FISH_EYE)) {
-            forgeFluidTypeOnEyes = NeoForgeMod.EMPTY_TYPE.value();
-        }
-    }
+    // Todo 26.1 Port
+//    @Inject(method = "updateFluidOnEyes", at = @At("RETURN"))
+//    private void updateFluidOnEyes(CallbackInfo ci) {
+//        if ((Object) this instanceof LivingEntity livingEntity && livingEntity.hasEffect(ExtraEffects.FISH_EYE)) {
+//            forgeFluidTypeOnEyes = NeoForgeMod.EMPTY_TYPE.value();
+//        }
+//    }
 
     @Inject(method = "nextStep", at = @At("RETURN"), cancellable = true)
     private void nextStep(CallbackInfoReturnable<Float> cir) {
@@ -101,9 +102,9 @@ public class EntityMixin {
         }
     }
 
-    // Required for allowing /ride to work with players
-    @ModifyExpressionValue(method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;canSerialize()Z"))
-    private boolean skipChecks(boolean original) {
+    // Allows for /ride to work with players
+    @ModifyExpressionValue(method = "startRiding(Lnet/minecraft/world/entity/Entity;ZZ)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;canSerialize()Z"))
+    private boolean skipRiddingChecks(boolean original) {
         return true;
     }
 

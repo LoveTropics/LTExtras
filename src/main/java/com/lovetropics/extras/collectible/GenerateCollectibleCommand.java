@@ -60,7 +60,7 @@ public class GenerateCollectibleCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         // @formatter:off
         dispatcher.register(literal("generatecollectible")
-                .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(literal("create")
                         .then(argument("name", StringArgumentType.word())
                                 .then(argument("rarity", EnumArgument.enumArgument(CollectibleRarity.class))

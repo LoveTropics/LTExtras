@@ -19,9 +19,11 @@ import net.minecraft.SharedConstants;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
@@ -55,7 +57,7 @@ public class MapManager extends SavedData {
     }));
 
     private static final SavedDataType<MapManager> TYPE = new SavedDataType<>(
-            LTExtras.MODID + "_map_poi",
+            LTExtras.location("map_poi"),
             MapManager::new,
             CODEC
     );
@@ -72,21 +74,21 @@ public class MapManager extends SavedData {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            MapManager.get(player.getServer()).onPlayerLoggedIn(player);
+            MapManager.get(player.level().getServer()).onPlayerLoggedIn(player);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerPermissionsChanged(PermissionsChangedEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            MapManager.get(player.getServer()).refreshAccessiblePois(player);
+            MapManager.get(player.level().getServer()).refreshAccessiblePois(player);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            MapManager.get(player.getServer()).onPlayerLoggedOut(player);
+            MapManager.get(player.level().getServer()).onPlayerLoggedOut(player);
         }
     }
 
@@ -100,7 +102,7 @@ public class MapManager extends SavedData {
     }
 
     public void reload(MinecraftServer server) {
-        if (disabledPois.removeIf(key -> !MapConfigs.POIS.containsKey(key.location()))) {
+        if (disabledPois.removeIf(key -> !MapConfigs.POIS.containsKey(key.identifier()))) {
             setDirty();
         }
 
@@ -113,7 +115,7 @@ public class MapManager extends SavedData {
     }
 
     private void reloadForPlayer(PlayerSender sender, ServerPlayer player) {
-        sender.dropAll(player, key -> !MapConfigs.POIS.containsKey(key.location()));
+        sender.dropAll(player, key -> !MapConfigs.POIS.containsKey(key.identifier()));
         // Resend everything, even if it didn't change
         for (Named<PoiConfig> holder : MapConfigs.POIS) {
             if (isAccessibleFor(holder, player)) {
@@ -123,13 +125,13 @@ public class MapManager extends SavedData {
     }
 
     @Nullable
-    public Named<PoiConfig> getPoiAccessibleTo(ServerPlayer player, ResourceLocation id) {
+    public Named<PoiConfig> getPoiAccessibleTo(ServerPlayer player, Identifier id) {
         Named<PoiConfig> holder = MapConfigs.POIS.get(id);
         return holder != null && isAccessibleFor(holder, player) ? holder : null;
     }
 
     private boolean isAccessibleFor(Named<PoiConfig> poi, ServerPlayer player) {
-        return player.hasPermissions(Commands.LEVEL_GAMEMASTERS) || !disabledPois.contains(poi.key());
+        return player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER) || !disabledPois.contains(poi.key());
     }
 
     public Stream<ResourceKey<PoiConfig>> getAccessiblePois(ServerPlayer player) {
@@ -145,7 +147,7 @@ public class MapManager extends SavedData {
     }
 
     public boolean enable(MinecraftServer server, ResourceKey<PoiConfig> id) {
-        Named<PoiConfig> holder = MapConfigs.POIS.get(id.location());
+        Named<PoiConfig> holder = MapConfigs.POIS.get(id.identifier());
         if (holder == null) {
             return false;
         }
@@ -159,7 +161,7 @@ public class MapManager extends SavedData {
     }
 
     public boolean disable(MinecraftServer server, ResourceKey<PoiConfig> id) {
-        Named<PoiConfig> holder = MapConfigs.POIS.get(id.location());
+        Named<PoiConfig> holder = MapConfigs.POIS.get(id.identifier());
         if (holder == null) {
             return false;
         }

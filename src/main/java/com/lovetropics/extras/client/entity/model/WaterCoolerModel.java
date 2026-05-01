@@ -16,7 +16,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.world.entity.Entity;
 
 public class WaterCoolerModel<T extends Entity> extends EntityModel<WaterCoolerRenderState> {
@@ -31,7 +31,7 @@ public class WaterCoolerModel<T extends Entity> extends EntityModel<WaterCoolerR
     private final KeyframeAnimation shakeDispenseAnimation;
 
 	public WaterCoolerModel(ModelPart root) {
-        super(root, RenderType::entityTranslucent);
+        super(root, RenderTypes::entityTranslucent);
         this.root = root.getChild("root");
 		this.water_jug = this.root.getChild("water_jug");
         this.shake1Animation = WaterCoolerAnimation.SHAKE_1.bake(root);

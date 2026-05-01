@@ -1,6 +1,5 @@
 package com.lovetropics.extras.block;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
@@ -11,10 +10,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class CurtainBlock extends StainedGlassPaneBlock {
     public CurtainBlock(Properties props) {
         super(DyeColor.BLACK, props);
@@ -26,7 +22,7 @@ public class CurtainBlock extends StainedGlassPaneBlock {
     }
 
     @Override
-    protected int getLightBlock(BlockState state) {
+    protected int getLightDampening(BlockState state) {
         return Level.MAX_BRIGHTNESS;
     }
 }

@@ -6,9 +6,9 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.item.ImageData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.ItemFrameRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.context.ContextKey;
@@ -18,6 +18,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderItemInFrameEvent;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
+import org.jetbrains.annotations.UnknownNullability;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class ImageRenderer {
@@ -38,22 +39,23 @@ public class ImageRenderer {
     public static void onRenderItemInFrame(RenderItemInFrameEvent event) {
         ImageData image = event.getItemFrameRenderState().getRenderData(IMAGE_KEY);
         if (image != null) {
-            renderImage(image, event.getPoseStack().last(), event.getMultiBufferSource(), event.getPackedLight());
+            renderImage(image, event.getPoseStack().last(), event.getSubmitNodeCollector(), event.getItemFrameRenderState().lightCoords);
             event.setCanceled(true);
         }
     }
 
-    private static void renderImage(ImageData image, PoseStack.Pose pose, MultiBufferSource bufferSource, int packedLight) {
+    private static void renderImage(ImageData image, PoseStack.Pose pose, SubmitNodeCollector bufferSource, int packedLight) {
         float x0 = -image.width() / 2.0f + image.offsetX();
         float y0 = -image.height() / 2.0f + image.offsetY();
         float x1 = image.width() / 2.0f + image.offsetX();
         float y1 = image.height() / 2.0f + image.offsetY();
 
-        VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityCutoutNoCullZOffset(image.texture()));
-        addVertex(consumer, pose, x0, y0, 1.0f, 1.0f, packedLight);
-        addVertex(consumer, pose, x1, y0, 0.0f, 1.0f, packedLight);
-        addVertex(consumer, pose, x1, y1, 0.0f, 0.0f, packedLight);
-        addVertex(consumer, pose, x0, y1, 1.0f, 0.0f, packedLight);
+        // Todo 26.1 Port
+//        VertexConsumer consumer = bufferSource.getBuffer(RenderTypes.entityCutoutZOffset(image.texture()));
+//        addVertex(consumer, pose, x0, y0, 1.0f, 1.0f, packedLight);
+//        addVertex(consumer, pose, x1, y0, 0.0f, 1.0f, packedLight);
+//        addVertex(consumer, pose, x1, y1, 0.0f, 0.0f, packedLight);
+//        addVertex(consumer, pose, x0, y1, 1.0f, 0.0f, packedLight);
     }
 
     private static void addVertex(VertexConsumer consumer, PoseStack.Pose pose, float x, float y, float u, float v, int packedLight) {

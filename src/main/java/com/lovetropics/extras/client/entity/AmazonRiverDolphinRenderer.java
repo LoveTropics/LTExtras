@@ -7,10 +7,10 @@ import com.lovetropics.extras.entity.AmazonRiverDolphin;
 import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.HoldingEntityRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class AmazonRiverDolphinRenderer extends AgeableMobRenderer<AmazonRiverDolphin, AmazonRiverDolphinRenderState, AmazonRiverDolphinModel> {
-    private static final ResourceLocation TEXTURE = LTExtras.location("textures/entity/amazon_river_dolphin.png");
+    private static final Identifier TEXTURE = LTExtras.location("textures/entity/amazon_river_dolphin.png");
 
     public AmazonRiverDolphinRenderer(EntityRendererProvider.Context context) {
         super(
@@ -27,7 +27,7 @@ public class AmazonRiverDolphinRenderer extends AgeableMobRenderer<AmazonRiverDo
     }
 
     @Override
-    public ResourceLocation getTextureLocation(AmazonRiverDolphinRenderState renderState) {
+    public Identifier getTextureLocation(AmazonRiverDolphinRenderState renderState) {
         return TEXTURE;
     }
 

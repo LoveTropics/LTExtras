@@ -1,45 +1,30 @@
 package com.lovetropics.extras.client.particle;
 
-import com.lovetropics.extras.LTExtras;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraft.util.RandomSource;
+import org.jspecify.annotations.Nullable;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class EmittedHeartsParticle extends EmittedRaisingParticle {
+
     EmittedHeartsParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
         super(world, x, y, z, sprites);
         setSize(0.75f, 0.75f);
     }
 
-    @SubscribeEvent
-    public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-        Minecraft.getInstance().particleEngine.register(ExtraParticles.EMITTED_HEARTS_PARTICLE.get(), EmittedHeartsParticle.Factory::new);
-    }
-
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    protected Layer getLayer() {
+        return Layer.OPAQUE;
     }
 
-    public static class Factory implements ParticleProvider<SimpleParticleType> {
-        private final SpriteSet sprites;
-
-        public Factory(SpriteSet pSprites) {
-            sprites = pSprites;
-        }
+    record Factory(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
 
         @Override
-        public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-            return new EmittedHeartsParticle(pLevel, pX, pY, pZ, sprites);
+        public @Nullable Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double xAux, double yAux, double zAux, RandomSource random) {
+            return new EmittedHeartsParticle(level, x, y, z, sprites);
         }
     }
 }

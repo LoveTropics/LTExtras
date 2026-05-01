@@ -40,13 +40,14 @@ public abstract class LivingEntityMixin extends Entity {
         return speed;
     }
 
-    @Override
-    public void updateFluidHeightAndDoFluidPushing() {
-        super.updateFluidHeightAndDoFluidPushing();
-        if (hasEffect(ExtraEffects.FISH_EYE)) {
-            forgeFluidTypeHeight.removeDouble(NeoForgeMod.WATER_TYPE.value());
-        }
-    }
+    // Todo 26.1 Port
+//    @Override
+//    public void updateFluidHeightAndDoFluidPushing() {
+//        super.updateFluidHeightAndDoFluidPushing();
+//        if (hasEffect(ExtraEffects.FISH_EYE)) {
+//            forgeFluidTypeHeight.removeDouble(NeoForgeMod.WATER_TYPE.value());
+//        }
+//    }
 
     @Override
     public boolean isPushedByFluid(FluidType type) {
@@ -58,7 +59,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "isPushable", at= @At("HEAD"), cancellable = true)
     private void isPushable(CallbackInfoReturnable<Boolean> cir) {
-        if(this.getTags().contains(ExtraTags.NO_PUSH)) {
+        if(this.entityTags().contains(ExtraTags.NO_PUSH)) {
             cir.setReturnValue(false);
         }
     }

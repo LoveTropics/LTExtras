@@ -41,7 +41,7 @@ public class ForkliftSpawnEggItem extends Item {
 
     @SubscribeEvent
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
-        if (!event.getLevel().isClientSide) {
+        if (!event.getLevel().isClientSide()) {
             final Entity entity = event.getTarget();
             final Player player = event.getEntity();
             final ItemStack stack = event.getItemStack();
@@ -55,7 +55,7 @@ public class ForkliftSpawnEggItem extends Item {
 
                 player.awardStat(Stats.ITEM_USED.get(ExtraItems.FORKLIFT_SPAWN_EGG.asItem()));
                 serverLevel.gameEvent(player, GameEvent.ENTITY_PLACE, entity.position());
-                stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+                stack.shrink(1);
 
                 event.setCanceled(true);
             }
@@ -97,7 +97,7 @@ public class ForkliftSpawnEggItem extends Item {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             ItemStack itemstack = context.getItemInHand();
             BlockPos blockpos = context.getClickedPos();
             Direction direction = context.getClickedFace();

@@ -1,16 +1,6 @@
 package com.lovetropics.extras;
 
-import com.lovetropics.extras.client.ClientPlayerForkliftHUD;
-import com.lovetropics.extras.client.ClientPlayerSensorEffects;
 import com.lovetropics.extras.client.command.NameTagModeCommand;
-import com.lovetropics.extras.client.entity.model.AmazonRiverDolphinModel;
-import com.lovetropics.extras.client.entity.model.ForkliftModel;
-import com.lovetropics.extras.client.entity.model.GlassFrogModel;
-import com.lovetropics.extras.client.entity.model.HighHeelsModel;
-import com.lovetropics.extras.client.entity.model.RaveKoaModel;
-import com.lovetropics.extras.client.entity.model.SpinningSignModel;
-import com.lovetropics.extras.client.entity.model.WaterCoolerModel;
-import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
 import com.lovetropics.extras.client.particle.ExtraParticles;
 import com.lovetropics.extras.collectible.CollectibleCommand;
 import com.lovetropics.extras.collectible.GenerateCollectibleCommand;
@@ -25,12 +15,10 @@ import com.lovetropics.extras.command.WarpCommand;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
-import com.lovetropics.extras.effect.PropaguledEffect;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
 import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.mounts.MountCommand;
-import com.lovetropics.extras.placeholder.ExtraPlaceholders;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.techstack.VideoImporter;
 import com.lovetropics.extras.world_effect.WorldEffectCommand;
@@ -42,7 +30,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -50,19 +38,12 @@ import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
@@ -75,7 +56,7 @@ public class LTExtras {
 
     public static final String MODID = "ltextras";
 
-    private static final ResourceLocation TAB_ID = LTExtras.location("ltextras");
+    private static final Identifier TAB_ID = LTExtras.location("ltextras");
     public static final ResourceKey<CreativeModeTab> TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, TAB_ID);
 
     @Nullable
@@ -99,7 +80,7 @@ public class LTExtras {
         ExtraBlocks.init();
         ExtraItems.init();
         ExtraEntities.init();
-        ExtraPlaceholders.init();
+//        ExtraPlaceholders.init(); // Todo 26.1 Port
 
         ExtraParticles.REGISTER.register(modBus);
         ExtraEffects.REGISTER.register(modBus);
@@ -144,8 +125,8 @@ public class LTExtras {
                 .addDataGenerator(ProviderType.BLOCK_TAGS, block -> {
                     block.tag(ExtraTags.Blocks.PLUMBERS_TNT_EXPLODES)
                             .add(Blocks.MUD, Blocks.PACKED_MUD, Blocks.DIRT)
-                            .add(TagEntry.optionalElement(ResourceLocation.fromNamespaceAndPath("tropicraft", "mud")))
-                            .add(TagEntry.optionalElement(ResourceLocation.fromNamespaceAndPath("tropicraft", "mud_with_pianguas")))
+                            .add(TagEntry.optionalElement(Identifier.fromNamespaceAndPath("tropicraft", "mud")))
+                            .add(TagEntry.optionalElement(Identifier.fromNamespaceAndPath("tropicraft", "mud_with_pianguas")))
                     ;
                 })
                 .addDataGenerator(ProviderType.ITEM_TAGS, item -> {
@@ -200,38 +181,7 @@ public class LTExtras {
         event.add(EntityType.PLAYER, FRICTION);
     }
 
-    public static ResourceLocation location(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, path);
-    }
-
-    @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
-    public static class ClientSetup {
-        @SubscribeEvent
-        public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-            event.registerLayerDefinition(RaveKoaModel.LAYER_LOCATION, RaveKoaModel::createBodyLayer);
-            event.registerLayerDefinition(HighHeelsModel.LAYER_LOCATION, HighHeelsModel::createLayer);
-            event.registerLayerDefinition(ForkliftModel.LAYER_LOCATION, ForkliftModel::createBodyLayer);
-            event.registerLayerDefinition(WaterCoolerModel.LAYER_LOCATION, WaterCoolerModel::createBodyLayer);
-            event.registerLayerDefinition(SpinningSignModel.LAYER_LOCATION, SpinningSignModel::createBodyLayer);
-            event.registerLayerDefinition(AmazonRiverDolphinModel.LAYER, AmazonRiverDolphinModel::createBodyLayer);
-            event.registerLayerDefinition(AmazonRiverDolphinModel.BABY_LAYER, () -> AmazonRiverDolphinModel.createBodyLayer().apply(AmazonRiverDolphinModel.BABY_TRANSFORMER));
-            event.registerLayerDefinition(GlassFrogModel.LAYER, GlassFrogModel::createBodyLayer);
-        }
-
-        @SubscribeEvent
-        public static void registerGuiLayers(RegisterGuiLayersEvent event) {
-            ClientPlayerSensorEffects.registerGuiLayers(event);
-            ClientPlayerForkliftHUD.registerGuiLayers(event);
-        }
-
-        @SubscribeEvent
-        public static void setupClient(final FMLClientSetupEvent event) {
-            ForkliftKeybinds.init();
-        }
-
-        @SubscribeEvent
-        public static void registerMobEffectExtensions(RegisterClientExtensionsEvent event) {
-            event.registerMobEffect(new PropaguledEffect.ClientExtensions(), ExtraEffects.PROPAGULED);
-        }
+    public static Identifier location(String path) {
+        return Identifier.fromNamespaceAndPath(MODID, path);
     }
 }

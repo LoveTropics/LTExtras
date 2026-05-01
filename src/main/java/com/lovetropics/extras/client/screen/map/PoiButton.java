@@ -5,16 +5,17 @@ import com.lovetropics.extras.client.map.ClientMapManager;
 import com.lovetropics.extras.client.map.ClientPoi;
 import com.lovetropics.extras.data.poi.PoiConfig;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.components.PlayerFaceRenderer;
+import net.minecraft.client.gui.components.PlayerFaceExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -29,9 +30,9 @@ class PoiButton extends AbstractButton {
 
     private static final int HOVER_ANIMATION_LENGTH = 8;
 
-    private static final ResourceLocation TOOLTIP_SPRITE = LTExtras.location("widget/poi_tooltip");
-    private static final ResourceLocation BACKGROUND_SPRITE = LTExtras.location("widget/poi_background");
-    private static final ResourceLocation TITLE_BOX_SPRITE = ResourceLocation.withDefaultNamespace("advancements/title_box");
+    private static final Identifier TOOLTIP_SPRITE = LTExtras.location("widget/poi_tooltip");
+    private static final Identifier BACKGROUND_SPRITE = LTExtras.location("widget/poi_background");
+    private static final Identifier TITLE_BOX_SPRITE = Identifier.withDefaultNamespace("advancements/title_box");
 
     private final ClientPoi poi;
     private final Font font;
@@ -64,7 +65,7 @@ class PoiButton extends AbstractButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         float animation = Mth.lerp(partialTicks, lastFocusAnimation, focusAnimation) / HOVER_ANIMATION_LENGTH;
         animation = (float) (1.0 - Math.pow(1.0 - animation, 5.0));
 
@@ -81,7 +82,7 @@ class PoiButton extends AbstractButton {
             graphics.enableScissor(getX() + BORDER_SIZE, getY() + BORDER_SIZE, getX() + getWidth() - BORDER_SIZE, getY() + getHeight() - BORDER_SIZE);
             int textLeft = getX() + SIZE + BORDER_SIZE - 1;
             int textTop = getY() + (getHeight() - font.lineHeight) / 2 + 1;
-            graphics.drawString(font, getMessage(), textLeft, textTop, CommonColors.WHITE);
+            graphics.text(font, getMessage(), textLeft, textTop, CommonColors.WHITE);
 
             graphics.disableScissor();
         } else {
@@ -96,8 +97,8 @@ class PoiButton extends AbstractButton {
         }
 
         switch (poi.icon()) {
-            case PoiConfig.ItemIcon(ItemStack item) -> graphics.renderFakeItem(item, iconX, iconY);
-            case PoiConfig.TextureIcon(ResourceLocation texture) ->
+            case PoiConfig.ItemIcon(ItemStack item) -> graphics.fakeItem(item, iconX, iconY);
+            case PoiConfig.TextureIcon(Identifier texture) ->
                     graphics.blit(RenderPipelines.GUI_TEXTURED, texture, iconX, iconY, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE, CommonColors.WHITE);
         }
 
@@ -106,13 +107,13 @@ class PoiButton extends AbstractButton {
             int faceFactor = faces.size() > 2 ? 2 : 1;
             for (int i = 0; i < faces.size(); i++) {
                 PlayerSkin skin = ClientMapManager.getOnlinePlayerSkin(faces.get(i));
-                PlayerFaceRenderer.draw(graphics, skin, getX() + BORDER_SIZE + i * HALF_ICON_SIZE / faceFactor + i, getY() + ICON_SIZE, HALF_ICON_SIZE / faceFactor);
+                PlayerFaceExtractor.extractRenderState(graphics, skin, getX() + BORDER_SIZE + i * HALF_ICON_SIZE / faceFactor + i, getY() + ICON_SIZE, HALF_ICON_SIZE / faceFactor);
             }
         }
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         action.run();
     }
 

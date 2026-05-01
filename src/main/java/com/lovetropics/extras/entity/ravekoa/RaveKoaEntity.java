@@ -65,11 +65,6 @@ public class RaveKoaEntity extends PathfinderMob {
     }
 
     @Override
-    protected boolean shouldDespawnInPeaceful() {
-        return false;
-    }
-
-    @Override
     public void checkDespawn() {
         //NO OP
     }

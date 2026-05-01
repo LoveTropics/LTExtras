@@ -11,10 +11,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.tags.TagFile;
 import net.minecraft.world.item.Item;
@@ -41,7 +42,7 @@ public class GenerateCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         // @formatter:off
         dispatcher.register(
-            literal("generate").requires(source -> source.hasPermission(4))
+            literal("generate").requires(Commands.hasPermission(Commands.LEVEL_OWNERS))
                 .then(literal("tag")
                     .then(literal("item")
                         .then(argument("name", StringArgumentType.word())
@@ -56,7 +57,7 @@ public class GenerateCommand {
         TagBuilder tagBuilder = TagBuilder.create();
 
         for (Entry<ResourceKey<Item>, Item> e : BuiltInRegistries.ITEM.entrySet()) {
-            ResourceLocation id = e.getKey().location();
+            Identifier id = e.getKey().identifier();
             if (pattern.matcher(id.toString()).matches()) {
                 tagBuilder.addElement(id);
             }

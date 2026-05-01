@@ -75,7 +75,7 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import net.minecraft.Util;
+import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.color.item.Constant;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.MultiVariant;
@@ -92,9 +92,10 @@ import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.block.model.Variant;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -104,10 +105,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -157,6 +159,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -182,9 +185,9 @@ import static net.minecraft.client.data.models.BlockModelGenerators.*;
 import static net.minecraft.client.data.models.blockstates.MultiVariantGenerator.dispatch;
 import static net.minecraft.world.level.storage.loot.LootTable.lootTable;
 import static net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem;
-import static net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction.copyComponents;
 import static net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly;
 
+@SuppressWarnings({"unused", "Convert2MethodRef"})
 public class ExtraBlocks {
 
     public static final Registrate REGISTRATE = LTExtras.registrate();
@@ -194,7 +197,7 @@ public class ExtraBlocks {
     public static final BlockEntry<WaterBarrierBlock> WATER_BARRIER = REGISTRATE.block("water_barrier", WaterBarrierBlock::new)
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.noLootTable())
-            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), ResourceLocation.withDefaultNamespace("item/barrier")))
+            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("item/barrier"))))
             .item()
             .model(() -> Models::generateWaterBarrierItem)
             .build()
@@ -203,7 +206,7 @@ public class ExtraBlocks {
     public static final BlockEntry<LightweightBarrierBlock> LIGHTWEIGHT_BARRIER = REGISTRATE.block("lightweight_barrier", LightweightBarrierBlock::new)
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.strength(0.0F, 3.6e6f).noLootTable())
-            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), ResourceLocation.withDefaultNamespace("item/barrier")))
+            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("item/barrier"))))
             .item()
             .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), Items.BARRIER, ModelTemplates.FLAT_ITEM))
             .build()
@@ -214,7 +217,7 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.noLootTable())
             .blockstate(() -> (ctx, prov)
-                    -> prov.createAirLikeBlock(ctx.get(), ResourceLocation.withDefaultNamespace("item/barrier")))
+                    -> prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("item/barrier"))))
             .simpleBlockEntity(RoleBarrierBlock.RoleBarrierBE::new)
             .item()
             .model(() -> (ctx, prov)
@@ -226,7 +229,7 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.noLootTable())
             .blockstate(() -> (ctx, prov)
-                    -> prov.createAirLikeBlock(ctx.get(), ResourceLocation.withDefaultNamespace("item/barrier")))
+                    -> prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("item/barrier"))))
             .item()
             .model(() -> (ctx, prov)
                     -> prov.generateFlatItem(ctx.get(), Items.BARRIER, ModelTemplates.FLAT_ITEM))
@@ -237,7 +240,7 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.noLootTable().explosionResistance(0.0f))
             .blockstate(() -> (ctx, prov)
-                    -> prov.createAirLikeBlock(ctx.get(), ResourceLocation.withDefaultNamespace("item/barrier")))
+                    -> prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("item/barrier"))))
             .item()
             .model(() -> (ctx, prov)
                     -> prov.generateFlatItem(ctx.get(), Items.BARRIER, ModelTemplates.FLAT_ITEM))
@@ -248,7 +251,7 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.noLootTable())
             .blockstate(() -> (ctx, prov) ->
-                    prov.createAirLikeBlock(ctx.get(), ResourceLocation.withDefaultNamespace("block/water_still"))
+                    prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("block/water_still")))
             )
             .item()
             .model(() -> Models::generateFakeWaterItem)
@@ -276,15 +279,14 @@ public class ExtraBlocks {
     public static final BlockEntry<PanelBlock> GLASS_PANEL = REGISTRATE.block("glass_panel", PanelBlock::new)
             .initialProperties(() -> Blocks.GLASS)
             .blockstate(() -> (ctx, prov) -> {
-                TextureMapping textures = TextureMapping.defaultTexture(ModelLocationUtils.getModelLocation(Blocks.GLASS));
+                TextureMapping textures = TextureMapping.defaultTexture(new Material(ModelLocationUtils.getModelLocation(Blocks.GLASS)));
                 MultiVariant variant = plainVariant(ModelTemplates.TRAPDOOR_TOP.create(ctx.get(), textures, prov.modelOutput));
                 prov.blockStateOutput.accept(dispatch(ctx.get(), variant).with(BlockModelGenerators.ROTATIONS_COLUMN_WITH_FACING));
             })
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
             .item()
             .model(() -> (ctx, prov) -> {
-                TextureMapping textures = TextureMapping.defaultTexture(ModelLocationUtils.getModelLocation(Blocks.GLASS));
+                TextureMapping textures = TextureMapping.defaultTexture(new Material(ModelLocationUtils.getModelLocation(Blocks.GLASS)));
                 prov.generateWithTemplate(ctx.get(), ModelTemplates.TRAPDOOR_BOTTOM, textures);
             })
             .build()
@@ -311,7 +313,7 @@ public class ExtraBlocks {
             .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), Items.STRUCTURE_VOID))
             .item()
             .model(() -> (ctx, prov) ->
-                    prov.generateFlatItem(ctx.get(), ResourceLocation.withDefaultNamespace("item/structure_void"))
+                    prov.generateFlatItem(ctx.get(), new Material(Identifier.withDefaultNamespace("item/structure_void")))
             )
             .build()
             .register();
@@ -324,7 +326,6 @@ public class ExtraBlocks {
             })
             .initialProperties(() -> Blocks.SCAFFOLDING)
             .blockstate(() -> Models::generateScaffolding)
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
             .tag(BlockTags.CLIMBABLE)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .tag(BlockTags.NEEDS_IRON_TOOL)
@@ -337,7 +338,6 @@ public class ExtraBlocks {
             })
             .initialProperties(() -> Blocks.IRON_BARS)
             .blockstate(() -> Models::barsBlock)
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .tag(BlockTags.NEEDS_IRON_TOOL)
             .item()
@@ -357,9 +357,8 @@ public class ExtraBlocks {
                 .tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .tag(BlockTags.NEEDS_IRON_TOOL)
                 .blockstate(() -> (ctx, prov) -> Models.generateLadder(ctx, prov, texture))
-                .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
                 .item()
-                .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), prov.modLoc("block/" + texture)))
+                .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), new Material(prov.modLoc("block/" + texture))))
                 .build();
     }
 
@@ -410,7 +409,6 @@ public class ExtraBlocks {
     public static final BlockEntry<StainedGlassBlock> SMOOTH_LIGHT_GRAY_STAINED_GLASS = REGISTRATE.block("smooth_light_gray_stained_glass", p -> new StainedGlassBlock(DyeColor.LIGHT_GRAY, p))
             .initialProperties(() -> Blocks.LIGHT_GRAY_STAINED_GLASS)
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
-            .addLayer(() -> () -> ChunkSectionLayer.TRANSLUCENT)
             .simpleItem()
             .register();
 
@@ -423,9 +421,8 @@ public class ExtraBlocks {
         return REGISTRATE.block("edgeless_" + color + "_stained_glass", p -> new StainedGlassBlock(dyeColor, p))
                 .initialProperties(() -> Blocks.GLASS)
                 .blockstate(() -> (ctx, prov) ->
-                        prov.generate(ctx.get(), TexturedModel.CUBE.updateTexture(textures -> textures.put(TextureSlot.ALL, prov.modLoc("block/edgeless/edgeless_" + color + "_stained_glass"))))
+                        prov.generate(ctx.get(), TexturedModel.CUBE.updateTexture(textures -> textures.put(TextureSlot.ALL, new Material(prov.modLoc("block/edgeless/edgeless_" + color + "_stained_glass")))))
                 )
-                .addLayer(() -> () -> ChunkSectionLayer.TRANSLUCENT)
                 .simpleItem()
                 .register();
     }
@@ -435,27 +432,25 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.SUGAR_CANE)
             .properties(p -> p.noLootTable())
             .blockstate(() -> Models::generateReeds)
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
             .item()
-            .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), prov.modLoc("block/" + ctx.getName() + "_top_tall")))
+            .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), new Material(prov.modLoc("block/" + ctx.getName() + "_top_tall"))))
             .build()
             .register();
 
     public static final BlockEntry<CustomSugarCaneBlock> SUGAR_CANE = REGISTRATE.block("sugar_cane", CustomSugarCaneBlock::new)
             .initialProperties(() -> Blocks.SUGAR_CANE)
             .blockstate(() -> Models::generateSugarCane)
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
             .defaultLoot()
             .item()
-            .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), prov.modLoc("block/" + ctx.getName() + "_top")))
+            .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), new Material(prov.modLoc("block/" + ctx.getName() + "_top"))))
             .build()
             .register();
 
     public static final BlockEntry<PianguasBlock> PIANGUAS = REGISTRATE.block("pianguas", PianguasBlock::new)
-            .properties(p -> p.mapColor(MapColor.STONE).noCollission().instabreak().instrument(NoteBlockInstrument.BASEDRUM))
+            .properties(p -> p.mapColor(MapColor.STONE).noCollision().instabreak().instrument(NoteBlockInstrument.BASEDRUM))
             .blockstate(() -> (ctx, prov) -> {
                 MultiPartGenerator builder = MultiPartGenerator.multiPart(ctx.get());
-                ResourceLocation modelLocation = ModelLocationUtils.getModelLocation(ctx.get());
+                Identifier modelLocation = ModelLocationUtils.getModelLocation(ctx.get());
                 MultiVariant baseVariant = plainVariant(modelLocation);
                 PianguasBlock.ATTACHMENTS.forEach((direction, property) -> {
                     if (direction.getAxis().isHorizontal()) {
@@ -474,7 +469,6 @@ public class ExtraBlocks {
                 });
                 prov.blockStateOutput.accept(builder);
             })
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
             .item()
             .model(() -> (ctx, prov) -> prov.generateFlatBlockItem(ctx.get()))
             .build()
@@ -485,12 +479,11 @@ public class ExtraBlocks {
 
     private static BlockBuilder<RopeBlock, Registrate> rope(String name) {
         return REGISTRATE.block(name, RopeBlock::new)
-                .properties(p -> p.mapColor(MapColor.WOOL).instabreak().noCollission().sound(SoundType.WOOL).ignitedByLava())
+                .properties(p -> p.mapColor(MapColor.WOOL).instabreak().noCollision().sound(SoundType.WOOL).ignitedByLava())
                 .blockstate(() -> Models::generateRope)
-                .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
                 .tag(BlockTags.CLIMBABLE)
                 .item()
-                .model(() -> (ctx, prov) -> prov.itemModelOutput.accept(ctx.get(), ItemModelUtils.plainModel(ModelTemplates.FLAT_ITEM.create(ctx.get(), TextureMapping.layer0(prov.modLoc("block/" + name + "_knot")), prov.modelOutput))))
+                .model(() -> (ctx, prov) -> prov.itemModelOutput.accept(ctx.get(), ItemModelUtils.plainModel(ModelTemplates.FLAT_ITEM.create(ctx.get(), TextureMapping.layer0(prov.modBlockTexture(name + "_knot")), prov.modelOutput))))
                 .build();
     }
 
@@ -503,14 +496,13 @@ public class ExtraBlocks {
                 String dyeName = dyeColor.getSerializedName();
                 String name = dyeName + "_glow_sticks";
                 return REGISTRATE.block(name, GlowSticksBlock::new)
-                        .properties(p -> p.instabreak().noCollission().sound(SoundType.GLASS).noOcclusion().instrument(NoteBlockInstrument.HAT)
+                        .properties(p -> p.instabreak().noCollision().sound(SoundType.GLASS).noOcclusion().instrument(NoteBlockInstrument.HAT)
                                 .lightLevel(value -> 6)
                         )
                         .blockstate(() -> (ctx, prov) -> {
-                            ResourceLocation model = prov.getBuilder()
-                                    .transformTemplate(template -> template.parent(prov.modLoc("block/glow_sticks"))
-                                            .renderType(prov.mcLoc("translucent")))
-                                    .texture(Models.GLOW_STICKS, prov.modLoc("block/glow_sticks/" + dyeName))
+                            Identifier model = prov.getBuilder()
+                                    .transformTemplate(template -> template.parent(prov.modLoc("block/glow_sticks")))
+                                    .texture(Models.GLOW_STICKS, new Material(prov.modLoc("block/glow_sticks/" + dyeName)))
                                     .build(ctx.get());
                             prov.blockStateOutput.accept(dispatch(ctx.get(), createRotatedVariants(plainModel(model))));
                         })
@@ -527,10 +519,7 @@ public class ExtraBlocks {
             })
             .tag(BlockTags.CLIMBABLE)
             .blockstate(() -> Models::generateInfertileVine)
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
-            .color(() -> () -> (state, reader, pos, color) -> reader != null && pos != null
-                    ? BiomeColors.getAverageFoliageColor(reader, pos)
-                    : FoliageColor.FOLIAGE_DEFAULT)
+            .color(() -> () ->  List.of(BlockTintSources.foliage()))
             .item()
             .model(() -> Models::generateInfertileVineItem)
             .build()
@@ -559,7 +548,6 @@ public class ExtraBlocks {
                 });
                 prov.blockStateOutput.accept(builder);
             })
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
             .simpleItem()
             .register();
 
@@ -576,8 +564,8 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.CRAFTING_TABLE)
             .blockstate(() -> (ctx, prov) ->
                     prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE_TOP.updateTexture(textureMapping -> {
-                        textureMapping.put(TextureSlot.SIDE, prov.modLoc("block/recycling_table_side"));
-                        textureMapping.put(TextureSlot.TOP, prov.modLoc("block/recycling_table_top"));
+                        textureMapping.put(TextureSlot.SIDE, new Material(prov.modLoc("block/recycling_table_side")));
+                        textureMapping.put(TextureSlot.TOP, new Material(prov.modLoc("block/recycling_table_top")));
                     })))
             .simpleItem()
             .lang("Recycling Table")
@@ -589,8 +577,8 @@ public class ExtraBlocks {
             .properties(p -> p.sound(SoundType.SLIME_BLOCK))
             .blockstate(() -> (ctx, prov) ->
                     prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE_TOP.updateTexture(textureMapping -> {
-                        textureMapping.put(TextureSlot.SIDE, prov.modLoc("block/lime_side"));
-                        textureMapping.put(TextureSlot.TOP, prov.modLoc("block/lime_top"));
+                        textureMapping.put(TextureSlot.SIDE, new Material(prov.modLoc("block/lime_side")));
+                        textureMapping.put(TextureSlot.TOP, new Material(prov.modLoc("block/lime_top")));
                     })))
             .lang("Block of Lime")
             .simpleItem()
@@ -607,9 +595,9 @@ public class ExtraBlocks {
     public static final BlockEntry<SlabBlock> SLICED_LIME = REGISTRATE.block("sliced_lime", SlabBlock::new)
             .initialProperties(LIME_BLOCK)
             .blockstate(() -> (ctx, prov) -> {
-                ResourceLocation side = prov.modLoc("block/lime_side");
-                ResourceLocation end = prov.modLoc("block/lime_top");
-                ResourceLocation inside = prov.modLoc("block/lime_inside");
+                Material side = new Material(prov.modLoc("block/lime_side"));
+                Material end = new Material(prov.modLoc("block/lime_top"));
+                Material inside = new Material(prov.modLoc("block/lime_inside"));
                 TextureMapping bottomTextures = new TextureMapping()
                         .put(TextureSlot.SIDE, side)
                         .put(TextureSlot.BOTTOM, end)
@@ -637,7 +625,7 @@ public class ExtraBlocks {
             .tag(BlockTags.MINEABLE_WITH_SHOVEL)
             .blockstate(() -> (ctx, prov) ->
                     prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE.updateTexture(textureMapping -> {
-                        textureMapping.put(TextureSlot.ALL, prov.mcLoc("block/dirt_path_top"));
+                        textureMapping.put(TextureSlot.ALL, new Material(prov.mcLoc("block/dirt_path_top")));
                     })))
             .simpleItem()
             .register();
@@ -667,7 +655,7 @@ public class ExtraBlocks {
             .tag(BlockTags.MINEABLE_WITH_AXE)
             .blockstate(() -> (ctx, prov) -> {
                 RotatedPillarBlock block = ctx.get();
-                ResourceLocation texture = prov.blockTexture(BLOODWOOD_LOG.get());
+                Material texture = prov.blockTexture(BLOODWOOD_LOG.get());
                 MultiVariant variant = plainVariant(ModelTemplates.CUBE_COLUMN.create(block, TextureMapping.column(texture, texture), prov.modelOutput));
                 prov.generateAxisBlock(block, variant, variant);
             })
@@ -697,7 +685,6 @@ public class ExtraBlocks {
             .block("kapok_seed", KapokSeedBlock::new)
             .initialProperties(() -> Blocks.COCOA)
             .blockstate(() -> (ctx, prov) -> prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get(), plainVariant(ctx.getId().withPrefix("block/")))))
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT_MIPPED)
             .tag(BlockTags.MINEABLE_WITH_AXE)
             .item()
             .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), ModelTemplates.FLAT_ITEM))
@@ -731,7 +718,7 @@ public class ExtraBlocks {
                     })
                     .tag(template.blockTags)
                     .item((block, p) -> new BlockItem(block, p.overrideDescription(object.value().getDescriptionId())))
-                    .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), TextureMapping.getBlockTexture(object.value(), "_inventory")))
+                    .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), TextureMapping.getBlockTexture(object.value(), "_inventory").sprite()))
                     .tag(template.itemTags)
                     .build()
                     .register()
@@ -784,7 +771,7 @@ public class ExtraBlocks {
     public static final BlockEntry<CarpetBlock> WAREHOUSE_PARKING_MARKING = REGISTRATE
             .block("warehouse_parking_marking", CarpetBlock::new)
             .properties(BlockBehaviour.Properties::noOcclusion)
-            .properties(BlockBehaviour.Properties::noCollission)
+            .properties(BlockBehaviour.Properties::noCollision)
             .properties(BlockBehaviour.Properties::noLootTable)
             .properties(BlockBehaviour.Properties::noTerrainParticles)
             .item()
@@ -795,7 +782,7 @@ public class ExtraBlocks {
     public static final BlockEntry<WarehouseRoadBoosterBlock> WAREHOUSE_ROAD_BOOSTER = REGISTRATE
             .block("warehouse_road_booster", WarehouseRoadBoosterBlock::new)
             .properties(BlockBehaviour.Properties::noOcclusion)
-            .properties(BlockBehaviour.Properties::noCollission)
+            .properties(BlockBehaviour.Properties::noCollision)
             .properties(BlockBehaviour.Properties::noLootTable)
             .properties(BlockBehaviour.Properties::noTerrainParticles)
             .blockstate(() -> Models::generateWarehouseRoadBoosterBlock)
@@ -820,7 +807,7 @@ public class ExtraBlocks {
             .add(Blocks.PACKED_MUD, SpeedyBlock::opaque)
             .add(Blocks.MUD_BRICKS, SpeedyBlock::opaque)
             .add(Blocks.ROOTED_DIRT, SpeedyBlock::opaque)
-            .add(ResourceLocation.fromNamespaceAndPath("tropicraft", "chunk"), SpeedyBlock::opaque)
+            .add(Identifier.fromNamespaceAndPath("tropicraft", "chunk"), SpeedyBlock::opaque)
             .add(FULL_PATH, SpeedyBlock::opaque);
 
     public static final Map<Holder<Block>, BlockEntry<? extends SpeedyBlock>> SPEEDY_BLOCKS = SPEEDY_BLOCK_TEMPLATES
@@ -840,7 +827,7 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.BROWN_MUSHROOM_BLOCK)
             .blockstate(() -> (ctx, prov) -> {
                 prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE.updateTexture(textureMapping -> {
-                    textureMapping.put(TextureSlot.ALL, prov.mcLoc("block/brown_mushroom_block"));
+                    textureMapping.put(TextureSlot.ALL, new Material(prov.mcLoc("block/brown_mushroom_block")));
                 }));
             })
             .simpleItem()
@@ -854,12 +841,12 @@ public class ExtraBlocks {
         return speedySlab(getId(slab.builtInRegistryHolder()), () -> slab, fullBlock);
     }
 
-    private static BlockEntry<SpeedySlabBlock> speedySlab(ResourceLocation id, NonNullSupplier<Block> slab, Block fullBlock) {
+    private static BlockEntry<SpeedySlabBlock> speedySlab(Identifier id, NonNullSupplier<Block> slab, Block fullBlock) {
         return REGISTRATE
                 .block("speedy_" + id.getPath(), SpeedySlabBlock::new)
                 .initialProperties(slab)
                 .blockstate(() -> (ctx, prov) -> {
-                    ResourceLocation donorModel = ModelLocationUtils.getModelLocation(slab.get());
+                    Identifier donorModel = ModelLocationUtils.getModelLocation(slab.get());
                     MultiVariant modelVariant = plainVariant(ModelLocationUtils.getModelLocation(fullBlock));
                     MultiVariant sideVariant = plainVariant(donorModel);
                     MultiVariant topVariant = plainVariant(donorModel.withSuffix("_top"));
@@ -876,8 +863,8 @@ public class ExtraBlocks {
     }
 
     public static final BlockEntry<SpeedyZone> SPEEDY_ZONE = REGISTRATE.block("speedy_zone", SpeedyZone::new)
-            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), prov.mcLoc("item/sugar")))
-            .properties(p -> p.noOcclusion().noCollission().strength(-1.0F, 3600000.0F))
+            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), new Material(prov.mcLoc("item/sugar"))))
+            .properties(p -> p.noOcclusion().noCollision().strength(-1.0F, 3600000.0F))
             .item()
             .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), Items.SUGAR, ModelTemplates.FLAT_ITEM))
             .build()
@@ -1080,7 +1067,7 @@ public class ExtraBlocks {
                     .item()
                     .tag(ItemTags.FENCES)
                     .model(() -> (ctx, prov) -> {
-                        ResourceLocation model = ModelTemplates.FENCE_INVENTORY.create(ctx.get(), TextureMapping.defaultTexture(Models.getMainTexture(block, textureType)), prov.modelOutput);
+                        Identifier model = ModelTemplates.FENCE_INVENTORY.create(ctx.get(), TextureMapping.defaultTexture(new Material(Models.getMainTexture(block, textureType))), prov.modelOutput);
                         prov.createWithExistingModel(ctx.get(), model);
                     })
                     .build()
@@ -1096,8 +1083,8 @@ public class ExtraBlocks {
                     .item()
                     .tag(ItemTags.WALLS)
                     .model(() -> (ctx, prov) -> {
-                        TextureMapping textures = TextureMapping.cube(Models.getMainTexture(block, textureType));
-                        ResourceLocation itemModel = ModelTemplates.WALL_INVENTORY.create(ctx.get(), textures, prov.modelOutput);
+                        TextureMapping textures = TextureMapping.cube(new Material((Models.getMainTexture(block, textureType))));
+                        Identifier itemModel = ModelTemplates.WALL_INVENTORY.create(ctx.get(), textures, prov.modelOutput);
                         prov.createWithExistingModel(ctx.get(), itemModel);
                     })
                     .build()
@@ -1106,7 +1093,7 @@ public class ExtraBlocks {
 
     private static final TemplateBuilder<DoorBlock, Models.TextureType> HEAVY_DOOR_TEMPLATES = new TemplateBuilder<DoorBlock, Models.TextureType>()
             .add(Blocks.SPRUCE_DOOR, Models.TextureType.normal())
-            .add(ResourceLocation.fromNamespaceAndPath("tropicraft", "thatch_door"), Models.TextureType.normal());
+            .add(Identifier.fromNamespaceAndPath("tropicraft", "thatch_door"), Models.TextureType.normal());
 
     public static final Map<Holder<Block>, BlockEntry<? extends DoorBlock>> HEAVY_DOORS = HEAVY_DOOR_TEMPLATES
             .build((block, textureType) -> REGISTRATE.block("heavy_" + getName(block), p -> new DoorBlock(BlockSetType.IRON, p))
@@ -1114,7 +1101,6 @@ public class ExtraBlocks {
                     .blockstate(() -> (ctx, prov) ->
                             prov.generateDoorBlock(ctx.get(), prov.blockTexture(block.value(), "_bottom"), prov.blockTexture(block.value(), "_top"))
                     )
-                    .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
                     .tag(BlockTags.MINEABLE_WITH_AXE)
                     .item()
                     .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), block.value().asItem(), ModelTemplates.FLAT_ITEM))
@@ -1139,7 +1125,6 @@ public class ExtraBlocks {
             .blockstate(() -> (ctx, prov) ->
                     prov.createTrivialBlock(ctx.get(), TexturedModel.CORAL_FAN)
             )
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
             .item()
             .model(() -> (ctx, prov) -> prov.generateFlatBlockItem(ctx.get()))
             .build()
@@ -1155,7 +1140,6 @@ public class ExtraBlocks {
         return REGISTRATE.block(blockName, p -> new CustomSeagrassBlock(p, RegistrateLangProvider.toEnglishName(blockName), tall))
                 .lang("Seagrass")
                 .initialProperties(() -> Blocks.SEAGRASS)
-                .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
                 .blockstate(() -> (ctx, prov) ->
                         prov.createTrivialBlock(ctx.get(), TexturedModel.SEAGRASS)
                 )
@@ -1202,10 +1186,9 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.SUGAR_CANE)
             .properties(p -> p.sound(SoundType.WOOD))
             .blockstate(() -> Models::generatePapyrusStem)
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
             .item()
             .model(() -> (ctx, prov) ->
-                    prov.generateFlatItem(ctx.get(), prov.modLoc("block/papyrus/plain_papyrus_stem")))
+                    prov.generateFlatItem(ctx.get(), prov.modBlockTexture("papyrus/plain_papyrus_stem")))
             .build()
             .register();
 
@@ -1215,15 +1198,14 @@ public class ExtraBlocks {
             .blockstate(() -> ImposterBlockTemplate.Model::generatePapyrusUmbel)
             .item()
             .model(() -> (ctx, prov) ->
-                    prov.generateFlatItem(ctx.get(), prov.modLoc("block/papyrus/plain_papyrus_umbel")))
+                    prov.generateFlatItem(ctx.get(), prov.modBlockTexture("papyrus/plain_papyrus_umbel")))
             .build()
             .register();
 
     public static final BlockEntry<SubmergedLilyBlock> SUBMERGED_LILY_PAD = REGISTRATE.block("submerged_lily_pad", SubmergedLilyBlock::new)
             .lang("Submerged Lily Pad")
             .initialProperties(() -> Blocks.LILY_PAD)
-            .color(() -> () -> (state, level, pos, index) -> level != null && pos != null ? 2129968 : 7455580)
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
+            .color(() -> () -> List.of(BlockTintSources.foliage()))
             .blockstate(() -> Models::generateLilyPad)
             .item((submergedLilyBlock, properties) -> new BlockItem(submergedLilyBlock, properties) {
                 @Override
@@ -1257,17 +1239,15 @@ public class ExtraBlocks {
                                             .allFaces((direction, faceBuilder) -> faceBuilder.texture(TextureSlot.TOP)
                                                     .uvs(0, 0, 16, 16).cullface(direction).tintindex(0)));
                         })
-                        .texture(TextureSlot.DOWN, prov.mcLoc("block/grass_block_top"))
-                        .texture(TextureSlot.UP, prov.mcLoc("block/grass_block_top"))
-                        .texture(TextureSlot.NORTH, prov.mcLoc("block/grass_block_top"))
-                        .texture(TextureSlot.SOUTH, prov.mcLoc("block/grass_block_top"))
-                        .texture(TextureSlot.EAST, prov.mcLoc("block/grass_block_top"))
-                        .texture(TextureSlot.WEST, prov.mcLoc("block/grass_block_top"))
+                        .texture(TextureSlot.DOWN, prov.mcBlockTexture("grass_block_top"))
+                        .texture(TextureSlot.UP, prov.mcBlockTexture("grass_block_top"))
+                        .texture(TextureSlot.NORTH, prov.mcBlockTexture("grass_block_top"))
+                        .texture(TextureSlot.SOUTH, prov.mcBlockTexture("grass_block_top"))
+                        .texture(TextureSlot.EAST, prov.mcBlockTexture("grass_block_top"))
+                        .texture(TextureSlot.WEST, prov.mcBlockTexture("grass_block_top"))
                         .build(ctx.get()));
             })
-            .color(() -> () -> (state, reader, pos, color) -> reader != null && pos != null
-                    ? BiomeColors.getAverageGrassColor(reader, pos)
-                    : FoliageColor.FOLIAGE_DEFAULT)
+            .color(() -> () -> List.of(BlockTintSources.grassBlock()))
             .item()
             .model(() -> Models::generateGrassGrassItem)
             .build()
@@ -1279,10 +1259,9 @@ public class ExtraBlocks {
             .tag(ExtraTags.Blocks.CREATE_MOVABLE_EMPTY_COLLIDER)
             .properties(p -> p.sound(SoundType.WOOL))
             .blockstate(() -> (ctx, prov) -> {
-                ResourceLocation texture = prov.blockTexture(ctx.get());
+                Material texture = prov.blockTexture(ctx.get());
                 prov.generatePaneBlock(ctx.get(), texture, texture);
             })
-            .addLayer(() -> () -> ChunkSectionLayer.SOLID)
             .item()
             .model(() -> (ctx, prov) -> prov.generateFlatBlockItem(ctx.get()))
             .build()
@@ -1292,17 +1271,17 @@ public class ExtraBlocks {
             .lang("Jump Pad")
             .initialProperties(() -> Blocks.STONE_SLAB)
             .blockstate(() -> (ctx, prov) -> {
-                ResourceLocation modelBottom = createJumpPadModel(ctx, prov, false);
-                ResourceLocation modelTop = createJumpPadModel(ctx, prov, true);
-                ResourceLocation verticalModelBottom = prov.getBuilder().transformTemplate(template -> template.parent(modelBottom))
-                        .texture(TextureSlot.TOP, prov.modLoc("block/jump_pad_top_vertical"))
+                Identifier modelBottom = createJumpPadModel(ctx, prov, false);
+                Identifier modelTop = createJumpPadModel(ctx, prov, true);
+                Identifier verticalModelBottom = prov.getBuilder().transformTemplate(template -> template.parent(modelBottom))
+                        .texture(TextureSlot.TOP, prov.modBlockTexture("jump_pad_top_vertical"))
                         .build(prov.modLoc("block/" + ctx.getName() + "_vertical"));
-                ResourceLocation verticalModelTop = prov.getBuilder().transformTemplate(template -> template.parent(modelTop))
-                        .texture(TextureSlot.TOP, prov.modLoc("block/jump_pad_top_vertical"))
+                Identifier verticalModelTop = prov.getBuilder().transformTemplate(template -> template.parent(modelTop))
+                        .texture(TextureSlot.TOP, prov.modBlockTexture("jump_pad_top_vertical"))
                         .build(prov.modLoc("block/" + ctx.getName() + "_top_vertical"));
                 prov.blockStateOutput.accept(dispatch(ctx.get())
                         .with(PropertyDispatch.initial(JumpPadBlock.FACING, JumpPadBlock.HALF).generate((direction, half) -> {
-                            ResourceLocation selectedModel;
+                            Identifier selectedModel;
                             if (half == Half.TOP) {
                                 selectedModel = direction == Direction.UP ? verticalModelTop : modelTop;
                             } else {
@@ -1325,11 +1304,11 @@ public class ExtraBlocks {
             .lang("Teleport Pad")
             .initialProperties(() -> Blocks.STONE_SLAB)
             .blockstate(() -> (ctx, prov) -> {
-                ResourceLocation modelBottom = createTeleportPadModel(ctx, prov, false);
-                ResourceLocation modelTop = createTeleportPadModel(ctx, prov, true);
+                Identifier modelBottom = createTeleportPadModel(ctx, prov, false);
+                Identifier modelTop = createTeleportPadModel(ctx, prov, true);
                 prov.blockStateOutput.accept(dispatch(ctx.get())
                         .with(PropertyDispatch.initial(TeleportPadBlock.HALF).generate(half -> {
-                            ResourceLocation selectedModel = half == Half.TOP ? modelTop : modelBottom;
+                            Identifier selectedModel = half == Half.TOP ? modelTop : modelBottom;
                             return plainVariant(selectedModel);
                         })));
             })
@@ -1338,25 +1317,25 @@ public class ExtraBlocks {
             .simpleItem()
             .register();
 
-    private static ResourceLocation createJumpPadModel(DataGenContext<Block, JumpPadBlock> ctx, RegistrateBlockModelGenerator prov, boolean top) {
+    private static Identifier createJumpPadModel(DataGenContext<Block, JumpPadBlock> ctx, RegistrateBlockModelGenerator prov, boolean top) {
         return prov.getBuilder()
                 .transformTemplate(template -> {
                     template.parent(prov.mcLoc(top ? "block/slab_top" : "block/slab"));
                 })
-                .texture(TextureSlot.BOTTOM, prov.modLoc("block/jump_pad_bottom"))
-                .texture(TextureSlot.SIDE, prov.modLoc("block/jump_pad_side"))
-                .texture(TextureSlot.TOP, prov.modLoc("block/jump_pad_top"))
-                .texture(TextureSlot.PARTICLE, prov.modLoc("block/jump_pad_side"))
+                .texture(TextureSlot.BOTTOM, prov.modBlockTexture("jump_pad_bottom"))
+                .texture(TextureSlot.SIDE, prov.modBlockTexture("jump_pad_side"))
+                .texture(TextureSlot.TOP, prov.modBlockTexture("jump_pad_top"))
+                .texture(TextureSlot.PARTICLE, prov.modBlockTexture("jump_pad_side"))
                 .build(prov.modLoc("block/" + (top ? ctx.getName() + "_top" : ctx.getName())));
     }
 
-    private static ResourceLocation createTeleportPadModel(DataGenContext<Block, TeleportPadBlock> ctx, RegistrateBlockModelGenerator prov, boolean top) {
+    private static Identifier createTeleportPadModel(DataGenContext<Block, TeleportPadBlock> ctx, RegistrateBlockModelGenerator prov, boolean top) {
         return prov.getBuilder()
                 .transformTemplate(template -> template.parent(prov.mcLoc(top ? "block/slab_top" : "block/slab")))
-                .texture(TextureSlot.BOTTOM, prov.modLoc("block/teleport_pad_bottom"))
-                .texture(TextureSlot.SIDE, prov.modLoc("block/teleport_pad_side"))
-                .texture(TextureSlot.TOP, prov.modLoc("block/teleport_pad_top"))
-                .texture(TextureSlot.PARTICLE, prov.modLoc("block/teleport_pad_side"))
+                .texture(TextureSlot.BOTTOM, prov.modBlockTexture("teleport_pad_bottom"))
+                .texture(TextureSlot.SIDE, prov.modBlockTexture("teleport_pad_side"))
+                .texture(TextureSlot.TOP, prov.modBlockTexture("teleport_pad_top"))
+                .texture(TextureSlot.PARTICLE, prov.modBlockTexture("teleport_pad_side"))
                 .build(prov.modLoc("block/" + (top ? ctx.getName() + "_top" : ctx.getName())));
     }
 
@@ -1397,7 +1376,7 @@ public class ExtraBlocks {
                 .initialProperties(() -> Blocks.OAK_SLAB)
                 .properties(p -> p.sound(SoundType.WOOL))
                 .blockstate(() -> (ctx, prov) -> Models.generateSeat(ctx, prov, color))
-                .color(() -> () -> (state, level, pos, index) -> dyeColor.getTextColor())
+                .color(() -> () -> List.of(BlockTintSources.constant(dyeColor.getTextColor())))
                 .simpleItem()
                 .register();
     }
@@ -1408,7 +1387,7 @@ public class ExtraBlocks {
                 .initialProperties(() -> Blocks.SAND)
                 .lang("Seagrass Block")
                 .blockstate(() -> (ctx, prov) ->
-                        prov.generateWithTemplate(ctx.get(), ModelTemplates.CUBE_ALL, TextureMapping.cube(prov.modLoc("block/matted_" + name + "_top")))
+                        prov.generateWithTemplate(ctx.get(), ModelTemplates.CUBE_ALL, TextureMapping.cube(prov.modBlockTexture("matted_" + name + "_top")))
                 )
                 .simpleItem()
                 .register();
@@ -1420,7 +1399,7 @@ public class ExtraBlocks {
                 .initialProperties(() -> Blocks.SAND)
                 .lang("Matted Seagrass Block")
                 .blockstate(() -> (ctx, prov) ->
-                        prov.generateWithTemplate(ctx.get(), ModelTemplates.CUBE_BOTTOM_TOP, TextureMapping.cubeBottomTop(ctx.get()).put(TextureSlot.BOTTOM, prov.modLoc("block/purified_sand")))
+                        prov.generateWithTemplate(ctx.get(), ModelTemplates.CUBE_BOTTOM_TOP, TextureMapping.cubeBottomTop(ctx.get()).put(TextureSlot.BOTTOM, prov.modBlockTexture("purified_sand")))
                 )
                 .simpleItem()
                 .register();
@@ -1431,7 +1410,6 @@ public class ExtraBlocks {
                 .initialProperties(drop)
                 .loot((p, b) -> p.dropOther(b, drop.get()))
                 .lang("Tall Seagrass")
-                .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
                 .blockstate(() -> Models::generateTallSeagrass);
     }
 
@@ -1490,7 +1468,6 @@ public class ExtraBlocks {
     public static final BlockEntry<HoneyBlossomBlock> HONEY_BLOSSOM = REGISTRATE.block("honey_blossom", HoneyBlossomBlock::new)
             .initialProperties(() -> Blocks.SPORE_BLOSSOM)
             .blockstate(() -> (ctx, prov) -> prov.create(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get())))
-            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
             .lang("Honey Blossom")
             .item()
             .build()
@@ -1503,7 +1480,7 @@ public class ExtraBlocks {
                     lootTable().withPool(lootTables.applyExplosionCondition(block, LootPool.lootPool()
                             .setRolls(exactly(1))
                             .add(lootTableItem(block).apply(
-                                    copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+                                    CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY)
                                             .include(DataComponents.CUSTOM_NAME))
                             )
                     ))
@@ -1530,8 +1507,8 @@ public class ExtraBlocks {
             .register();
 
     private static final TemplateBuilder<TransparentLeavesBlock, BlockFactory<TransparentLeavesBlock>> TRANSPARENT_LEAVES_TEMPLATES = new TemplateBuilder<TransparentLeavesBlock, BlockFactory<TransparentLeavesBlock>>()
-            .add(ResourceLocation.fromNamespaceAndPath("tropicraft", "kapok_leaves"), TransparentLeavesBlock::tropicsLeaves)
-            .add(ResourceLocation.fromNamespaceAndPath("tropicraft", "palm_leaves"), TransparentLeavesBlock::tropicsLeaves);
+            .add(Identifier.fromNamespaceAndPath("tropicraft", "kapok_leaves"), TransparentLeavesBlock::tropicsLeaves)
+            .add(Identifier.fromNamespaceAndPath("tropicraft", "palm_leaves"), TransparentLeavesBlock::tropicsLeaves);
 
     public static final Map<Holder<Block>, BlockEntry<? extends TransparentLeavesBlock>> TRANSPARENT_LEAVES = TRANSPARENT_LEAVES_TEMPLATES
             .build((object, factory) -> REGISTRATE
@@ -1541,7 +1518,6 @@ public class ExtraBlocks {
                         MultiVariant model = plainVariant(ModelLocationUtils.getModelLocation(object.value()));
                         prov.blockStateOutput.accept(createSimpleBlock(ctx.get(), model));
                     })
-                    .addLayer(() -> () -> ChunkSectionLayer.CUTOUT_MIPPED)
                     .simpleItem()
                     .register()
             );
@@ -1553,8 +1529,8 @@ public class ExtraBlocks {
         return getId(holder).getPath();
     }
 
-    private static ResourceLocation getId(Holder<?> holder) {
-        return holder.unwrapKey().orElseThrow().location();
+    private static Identifier getId(Holder<?> holder) {
+        return holder.unwrapKey().orElseThrow().identifier();
     }
 
     public static final class TemplateBuilder<T extends Block, P> {
@@ -1571,12 +1547,12 @@ public class ExtraBlocks {
             return this;
         }
 
-        public TemplateBuilder<T, P> add(ResourceLocation id, P parameter) {
+        public TemplateBuilder<T, P> add(Identifier id, P parameter) {
             return add(DeferredHolder.create(Registries.BLOCK, id), parameter);
         }
 
         public TemplateBuilder<T, P> add(Holder<Block> block, P parameter) {
-            String namespace = block.unwrapKey().orElseThrow().location().getNamespace();
+            String namespace = block.unwrapKey().orElseThrow().identifier().getNamespace();
             if (ModList.get().isLoaded(namespace)) {
                 templates.put(block, parameter);
             } else {
@@ -1618,7 +1594,7 @@ public class ExtraBlocks {
                 ModelLocationUtils.decorateBlockModelLocation("ltextras:papyrus_stem")
         ), Optional.empty(), TextureSlot.ALL);
 
-        private static ResourceLocation createSuffixedVariant(Block block, String suffix, ModelTemplate modelTemplate, Function<ResourceLocation, TextureMapping> textureMappingGetter, BiConsumer<ResourceLocation, ModelInstance> modelOutput) {
+        private static Identifier createSuffixedVariant(Block block, String suffix, ModelTemplate modelTemplate, Function<Material, TextureMapping> textureMappingGetter, BiConsumer<Identifier, ModelInstance> modelOutput) {
             return modelTemplate.createWithSuffix(block, suffix, textureMappingGetter.apply(TextureMapping.getBlockTexture(block, suffix)), modelOutput);
         }
 
@@ -1628,8 +1604,8 @@ public class ExtraBlocks {
 
         private static void generateReeds(DataGenContext<Block, ReedsBlock> ctx, RegistrateBlockModelGenerator prov) {
             Function<String, Variant> models = Util.memoize(texture -> {
-                ResourceLocation location = prov.modLoc("block/" + texture);
-                return plainModel(ModelTemplates.CROP.create(location, TextureMapping.singleSlot(TextureSlot.CROP, location), prov.modelOutput));
+                Material location = prov.modBlockTexture(texture);
+                return plainModel(ModelTemplates.CROP.create(location.sprite(), TextureMapping.singleSlot(TextureSlot.CROP, location), prov.modelOutput));
             });
             prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get()).with(PropertyDispatch.initial(ReedsBlock.TYPE)
                     .generate(type -> variants(Arrays.stream(type.getTextures()).map(models).toArray(Variant[]::new)))
@@ -1639,23 +1615,23 @@ public class ExtraBlocks {
         private static void generateSugarCane(DataGenContext<Block, CustomSugarCaneBlock> ctx, RegistrateBlockModelGenerator prov) {
             prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get()).with(PropertyDispatch.initial(CustomSugarCaneBlock.TYPE)
                     .generate(type -> {
-                        ResourceLocation location = prov.modLoc("block/" + ctx.getName() + "_" + type.getSerializedName());
-                        return plainVariant(ModelTemplates.CROP.create(location, TextureMapping.singleSlot(TextureSlot.CROP, location), prov.modelOutput));
+                        Material location = prov.modBlockTexture( ctx.getName() + "_" + type.getSerializedName());
+                        return plainVariant(ModelTemplates.CROP.create(location.sprite(), TextureMapping.singleSlot(TextureSlot.CROP, location), prov.modelOutput));
                     })
             ));
         }
 
         private static void generateSeat(DataGenContext<Block, SeatBlock> ctx, RegistrateBlockModelGenerator prov, String color) {
             TextureMapping textures = new TextureMapping()
-                    .put(TextureSlot.SIDE, prov.modLoc("block/seat/side_" + color))
-                    .put(TextureSlot.TOP, prov.modLoc("block/seat/top_" + color))
-                    .put(TextureSlot.BOTTOM, prov.mcLoc("block/oak_planks"));
-            ResourceLocation model = ModelTemplates.SLAB_BOTTOM.create(ctx.get(), textures, prov.modelOutput);
+                    .put(TextureSlot.SIDE, prov.modBlockTexture("seat/side_" + color))
+                    .put(TextureSlot.TOP, prov.modBlockTexture("seat/top_" + color))
+                    .put(TextureSlot.BOTTOM, prov.mcBlockTexture("oak_planks"));
+            Identifier model = ModelTemplates.SLAB_BOTTOM.create(ctx.get(), textures, prov.modelOutput);
             prov.blockStateOutput.accept(dispatch(ctx.get(), createRotatedVariants(plainModel(model))));
         }
 
         public static void generateSteelGirder(DataGenContext<Block, GirderBlock> ctx, RegistrateBlockModelGenerator prov) {
-            ResourceLocation girderModel = GIRDER.create(ctx.get(), TextureMapping.defaultTexture(prov.modLoc("block/" + ctx.getName())), prov.modelOutput);
+            Identifier girderModel = GIRDER.create(ctx.get(), TextureMapping.defaultTexture(prov.modBlockTexture(ctx.getName())), prov.modelOutput);
 
             MultiVariant variant = plainVariant(girderModel)
                     .with(UV_LOCK);
@@ -1686,10 +1662,10 @@ public class ExtraBlocks {
         public static MultiVariant scaffoldingModel(DataGenContext<Block, ScaffoldingBlock> ctx, RegistrateBlockModelGenerator prov, ModelTemplate modelTemplate) {
             return plainVariant(modelTemplate.create(ctx.get(),
                     new TextureMapping()
-                            .put(TextureSlot.BOTTOM, prov.modLoc("block/metal_scaffolding_bottom"))
-                            .put(TextureSlot.SIDE, prov.modLoc("block/metal_scaffolding_side"))
-                            .put(TextureSlot.TOP, prov.modLoc("block/metal_scaffolding_top"))
-                            .put(TextureSlot.PARTICLE, prov.modLoc("block/metal_scaffolding_top")), prov.modelOutput));
+                            .put(TextureSlot.BOTTOM, prov.modBlockTexture("metal_scaffolding_bottom"))
+                            .put(TextureSlot.SIDE, prov.modBlockTexture("metal_scaffolding_side"))
+                            .put(TextureSlot.TOP, prov.modBlockTexture("metal_scaffolding_top"))
+                            .put(TextureSlot.PARTICLE, prov.modBlockTexture("metal_scaffolding_top")), prov.modelOutput));
         }
 
         public static void barsBlock(DataGenContext<Block, IronBarsBlock> ctx, RegistrateBlockModelGenerator prov) {
@@ -1750,7 +1726,7 @@ public class ExtraBlocks {
         }
 
         private static MultiVariant barsModel(RegistrateBlockModelGenerator prov, DataGenContext<Block, ?> ctx, ModelTemplate modelTemplate) {
-            ResourceLocation tex = ModelLocationUtils.getModelLocation(ctx.get());
+            Material tex = new Material(ModelLocationUtils.getModelLocation(ctx.get()));
             return plainVariant(modelTemplate.create(ctx.get(),
                     new TextureMapping()
                             .put(BARS, tex)
@@ -1758,37 +1734,37 @@ public class ExtraBlocks {
                             .put(TextureSlot.PARTICLE, tex), prov.modelOutput));
         }
 
-        public static ResourceLocation getMainTexture(Holder<Block> block, TextureType texture) {
+        public static Identifier getMainTexture(Holder<Block> block, TextureType texture) {
             return texture.getSideTexture(block);
         }
 
         public static <T extends StairBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockModelGenerator> stairsBlock(Holder<Block> object, TextureType textureType) {
             return (ctx, prov) -> {
-                ResourceLocation side = textureType.getSideTexture(object);
-                ResourceLocation top = textureType.getTopTexture(object);
-                prov.generateStairsBlock(ctx.get(), side, top, top);
+                Identifier side = textureType.getSideTexture(object);
+                Identifier top = textureType.getTopTexture(object);
+                prov.generateStairsBlock(ctx.get(), new Material(side), new Material(top), new Material(top));
             };
         }
 
         public static <T extends SlabBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockModelGenerator> slabBlock(Holder<Block> object, TextureType textureType) {
             return (ctx, prov) -> {
-                ResourceLocation model = textureType.getModel(object);
-                ResourceLocation side = textureType.getSideTexture(object);
-                ResourceLocation top = textureType.getTopTexture(object);
-                prov.generateSlabBlock(ctx.get(), plainVariant(model), side, top, top);
+                Identifier model = textureType.getModel(object);
+                Identifier side = textureType.getSideTexture(object);
+                Identifier top = textureType.getTopTexture(object);
+                prov.generateSlabBlock(ctx.get(), plainVariant(model), new Material(side), new Material(top), new Material(top));
             };
         }
 
         public static <T extends FenceBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockModelGenerator> fenceBlock(Holder<Block> object, TextureType textureType) {
             return (ctx, prov) -> {
-                ResourceLocation topTexture = textureType.getTopTexture(object);
-                prov.generateFenceBlock(ctx.get(), topTexture);
+                Identifier topTexture = textureType.getTopTexture(object);
+                prov.generateFenceBlock(ctx.get(), new Material(topTexture));
             };
         }
 
         public static <T extends WallBlock> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockModelGenerator> wallBlock(Holder<Block> object, TextureType textureType) {
             return (ctx, prov) -> {
-                ResourceLocation sideTexture = textureType.getSideTexture(object);
+                Material sideTexture = new Material(textureType.getSideTexture(object));
                 prov.generateWallBlock(ctx.get(), sideTexture);
             };
         }
@@ -1821,7 +1797,7 @@ public class ExtraBlocks {
         }
 
         private static void generateSubmergedLilyPadItem(DataGenContext<Item, ? extends Item> ctx, RegistrateItemModelGenerator prov) {
-            ResourceLocation model = ModelTemplates.FLAT_ITEM.create(ctx.get(), TextureMapping.layer0(ResourceLocation.withDefaultNamespace("block/lily_pad")), prov.modelOutput);
+            Identifier model = ModelTemplates.FLAT_ITEM.create(ctx.get(), TextureMapping.layer0(prov.mcBlockTexture("lily_pad")), prov.modelOutput);
             prov.generateTintedModel(ctx.get(), model, new Constant(0x71c35c));
         }
 
@@ -1831,12 +1807,12 @@ public class ExtraBlocks {
         }
 
         private static void generateWaterBarrierItem(DataGenContext<Item, BlockItem> ctx, RegistrateItemModelGenerator prov) {
-            ResourceLocation model = prov.generateLayeredItem(ctx.get(), ResourceLocation.withDefaultNamespace("block/water_still"), ResourceLocation.withDefaultNamespace("item/barrier"));
+            Identifier model = prov.generateLayeredItem(ctx.get(), prov.mcBlockTexture("water_still"), prov.mcItemTexture(("barrier")));
             prov.generateTintedModel(ctx.get(), model, new Constant(0x3f76e4));
         }
 
         private static void generateFakeWaterItem(DataGenContext<Item, BlockItem> ctx, RegistrateItemModelGenerator prov) {
-            ResourceLocation model = ModelTemplates.FLAT_ITEM.create(ctx.get(), TextureMapping.layer0(ResourceLocation.withDefaultNamespace("block/water_still")), prov.modelOutput);
+            Identifier model = ModelTemplates.FLAT_ITEM.create(ctx.get(), TextureMapping.layer0(prov.mcBlockTexture("water_still")), prov.modelOutput);
             prov.generateTintedModel(ctx.get(), model, new Constant(0x3f76e4));
         }
 
@@ -1846,11 +1822,10 @@ public class ExtraBlocks {
                             .generate(type -> {
                                 final String typeName = type.getSerializedName();
                                 final String modelName = typeName + "_" + ctx.getName();
-                                final ResourceLocation texture = prov.modLoc("block/papyrus/" + modelName);
-                                ResourceLocation model = prov.getBuilder()
+                                final Material texture = prov.modBlockTexture("papyrus/" + modelName);
+                                Identifier model = prov.getBuilder()
                                         .transformTemplate(template -> {
                                             template.parent(prov.modLoc("block/papyrus_stem"));
-                                            template.renderType(prov.mcLoc("cutout"));
                                         }).texture(TextureSlot.ALL, texture).build(prov.modLoc("block/" + modelName));
                                 return plainVariant(model);
                             })));
@@ -1870,7 +1845,7 @@ public class ExtraBlocks {
         }
 
         private static void generateCeilingCarpet(Holder<Block> object, DataGenContext<Block, CeilingCarpetBlock> ctx, RegistrateBlockModelGenerator prov) {
-            ResourceLocation model = prov.getBuilder()
+            Identifier model = prov.getBuilder()
                     .transformTemplate(template -> template.parent(prov.mcLoc("block/thin_block"))
                             .element(elementBuilder -> {
                                 elementBuilder.from(0, 16, 0)
@@ -1882,13 +1857,13 @@ public class ExtraBlocks {
                                         .face(Direction.WEST, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 15, 16, 16).cullface(Direction.WEST).tintindex(0))
                                         .face(Direction.EAST, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 15, 16, 16).cullface(Direction.EAST).tintindex(0));
                             }))
-                    .texture(TextureSlot.PARTICLE, ModelLocationUtils.getModelLocation(object.value()))
+                    .texture(TextureSlot.PARTICLE, new Material(ModelLocationUtils.getModelLocation(object.value())))
                     .build(ctx.get());
             prov.create(ctx.get(), model);
         }
 
         private static void generateWaterLoggableCarpet(Holder<Block> object, DataGenContext<Block, WaterLoggableCarpet> ctx, RegistrateBlockModelGenerator prov) {
-            ResourceLocation model = prov.getBuilder()
+            Identifier model = prov.getBuilder()
                     .transformTemplate(template -> template.parent(prov.mcLoc("block/thin_block"))
                             .element(elementBuilder -> {
                                 elementBuilder.from(0, 0, 0)
@@ -1900,7 +1875,7 @@ public class ExtraBlocks {
                                         .face(Direction.WEST, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 15, 16, 16).cullface(Direction.WEST).tintindex(0))
                                         .face(Direction.EAST, (faceBuilder) -> faceBuilder.texture(TextureSlot.PARTICLE).uvs(0, 15, 16, 16).cullface(Direction.EAST).tintindex(0));
                             }))
-                    .texture(TextureSlot.PARTICLE, ModelLocationUtils.getModelLocation(object.value()))
+                    .texture(TextureSlot.PARTICLE, new Material(ModelLocationUtils.getModelLocation(object.value())))
                     .build(ctx.get());
             prov.create(ctx.get(), model);
         }
@@ -1915,14 +1890,14 @@ public class ExtraBlocks {
         }
 
         private static void generateLadder(DataGenContext<Block, LadderBlock> ctx, RegistrateBlockModelGenerator prov, String texture) {
-            TextureMapping textures = TextureMapping.defaultTexture(prov.modLoc("block/" + texture))
+            TextureMapping textures = TextureMapping.defaultTexture(prov.modBlockTexture(texture))
                     .copySlot(TextureSlot.TEXTURE, TextureSlot.PARTICLE);
             MultiVariant model = plainVariant(LADDER.create(ctx.get(), textures, prov.modelOutput));
             prov.blockStateOutput.accept(dispatch(ctx.get(), model).with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING));
         }
 
         private static void generateInfertileVineItem(DataGenContext<Item, BlockItem> ctx, RegistrateItemModelGenerator prov) {
-            ResourceLocation model = prov.generateLayeredItem(ctx.get(), ResourceLocation.withDefaultNamespace("block/vine"), ResourceLocation.withDefaultNamespace("item/barrier"));
+            Identifier model = prov.generateLayeredItem(ctx.get(), prov.mcBlockTexture("vine"), prov.mcItemTexture("barrier"));
             prov.generateTintedModel(ctx.get(), model, new Constant(FoliageColor.FOLIAGE_DEFAULT));
         }
 
@@ -1961,7 +1936,7 @@ public class ExtraBlocks {
         }
 
         private static void generateWordBoxItem(DataGenContext<Item, BlockItem> ctx, RegistrateItemModelGenerator prov) {
-            ResourceLocation blockModel = ModelLocationUtils.getModelLocation(ctx.get().getBlock());
+            Identifier blockModel = ModelLocationUtils.getModelLocation(ctx.get().getBlock());
             prov.itemModelOutput.accept(ctx.get(), ItemModelUtils.composite(
                     ItemModelUtils.plainModel(blockModel),
                     ItemModelUtils.specialModel(blockModel, new WordBoxSpecialRenderer.Unbaked())
@@ -1970,67 +1945,67 @@ public class ExtraBlocks {
 
         public interface TextureType {
             static TextureType normal() {
-                return TextureType.allTexture(block -> TextureMapping.getBlockTexture(block.value()));
+                return TextureType.allTexture(block -> TextureMapping.getBlockTexture(block.value()).sprite());
             }
 
             static TextureType allWithSuffix(Block donor, String suffix) {
                 return TextureType.allTexture(ignored -> {
                     Holder<Block> block = donor.builtInRegistryHolder();
-                    return TextureMapping.getBlockTexture(block.value(), "_" + suffix);
+                    return TextureMapping.getBlockTexture(block.value(), "_" + suffix).sprite();
                 });
             }
 
             static TextureType sideTopSuffix() {
                 return new TextureType() {
                     @Override
-                    public ResourceLocation getModel(Holder<Block> block) {
-                        return TextureMapping.getBlockTexture(block.value());
+                    public Identifier getModel(Holder<Block> block) {
+                        return TextureMapping.getBlockTexture(block.value()).sprite();
                     }
 
                     @Override
-                    public ResourceLocation getSideTexture(Holder<Block> block) {
-                        return TextureMapping.getBlockTexture(block.value(), "_side");
+                    public Identifier getSideTexture(Holder<Block> block) {
+                        return TextureMapping.getBlockTexture(block.value(), "_side").sprite();
                     }
 
                     @Override
-                    public ResourceLocation getTopTexture(Holder<Block> block) {
-                        return TextureMapping.getBlockTexture(block.value(), "_top");
+                    public Identifier getTopTexture(Holder<Block> block) {
+                        return TextureMapping.getBlockTexture(block.value(), "_top").sprite();
                     }
                 };
             }
 
-            static TextureType allTexture(ResourceLocation texture) {
+            static TextureType allTexture(Identifier texture) {
                 return allTexture(b -> texture);
             }
 
-            static TextureType allTexture(Function<Holder<Block>, ResourceLocation> texture) {
-                return simple(block -> TextureMapping.getBlockTexture(block.value()), texture);
+            static TextureType allTexture(Function<Holder<Block>, Identifier> texture) {
+                return simple(block -> TextureMapping.getBlockTexture(block.value()).sprite(), texture);
             }
 
-            static TextureType simple(Function<Holder<Block>, ResourceLocation> model, Function<Holder<Block>, ResourceLocation> texture) {
+            static TextureType simple(Function<Holder<Block>, Identifier> model, Function<Holder<Block>, Identifier> texture) {
                 return new TextureType() {
                     @Override
-                    public ResourceLocation getModel(Holder<Block> block) {
+                    public Identifier getModel(Holder<Block> block) {
                         return model.apply(block);
                     }
 
                     @Override
-                    public ResourceLocation getSideTexture(Holder<Block> block) {
+                    public Identifier getSideTexture(Holder<Block> block) {
                         return texture.apply(block);
                     }
 
                     @Override
-                    public ResourceLocation getTopTexture(Holder<Block> block) {
+                    public Identifier getTopTexture(Holder<Block> block) {
                         return texture.apply(block);
                     }
                 };
             }
 
-            ResourceLocation getModel(Holder<Block> block);
+            Identifier getModel(Holder<Block> block);
 
-            ResourceLocation getSideTexture(Holder<Block> block);
+            Identifier getSideTexture(Holder<Block> block);
 
-            ResourceLocation getTopTexture(Holder<Block> block);
+            Identifier getTopTexture(Holder<Block> block);
         }
     }
 }

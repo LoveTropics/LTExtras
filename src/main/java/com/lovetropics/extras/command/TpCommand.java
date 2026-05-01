@@ -19,7 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -146,7 +146,7 @@ public class TpCommand {
 
         spamCheck(requestingPlayer.getUUID());
 
-        Style style = Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent.RunCommand("/tpaccept " + requestingPlayer.getGameProfile().getName()));
+        Style style = Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent.RunCommand("/tpaccept " + requestingPlayer.getGameProfile().name()));
         MutableComponent hereComponent = Component.translatable("commands.tpa.here").withStyle(style);
         MutableComponent translatable = Component.translatable("commands.tpa.request", requestingPlayer.getName(), hereComponent, requestingPlayer.getName());
         targetPlayer.sendSystemMessage(translatable);
@@ -172,13 +172,13 @@ public class TpCommand {
             throw NOT_ALLOWED_HERE.create();
         }
 
-        ServerLevel level = player.getServer().getLevel(globalPos.dimension());
+        ServerLevel level = player.level().getServer().getLevel(globalPos.dimension());
         player.teleportTo(level, globalPos.pos().getX(), globalPos.pos().getY(), globalPos.pos().getZ(), Set.of(), player.getYRot(), player.getXRot(), true);
     }
 
     private static Predicate<ResourceKey<Level>> dimensionPredicate() {
         String string = ExtrasConfig.COMMANDS.tpaDimension.get();
-        ResourceLocation id = ResourceLocation.tryParse(string);
+        Identifier id = Identifier.tryParse(string);
         if (string.isBlank() || id == null) {
             return level -> true;
         }

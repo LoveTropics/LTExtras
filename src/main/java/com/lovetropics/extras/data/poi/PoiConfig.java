@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
@@ -51,12 +51,12 @@ public record PoiConfig(
         }
     }
 
-    public record TextureIcon(ResourceLocation texture) implements Icon {
+    public record TextureIcon(Identifier texture) implements Icon {
         public static final Codec<TextureIcon> CODEC = RecordCodecBuilder.create(i -> i.group(
-                ResourceLocation.CODEC.fieldOf("texture").forGetter(TextureIcon::texture)
+                Identifier.CODEC.fieldOf("texture").forGetter(TextureIcon::texture)
         ).apply(i, TextureIcon::new));
         public static final StreamCodec<ByteBuf, TextureIcon> STREAM_CODEC = StreamCodec.composite(
-                ResourceLocation.STREAM_CODEC, TextureIcon::texture,
+                Identifier.STREAM_CODEC, TextureIcon::texture,
                 TextureIcon::new
         );
     }

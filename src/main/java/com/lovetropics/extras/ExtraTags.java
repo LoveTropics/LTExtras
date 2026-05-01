@@ -3,7 +3,7 @@ package com.lovetropics.extras;
 import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -21,7 +21,7 @@ public class ExtraTags {
         public static final TagKey<Block> PLUMBERS_TNT_EXPLODES = modTag("plumbers_tnt_explodes");
 
         static TagKey<Block> tag(String modid, String name) {
-            return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(modid, name));
+            return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(modid, name));
         }
 
         static TagKey<Block> modTag(String name) {
@@ -34,7 +34,7 @@ public class ExtraTags {
         public static final TagKey<Item> HONIES = modTag("honies");
 
         static TagKey<Item> tag(String modid, String name) {
-            return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(modid, name));
+            return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(modid, name));
         }
 
         static TagKey<Item> modTag(String name) {

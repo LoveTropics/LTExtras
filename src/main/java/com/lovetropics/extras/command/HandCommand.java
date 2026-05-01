@@ -9,6 +9,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
@@ -16,7 +17,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +30,7 @@ public class HandCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         // @formatter:off
         dispatcher.register(
-                literal("hand").requires(source -> source.hasPermission(4))
+                literal("hand").requires(Commands.hasPermission(Commands.LEVEL_OWNERS))
                                 .then(literal("json")
                                         .executes(HandCommand::json)
                                 )
@@ -42,7 +43,7 @@ public class HandCommand {
     private static int json(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         ItemStack heldItem = player.getMainHandItem();
-        RegistryOps<JsonElement> registryops = player.getServer().registryAccess().createSerializationContext(JsonOps.INSTANCE);
+        RegistryOps<JsonElement> registryops = player.level().getServer().registryAccess().createSerializationContext(JsonOps.INSTANCE);
         String json = GSON.toJson(ItemStack.CODEC.encodeStart(registryops, heldItem).getOrThrow());
         ctx.getSource().sendSystemMessage(Component.literal("Exported Click to Copy").withStyle(style -> style
                 .withClickEvent(new ClickEvent.CopyToClipboard(json))));
@@ -52,9 +53,10 @@ public class HandCommand {
     private static int displayItem(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         Player player = ctx.getSource().getPlayerOrException();
         ItemStack mainHandItem = player.getMainHandItem();
-        String serialize = new ItemInput(mainHandItem.getItemHolder(), mainHandItem.getComponentsPatch()).serialize(player.getServer().registryAccess());
-        ctx.getSource().sendSystemMessage(Component.literal("Exported Click to Copy").withStyle(style -> style
-                .withClickEvent(new ClickEvent.CopyToClipboard(serialize))));
+        // Todo 26.1 Port
+//        String serialize = new ItemInput(mainHandItem.typeHolder(), mainHandItem.getComponentsPatch()).serialize(player.level().registryAccess());
+//        ctx.getSource().sendSystemMessage(Component.literal("Exported Click to Copy").withStyle(style -> style
+//                .withClickEvent(new ClickEvent.CopyToClipboard(serialize))));
         return Command.SINGLE_SUCCESS;
     }
 

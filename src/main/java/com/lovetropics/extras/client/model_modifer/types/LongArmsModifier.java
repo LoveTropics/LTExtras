@@ -1,10 +1,12 @@
 package com.lovetropics.extras.client.model_modifer.types;
 
 import com.lovetropics.extras.client.model_modifer.ModelModifier;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.world.entity.LivingEntity;
 
 public class LongArmsModifier implements ModelModifier {
 

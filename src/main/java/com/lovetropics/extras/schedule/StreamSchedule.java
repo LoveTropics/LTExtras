@@ -1,5 +1,6 @@
 package com.lovetropics.extras.schedule;
 
+import com.google.common.net.HttpHeaders;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.lovetropics.extras.ExtrasConfig;
@@ -7,9 +8,8 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.Util;
 import net.minecraft.util.ExtraCodecs;
-import org.apache.http.HttpHeaders;
+import net.minecraft.util.Util;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;

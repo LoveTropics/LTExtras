@@ -30,13 +30,13 @@ public record MountClickEvent(ResourceKey<EntityType<?>> type, Optional<Compound
     public void handleAction(ServerPlayer serverPlayer, Tag tag, Consumer<Component> errorHandler) {
         Optional<Holder.Reference<EntityType<?>>> entityTypeReference = serverPlayer.registryAccess().get(type);
         if (entityTypeReference.isEmpty()) {
-            errorHandler.accept(Component.literal("Entity type not found in registry: " + type.location()));
+            errorHandler.accept(Component.literal("Entity type not found in registry: " + type.identifier()));
             return;
         }
         Holder.Reference<EntityType<?>> holder = entityTypeReference.get();
         try {
             Entity spawnEntity = SummonCommand.createEntity(serverPlayer.createCommandSourceStackForNameResolution(serverPlayer.level()), holder, serverPlayer.position(), nbt.orElse(new CompoundTag()), false);
-            serverPlayer.startRiding(spawnEntity, true);
+            serverPlayer.startRiding(spawnEntity, true, false);
             spawnEntity.addTag(ExtraMountController.KILL_DISMOUNT);
         }catch (CommandSyntaxException e) {
             errorHandler.accept(Component.literal("Failed to summon entity: " + e.getMessage()));

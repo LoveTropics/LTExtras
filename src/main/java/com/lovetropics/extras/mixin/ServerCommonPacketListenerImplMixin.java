@@ -20,7 +20,7 @@ public class ServerCommonPacketListenerImplMixin {
     @Final
     protected Connection connection;
 
-    @Inject(method = "handleCustomClickAction", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;handleCustomClickAction(Lnet/minecraft/resources/ResourceLocation;Ljava/util/Optional;)V"))
+    @Inject(method = "handleCustomClickAction", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;handleCustomClickAction(Lnet/minecraft/resources/Identifier;Ljava/util/Optional;)V"))
     private void onHandle(ServerboundCustomClickActionPacket packet, CallbackInfo ci) {
         ServerCommonPacketListenerImpl thisObj = (ServerCommonPacketListenerImpl) (Object) this;
         if (thisObj instanceof ServerGamePacketListenerImpl serverGamePacketListener) {

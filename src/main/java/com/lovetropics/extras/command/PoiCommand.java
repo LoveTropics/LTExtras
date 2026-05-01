@@ -12,7 +12,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.stream.Stream;
@@ -20,8 +20,8 @@ import java.util.stream.Stream;
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 import static net.minecraft.commands.SharedSuggestionProvider.suggestResource;
-import static net.minecraft.commands.arguments.ResourceLocationArgument.getId;
-import static net.minecraft.commands.arguments.ResourceLocationArgument.id;
+import static net.minecraft.commands.arguments.IdentifierArgument.getId;
+import static net.minecraft.commands.arguments.IdentifierArgument.id;
 
 public class PoiCommand {
 
@@ -31,7 +31,7 @@ public class PoiCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         // @formatter:off
         dispatcher.register(literal(COMMAND_BASE)
-            .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
+            .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(literal("enable")
                     .then(argument("id", id())
                             .suggests((ctx, builder) -> suggestResource(suggestDisabledPois(ctx), builder))
@@ -39,7 +39,7 @@ public class PoiCommand {
         )));
 
         dispatcher.register(literal(COMMAND_BASE)
-            .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
+            .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(literal("disable")
                 .then(argument("id", id())
                     .suggests((ctx, builder) -> suggestResource(suggestEnabledPois(ctx), builder))
@@ -50,7 +50,7 @@ public class PoiCommand {
     }
 
     private static int enable(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ResourceLocation id = getId(ctx, "id");
+        Identifier id = getId(ctx, "id");
         MinecraftServer server = ctx.getSource().getServer();
         if (!MapManager.get(server).enable(server, ResourceKey.create(ExtraRegistries.POI, id))) {
             throw GENERAL_ERROR.create();
@@ -60,7 +60,7 @@ public class PoiCommand {
     }
 
     private static int disable(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ResourceLocation id = getId(ctx, "id");
+        Identifier id = getId(ctx, "id");
         MinecraftServer server = ctx.getSource().getServer();
         if (!MapManager.get(server).disable(server, ResourceKey.create(ExtraRegistries.POI, id))) {
             throw GENERAL_ERROR.create();
@@ -69,11 +69,11 @@ public class PoiCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static Stream<ResourceLocation> suggestEnabledPois(CommandContext<CommandSourceStack> ctx) {
-        return MapManager.get(ctx.getSource().getServer()).getEnabledPois().map(ResourceKey::location);
+    private static Stream<Identifier> suggestEnabledPois(CommandContext<CommandSourceStack> ctx) {
+        return MapManager.get(ctx.getSource().getServer()).getEnabledPois().map(ResourceKey::identifier);
     }
 
-    private static Stream<ResourceLocation> suggestDisabledPois(CommandContext<CommandSourceStack> ctx) {
-        return MapManager.get(ctx.getSource().getServer()).getDisabledPois().map(ResourceKey::location);
+    private static Stream<Identifier> suggestDisabledPois(CommandContext<CommandSourceStack> ctx) {
+        return MapManager.get(ctx.getSource().getServer()).getDisabledPois().map(ResourceKey::identifier);
     }
 }

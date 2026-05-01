@@ -12,22 +12,22 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 
 public class SpinningSignRenderer extends EntityRenderer<SpinningSignEntity, SpinningSignRenderState> {
-    private static final ResourceLocation TEXTURE = LTExtras.location("textures/entity/spinning_sign.png");
+    private static final Identifier TEXTURE = LTExtras.location("textures/entity/spinning_sign.png");
 
     private final SpinningSignModel model;
     private final ItemModelResolver itemModelResolver;
@@ -43,8 +43,9 @@ public class SpinningSignRenderer extends EntityRenderer<SpinningSignEntity, Spi
         return new SpinningSignRenderState();
     }
 
+
     @Override
-    public void render(SpinningSignRenderState renderState, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void submit(SpinningSignRenderState renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
         poseStack.pushPose();
         poseStack.scale(-1.0F, -1.0F, 1.0F);
         poseStack.scale(0.3f, 0.3f, 0.3f);
@@ -54,8 +55,7 @@ public class SpinningSignRenderer extends EntityRenderer<SpinningSignEntity, Spi
 
         model.setupAnim(renderState);
         poseStack.mulPose(Axis.YP.rotationDegrees(renderState.yRot));
-        VertexConsumer builder = bufferSource.getBuffer(model.renderType(TEXTURE));
-        model.renderToBuffer(poseStack, builder, packedLight, OverlayTexture.NO_OVERLAY);
+        submitNodeCollector.submitModel(model, renderState, poseStack, model.renderType(TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, renderState.outlineColor, null);
         if(renderState.text.isPresent()) {
             Component text = renderState.text.get();
             int width = Minecraft.getInstance().font.width(text);
@@ -72,7 +72,20 @@ public class SpinningSignRenderer extends EntityRenderer<SpinningSignEntity, Spi
                 //-0.17f;
                 poseStack.translate(0F, y, -5.01F);
                 poseStack.scale(scale, scale, scale);
-                Minecraft.getInstance().font.drawInBatch(text, -(width / 2f), 0, -1, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, LightTexture.lightCoordsWithEmission(packedLight, 2));
+                FormattedCharSequence actualLine = text.getVisualOrderText();
+                float x1 = (float) -this.getFont().width(actualLine) / 2;
+                submitNodeCollector.submitText(
+                        poseStack,
+                        x1,
+                        0,
+                        actualLine,
+                        false,
+                        Font.DisplayMode.POLYGON_OFFSET,
+                        renderState.lightCoords,
+                        DyeColor.WHITE.getTextColor(),
+                        0,
+                        0
+                );
                 poseStack.popPose();
             }
         } else if(!renderState.itemStack.isEmpty()){
@@ -81,8 +94,7 @@ public class SpinningSignRenderer extends EntityRenderer<SpinningSignEntity, Spi
                 poseStack.mulPose(Axis.YP.rotationDegrees(i * 90f));
                 poseStack.translate(0F, 0.5F, -5.01F);
                 poseStack.scale(-1.0F, -1.0F, 1.0F);
-                renderState.itemStack.render(poseStack, bufferSource, packedLight, OverlayTexture.NO_OVERLAY);
-//                Minecraft.getInstance().font.drawInBatch(text, -(width / 2f), 0, -1, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, LightTexture.lightCoordsWithEmission(packedLight, 2));
+                renderState.itemStack.submit(poseStack, submitNodeCollector, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
                 poseStack.popPose();
             }
         }

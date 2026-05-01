@@ -7,7 +7,7 @@ import com.lovetropics.extras.LTExtras;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -19,10 +19,9 @@ import java.util.Map;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class SpawnItemsReloadListener extends SimpleJsonResourceReloadListener<SpawnItems> {
-    // TODO: Move it to ltextras namespace
-    private static final ResourceKey<Registry<SpawnItems>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.withDefaultNamespace("spawn_items"));
+    private static final ResourceKey<Registry<SpawnItems>> REGISTRY_KEY = ResourceKey.createRegistryKey(LTExtras.location("spawn_items"));
 
-    public static final BiMap<ResourceLocation, SpawnItems> REGISTRY = Maps.synchronizedBiMap(HashBiMap.create());
+    public static final BiMap<Identifier, SpawnItems> REGISTRY = Maps.synchronizedBiMap(HashBiMap.create());
 
     public SpawnItemsReloadListener(HolderLookup.Provider registries) {
         super(registries, SpawnItems.CODEC, REGISTRY_KEY);
@@ -34,7 +33,7 @@ public class SpawnItemsReloadListener extends SimpleJsonResourceReloadListener<S
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, SpawnItems> spawnItems, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<Identifier, SpawnItems> spawnItems, ResourceManager resourceManager, ProfilerFiller profiler) {
         REGISTRY.clear();
         REGISTRY.putAll(spawnItems);
     }

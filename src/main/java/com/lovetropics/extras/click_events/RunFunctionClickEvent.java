@@ -12,22 +12,22 @@ import net.minecraft.commands.functions.InstantiatedFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.function.Consumer;
 
-public record RunFunctionClickEvent(ResourceLocation function) implements ExtraClickEvent {
+public record RunFunctionClickEvent(Identifier function) implements ExtraClickEvent {
 
     public static final MapCodec<RunFunctionClickEvent> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("function").forGetter(RunFunctionClickEvent::function)
+                Identifier.CODEC.fieldOf("function").forGetter(RunFunctionClickEvent::function)
         ).apply(instance, RunFunctionClickEvent::new)
     );
 
     @Override
     public void handleAction(ServerPlayer serverPlayer, Tag tag, Consumer<Component> errorHandler) {
-        MinecraftServer server = serverPlayer.getServer();
+        MinecraftServer server = serverPlayer.level().getServer();
         CommandFunction<CommandSourceStack> commandFunction = server.getFunctions().get(function).orElseThrow();
         try {
             CompoundTag compound = tag.asCompound().orElse(new CompoundTag());

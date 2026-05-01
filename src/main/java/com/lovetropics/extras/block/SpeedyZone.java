@@ -22,7 +22,7 @@ public class SpeedyZone extends CustomShapeBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
         if (entity instanceof LivingEntity livingEntity && !livingEntity.isSteppingCarefully()) {
             livingEntity.addEffect(new MobEffectInstance(MobEffects.SPEED, SharedConstants.TICKS_PER_SECOND, 2, false, false));
         }

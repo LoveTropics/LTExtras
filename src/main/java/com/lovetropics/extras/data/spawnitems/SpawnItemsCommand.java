@@ -7,7 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 import static net.minecraft.commands.Commands.argument;
@@ -23,7 +23,7 @@ public class SpawnItemsCommand {
                                                 .map(e -> e.getKey().toString()), builder))
                                 .executes(context -> {
                                     var arg = context.getArgument("set", String.class);
-                                    var set = SpawnItemsReloadListener.REGISTRY.get(ResourceLocation.parse(arg));
+                                    var set = SpawnItemsReloadListener.REGISTRY.get(Identifier.parse(arg));
                                     ServerPlayer player = context.getSource().getPlayerOrException();
 
                                     if (set == null) {

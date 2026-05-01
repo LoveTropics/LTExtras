@@ -12,7 +12,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 public record MapConfig(
@@ -22,7 +22,7 @@ public record MapConfig(
         int minZ,
         int maxX,
         int maxZ,
-        ResourceLocation texture
+        Identifier texture
 ) {
     public static final Codec<MapConfig> DIRECT_CODEC = RecordCodecBuilder.create(i -> i.group(
             ComponentSerialization.CODEC.fieldOf("description").forGetter(MapConfig::description),
@@ -31,7 +31,7 @@ public record MapConfig(
             Codec.INT.fieldOf("min_z").forGetter(MapConfig::minZ),
             Codec.INT.fieldOf("max_x").forGetter(MapConfig::maxX),
             Codec.INT.fieldOf("max_z").forGetter(MapConfig::maxZ),
-            ResourceLocation.CODEC.fieldOf("texture").forGetter(MapConfig::texture)
+            Identifier.CODEC.fieldOf("texture").forGetter(MapConfig::texture)
     ).apply(i, MapConfig::new));
 
     public static final Codec<Holder<MapConfig>> CODEC = RegistryFixedCodec.create(ExtraRegistries.MAP);

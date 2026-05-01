@@ -5,10 +5,10 @@ import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public final class SpawnItemsStore {
-    public static final MapCodec<SpawnItemsStore> MAP_CODEC = Codec.unboundedMap(ResourceLocation.CODEC, SpawnItems.Stack.CODEC.listOf()).xmap(
+    public static final MapCodec<SpawnItemsStore> MAP_CODEC = Codec.unboundedMap(Identifier.CODEC, SpawnItems.Stack.CODEC.listOf()).xmap(
             stacksById -> {
                 SpawnItemsStore store = new SpawnItemsStore();
                 stacksById.forEach((id, stacks) -> {
@@ -36,7 +36,7 @@ public final class SpawnItemsStore {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private final Map<ResourceLocation, List<SpawnItems.Stack>> receivedItems = new HashMap<>();
+    private final Map<Identifier, List<SpawnItems.Stack>> receivedItems = new HashMap<>();
 
     @SubscribeEvent
     static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
@@ -70,8 +70,8 @@ public final class SpawnItemsStore {
         }
     }
 
-    private static Map<ResourceLocation, List<SpawnItems.Stack>> getDiff(ServerPlayer player, Map<ResourceLocation, List<SpawnItems.Stack>> old) {
-        Map<ResourceLocation, List<SpawnItems.Stack>> diff = new HashMap<>();
+    private static Map<Identifier, List<SpawnItems.Stack>> getDiff(ServerPlayer player, Map<Identifier, List<SpawnItems.Stack>> old) {
+        Map<Identifier, List<SpawnItems.Stack>> diff = new HashMap<>();
         SpawnItemsReloadListener.REGISTRY.forEach((location, items) -> {
             var oldReceived = old.getOrDefault(location, List.of());
             if (items.canApplyToPlayer(player)) {
@@ -87,7 +87,7 @@ public final class SpawnItemsStore {
     static void onPlayerClone(PlayerEvent.Clone event) {
         Player oldPlayer = event.getOriginal();
         if (oldPlayer instanceof ServerPlayer serverPlayer) {
-            if (event.isWasDeath() && !serverPlayer.level().getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).get()) {
+            if (event.isWasDeath() && !serverPlayer.level().getGameRules().get(GameRules.KEEP_INVENTORY)) {
                 return;
             }
 

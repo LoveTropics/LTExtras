@@ -32,10 +32,10 @@ public class EntityWandItem extends Item {
         if (target instanceof ExtendedCreatureEntity) {
             ItemStack heldItem = player.getItemInHand(hand);
             heldItem.set(ExtraDataComponents.TARGETED_ENTITY, target.getUUID());
-            player.displayClientMessage(Component.literal("Targeted entity!"), true);
+            player.sendOverlayMessage(Component.literal("Targeted entity!"));
             return InteractionResult.SUCCESS;
         } else {
-            player.displayClientMessage(Component.literal("This entity cannot be targeted!"), true);
+            player.sendOverlayMessage(Component.literal("This entity cannot be targeted!"));
         }
 
         return super.interactLivingEntity(stack, player, target, hand);
@@ -57,7 +57,7 @@ public class EntityWandItem extends Item {
                 Entity entity = serverLevel.getEntity(entityId);
                 if (entity != null) {
                     mobController.addEntity(entity);
-                    context.getPlayer().displayClientMessage(Component.literal("Added entity!"), true);
+                    context.getPlayer().sendOverlayMessage(Component.literal("Added entity!"));
                 }
             }
         }

@@ -56,7 +56,9 @@ public class ServerClosedScreen extends Screen {
         contents.defaultCellSetting().alignHorizontallyCenter().alignVerticallyMiddle();
 
         int textWidth = Window.BASE_WIDTH - 20;
-        contents.addChild(new FocusableTextWidget(textWidth, description, font));
+        contents.addChild(FocusableTextWidget.builder(description, font)
+                .textWidth(textWidth)
+                .build());
 
         if (type.autoJoin) {
             contents.addChild(new LoadingDotsWidget(font, CommonComponents.EMPTY));

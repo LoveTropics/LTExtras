@@ -5,13 +5,13 @@ import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -77,7 +77,7 @@ public class WaterCoolerEntity extends Entity {
     public void tick() {
         super.tick();
 
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             this.setupAnimationStates();
         }
 
@@ -92,8 +92,8 @@ public class WaterCoolerEntity extends Entity {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
-        if (level().isClientSide) return InteractionResult.SUCCESS;
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+        if (level().isClientSide()) return InteractionResult.SUCCESS;
         if (!this.isShaking()) {
             if (random.nextInt(100) >= 90) {
                 dispense(level());

@@ -11,7 +11,8 @@ import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HalfTransparentBlock;
 
@@ -55,17 +56,15 @@ public final class ImposterBlockTemplate {
                             .generate((type) -> {
                                 final String typeName = type.getSerializedName();
                                 final String modelName = typeName + "_" + ctx.getName();
-                                final ResourceLocation texture = prov.modLoc("block/papyrus/" + modelName);
-                                ResourceLocation model = prov.getBuilder()
+                                Identifier model = prov.getBuilder()
                                         .transformTemplate(template -> {
                                             template.parent(prov.mcLoc("block/sugar_cane"));
-                                            template.renderType(prov.mcLoc("cutout"));
-                                        }).texture(TextureSlot.CROSS, texture).build(prov.modLoc("block/" + modelName));
+                                        }).texture(TextureSlot.CROSS, prov.modBlockTexture("papyrus")).build(prov.modLoc("block/" + modelName));
                                 return plainVariant(model);
                             })));
         }
 
-        public BlockBuilder<? extends Block, Registrate> apply(BlockBuilder<? extends Block, Registrate> block, ResourceLocation id) {
+        public BlockBuilder<? extends Block, Registrate> apply(BlockBuilder<? extends Block, Registrate> block, Identifier id) {
             return switch (this) {
                 case CUBE -> block.blockstate(() -> (ctx, prov) -> prov.create(ctx.getEntry(), id.withPrefix("block/")))
                         .simpleItem();
@@ -73,17 +72,15 @@ public final class ImposterBlockTemplate {
                         .blockstate(() -> (ctx, prov) ->
                                 prov.blockStateOutput.accept(createSimpleBlock(ctx.get(), plainVariant(id.withPrefix("block/"))))
                         )
-                        .addLayer(() -> () -> ChunkSectionLayer.TRANSLUCENT)
                         .simpleItem();
                 case CROSS -> {
-                    ResourceLocation texture = id.withPrefix("block/");
+                    Identifier texture = id.withPrefix("block/");
                     yield block
                             .blockstate(() -> (ctx, prov) -> {
-                                prov.createCrossBlock(ctx.get(), BlockModelGenerators.PlantType.NOT_TINTED, TextureMapping.cross(texture));
+                                prov.createCrossBlock(ctx.get(), BlockModelGenerators.PlantType.NOT_TINTED, TextureMapping.cross(new Material(texture)));
                             })
-                            .addLayer(() -> () -> ChunkSectionLayer.CUTOUT)
                             .item()
-                            .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), texture))
+                            .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), new Material(texture)))
                             .build();
                 }
             };

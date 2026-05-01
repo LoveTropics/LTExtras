@@ -41,10 +41,10 @@ public record ServerboundLiftForkliftPacket(boolean eject, int forkHeight, int e
                     }
 
                     passenger.stopRiding();
-                    passenger.hasImpulse = true;
+                    passenger.needsSync = true;
 
                     float force = (float) heightChanged / ForkliftEntity.FORK_HEIGHT;
-                    double ejectY = level.random.triangle(force, 0.1f + force);
+                    double ejectY = level.getRandom().triangle(force, 0.1f + force);
 
                     final var forkMotion = forklift.getKnownMovement();
                     double newVelX = forkMotion.x;

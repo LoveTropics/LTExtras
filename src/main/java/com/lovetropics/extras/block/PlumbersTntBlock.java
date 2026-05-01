@@ -25,7 +25,7 @@ public class PlumbersTntBlock extends TntBlock {
     public void wasExploded(ServerLevel level, BlockPos pos, Explosion explosion) {
         PrimedPlumbersTnt primedtnt = PrimedPlumbersTnt.create(level, (double)pos.getX() + (double)0.5F, pos.getY(), (double)pos.getZ() + (double)0.5F, explosion.getIndirectSourceEntity());
         final int fuse = primedtnt.getFuse();
-        primedtnt.setFuse((short)(level.random.nextInt(fuse / 4) + fuse / 8));
+        primedtnt.setFuse((short)(level.getRandom().nextInt(fuse / 4) + fuse / 8));
         level.addFreshEntity(primedtnt);
     }
 

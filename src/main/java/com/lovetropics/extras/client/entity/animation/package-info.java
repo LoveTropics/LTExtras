@@ -1,9 +1,6 @@
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
-@FieldsAreNonnullByDefault
+@NullMarked
 package com.lovetropics.extras.client.entity.animation;
 
-import com.mojang.blaze3d.FieldsAreNonnullByDefault;
-import com.mojang.blaze3d.MethodsReturnNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+

@@ -20,7 +20,7 @@ public record SpawnItems(List<Stack> items, boolean canBeRestored, Optional<Stri
     ).apply(in, SpawnItems::new));
 
     public boolean canApplyToPlayer(ServerPlayer player) {
-        return excludeTag.map(tag -> !player.getTags().contains(tag)).orElse(true);
+        return excludeTag.map(tag -> !player.entityTags().contains(tag)).orElse(true);
     }
 
     public record Stack(Holder<Item> item, int count, DataComponentPatch components) {

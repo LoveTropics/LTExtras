@@ -7,15 +7,15 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -43,8 +43,8 @@ public record SimpleDataPackLister<T>(String root, ResourceKey<Registry<T>> regi
         FileToIdConverter lister = fileToIdConverter();
         List<CompletableFuture<Named<T>>> futures = lister.listMatchingResources(resourceManager).entrySet().stream()
                 .map(resource -> {
-                    ResourceLocation path = resource.getKey();
-                    ResourceLocation id = lister.fileToId(path);
+                    Identifier path = resource.getKey();
+                    Identifier id = lister.fileToId(path);
                     return CompletableFuture.supplyAsync(() -> {
                         T entry = loadEntry(ops, path, resource.getValue());
                         return entry != null ? new Named<>(ResourceKey.create(registryKey, id), entry) : null;
@@ -55,7 +55,7 @@ public record SimpleDataPackLister<T>(String root, ResourceKey<Registry<T>> regi
     }
 
     @Nullable
-    private T loadEntry(DynamicOps<JsonElement> ops, ResourceLocation path, Resource resource) {
+    private T loadEntry(DynamicOps<JsonElement> ops, Identifier path, Resource resource) {
         try (BufferedReader reader = resource.openAsReader()) {
             return codec.parse(ops, JsonParser.parseReader(reader))
                     .ifError(error -> LOGGER.error("Failed to load data pack entry at {}: {}", path, error.error()))

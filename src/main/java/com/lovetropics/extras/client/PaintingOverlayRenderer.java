@@ -7,13 +7,15 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.state.PaintingRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,7 +24,7 @@ import java.util.List;
 
 public class PaintingOverlayRenderer {
 
-    public static void renderOverlay(PaintingRenderState renderState, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public static void renderOverlay(PaintingRenderState renderState, PoseStack poseStack, SubmitNodeCollector collector) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             return;
@@ -40,6 +42,7 @@ public class PaintingOverlayRenderer {
 
                     if (paintingOverlay.text().isPresent()) {
                         final Component textComponent = paintingOverlay.text().get();
+                        FormattedCharSequence visualOrderText = textComponent.getVisualOrderText();
                         final int textLength = textComponent.getString().length();
 
                         // Bring text in front of painting
@@ -48,12 +51,25 @@ public class PaintingOverlayRenderer {
                         final float scale = 0.01f + scaleAdjust;
                         poseStack.scale(scale, scale, scale);
 
-                        Minecraft.getInstance().font.drawInBatch(textComponent, -textLength * 2, -3, -1, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, LightTexture.lightCoordsWithEmission(packedLight, 2));
+                        // Todo 26.1 Port - Check This Works
+                        collector.submitText(
+                                poseStack,
+                                -textLength * 2,
+                                0,
+                                visualOrderText,
+                                false,
+                                Font.DisplayMode.POLYGON_OFFSET,
+                                renderState.lightCoords,
+                                DyeColor.WHITE.getTextColor(),
+                                0,
+                                0
+                        );
                     } else if (paintingOverlay.itemStack().isPresent()) {
                         final float scale = 1.f + scaleAdjust;
                         poseStack.scale(scale, scale, scale);
 
-                        Minecraft.getInstance().getItemRenderer().renderStatic(paintingOverlay.itemStack().get(), ItemDisplayContext.FIXED, 15728850, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, player.level(), 0);
+                        // Todo 26.1 Port
+//                        Minecraft.getInstance().getItemRenderer().renderStatic(paintingOverlay.itemStack().get(), ItemDisplayContext.FIXED, 15728850, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, player.level(), 0);
                     }
 
                     poseStack.popPose();

@@ -28,7 +28,7 @@ public class ModelModifierCommand {
         // @formatter:off
         dispatcher.register(
                 literal("modelmodifer")
-                        .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(literal("add")
                             .then(argument("entities", EntityArgument.entities())
                                 .then(argument("modifier", ModelModifierArgumentType.modelModifier())

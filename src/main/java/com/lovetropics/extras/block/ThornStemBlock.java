@@ -42,7 +42,7 @@ public final class ThornStemBlock extends PipeBlock implements SimpleWaterlogged
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
         if (level instanceof ServerLevel serverLevel) {
             entity.hurtServer(serverLevel, entity.damageSources().sweetBerryBush(), 1.0f);
         }

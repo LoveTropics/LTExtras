@@ -7,7 +7,7 @@ import com.lovetropics.extras.client.entity.model.HighHeelsModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -68,7 +68,7 @@ public class HighHeelsItem extends Item {
     }
 
     public static class ClientExtensions implements IClientItemExtensions {
-        private static final ResourceLocation TEXTURE = LTExtras.location("textures/entity/high_heels.png");
+        private static final Identifier TEXTURE = LTExtras.location("textures/entity/high_heels.png");
 
         private final Supplier<HighHeelsModel> model;
 
@@ -82,7 +82,7 @@ public class HighHeelsItem extends Item {
         }
 
         @Override
-        public ResourceLocation getArmorTexture(ItemStack stack, EquipmentClientInfo.LayerType type, EquipmentClientInfo.Layer layer, ResourceLocation _default) {
+        public Identifier getArmorTexture(ItemStack stack, EquipmentClientInfo.LayerType type, EquipmentClientInfo.Layer layer, Identifier _default) {
             return TEXTURE;
         }
     }

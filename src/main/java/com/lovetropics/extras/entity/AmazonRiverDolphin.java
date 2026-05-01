@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Dolphin;
+import net.minecraft.world.entity.animal.dolphin.Dolphin;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -36,7 +36,7 @@ public class AmazonRiverDolphin extends Dolphin {
 
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             if (this.ambientSoundTime < -(this.getAmbientSoundInterval() - 20)) {
                 if (this.tickCount % 3 > 1) {
                     if (!this.getMouthOpen()) {

@@ -1,7 +1,7 @@
 package com.lovetropics.extras.block.entity;
 
 import net.minecraft.SharedConstants;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;

@@ -65,9 +65,9 @@ public class FireExtinguisherItem extends BlockItem {
             final double xSpeed = lookVec.x + (i / SPRAY);
             final double zSpeed = lookVec.z + (i / SPRAY);
 
-            final double xLoc = pos.x + startPos.x + level.random.triangle(0, 1f);
-            final double zLoc = pos.z + startPos.z + level.random.triangle(0, 1f);
-            if (level.isClientSide) {
+            final double xLoc = pos.x + startPos.x + level.getRandom().triangle(0, 1f);
+            final double zLoc = pos.z + startPos.z + level.getRandom().triangle(0, 1f);
+            if (level.isClientSide()) {
                 level.addParticle(ParticleTypes.CLOUD, true, true, xLoc, pos.y, zLoc, xSpeed, lookVec.y, zSpeed);
                 if (i % 3 == 0) {
                     level.addParticle(ParticleTypes.SMOKE, true, true, xLoc, pos.y, zLoc, xSpeed, lookVec.y, zSpeed);
@@ -81,7 +81,7 @@ public class FireExtinguisherItem extends BlockItem {
             HitResult result = getHitResultOnViewVector(livingEntity, to, Entity::isPickable);
             if (result.getType() != HitResult.Type.MISS) {
                 hit = true;
-                if (!level.isClientSide && extinguisherComponent.shouldExtinguish()) {
+                if (!level.isClientSide() && extinguisherComponent.shouldExtinguish()) {
                     if (result instanceof final EntityHitResult entityHitResult) {
                         if (entityHitResult.getEntity().isOnFire()) {
                             entityHitResult.getEntity().extinguishFire();
@@ -113,12 +113,12 @@ public class FireExtinguisherItem extends BlockItem {
         }
 
         final float scale = hit ? extinguisherComponent.impulseOnHit() : extinguisherComponent.impulseOnMiss();
-        if(livingEntity.getVehicle() != null && !level.isClientSide){
-            livingEntity.getVehicle().hasImpulse = true;
+        if(livingEntity.getVehicle() != null && !level.isClientSide()){
+            livingEntity.getVehicle().needsSync = true;
             livingEntity.getVehicle().setDeltaMovement(lookVec.reverse().scale(scale));
         } else {
-            if (level.isClientSide) {
-                livingEntity.hasImpulse = true;
+            if (level.isClientSide()) {
+                livingEntity.needsSync = true;
                 livingEntity.setDeltaMovement(lookVec.reverse().scale(scale));
             } else {
                 EquipmentSlot slot = stack.equals(livingEntity.getItemBySlot(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;

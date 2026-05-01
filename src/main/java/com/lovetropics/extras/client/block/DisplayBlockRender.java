@@ -1,53 +1,45 @@
 package com.lovetropics.extras.client.block;
 
-import com.lovetropics.extras.block.RoatedDisplayBlock;
 import com.lovetropics.extras.block.entity.DisplayBlockEntity;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.lovetropics.extras.client.block.state.DisplayBlockRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nullable;
+public class DisplayBlockRender implements BlockEntityRenderer<DisplayBlockEntity, DisplayBlockRenderState> {
 
-public class DisplayBlockRender implements BlockEntityRenderer<DisplayBlockEntity> {
-
-    private final ItemRenderer itemRenderer;
+    private final ItemModelResolver itemModelResolver;
 
     public DisplayBlockRender(BlockEntityRendererProvider.Context context) {
-        this.itemRenderer = context.getItemRenderer();
+        this.itemModelResolver = context.itemModelResolver();
     }
 
     @Override
-    public void render(DisplayBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, Vec3 cameraPos) {
-        poseStack.pushPose();
-        BlockPos relativePos = blockEntity.getBlockPos();
-        if (blockEntity.getBlockState().hasProperty(RoatedDisplayBlock.FACING)) {
-            Direction rotationAngle = blockEntity.getBlockState().getValue(RoatedDisplayBlock.FACING);
-            poseStack.translate(rotationAngle.getStepX() == 0 ? 0.5 : 1.5f, rotationAngle.getStepY() == 0 ? 0.5 : 1.5f, rotationAngle.getStepZ() == 0 ? 0.5 : 1.5f);
-            relativePos = relativePos.relative(rotationAngle);
-        } else {
-            poseStack.translate(0.5F, 1.15F, 0.5F);
-            relativePos = relativePos.above();
-        }
-        int lightLevel = LevelRenderer.getLightColor(LevelRenderer.BrightnessGetter.DEFAULT, blockEntity.getLevel(), blockEntity.getBlockState(), relativePos);
-        if (!blockEntity.getItemStack().isEmpty()) {
-            itemRenderer.renderStatic(blockEntity.getItemStack(), ItemDisplayContext.GROUND, lightLevel, packedOverlay, poseStack, bufferSource, blockEntity.getLevel(), 0);
-        }
-        poseStack.popPose();
+    public DisplayBlockRenderState createRenderState() {
+        return new DisplayBlockRenderState();
     }
 
+    @Override
+    public void extractRenderState(DisplayBlockEntity blockEntity, DisplayBlockRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+        itemModelResolver.updateForTopItem(state.itemStack, blockEntity.getItemStack(), ItemDisplayContext.FIXED, null, null, 0);
+    }
+
+    @Override
+    public void submit(DisplayBlockRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        poseStack.pushPose();
+        BlockPos relativePos = state.blockPos;
+        poseStack.translate(0.5F, 1.15F, 0.5F);
+        state.itemStack.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        poseStack.popPose();
+    }
 }

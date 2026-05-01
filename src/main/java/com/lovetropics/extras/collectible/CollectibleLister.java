@@ -4,7 +4,6 @@ import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.mixin.MinecraftServerAccessor;
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
@@ -14,6 +13,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.storage.PlayerDataStorage;
 import net.neoforged.neoforge.attachment.AttachmentHolder;
 import org.jetbrains.annotations.Nullable;
@@ -110,7 +110,7 @@ public class CollectibleLister {
             return null;
         }
         CompoundTag attachmentsTag = tag.getCompoundOrEmpty(AttachmentHolder.ATTACHMENTS_NBT_KEY);
-        Tag collectiblesTag = attachmentsTag.get(ExtraAttachments.COLLECTIBLE_STORE.getKey().location().toString());
+        Tag collectiblesTag = attachmentsTag.get(ExtraAttachments.COLLECTIBLE_STORE.getKey().identifier().toString());
         if (collectiblesTag == null) {
             return null;
         }

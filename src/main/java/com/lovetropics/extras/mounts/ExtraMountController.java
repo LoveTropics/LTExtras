@@ -12,7 +12,7 @@ public class ExtraMountController {
 
     @SubscribeEvent
     public static void onEntityMount(EntityMountEvent event) {
-        if (event.getEntityBeingMounted().isRemoved() || !event.isDismounting() || !event.getEntityBeingMounted().getTags().contains(KILL_DISMOUNT)) {
+        if (event.getEntityBeingMounted().isRemoved() || !event.isDismounting() || !event.getEntityBeingMounted().entityTags().contains(KILL_DISMOUNT)) {
             return;
         }
 

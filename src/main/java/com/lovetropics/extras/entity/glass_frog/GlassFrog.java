@@ -12,6 +12,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
@@ -23,7 +24,10 @@ import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.camel.Camel;
+import net.minecraft.world.entity.animal.camel.CamelAi;
 import net.minecraft.world.entity.animal.frog.Frog;
+import net.minecraft.world.entity.animal.frog.FrogAi;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -36,6 +40,7 @@ import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * A small, translucent frog native to Amazonian streams. Serves as a bioindicator for healthy freshwater ecosystems and provides food for larger predators.
@@ -66,6 +71,7 @@ public class GlassFrog extends Animal {
             MemoryModuleType.IS_IN_WATER,
             MemoryModuleType.IS_PANICKING
     );
+
     public int jumpDelay = 0;
 
     public GlassFrog(EntityType<? extends GlassFrog> type, Level level) {
@@ -93,7 +99,7 @@ public class GlassFrog extends Animal {
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
         GlassFrog frog = ExtraEntities.GLASS_FROG.create(level, EntitySpawnReason.BREEDING);
         if (frog != null) {
-            GlassFrogAi.initMemories(frog, level.getRandom());
+//            GlassFrogAi.initMemories(frog, level.getRandom()); // Todo 26.1 Port
         }
 
         return frog;
@@ -103,7 +109,7 @@ public class GlassFrog extends Animal {
     public SpawnGroupData finalizeSpawn(
             ServerLevelAccessor levelAccessor, DifficultyInstance difficultyInstance, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData
     ) {
-        GlassFrogAi.initMemories(this, levelAccessor.getRandom());
+//        GlassFrogAi.initMemories(this, levelAccessor.getRandom()); // Todo 26.1 Port
         return super.finalizeSpawn(levelAccessor, difficultyInstance, spawnReason, spawnGroupData);
     }
 
@@ -112,27 +118,27 @@ public class GlassFrog extends Animal {
         return super.calculateFallDamage(fallDistance, damageMultiplier) - 5;
     }
 
-    // AI
+    // Todo 26.1 Port
 
-    @Override
-    protected Brain.Provider<GlassFrog> brainProvider() {
-        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
-    }
+//    @Override
+//    protected Brain.Provider<GlassFrog> brainProvider() {
+//        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
+//    }
+//
+//    @Override
+//    protected Brain<? extends LivingEntity> makeBrain(Brain.Packed packedBrain) {
+//        return GlassFrogAi.makeBrain(this.brainProvider().makeBrain(packedBrain));;
+//    }
 
-    @Override
-    protected Brain<?> makeBrain(Dynamic<?> ops) {
-        return GlassFrogAi.makeBrain(this.brainProvider().makeBrain(ops));
-    }
-
-    @Override
-    public Brain<GlassFrog> getBrain() {
-        return (Brain<GlassFrog>) super.getBrain();
-    }
+//    @Override
+//    public Brain<GlassFrog> getBrain() {
+//        return (Brain<GlassFrog>) super.getBrain();
+//    }
 
     @Override
     protected void customServerAiStep(ServerLevel level) {
-        this.getBrain().tick(level, this);
-        GlassFrogAi.updateActivity(this);
+//        this.getBrain().tick(level, this); // Todo 26.1 Port
+//        GlassFrogAi.updateActivity(this);
         super.customServerAiStep(level);
 
         if ((!this.getNavigation().isDone() || this.getTarget() != null) && (this.onGround() || this.isInWater())) {

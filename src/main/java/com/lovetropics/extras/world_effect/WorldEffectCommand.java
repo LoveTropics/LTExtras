@@ -10,10 +10,10 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.commands.arguments.TimeArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 
 import static net.minecraft.commands.Commands.argument;
@@ -26,7 +26,7 @@ public class WorldEffectCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(literal("worldeffect")
-                .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(literal("apply")
                         .then(effectArgument("effect")
                                 .executes(context -> apply(context, getEffect(context, "effect"), Long.MAX_VALUE))
@@ -64,15 +64,15 @@ public class WorldEffectCommand {
         return 1;
     }
 
-    public static RequiredArgumentBuilder<CommandSourceStack, ResourceLocation> effectArgument(String name) {
-        return argument(name, ResourceLocationArgument.id()).suggests((context, builder) -> SharedSuggestionProvider.suggestResource(
+    public static RequiredArgumentBuilder<CommandSourceStack, Identifier> effectArgument(String name) {
+        return argument(name, IdentifierArgument.id()).suggests((context, builder) -> SharedSuggestionProvider.suggestResource(
                 WorldEffectConfigs.REGISTRY.stream().map(Named::id),
                 builder
         ));
     }
 
     private static Named<WorldEffect> getEffect(CommandContext<CommandSourceStack> context, String name) throws CommandSyntaxException {
-        ResourceLocation id = ResourceLocationArgument.getId(context, name);
+        Identifier id = IdentifierArgument.getId(context, name);
         Named<WorldEffect> config = WorldEffectConfigs.REGISTRY.get(id);
         if (config == null) {
             throw WORLD_EFFECT_CONFIG_NOT_FOUND.create(id);

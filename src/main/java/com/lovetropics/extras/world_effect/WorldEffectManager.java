@@ -6,7 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,18 +24,18 @@ import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class WorldEffectManager {
-    private static final Map<ResourceKey<Level>, Map<ResourceLocation, Entry>> EFFECTS_BY_DIMENSION = new Reference2ObjectOpenHashMap<>();
+    private static final Map<ResourceKey<Level>, Map<Identifier, Entry>> EFFECTS_BY_DIMENSION = new Reference2ObjectOpenHashMap<>();
 
     public static void apply(ServerLevel level, Named<WorldEffect> effect, long expiresAt) {
-        Map<ResourceLocation, Entry> effects = EFFECTS_BY_DIMENSION.computeIfAbsent(level.dimension(), k -> new Object2ObjectOpenHashMap<>());
+        Map<Identifier, Entry> effects = EFFECTS_BY_DIMENSION.computeIfAbsent(level.dimension(), k -> new Object2ObjectOpenHashMap<>());
         Entry entry = new Entry(effect.value(), expiresAt);
         if (effects.put(effect.id(), entry) == null) {
             apply(level, effect.value(), false);
         }
     }
 
-    public static void clear(ServerLevel level, ResourceLocation effectId) {
-        Map<ResourceLocation, Entry> effects = EFFECTS_BY_DIMENSION.get(level.dimension());
+    public static void clear(ServerLevel level, Identifier effectId) {
+        Map<Identifier, Entry> effects = EFFECTS_BY_DIMENSION.get(level.dimension());
         if (effects == null) {
             return;
         }
@@ -58,7 +58,7 @@ public class WorldEffectManager {
     }
 
     public static void clearAll(ServerLevel level) {
-        Map<ResourceLocation, Entry> effects = EFFECTS_BY_DIMENSION.remove(level.dimension());
+        Map<Identifier, Entry> effects = EFFECTS_BY_DIMENSION.remove(level.dimension());
         if (effects == null) {
             return;
         }
@@ -71,18 +71,18 @@ public class WorldEffectManager {
         EFFECTS_BY_DIMENSION.forEach((dimension, effects) -> {
             ServerLevel level = server.getLevel(dimension);
             if (level != null) {
-                Map<ResourceLocation, Entry> newEffects = reloadInDimension(effects, level);
+                Map<Identifier, Entry> newEffects = reloadInDimension(effects, level);
                 effects.clear();
                 effects.putAll(newEffects);
             }
         });
     }
 
-    private static Map<ResourceLocation, Entry> reloadInDimension(Map<ResourceLocation, Entry> effects, ServerLevel level) {
+    private static Map<Identifier, Entry> reloadInDimension(Map<Identifier, Entry> effects, ServerLevel level) {
         for (Entry entry : effects.values()) {
             clear(level, entry.effect(), true);
         }
-        Map<ResourceLocation, Entry> newEffects = effects.entrySet().stream()
+        Map<Identifier, Entry> newEffects = effects.entrySet().stream()
                 .map(entry -> {
                     Named<WorldEffect> newEffect = WorldEffectConfigs.REGISTRY.get(entry.getKey());
                     if (newEffect != null) {
@@ -129,7 +129,7 @@ public class WorldEffectManager {
     @SubscribeEvent
     public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            MinecraftServer server = player.getServer();
+            MinecraftServer server = player.level().getServer();
             ServerLevel fromLevel = server.getLevel(event.getFrom());
             if (fromLevel != null) {
                 forEachEffect(player, fromLevel, (e, p) -> e.clear(p, true));
@@ -142,7 +142,7 @@ public class WorldEffectManager {
     }
 
     private static void forEachEffect(ServerPlayer player, ServerLevel level, BiConsumer<WorldEffect, ServerPlayer> consumer) {
-        Map<ResourceLocation, Entry> effects = EFFECTS_BY_DIMENSION.get(level.dimension());
+        Map<Identifier, Entry> effects = EFFECTS_BY_DIMENSION.get(level.dimension());
         if (effects != null && !effects.isEmpty()) {
             for (Entry entry : effects.values()) {
                 consumer.accept(entry.effect(), player);

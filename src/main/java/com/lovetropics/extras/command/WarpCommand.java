@@ -11,11 +11,11 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -34,11 +34,11 @@ public class WarpCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         // @formatter:off
 		dispatcher.register(literal("warp")
-				.then(argument(ARGUMENT_TARGET, ResourceLocationArgument.id())
+				.then(argument(ARGUMENT_TARGET, IdentifierArgument.id())
                         .suggests((context, builder) -> {
                             MapManager poiManager = MapManager.get(context.getSource().getServer());
                             ServerPlayer player = context.getSource().getPlayerOrException();
-                            return SharedSuggestionProvider.suggestResource(poiManager.getAccessiblePois(player).map(ResourceKey::location), builder);
+                            return SharedSuggestionProvider.suggestResource(poiManager.getAccessiblePois(player).map(ResourceKey::identifier), builder);
                         })
 						.executes(WarpCommand::warp)
 		));
@@ -46,7 +46,7 @@ public class WarpCommand {
     }
 
     private static int warp(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ResourceLocation targetName = ResourceLocationArgument.getId(ctx, ARGUMENT_TARGET);
+        Identifier targetName = IdentifierArgument.getId(ctx, ARGUMENT_TARGET);
         CommandSourceStack source = ctx.getSource();
         ServerPlayer player = source.getPlayerOrException();
 
@@ -56,7 +56,7 @@ public class WarpCommand {
         }
 
         BlockPos blockPos = target.value().pos();
-        ServerLevel level = player.getServer().getLevel(target.value().map().value().dimension());
+        ServerLevel level = player.level().getServer().getLevel(target.value().map().value().dimension());
         if (level == null) {
             throw NOT_FOUND.create();
         }

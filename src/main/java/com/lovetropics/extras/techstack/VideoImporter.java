@@ -11,11 +11,11 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.LenientJsonParser;
+import net.minecraft.util.Util;
 import net.minecraft.util.thread.ConsecutiveExecutor;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
@@ -73,7 +73,7 @@ public class VideoImporter {
     }
 
     public void importVideo(String title, URI url, double duration) {
-        ResourceLocation id = toVideoId(title);
+        Identifier id = toVideoId(title);
         LOGGER.info("Importing video with id {} from {} and duration of {} seconds", id, url, duration);
 
         SlideshowApi.importSimpleVideo(id, url, duration);
@@ -92,7 +92,7 @@ public class VideoImporter {
         });
     }
 
-    private static ResourceLocation toVideoId(String title) {
+    private static Identifier toVideoId(String title) {
         StringBuilder id = new StringBuilder();
         title.chars().forEach(c -> {
             char ch = Character.toLowerCase((char) c);
@@ -106,12 +106,12 @@ public class VideoImporter {
     }
 
     private record ImportedVideo(
-            ResourceLocation id,
+            Identifier id,
             URI url,
             double duration
     ) {
         public static final Codec<ImportedVideo> CODEC = RecordCodecBuilder.create(i -> i.group(
-                ResourceLocation.CODEC.fieldOf("id").forGetter(ImportedVideo::id),
+                Identifier.CODEC.fieldOf("id").forGetter(ImportedVideo::id),
                 ExtraCodecs.UNTRUSTED_URI.fieldOf("url").forGetter(ImportedVideo::url),
                 Codec.DOUBLE.fieldOf("duration").forGetter(ImportedVideo::duration)
         ).apply(i, ImportedVideo::new));

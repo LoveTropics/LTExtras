@@ -1,4 +1,4 @@
-package com.lovetropics.extras.mixin.rejoiner;
+package com.lovetropics.extras.mixin.client.rejoiner;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

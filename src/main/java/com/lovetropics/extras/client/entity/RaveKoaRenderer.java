@@ -7,12 +7,12 @@ import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class RaveKoaRenderer extends MobRenderer<RaveKoaEntity, RaveKoaRenderState, RaveKoaModel> {
-    private static final ResourceLocation TEXTURE_MAN_HUNTER = LTExtras.location("textures/entity/koa_man_hunter.png");
-    private static final ResourceLocation TEXTURE_MAN_FISHER = LTExtras.location("textures/entity/koa_man_fisher.png");
-    private static final ResourceLocation TEXTURE_WOMAN_FISHER = LTExtras.location("textures/entity/koa_woman_fisher.png");
+    private static final Identifier TEXTURE_MAN_HUNTER = LTExtras.location("textures/entity/koa_man_hunter.png");
+    private static final Identifier TEXTURE_MAN_FISHER = LTExtras.location("textures/entity/koa_man_fisher.png");
+    private static final Identifier TEXTURE_WOMAN_FISHER = LTExtras.location("textures/entity/koa_woman_fisher.png");
 
     public RaveKoaRenderer(EntityRendererProvider.Context context) {
         super(context, new RaveKoaModel(context.bakeLayer(RaveKoaModel.LAYER_LOCATION)), 0.9f);
@@ -32,7 +32,7 @@ public class RaveKoaRenderer extends MobRenderer<RaveKoaEntity, RaveKoaRenderSta
     }
 
     @Override
-    public ResourceLocation getTextureLocation(RaveKoaRenderState state) {
+    public Identifier getTextureLocation(RaveKoaRenderState state) {
         if (state.entityType == ExtraEntities.RAVEKOADJ.get()) {
             return TEXTURE_MAN_HUNTER;
         } else if (state.entityType == ExtraEntities.RAVEKOADANCE1.get()) {

@@ -9,7 +9,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public record PlayerSensor(
 
     public boolean matches(ServerPlayer player) {
         for (String tag : tags) {
-            if (player.getTags().contains(tag)) {
+            if (player.entityTags().contains(tag)) {
                 return true;
             }
         }
@@ -67,15 +67,15 @@ public record PlayerSensor(
         );
     }
 
-    public record Sprite(ResourceLocation location, int width, int height) {
+    public record Sprite(Identifier location, int width, int height) {
         public static final Codec<Sprite> CODEC = RecordCodecBuilder.create(i -> i.group(
-                ResourceLocation.CODEC.fieldOf("location").forGetter(Sprite::location),
+                Identifier.CODEC.fieldOf("location").forGetter(Sprite::location),
                 Codec.INT.fieldOf("width").forGetter(Sprite::width),
                 Codec.INT.fieldOf("height").forGetter(Sprite::height)
         ).apply(i, Sprite::new));
 
         public static final StreamCodec<ByteBuf, Sprite> STREAM_CODEC = StreamCodec.composite(
-                ResourceLocation.STREAM_CODEC, Sprite::location,
+                Identifier.STREAM_CODEC, Sprite::location,
                 ByteBufCodecs.VAR_INT, Sprite::width,
                 ByteBufCodecs.VAR_INT, Sprite::height,
                 Sprite::new

@@ -9,8 +9,8 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LilyPadBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.WaterlilyBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -22,7 +22,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
-public class SubmergedLilyBlock extends WaterlilyBlock implements SimpleWaterloggedBlock {
+public class SubmergedLilyBlock extends LilyPadBlock implements SimpleWaterloggedBlock {
 
     protected static final VoxelShape AABB = Block.box(1.0D, 14.5D, 1.0D, 15.0D, 16D, 15.0D);
 

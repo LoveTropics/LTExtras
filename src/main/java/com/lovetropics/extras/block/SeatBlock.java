@@ -31,7 +31,7 @@ public class SeatBlock extends SlabBlock {
             return InteractionResult.PASS;
         }
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
 

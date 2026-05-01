@@ -13,7 +13,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.datafixers.util.Either;
-import net.minecraft.Util;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -25,11 +24,13 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.server.players.NameAndId;
+import net.minecraft.server.players.UserNameToIdResolver;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -59,7 +60,7 @@ public class CollectibleCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         dispatcher.register(literal("collectible")
-                .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(literal("give_stack")
                         .then(argument("target", players())
                                 .then(argument("collectible", ResourceArgument.resource(buildContext, ExtraRegistries.COLLECTIBLE))
@@ -119,7 +120,7 @@ public class CollectibleCommand {
     }
 
     private static int give(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, ItemInput item) throws CommandSyntaxException {
-        ItemStack stack = item.createItemStack(1, true);
+        ItemStack stack = item.createItemStack(1);
         return giveSingle(ctx, players, Holder.direct(new Collectible(stack)));
     }
 
@@ -233,7 +234,7 @@ public class CollectibleCommand {
         }
     }
 
-    private static final ResourceKey<Item> DISGUISE = ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("ltminigames", "disguise"));
+    private static final ResourceKey<Item> DISGUISE = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("ltminigames", "disguise"));
 
     private static int countDisguises(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
@@ -252,7 +253,7 @@ public class CollectibleCommand {
 
     private static int findCollectibles(CommandSourceStack source, Predicate<Holder<Collectible>> predicate) {
         MinecraftServer server = source.getServer();
-        GameProfileCache profileCache = server.getProfileCache();
+        UserNameToIdResolver profileCache = server.services().nameToIdCache();
         CollectibleLister.listPlayersWithItem(server, predicate)
                 .thenApplyAsync(
                         profileIds -> profileIds.stream().map(profileCache::get).flatMap(Optional::stream).toList(),
@@ -262,7 +263,7 @@ public class CollectibleCommand {
                     if (profiles.isEmpty()) {
                         source.sendSuccess(() -> Component.literal("Found no players"), false);
                     } else {
-                        String names = profiles.stream().map(GameProfile::getName).collect(Collectors.joining(", "));
+                        String names = profiles.stream().map(NameAndId::name).collect(Collectors.joining(", "));
                         source.sendSuccess(() -> Component.literal("Found " + profiles.size() + " players: " + names), false);
                     }
                 }, server);

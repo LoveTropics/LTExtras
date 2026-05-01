@@ -5,9 +5,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemFrameRenderer;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.network.chat.Component;
 import org.joml.Matrix4f;
 
@@ -18,25 +20,25 @@ public class CleaningItemFrameRender extends ItemFrameRenderer<CleaningItemFrame
     }
 
     @Override
-    public void render(ItemFrameRenderState renderState, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        super.render(renderState, poseStack, bufferSource, packedLight);
-        if (renderState instanceof CleaingItemFrameRenderState cleaningState) {
-            renderProgressBar(cleaningState, Component.literal(cleaningState.cleanTick + " / " + cleaningState.maxCleanTick), poseStack, bufferSource, packedLight);
-        }
+    public void submit(ItemFrameRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        // Todo 26.1 Port
+//        if (renderState instanceof CleaingItemFrameRenderState cleaningState) {
+//            renderProgressBar(cleaningState, Component.literal(cleaningState.cleanTick + " / " + cleaningState.maxCleanTick), poseStack, submitNodeCollector, camera);
+//        }
     }
 
-    protected void renderProgressBar(CleaingItemFrameRenderState renderState, Component displayName, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    protected void renderProgressBar(CleaingItemFrameRenderState renderState, Component displayName, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
         int i = 0;
         poseStack.pushPose();
         poseStack.translate(0, 1, 0);
-        poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+        poseStack.mulPose(camera.orientation);
         poseStack.scale(0.025F, -0.025F, 0.025F);
         Matrix4f matrix4f = poseStack.last().pose();
 
         Font font = this.getFont();
         float f = -font.width(displayName) / 2.0F;
         int j = (int) (Minecraft.getInstance().options.getBackgroundOpacity(0.25F) * 255.0F) << 24;
-        font.drawInBatch(displayName, f, (float) i, -2130706433, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, j, packedLight);
+//        font.drawInBatch(displayName, f, (float) i, -2130706433, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, j, packedLight); // Todo 26.1 Port
 
         poseStack.popPose();
     }

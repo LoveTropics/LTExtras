@@ -5,13 +5,13 @@ import com.lovetropics.lib.codec.CodecRegistry;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Util;
 import org.slf4j.Logger;
 
 import java.util.Optional;
@@ -20,12 +20,12 @@ public class ExtraClickEvents {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static final CodecRegistry<ResourceLocation, MapCodec<? extends ExtraClickEvent>> REGISTRY = Util.make(CodecRegistry.resourceLocationKeys(), registry -> {
+    private static final CodecRegistry<Identifier, MapCodec<? extends ExtraClickEvent>> REGISTRY = Util.make(CodecRegistry.resourceLocationKeys(), registry -> {
         registry.register(LTExtras.location("run_function"), RunFunctionClickEvent.CODEC);
         registry.register(LTExtras.location("mount_entity"), MountClickEvent.CODEC);
     });
 
-    public static void handleCustomClickAction(ServerPlayer serverPlayer, ResourceLocation location, Optional<Tag> tag) {
+    public static void handleCustomClickAction(ServerPlayer serverPlayer, Identifier location, Optional<Tag> tag) {
         MapCodec<? extends ExtraClickEvent> mapCodec = REGISTRY.get(location);
         if (mapCodec == null) {
             sendErrorMessage(serverPlayer, "Unknown click action: " + location);

@@ -72,7 +72,7 @@ public class ExtraDataComponents {
     // General extensions
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> UNDROPPABLE = REGISTER.registerComponentType(
             "undroppable",
-            builder -> builder.persistent(Codec.unit(Unit.INSTANCE)).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
+            builder -> builder.persistent(Unit.CODEC).networkSynchronized(Unit.STREAM_CODEC)
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> COOLDOWN_OVERRIDE = REGISTER.registerComponentType(
             "cooldown_override",
@@ -124,7 +124,7 @@ public class ExtraDataComponents {
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> INFINITE = REGISTER.registerComponentType(
             "infinite",
-            builder -> builder.persistent(Codec.unit(Unit.INSTANCE)).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
+            builder -> builder.persistent(Unit.CODEC).networkSynchronized(Unit.STREAM_CODEC)
     );
 
     @SubscribeEvent

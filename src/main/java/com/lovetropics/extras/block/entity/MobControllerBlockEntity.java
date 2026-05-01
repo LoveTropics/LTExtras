@@ -134,7 +134,7 @@ public class MobControllerBlockEntity extends BlockEntity {
                                 level.addFreshEntity(entity);
 
                                 if (entity instanceof Mob mob) {
-                                    mob.finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(pos), EntitySpawnReason.MOB_SUMMONED, null);
+                                    mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(pos), EntitySpawnReason.MOB_SUMMONED, null);
                                 }
 
                                 if (entity instanceof ExtendedCreatureEntity extended) {

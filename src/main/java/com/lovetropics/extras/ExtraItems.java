@@ -39,7 +39,7 @@ import net.minecraft.client.renderer.item.properties.select.DisplayContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -223,10 +223,12 @@ public class ExtraItems {
     public static final ItemEntry<WaterCoolerSpawnEggItem> WATER_COOLER_SPAWN_EGG = REGISTRATE.item("water_cooler_spawn_egg", WaterCoolerSpawnEggItem::new)
             .register();
 
-    public static final ItemEntry<SpawnEggItem> AMAZON_RIVER_DOLPHIN_SPAWN_EGG = REGISTRATE.item("amazon_river_dolphin_spawn_egg", p -> new SpawnEggItem(ExtraEntities.AMAZON_RIVER_DOLPHIN.get(), p))
+    public static final ItemEntry<SpawnEggItem> AMAZON_RIVER_DOLPHIN_SPAWN_EGG = REGISTRATE.item("amazon_river_dolphin_spawn_egg", SpawnEggItem::new)
+            .properties(properties -> properties.spawnEgg(ExtraEntities.AMAZON_RIVER_DOLPHIN.get()))
             .register();
 
-    public static final ItemEntry<SpawnEggItem> GLASS_FROG_SPAWN_EGG = REGISTRATE.item("glass_frog_spawn_egg", p -> new SpawnEggItem(ExtraEntities.GLASS_FROG.get(), p))
+    public static final ItemEntry<SpawnEggItem> GLASS_FROG_SPAWN_EGG = REGISTRATE.item("glass_frog_spawn_egg", SpawnEggItem::new)
+            .properties(properties -> properties.spawnEgg(ExtraEntities.GLASS_FROG.get()))
             .register();
 
     public static final ItemEntry<CleaningItemFrameItem> CLEANING_ITEM_FRAME = REGISTRATE.item("cleaning_item_frame", CleaningItemFrameItem::new)
@@ -265,7 +267,7 @@ public class ExtraItems {
             );
         }
 
-        private static void generateHeadEquippable(DataGenContext<Item, Item> ctx, RegistrateItemModelGenerator prov, ResourceLocation model, ResourceLocation equippedModel) {
+        private static void generateHeadEquippable(DataGenContext<Item, Item> ctx, RegistrateItemModelGenerator prov, Identifier model, Identifier equippedModel) {
             prov.itemModelOutput.accept(ctx.get(), select(
                     new DisplayContext(),
                     plainModel(model),

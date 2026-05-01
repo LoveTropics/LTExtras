@@ -52,7 +52,7 @@ public class Collectible implements DataComponentHolder {
     }
 
     public Collectible(ItemStack stack) {
-        this(stack.getItemHolder(), componentsWithoutMarker(stack.getComponentsPatch()), false);
+        this(stack.typeHolder(), componentsWithoutMarker(stack.getComponentsPatch()), false);
     }
 
     @Nullable

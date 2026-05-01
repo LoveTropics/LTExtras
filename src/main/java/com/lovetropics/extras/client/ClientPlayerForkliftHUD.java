@@ -5,7 +5,7 @@ import com.lovetropics.extras.entity.ForkliftEntity;
 import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.neoforged.api.distmarker.Dist;
@@ -25,7 +25,7 @@ public class ClientPlayerForkliftHUD {
         event.registerBelow(VanillaGuiLayers.CAMERA_OVERLAYS, LTExtras.location("forklift_hud"), ClientPlayerForkliftHUD::renderGui);
     }
 
-    private static void renderGui(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    private static void renderGui(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) {
             return;
@@ -38,12 +38,12 @@ public class ClientPlayerForkliftHUD {
             String lower = ForkliftKeybinds.LOWER_FORKLIFT.getTranslatedKeyMessage().getString();
             String drift = ForkliftKeybinds.DRIFT.getTranslatedKeyMessage().getString();
             String eject = ForkliftKeybinds.EJECT_FORK_RIDERS.getTranslatedKeyMessage().getString();
-            graphics.drawString(Minecraft.getInstance().font, "Raise Lift: " + raise, 2, 20, Color.WHITE.getRGB());
-            graphics.drawString(Minecraft.getInstance().font, "Lower Lift: " + lower, 2, 30, Color.WHITE.getRGB());
-            graphics.drawString(Minecraft.getInstance().font, "Drift: " + drift, 2, 40, Color.WHITE.getRGB());
-            graphics.drawString(Minecraft.getInstance().font, "Eject Riders: " + eject, 2, 50, Color.WHITE.getRGB());
-            graphics.drawString(Minecraft.getInstance().font, "Is drifting: " + forkliftEntity.isDrifting(), 2, 60, Color.GREEN.getRGB());
-            graphics.drawString(Minecraft.getInstance().font, "Drift cooldown: " + forkliftEntity.driftCooldown, 2, 70, Color.GREEN.getRGB());
+            graphics.text(Minecraft.getInstance().font, "Raise Lift: " + raise, 2, 20, Color.WHITE.getRGB());
+            graphics.text(Minecraft.getInstance().font, "Lower Lift: " + lower, 2, 30, Color.WHITE.getRGB());
+            graphics.text(Minecraft.getInstance().font, "Drift: " + drift, 2, 40, Color.WHITE.getRGB());
+            graphics.text(Minecraft.getInstance().font, "Eject Riders: " + eject, 2, 50, Color.WHITE.getRGB());
+            graphics.text(Minecraft.getInstance().font, "Is drifting: " + forkliftEntity.isDrifting(), 2, 60, Color.GREEN.getRGB());
+            graphics.text(Minecraft.getInstance().font, "Drift cooldown: " + forkliftEntity.driftCooldown, 2, 70, Color.GREEN.getRGB());
 
             DRIFT_BAR.render(graphics, forkliftEntity);
         }

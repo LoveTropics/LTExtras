@@ -11,22 +11,24 @@ import com.lovetropics.extras.network.message.ServerboundPickCollectibleItemPack
 import com.lovetropics.extras.network.message.ServerboundReturnCollectibleItemPacket;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
@@ -40,11 +42,11 @@ import java.util.List;
 // Stop doing scrolling
 // Containers were never meant to scroll
 public class CollectibleBasketScreen extends AbstractContainerScreen<CollectibleBasketScreen.Menu> {
-    private static final Component TITLE = ExtraItems.COLLECTIBLE_BASKET.get().getName();
+    private static final Component TITLE = Util.make(() -> ExtraItems.COLLECTIBLE_BASKET.get().getName(ExtraItems.COLLECTIBLE_BASKET.asStack()));
 
-    private static final ResourceLocation BACKGROUND_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/creative_inventory/tab_items.png");
-    private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("container/creative_inventory/scroller");
-    private static final ResourceLocation TROPICOIN_SLOT_SPRITE = ResourceLocation.fromNamespaceAndPath(LTExtras.MODID, "currency_slot");
+    private static final Identifier BACKGROUND_LOCATION = Identifier.withDefaultNamespace("textures/gui/container/creative_inventory/tab_items.png");
+    private static final Identifier SCROLLER_SPRITE = Identifier.withDefaultNamespace("container/creative_inventory/scroller");
+    private static final Identifier TROPICOIN_SLOT_SPRITE = Identifier.fromNamespaceAndPath(LTExtras.MODID, "currency_slot");
 
     private static final SimpleContainer TROPICOIN_CONTAINER = new SimpleContainer(1);
 
@@ -72,11 +74,8 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     private Slot tropiCoinSlot;
 
     public CollectibleBasketScreen(Inventory playerInventory) {
-        super(new Menu(playerInventory.player, new CollectibleContainer(ClientCollectiblesList.get())), playerInventory, TITLE);
+        super(new Menu(playerInventory.player, new CollectibleContainer(ClientCollectiblesList.get())), playerInventory, TITLE, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
         playerInventory.player.containerMenu = menu;
-
-        imageWidth = BACKGROUND_WIDTH;
-        imageHeight = BACKGROUND_HEIGHT;
     }
 
     @Override
@@ -86,9 +85,9 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        renderTooltip(graphics, mouseX, mouseY);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractRenderState(graphics, mouseX, mouseY, a);
+//        graphics.renderTooltip(graphics, mouseX, mouseY); // // Todo 26.1 Port
 
         ScreenRectangle scroller = scrollerRectangle();
         if (scroller != null) {
@@ -99,6 +98,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
             this.tropiCoinSlot = new Slot(TROPICOIN_CONTAINER, 0, TROPICOIN_SLOT_X, TROPICOIN_SLOT_Y);
             this.getMenu().slots.add(this.tropiCoinSlot);
         }
+
         if (this.tropiCoinSlot != null) {
             if (Minecraft.getInstance().player != null) {
                 if (this.isHovering(this.tropiCoinSlot.x, this.tropiCoinSlot.y, 16, 16, mouseX, mouseY)) {
@@ -108,43 +108,47 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
     }
 
+
     @Override
-    protected void renderSlot(GuiGraphics graphics, Slot slot) {
+    protected void extractSlot(GuiGraphicsExtractor graphics, Slot slot, int mouseX, int mouseY) {
         if (slot == this.tropiCoinSlot) {
             if (Minecraft.getInstance().player != null) {
                 TropiCoinsStore data = Minecraft.getInstance().player.getData(ExtraAttachments.TROPICOINS_STORE);
                 String text = data.getAmount() > 99 ? "99₊" : String.valueOf(data.getAmount()); //todo
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TROPICOIN_SLOT_SPRITE, slot.x - 8, slot.y - 8, 32, 32);
-                graphics.renderFakeItem(ExtraItems.TROPICOIN.asStack(), slot.x, slot.y);
-                graphics.renderItemDecorations(this.font, ExtraItems.TROPICOIN.asStack(), slot.x, slot.y, text);
+                graphics.fakeItem(ExtraItems.TROPICOIN.asStack(), slot.x, slot.y);
+                graphics.itemDecorations(this.font, ExtraItems.TROPICOIN.asStack(), slot.x, slot.y, text);
             }
         }
-        super.renderSlot(graphics, slot);
+        super.extractSlot(graphics, slot, mouseX, mouseY);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
         ScreenRectangle scroller = scrollerRectangle();
         if (scroller != null && mouseX >= scroller.left() && mouseX <= scroller.right() && mouseY >= scroller.top() && mouseY <= scroller.bottom()) {
             draggingScroller = true;
             dragOffsetY = scroller.top() - mouseY;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+        double mouseY = event.y();
         if (draggingScroller) {
             float targetScrollerY = (float) (mouseY + dragOffsetY) - SCROLL_BAR_Y - topPos;
             scroll = clampScroll(targetScrollerY / (SCROLL_BAR_HEIGHT - SCROLLER_HEIGHT) * maxScroll());
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dx, dy);
     }
 
     @Override
-    public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroller = false;
-        return super.mouseReleased(pMouseX, pMouseY, pButton);
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -157,15 +161,15 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawString(font, title, titleLabelX, titleLabelY, 0x404040, false);
+    protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
+        graphics.text(font, title, titleLabelX, titleLabelY, 0x404040, false);
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_LOCATION, leftPos, topPos, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 256, 256, CommonColors.WHITE);
     }
-
+    
     @Nullable
     private ScreenRectangle scrollerRectangle() {
         if (!canScroll()) {
@@ -189,9 +193,9 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     private int maxScroll() {
         return Math.max(menu.container.contentRows() - ROWS, 0);
     }
-
+    
     @Override
-    protected void slotClicked(@Nullable Slot slot, int slotId, int mouseButton, ClickType type) {
+    protected void slotClicked(@Nullable Slot slot, int slotId, int mouseButton, ContainerInput type) {
         if (slot instanceof CollectibleSlot collectibleSlot) {
             switch (type) {
                 case PICKUP, PICKUP_ALL, QUICK_MOVE -> {
@@ -208,8 +212,8 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
             }
         } else if (slot == this.tropiCoinSlot) {
             TropiCoinsStore data = Minecraft.getInstance().player.getData(ExtraAttachments.TROPICOINS_STORE);
-            if (type == ClickType.PICKUP || type == ClickType.QUICK_CRAFT) {
-                if (type == ClickType.QUICK_CRAFT) {
+            if (type == ContainerInput.PICKUP || type == ContainerInput.QUICK_CRAFT) {
+                if (type == ContainerInput.QUICK_CRAFT) {
                     if (mouseButton == 5) {
                         mouseButton = 1;
                     } else if (mouseButton == 1) {
@@ -270,13 +274,13 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     // We are the imposter
-    private void simulateInventorySlotClicked(@Nullable Slot slot, int slotId, int mouseButton, ClickType type) {
+    private void simulateInventorySlotClicked(@Nullable Slot slot, int slotId, int mouseButton, ContainerInput type) {
         LocalPlayer player = minecraft.player;
         try {
             player.containerMenu = player.inventoryMenu;
             Slot mappedSlot = slot != null ? getSlotIn(slot, player.inventoryMenu) : null;
             int mappedSlotId = mappedSlot != null ? mappedSlot.index : slotId;
-            minecraft.gameMode.handleInventoryMouseClick(player.inventoryMenu.containerId, mappedSlotId, mouseButton, type, player);
+            minecraft.gameMode.handleContainerInput(player.inventoryMenu.containerId, mappedSlotId, mouseButton, type, player);
         } finally {
             player.containerMenu = menu;
         }

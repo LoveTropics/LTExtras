@@ -1,6 +1,6 @@
 package com.lovetropics.extras.client.screen;
 
-import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.resolver.ResolvedServerAddress;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.client.multiplayer.resolver.ServerNameResolver;
@@ -11,6 +11,8 @@ import net.minecraft.network.protocol.ping.ClientboundPongResponsePacket;
 import net.minecraft.network.protocol.status.ClientStatusPacketListener;
 import net.minecraft.network.protocol.status.ClientboundStatusResponsePacket;
 import net.minecraft.network.protocol.status.ServerboundStatusRequestPacket;
+import net.minecraft.server.network.EventLoopGroupHolder;
+import net.minecraft.util.Util;
 
 import javax.annotation.Nullable;
 import java.net.InetSocketAddress;
@@ -79,7 +81,7 @@ public class AutoJoinServerPinger {
     private CompletableFuture<Boolean> doPing(InetSocketAddress resolvedAddress) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        Connection connection = Connection.connectToServer(resolvedAddress, false, null);
+        Connection connection = Connection.connectToServer(resolvedAddress,  EventLoopGroupHolder.remote(Minecraft.getInstance().options.useNativeTransport()), null);
         ClientStatusPacketListener listener = new ClientStatusPacketListener() {
             @Override
             public void handleStatusResponse(ClientboundStatusResponsePacket packet) {

@@ -1,15 +1,12 @@
 package com.lovetropics.extras.mixin;
 
-import com.google.common.collect.ImmutableList;
-import cpw.mods.modlauncher.Launcher;
-import cpw.mods.modlauncher.api.IEnvironment;
+import net.neoforged.fml.ModList;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public final class LTExtrasMixinPlugin implements IMixinConfigPlugin {
@@ -54,15 +51,6 @@ public final class LTExtrasMixinPlugin implements IMixinConfigPlugin {
     }
 
     private static boolean isOptifineLoaded() {
-        List<Map<String, String>> maps = Launcher.INSTANCE.environment().getProperty(IEnvironment.Keys.MODLIST.get())
-                .orElse(ImmutableList.of());
-
-        for (Map<String, String> map : maps) {
-            if ("optifine".equalsIgnoreCase(map.get("name"))) {
-                return true;
-            }
-        }
-
-        return false;
+        return ModList.get().isLoaded("optifine");
     }
 }

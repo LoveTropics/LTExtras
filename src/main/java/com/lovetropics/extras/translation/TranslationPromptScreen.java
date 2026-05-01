@@ -30,7 +30,7 @@ public class TranslationPromptScreen extends Screen {
 
         layout.defaultCellSetting().alignHorizontallyCenter();
 
-        layout.addChild(new StringWidget(TITLE, font).alignCenter(), layout.newCellSettings().paddingVertical(10));
+        layout.addChild(new StringWidget(TITLE, font), layout.newCellSettings().paddingVertical(10));
 
         layout.addChild(new MultiLineTextWidget(MESSAGE, font).setCentered(true).setMaxWidth(MAX_WIDTH));
 

@@ -7,7 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -25,6 +24,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.util.Lazy;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock {
             .put(Axis.Z, Block.box(5, 3, 0, 11, 13, 16))
             .build();
 
-    private final LazyLoadedValue<Map<BlockState, VoxelShape>> ALL_SHAPES = new LazyLoadedValue<>(() -> getStateDefinition().getPossibleStates().stream()
+    private final Lazy<Map<BlockState, VoxelShape>> ALL_SHAPES = Lazy.of(() -> getStateDefinition().getPossibleStates().stream()
             .collect(Collectors.toMap(Function.identity(), s -> {
                 VoxelShape ret = Shapes.empty();
                 for (Axis a : Axis.values()) {

@@ -36,9 +36,8 @@ import static net.minecraft.commands.Commands.literal;
 @EventBusSubscriber(modid = LTExtras.MODID)
 public class PackControl extends SavedData {
 
-    private static final String STORAGE_ID = LTExtras.MODID + "_pack_control";
     public static final SavedDataType<PackControl> ID = new SavedDataType<>(
-            STORAGE_ID,
+            LTExtras.location("pack_control"),
             PackControl::new,
             RecordCodecBuilder.create(instance -> instance.group(
                     State.CODEC.fieldOf("state").forGetter(o -> o.state)
@@ -67,7 +66,7 @@ public class PackControl extends SavedData {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            PackControl packControl = PackControl.get(player.getServer());
+            PackControl packControl = PackControl.get(player.level().getServer());
             player.connection.send(new ClientboundUpdatePackControl(packControl.state));
         }
     }
@@ -75,7 +74,7 @@ public class PackControl extends SavedData {
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         event.getDispatcher().register(literal("packcontrol")
-                .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(packUpdater("enable", (state, packId) -> state.setEnabled(packId, true)))
                 .then(packUpdater("disable", (state, packId) -> state.setEnabled(packId, false)))
                 .then(packUpdater("hide", (state, packId) -> state.setHidden(packId, true)))

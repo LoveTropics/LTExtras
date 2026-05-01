@@ -6,7 +6,7 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.item.ImageData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.CommonColors;
@@ -41,7 +41,7 @@ public class InviteOverlay {
         });
     }
 
-    private static void drawImage(GuiGraphics graphics, ImageData image) {
+    private static void drawImage(GuiGraphicsExtractor graphics, ImageData image) {
         Font font = Minecraft.getInstance().font;
         int height = Math.min((int) image.height(), graphics.guiHeight() - PADDING * 2);
         float scale = height / image.height();
@@ -71,7 +71,7 @@ public class InviteOverlay {
             float lineTop = text.alignVertical().resolve(text.y(), textHeight);
             for (FormattedCharSequence line : lines) {
                 float lineLeft = text.alignHorizontal().resolve(text.x(), font.width(line));
-                graphics.drawString(font, line, Mth.floor(lineLeft), Mth.floor(lineTop), CommonColors.WHITE);
+                graphics.text(font, line, Mth.floor(lineLeft), Mth.floor(lineTop), CommonColors.WHITE);
                 lineTop += lineSpacing;
             }
         }

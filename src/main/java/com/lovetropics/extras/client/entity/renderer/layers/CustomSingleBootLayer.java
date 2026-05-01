@@ -7,6 +7,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
@@ -19,17 +20,21 @@ public class CustomSingleBootLayer<S extends HumanoidRenderState, M extends Huma
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, S renderState, float yRot, float xRot) {
-        if (!renderState.feetEquipment.isEmpty() && renderState.feetEquipment.getItem() instanceof CustomBootsItem) {
+    public void submit(PoseStack poseStack, SubmitNodeCollector collector, int lightCoords, S state, float yRot, float xRot) {
+        if (!state.feetEquipment.isEmpty() && state.feetEquipment.getItem() instanceof CustomBootsItem) {
             poseStack.pushPose();
             M m = this.getParentModel();
             m.root().translateAndRotate(poseStack);
             m.leftLeg.translateAndRotate(poseStack);
-            translateToFeet(poseStack, renderState.feetEquipment);
-            Minecraft.getInstance().getItemRenderer().renderStatic(renderState.feetEquipment, ItemDisplayContext.FIXED, packedLight, 0, poseStack, bufferSource, null, 0);
+            translateToFeet(poseStack, state.feetEquipment);
+            // Todo 26.1 Port
+//            collector.submitItem(state.feetEquipment, ItemDisplayContext.FIXED, packedLight, 0, poseStack, bufferSource, null, 0);
+//            Minecraft.getInstance().getItemRenderer().renderStatic(renderState.feetEquipment, ItemDisplayContext.FIXED, packedLight, 0, poseStack, bufferSource, null, 0);
             poseStack.popPose();
         }
     }
+
+
 
     public void translateToFeet(PoseStack poseStack, ItemStack stack) {
         var y = 0.05 + stack.getOrDefault(ExtraDataComponents.ADJUST_HEIGHT, 0.0f);

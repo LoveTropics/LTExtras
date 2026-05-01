@@ -3,7 +3,6 @@
   "package": "com.lovetropics.extras.mixin",
   "compatibilityLevel": "JAVA_21",
   "plugin": "com.lovetropics.extras.mixin.LTExtrasMixinPlugin",
-  "refmap": "ltextras.refmap.json",
   "mixins": [
     "AbstractContainerMenuAccess",
     "BlockBehaviourMixin",
@@ -20,16 +19,13 @@
     "LecternBlockMixin",
     "LivingEntityMixin",
     "MinecraftServerAccessor",
-    "PlayerListMixin",
     "ResourceKeyArgumentAccessor",
     "RideCommandMixin",
     "ScaffoldingBlockMixin",
     "ServerCommonPacketListenerImplMixin",
     "ServerGamePacketListenerImplMixin",
     "ShulkerMixin",
-    "ShulkerRendererMixin",
     "WardenMixin",
-    "client.fix.ClientCommandHandlerMixin",
     "collectible.ItemStackMixin",
     "collectible.MerchantResultSlotMixin",
     "collectible.ServerPlayerGameModeMixin",
@@ -37,9 +33,7 @@
     "no_vanilla.AdvancementTreeMixin",
     "no_vanilla.DropVanillaAdvancementsMixin",
     "placeholder.TextDisplayAccessor",
-    "placeholder.TextDisplayMixin",
     "placeholder.TransformationMixin",
-    "rejoiner.ClientCommonPacketListenerImplMixin",
     "rejoiner.StopCommandMixin"
   ],
   "client": [
@@ -51,13 +45,15 @@
     "client.IconSetMixin",
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
+    "client.ModelFeatureRendererMixin",
     "client.PaintingRendererMixin",
+    "client.ShulkerRendererMixin",
     "client.collectible.MultiPlayerGameModeMixin",
     "client.menu.LogoRendererMixin",
     "client.menu.TitleScreenMixin",
     "client.packcontrol.PackSelectionModelMixin",
-    "client.translation.MinecraftMixin",
-    "client.world_effect.ClientLevelMixin"
+    "client.rejoiner.ClientCommonPacketListenerImplMixin",
+    "client.translation.MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1

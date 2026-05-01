@@ -8,18 +8,21 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.entity.ClientAvatarEntity;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.entity.player.AvatarRenderer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.context.ContextKey;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -29,6 +32,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.client.renderstate.AvatarRenderStateModifier;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import org.joml.Matrix4f;
@@ -44,7 +48,7 @@ import java.util.UUID;
 
 @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class ClientPlayerSensorEffects {
-    private static final ResourceLocation MARKER_BOX_SPRITE = LTExtras.location("marker_box");
+    private static final Identifier MARKER_BOX_SPRITE = LTExtras.location("marker_box");
     private static final int MARKER_BOX_INNER_PADDING = 32;
 
     private static final ContextKey<UUID> UUID_KEY = new ContextKey<>(LTExtras.location("uuid"));
@@ -75,7 +79,7 @@ public class ClientPlayerSensorEffects {
         event.registerBelow(VanillaGuiLayers.CAMERA_OVERLAYS, LTExtras.location("player_sensor"), ClientPlayerSensorEffects::renderGui);
     }
 
-    private static void renderGui(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    private static void renderGui(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) {
             return;
@@ -94,7 +98,7 @@ public class ClientPlayerSensorEffects {
         CAPTURED_SCREEN_POS.clear();
     }
 
-    private static void renderGuiMarker(GuiGraphics graphics, CapturedScreenBoxes screenBoxes, PlayerSensor.Appearance appearance) {
+    private static void renderGuiMarker(GuiGraphicsExtractor graphics, CapturedScreenBoxes screenBoxes, PlayerSensor.Appearance appearance) {
         GuiBox face = screenBoxes.face.toGui(graphics);
         int faceSize = Math.max(face.width(), face.height());
 
@@ -147,9 +151,12 @@ public class ClientPlayerSensorEffects {
 
     @SubscribeEvent
     public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
-        event.registerEntityModifier(PlayerRenderer.class, (entity, state) ->
-                state.setRenderData(UUID_KEY, entity.getUUID())
-        );
+        event.registerAvatarEntityModifier(new AvatarRenderStateModifier() {
+            @Override
+            public <T extends Avatar & ClientAvatarEntity> void accept(T avatar, AvatarRenderState renderState) {
+                renderState.setRenderData(UUID_KEY, avatar.getUUID());
+            }
+        });
     }
 
     public static <T extends LivingEntityRenderState> void captureModelPose(T state, EntityModel<?> model, PoseStack poseStack) {
@@ -226,7 +233,7 @@ public class ClientPlayerSensorEffects {
     }
 
     private record ScreenBox(float x0, float y0, float x1, float y1) {
-        public GuiBox toGui(GuiGraphics graphics) {
+        public GuiBox toGui(GuiGraphicsExtractor graphics) {
             return new GuiBox(
                     Mth.floor(x0 * graphics.guiWidth()), Mth.floor(y0 * graphics.guiHeight()),
                     Mth.floor(x1 * graphics.guiWidth()), Mth.floor(y1 * graphics.guiHeight())

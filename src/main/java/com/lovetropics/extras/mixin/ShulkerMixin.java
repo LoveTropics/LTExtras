@@ -30,7 +30,7 @@ public abstract class ShulkerMixin extends Entity {
     @Inject(method = "tick", at=@At("HEAD"), cancellable = true)
     public void getHonied(CallbackInfo ci) {
         if (getData(ExtraAttachments.HONIED)) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 // Shut yo face
                 entityData.set(DATA_PEEK_ID, (byte) 0);
 

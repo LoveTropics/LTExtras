@@ -89,7 +89,7 @@ public class WarehouseRoadBoosterBlock extends Block {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
         if (entity instanceof LivingEntity livingEntity && !livingEntity.isSteppingCarefully()) {
             Entity vehicle = entity.getVehicle();
             if (vehicle instanceof ForkliftEntity forkliftEntity) {
@@ -97,7 +97,6 @@ public class WarehouseRoadBoosterBlock extends Block {
                 livingEntity.addEffect(new MobEffectInstance(ExtraEffects.FORKLIFT_BOOST, FORKLIFT_BOOST_TICKS, 1, false, false, true));
             }
         }
-
     }
 
     static {

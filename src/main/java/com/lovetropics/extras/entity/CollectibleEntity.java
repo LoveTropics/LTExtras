@@ -5,7 +5,6 @@ import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.item.CollectibleCompassItem;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -13,6 +12,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
@@ -58,7 +59,7 @@ public class CollectibleEntity extends Entity {
 
     @Override
     public void playerTouch(Player player) {
-        if (!level().isClientSide && collectible != null) {
+        if (!level().isClientSide() && collectible != null) {
             tryGiveCollectible(player, collectible);
         }
     }
@@ -69,11 +70,11 @@ public class CollectibleEntity extends Entity {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         if (collectible == null) {
-            return super.interact(player, hand);
+            return super.interact(player, hand, location);
         }
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             tryGiveCollectible(player, collectible);
             return InteractionResult.CONSUME;
         } else {
@@ -84,7 +85,7 @@ public class CollectibleEntity extends Entity {
     @Override
     public boolean skipAttackInteraction(Entity entity) {
         if (collectible != null && entity instanceof Player player) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 tryGiveCollectible(player, collectible);
             }
             return true;

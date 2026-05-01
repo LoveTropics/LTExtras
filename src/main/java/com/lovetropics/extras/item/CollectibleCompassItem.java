@@ -10,12 +10,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
-import net.minecraft.Util;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -63,7 +63,7 @@ public class CollectibleCompassItem extends Item {
         CollectibleStore collectibles = CollectibleStore.get(player);
 
         List<CollectibleEntity> candidates = level.getEntitiesOfClass(CollectibleEntity.class, player.getBoundingBox().inflate(SEARCH_RANGE), entity -> {
-            if (entity.getTags().contains(ENTITY_TAG_IGNORE)) {
+            if (entity.entityTags().contains(ENTITY_TAG_IGNORE)) {
                 return false;
             }
             Holder<Collectible> collectible = entity.getCollectible();

@@ -1,6 +1,6 @@
 package com.lovetropics.extras.entity;
 
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 
 public class CleaningItemFrame extends ItemFrame {
 
@@ -67,7 +68,7 @@ public class CleaningItemFrame extends ItemFrame {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         if (hand == InteractionHand.MAIN_HAND && this.level() instanceof ServerLevel serverLevel) {
             ItemStack itemInFrame = this.getItem();
             if (!itemInFrame.isEmpty()) {
@@ -86,7 +87,6 @@ public class CleaningItemFrame extends ItemFrame {
             }
         }
         return InteractionResult.PASS;
-
     }
 
     public void processCleanTick(ServerLevel serverLevel) {
