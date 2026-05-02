@@ -6,8 +6,6 @@ import net.minecraft.network.codec.StreamCodec;
 
 public interface ModelModifierType<T extends ModelModifier<?>> {
 
-//    T create();
-
     MapCodec<T> codec();
 
     StreamCodec<RegistryFriendlyByteBuf, T> streamCodec();

@@ -3,6 +3,7 @@ package com.lovetropics.extras.client.model_modifer;
 import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.client.model_modifer.types.ConstantModelApplier;
 import com.lovetropics.extras.client.model_modifer.types.FabulousWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.FlailWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.HopWalkApplier;
@@ -57,6 +58,7 @@ public class ModelModifierClient {
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.ENDER_ARMS.get(), new LongArmsApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.STIFF_LEGS.get(), new StiffLegsApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.HOP_WALK.get(), new HopWalkApplier());
+        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.CONSTANT.get(), new ConstantModelApplier());
 
         ExtraModelModifierTypes.REGISTER.getEntries().forEach(entry -> {
             if (!CLIENT_MODEL_DATA.containsKey(entry.get())) {
