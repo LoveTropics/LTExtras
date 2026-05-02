@@ -1,15 +1,16 @@
 package com.lovetropics.extras.client.model_modifer.types;
 
-import com.lovetropics.extras.client.model_modifer.ModelModifier;
+import com.lovetropics.extras.client.model_modifer.ModelApplier;
+import com.lovetropics.extras.model_modifer.types.UnitType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Mth;
 
-public record HoveringWalkModifier() implements ModelModifier {
+public record HoveringWalkApplier() implements ModelApplier<UnitType> {
     @Override
-    public void applyToModel(LivingEntityRenderState state, EntityModel<?> model) {
+    public void applyToModel(UnitType data, LivingEntityRenderState state, EntityModel<?> model) {
         if (!(model instanceof HumanoidModel<?> humanoidModel)) {
             return;
         }
@@ -24,7 +25,7 @@ public record HoveringWalkModifier() implements ModelModifier {
     }
 
     @Override
-    public void applyToTransforms(PoseStack poseStack, LivingEntityRenderState state) {
+    public void applyToTransforms(UnitType data, PoseStack poseStack, LivingEntityRenderState state) {
         poseStack.translate(0.0f, getYOffset(state) / 16.0f, 0.0f);
     }
 

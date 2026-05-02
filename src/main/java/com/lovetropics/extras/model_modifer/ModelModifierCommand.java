@@ -1,15 +1,19 @@
 package com.lovetropics.extras.model_modifer;
 
 import com.google.common.collect.Sets;
-import com.lovetropics.extras.command.arguments.ModelModifierArgumentType;
+import com.lovetropics.extras.command.arugments.ModelModifierArgument;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
+import com.lovetropics.extras.registry.ExtraRegistries;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.ResourceArgument;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 
@@ -24,25 +28,25 @@ import static net.minecraft.commands.Commands.literal;
 
 public class ModelModifierCommand {
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         // @formatter:off
         dispatcher.register(
                 literal("modelmodifer")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(literal("add")
                             .then(argument("entities", EntityArgument.entities())
-                                .then(argument("modifier", ModelModifierArgumentType.modelModifier())
-                                    .executes(ctx -> addModifier(ctx, ctx.getArgument("modifier", ModelModifierType.class), EntityArgument.getEntities(ctx, "entities")))
+                                .then(argument("modifier", ModelModifierArgument.modifier(context))
+                                    .executes(ctx -> addModifier(ctx, ModelModifierArgument.getModifier(ctx, "modifier"), EntityArgument.getEntities(ctx, "entities")))
                                 )
                             )
                         )
                         .then(literal("remove")
                             .then(argument("entities", EntityArgument.entities())
-                                .then(argument("modifier", ModelModifierArgumentType.modelModifier())
+                                .then(argument("modifier", ModelModifierArgument.modifier(context))
                                     .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                             getModifiers(EntityArgument.getEntities(ctx, "entities")), builder)
                                     )
-                                    .executes(ctx -> removeModifier(ctx, ctx.getArgument("modifier", ModelModifierType.class), EntityArgument.getEntities(ctx, "entities")))
+                                    .executes(ctx -> removeModifier(ctx, ModelModifierArgument.getModifier(ctx, "modifier"), EntityArgument.getEntities(ctx, "entities")))
                                 )
                             )
                         )
@@ -59,23 +63,23 @@ public class ModelModifierCommand {
         );
     }
 
-    private static int addModifier(CommandContext<CommandSourceStack> ctx, ModelModifierType modifier, Collection<? extends Entity> entities)  {
+    private static int addModifier(CommandContext<CommandSourceStack> ctx, Holder<ModelModifier<?>> modifier, Collection<? extends Entity> entities)  {
         for (Entity entity : entities) {
             ModelModifierStore.addModifier(entity, modifier);
         }
 
-        ctx.getSource().sendSuccess(() -> Component.literal("Added " + modifier.getSerializedName() + " model modifier to " + entities.size() + " entities"), true);
+        ctx.getSource().sendSuccess(() -> Component.literal("Added " + modifier.getRegisteredName() + " model modifier to " + entities.size() + " entities"), true);
 
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int removeModifier(CommandContext<CommandSourceStack> ctx, ModelModifierType modifier, Collection<? extends Entity> entities)  {
+    private static int removeModifier(CommandContext<CommandSourceStack> ctx, Holder<ModelModifier<?>> modifier, Collection<? extends Entity> entities)  {
         for (Entity entity : entities) {
             ModelModifierStore.removeModifier(entity, modifier);
             entity.syncData(ExtraAttachments.MODEL_MODIFIERS);
         }
 
-        ctx.getSource().sendSuccess(() -> Component.literal("Removed " + modifier.getSerializedName() + " model modifier for " + entities.size() + " entities"), true);
+        ctx.getSource().sendSuccess(() -> Component.literal("Removed " + modifier.getRegisteredName() + " model modifier for " + entities.size() + " entities"), true);
 
         return Command.SINGLE_SUCCESS;
     }
@@ -91,18 +95,18 @@ public class ModelModifierCommand {
     }
 
     private static int listModifiers(CommandContext<CommandSourceStack> ctx, Collection<? extends Entity> entities)  {
-        List<ModelModifierType> modifiers = new ArrayList<>();
+        List<String> modifiers = new ArrayList<>();
 
         for (Entity entity : entities) {
-            List<ModelModifierType> modelModifierTypes = ModelModifierStore.getOrDefault(entity).appliedModifiers();
-            for (ModelModifierType modelModifierType : modelModifierTypes) {
-                if (!modifiers.contains(modelModifierType)) {
-                    modifiers.add(modelModifierType);
+            List<Holder<ModelModifier<?>>> modelModifierTypes = ModelModifierStore.getOrDefault(entity).appliedModifiers();
+            for (Holder<ModelModifier<?>> modelModifierType : modelModifierTypes) {
+                if (!modifiers.contains(modelModifierType.getRegisteredName())) {
+                    modifiers.add(modelModifierType.getRegisteredName());
                 }
             }
         }
 
-        String modifierString = modifiers.stream().map(ModelModifierType::getSerializedName).collect(Collectors.joining(", "));
+        String modifierString = String.join(", ",modifiers);
         ctx.getSource().sendSuccess(() -> Component.literal(entities.size() + " have " + modifierString + " modifers"), true);
 
         return Command.SINGLE_SUCCESS;
@@ -112,7 +116,11 @@ public class ModelModifierCommand {
         Set<String> set = Sets.newHashSet();
 
         for (Entity entity : entities) {
-            set.addAll(ModelModifierStore.getOrDefault(entity).getFormattedModifierNames());
+            List<Holder<ModelModifier<?>>> holders = ModelModifierStore.getOrDefault(entity).appliedModifiers();
+            for (Holder<ModelModifier<?>> holder : holders) {
+                holder.unwrapKey().ifPresent(key -> set.add(key.identifier().toString()));
+            }
+            set.addAll(holders.stream().map(Holder::getRegisteredName).toList());
         }
 
         return set;

@@ -14,6 +14,7 @@ import com.lovetropics.extras.client.entity.model.WaterCoolerModel;
 import com.lovetropics.extras.client.entity.renderer.layers.CustomSingleBootLayer;
 import com.lovetropics.extras.client.entity.state.HoniedShulkerRenderState;
 import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
+import com.lovetropics.extras.client.model_modifer.ModelModifierClient;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.effect.PropaguledEffect;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -85,6 +86,7 @@ public class ClientRegisterEvents {
     @SubscribeEvent
     public static void setupClient(final FMLClientSetupEvent event) {
         ForkliftKeybinds.init();
+        ModelModifierClient.init();
     }
 
     @SubscribeEvent
