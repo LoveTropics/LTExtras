@@ -2,6 +2,7 @@ package com.lovetropics.extras.model_modifer;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.model_modifer.types.CompositeType;
+import com.lovetropics.extras.model_modifer.types.ConstantType;
 import com.lovetropics.extras.model_modifer.types.EnderArmsType;
 import com.lovetropics.extras.model_modifer.types.FabulousType;
 import com.lovetropics.extras.model_modifer.types.FlailType;
@@ -53,4 +54,5 @@ public class ExtraModelModifierTypes {
     public static final DeferredHolder<ModelModifierType<?>, OffsetType> OFFSET = REGISTER.register("offset", OffsetType::new);
     public static final DeferredHolder<ModelModifierType<?>, CompositeType> COMPOSITE = REGISTER.register("composite", CompositeType::new);
     public static final DeferredHolder<ModelModifierType<?>, StiffLegsType> STIFF_LEGS = REGISTER.register("stiff_legs", StiffLegsType::new);
+    public static final DeferredHolder<ModelModifierType<?>, ConstantType> CONSTANT = REGISTER.register("constant", ConstantType::new);
 }

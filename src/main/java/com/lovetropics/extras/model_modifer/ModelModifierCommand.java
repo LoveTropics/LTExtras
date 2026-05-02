@@ -107,7 +107,7 @@ public class ModelModifierCommand {
         }
 
         String modifierString = String.join(", ",modifiers);
-        ctx.getSource().sendSuccess(() -> Component.literal(entities.size() + " have " + modifierString + " modifers"), true);
+        ctx.getSource().sendSuccess(() -> Component.literal(entities.size() + " have " + modifierString + " modifiers"), true);
 
         return Command.SINGLE_SUCCESS;
     }
