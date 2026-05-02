@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class GlassFrogRenderer extends MobRenderer<GlassFrog, GlassFrogRenderState, GlassFrogModel> {
     private static final Identifier TEXTURE = LTExtras.location("textures/entity/glass_frog.png");

@@ -1,6 +1,5 @@
 package com.lovetropics.extras.block;
 
-import com.lovetropics.extras.LTExtras;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -10,7 +9,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 // sorry
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class ScientificNameBlock extends Block {
     private final String scientificName;
 

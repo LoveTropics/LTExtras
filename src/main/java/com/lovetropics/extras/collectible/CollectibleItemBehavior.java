@@ -2,7 +2,6 @@ package com.lovetropics.extras.collectible;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.lovetropics.extras.ExtraDataComponents;
-import com.lovetropics.extras.LTExtras;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +23,7 @@ import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerDestroyItemEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class CollectibleItemBehavior {
     private static final int INVENTORY_CHECK_INTERVAL = SharedConstants.TICKS_PER_SECOND;
 

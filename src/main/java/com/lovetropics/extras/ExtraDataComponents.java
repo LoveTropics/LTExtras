@@ -8,9 +8,9 @@ import com.lovetropics.extras.item.FireExtinguisher;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.PaintingOverlay;
-import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
+import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +34,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.List;
 import java.util.UUID;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class ExtraDataComponents {
     public static final DeferredRegister.DataComponents REGISTER = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, LTExtras.MODID);
 

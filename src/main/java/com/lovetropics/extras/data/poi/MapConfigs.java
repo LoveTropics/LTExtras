@@ -13,7 +13,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class MapConfigs {
     public static final CodecRegistry<Identifier, Named<PoiConfig>> POIS = CodecRegistry.resourceLocationKeys();
 

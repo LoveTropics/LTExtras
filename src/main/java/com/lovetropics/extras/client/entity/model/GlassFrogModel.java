@@ -2,10 +2,8 @@ package com.lovetropics.extras.client.entity.model;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.entity.animation.GlassFrogAnimation;
-import com.lovetropics.extras.client.entity.state.AmazonRiverDolphinRenderState;
 import com.lovetropics.extras.client.entity.state.GlassFrogRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;
-import net.minecraft.client.animation.definitions.CamelAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -14,9 +12,7 @@ import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.MeshTransformer;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.util.Mth;
 
 /**
  * Model for the Glass Frog, made by TripleHeadedSheep!

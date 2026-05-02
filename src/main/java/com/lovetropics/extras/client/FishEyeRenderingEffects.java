@@ -1,6 +1,5 @@
 package com.lovetropics.extras.client;
 
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.effect.ExtraEffects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -11,7 +10,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ViewportEvent;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class FishEyeRenderingEffects {
     @SubscribeEvent
     public static void onRenderFog(ViewportEvent.RenderFog event) {

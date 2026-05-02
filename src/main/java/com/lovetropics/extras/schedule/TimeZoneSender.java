@@ -1,6 +1,5 @@
 package com.lovetropics.extras.schedule;
 
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.network.message.ServerboundSetTimeZonePacket;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -10,7 +9,7 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.time.ZoneId;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class TimeZoneSender {
     @SubscribeEvent
     public static void onLogIn(ClientPlayerNetworkEvent.LoggingIn event) {

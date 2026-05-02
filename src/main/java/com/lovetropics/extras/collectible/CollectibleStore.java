@@ -1,7 +1,6 @@
 package com.lovetropics.extras.collectible;
 
 import com.lovetropics.extras.ExtraDataComponents;
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
 import com.mojang.serialization.MapCodec;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class CollectibleStore {
     public static final MapCodec<CollectibleStore> MAP_CODEC = CollectibleData.MAP_CODEC.xmap(
             data -> {

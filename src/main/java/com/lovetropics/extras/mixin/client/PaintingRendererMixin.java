@@ -2,7 +2,6 @@ package com.lovetropics.extras.mixin.client;
 
 import com.lovetropics.extras.client.PaintingOverlayRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.PaintingRenderer;
 import net.minecraft.client.renderer.entity.state.PaintingRenderState;

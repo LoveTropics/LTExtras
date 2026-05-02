@@ -6,7 +6,6 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
-import net.minecraft.world.entity.animal.frog.Frog;
 
 public class GlassCroak extends Behavior<GlassFrog> {
     private static final int CROAK_TICKS = 60;

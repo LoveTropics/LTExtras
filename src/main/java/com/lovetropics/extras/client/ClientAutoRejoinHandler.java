@@ -1,6 +1,5 @@
 package com.lovetropics.extras.client;
 
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.screen.ServerClosedScreen;
 import com.lovetropics.extras.rejoiner.AutoRejoinIntent;
 import net.minecraft.client.gui.screens.Screen;
@@ -13,7 +12,7 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 
 import javax.annotation.Nullable;
 
-@EventBusSubscriber(value = Dist.CLIENT, modid = LTExtras.MODID)
+@EventBusSubscriber(Dist.CLIENT)
 public class ClientAutoRejoinHandler {
     private static AutoRejoinIntent intent = AutoRejoinIntent.DISABLE;
 

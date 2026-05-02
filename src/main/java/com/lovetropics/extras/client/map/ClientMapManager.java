@@ -1,6 +1,5 @@
 package com.lovetropics.extras.client.map;
 
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.screen.map.TropicalMapScreen;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.data.poi.PoiConfig;
@@ -24,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class ClientMapManager {
     private static final Int2ObjectMap<ClientPoi> POIS = new Int2ObjectOpenHashMap<>();
 

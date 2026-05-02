@@ -19,9 +19,9 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ScreenEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class CustomTitleScreen {
     private static final Component SINGLEPLAYER_TEXT = Component.translatable("menu.singleplayer");
     private static final Component MULTIPLAYER_TEXT = Component.translatable("menu.multiplayer");

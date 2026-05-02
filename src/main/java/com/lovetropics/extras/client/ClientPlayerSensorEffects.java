@@ -15,7 +15,6 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
@@ -46,7 +45,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class ClientPlayerSensorEffects {
     private static final Identifier MARKER_BOX_SPRITE = LTExtras.location("marker_box");
     private static final int MARKER_BOX_INNER_PADDING = 32;

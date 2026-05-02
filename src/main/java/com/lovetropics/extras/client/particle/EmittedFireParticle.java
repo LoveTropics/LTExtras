@@ -1,22 +1,13 @@
 package com.lovetropics.extras.client.particle;
 
-import com.lovetropics.extras.LTExtras;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import org.jspecify.annotations.Nullable;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
 public class EmittedFireParticle extends EmittedRaisingParticle {
 
     EmittedFireParticle(ClientLevel world, double x, double y, double z, SpriteSet sprites) {
@@ -48,15 +39,6 @@ public class EmittedFireParticle extends EmittedRaisingParticle {
         }
 
         return j | k << 16;
-    }
-
-    @SubscribeEvent
-    public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-    }
-
-    @Override
-    protected Layer getLayer() {
-        return Layer.OPAQUE;
     }
 
     record Factory(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {

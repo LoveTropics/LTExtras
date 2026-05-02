@@ -1,6 +1,5 @@
 package com.lovetropics.extras.client;
 
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.screen.container.CollectibleBasketScreen;
 import com.lovetropics.extras.collectible.Collectible;
 import net.minecraft.client.Minecraft;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class ClientCollectiblesList {
     @Nullable
     private static ClientCollectiblesList instance;

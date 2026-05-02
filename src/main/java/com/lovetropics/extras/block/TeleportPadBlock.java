@@ -2,7 +2,6 @@ package com.lovetropics.extras.block;
 
 import com.lovetropics.extras.ExtraBlocks;
 import com.lovetropics.extras.ExtraDataComponents;
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.block.entity.TeleportPadBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -45,9 +44,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class TeleportPadBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
     public static final MapCodec<TeleportPadBlock> CODEC = simpleCodec(TeleportPadBlock::new);
 

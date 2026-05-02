@@ -1,8 +1,8 @@
 package com.lovetropics.extras.client;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.entity.ForkliftEntity;
 import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
+import com.lovetropics.extras.entity.ForkliftEntity;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -15,7 +15,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 import java.awt.*;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class ClientPlayerForkliftHUD {
 
     private static ForkliftDriftBarRenderer DRIFT_BAR;

@@ -3,7 +3,6 @@ package com.lovetropics.extras.client.entity.model;// Made with Blockbench 5.0.4
 // Paste this class into your mod and generate all required imports
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.client.entity.WaterCoolerRenderer;
 import com.lovetropics.extras.client.entity.animation.WaterCoolerAnimation;
 import com.lovetropics.extras.client.entity.state.WaterCoolerRenderState;
 import net.minecraft.client.animation.KeyframeAnimation;

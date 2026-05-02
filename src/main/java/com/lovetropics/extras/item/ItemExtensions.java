@@ -1,10 +1,6 @@
 package com.lovetropics.extras.item;
 
 import com.lovetropics.extras.ExtraDataComponents;
-import com.lovetropics.extras.LTExtras;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.TriState;
@@ -19,7 +15,7 @@ import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class ItemExtensions {
     public static boolean onItemToss(Player player, ItemEntity item) {
         ItemStack stack = item.getItem();

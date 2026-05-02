@@ -19,7 +19,7 @@
 //import java.util.concurrent.CompletableFuture;
 //import java.util.stream.Collectors;
 //
-//@EventBusSubscriber(modid = LTExtras.MODID)
+//@EventBusSubscriber
 //public class SchedulePlaceholders {
 //    private static final PlaceholderResult UNKNOWN = PlaceholderResult.value("?");
 //    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("EEE HH:mm");

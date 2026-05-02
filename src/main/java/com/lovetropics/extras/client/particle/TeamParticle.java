@@ -7,7 +7,6 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.RandomSource;
-import org.jspecify.annotations.Nullable;
 
 public class TeamParticle extends HeartParticle {
 
@@ -15,12 +14,7 @@ public class TeamParticle extends HeartParticle {
         super(world, x, y, z, sprites.first());
     }
 
-    @Override
-    public Layer getLayer() {
-        return Layer.OPAQUE;
-    }
-
-   record TeamFactory(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {
+    record TeamFactory(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {
 
         @Override
         public Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double xAux, double yAux, double zAux, RandomSource random) {

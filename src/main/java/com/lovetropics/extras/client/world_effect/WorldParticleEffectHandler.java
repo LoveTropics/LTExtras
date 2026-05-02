@@ -1,6 +1,5 @@
 package com.lovetropics.extras.client.world_effect;
 
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.world_effect.ParticlesEffect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -15,7 +14,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 import javax.annotation.Nullable;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class WorldParticleEffectHandler {
     @Nullable
     private static ParticlesEffect effect;

@@ -38,8 +38,8 @@ import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemMode
 import net.minecraft.client.renderer.item.properties.select.DisplayContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -57,8 +57,6 @@ import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.item.equipment.EquipmentAssets;
 import net.minecraft.world.item.equipment.Equippable;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -242,7 +240,6 @@ public class ExtraItems {
     public static void init() {
     }
 
-    @EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
     private static class Models {
         public static final ModelTemplate GLASSES_EQUIPPED_TEMPLATE = ModelTemplates.createItem(LTExtras.location("template_glasses_equipped").toString(), "_equipped", TextureSlot.LAYER0);
 

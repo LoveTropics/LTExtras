@@ -1,12 +1,11 @@
 package com.lovetropics.extras.world_effect;
 
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.Named;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +21,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class WorldEffectManager {
     private static final Map<ResourceKey<Level>, Map<Identifier, Entry>> EFFECTS_BY_DIMENSION = new Reference2ObjectOpenHashMap<>();
 

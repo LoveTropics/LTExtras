@@ -1,13 +1,10 @@
 package com.lovetropics.extras.collectible;
 
 import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
-
-import java.util.stream.Stream;
 
 public enum CollectibleRarity implements StringRepresentable {
     PURCHASED("#BFEA00"),

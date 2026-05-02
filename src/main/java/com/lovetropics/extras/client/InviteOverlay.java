@@ -21,7 +21,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 import java.util.List;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class InviteOverlay {
     private static final int PADDING = 10;
 

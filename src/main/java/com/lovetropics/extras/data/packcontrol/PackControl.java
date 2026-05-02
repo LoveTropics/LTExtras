@@ -33,7 +33,7 @@ import static com.mojang.brigadier.arguments.StringArgumentType.string;
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class PackControl extends SavedData {
 
     public static final SavedDataType<PackControl> ID = new SavedDataType<>(

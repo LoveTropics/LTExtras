@@ -1,6 +1,5 @@
 package com.lovetropics.extras.client.command;
 
-import com.lovetropics.extras.LTExtras;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -22,7 +21,7 @@ import static com.mojang.brigadier.arguments.StringArgumentType.word;
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class NameTagModeCommand {
     private static Mode mode = Mode.DEFAULT;
 

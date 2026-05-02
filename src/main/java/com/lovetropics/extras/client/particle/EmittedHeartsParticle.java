@@ -6,7 +6,6 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.RandomSource;
-import org.jspecify.annotations.Nullable;
 
 public class EmittedHeartsParticle extends EmittedRaisingParticle {
 
@@ -15,15 +14,10 @@ public class EmittedHeartsParticle extends EmittedRaisingParticle {
         setSize(0.75f, 0.75f);
     }
 
-    @Override
-    protected Layer getLayer() {
-        return Layer.OPAQUE;
-    }
-
     record Factory(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
 
         @Override
-        public @Nullable Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double xAux, double yAux, double zAux, RandomSource random) {
+        public Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double xAux, double yAux, double zAux, RandomSource random) {
             return new EmittedHeartsParticle(level, x, y, z, sprites);
         }
     }

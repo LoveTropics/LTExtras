@@ -11,6 +11,6 @@ public class RideCommandMixin {
 
     @Redirect(method = "mount", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;is(Ljava/lang/Object;)Z"))
     private static boolean handleMount(Entity instance, Object o) {
-        return true;
+        return false;
     }
 }

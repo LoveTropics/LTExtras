@@ -1,6 +1,5 @@
 package com.lovetropics.extras.client.world_effect;
 
-import com.lovetropics.extras.LTExtras;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
@@ -10,7 +9,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class SkyColorEffectHandler {
     private static final EffectInterpolator<State> INTERPOLATOR = new EffectInterpolator<>(State::lerp, State.NONE);
 

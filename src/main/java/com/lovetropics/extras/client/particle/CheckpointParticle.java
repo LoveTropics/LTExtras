@@ -15,7 +15,7 @@
 //import net.neoforged.fml.common.EventBusSubscriber;
 //import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 //
-//@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+//@EventBusSubscriber(Dist.CLIENT)
 //public class CheckpointParticle extends SingleQuadParticle {
 //
 //    CheckpointParticle(ClientLevel world, double x, double y, double z, Identifier spriteId) {

@@ -1,6 +1,5 @@
 package com.lovetropics.extras.data;
 
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -8,13 +7,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class TropiCoinsStore {
     public static final MapCodec<TropiCoinsStore> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             Codec.INT.fieldOf("amount").forGetter(TropiCoinsStore::getAmount)

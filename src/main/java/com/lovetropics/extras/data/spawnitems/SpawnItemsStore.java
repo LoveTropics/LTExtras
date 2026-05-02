@@ -1,6 +1,5 @@
 package com.lovetropics.extras.data.spawnitems;
 
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public final class SpawnItemsStore {
     public static final MapCodec<SpawnItemsStore> MAP_CODEC = Codec.unboundedMap(Identifier.CODEC, SpawnItems.Stack.CODEC.listOf()).xmap(
             stacksById -> {

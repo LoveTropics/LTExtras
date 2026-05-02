@@ -26,7 +26,7 @@ import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 
 import java.util.function.Supplier;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class HighHeelsItem extends Item {
     public HighHeelsItem(Properties properties) {
         super(properties);

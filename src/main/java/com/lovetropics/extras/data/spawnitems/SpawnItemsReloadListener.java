@@ -6,8 +6,8 @@ import com.google.common.collect.Maps;
 import com.lovetropics.extras.LTExtras;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -17,7 +17,7 @@ import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 
 import java.util.Map;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class SpawnItemsReloadListener extends SimpleJsonResourceReloadListener<SpawnItems> {
     private static final ResourceKey<Registry<SpawnItems>> REGISTRY_KEY = ResourceKey.createRegistryKey(LTExtras.location("spawn_items"));
 

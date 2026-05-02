@@ -7,7 +7,6 @@ import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.RandomSource;
-import org.jspecify.annotations.Nullable;
 
 public class EmittedParticle extends SingleQuadParticle {
 
@@ -35,7 +34,7 @@ public class EmittedParticle extends SingleQuadParticle {
     record Factory(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {
 
         @Override
-        public @Nullable Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double xAux, double yAux, double zAux, RandomSource random) {
+        public Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double xAux, double yAux, double zAux, RandomSource random) {
             return new EmittedParticle(level, x, y, z, spriteSet);
         }
     }

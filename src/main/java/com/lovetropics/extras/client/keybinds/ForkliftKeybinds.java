@@ -10,10 +10,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.client.settings.KeyModifier;
 
-import java.util.HashMap;
-import java.util.Map;
-
-@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class ForkliftKeybinds {
     public static final KeyMapping RAISE_FORKLIFT = create("forklift_raise",  InputConstants.KEY_R, KeyModifier.NONE);
     public static final KeyMapping LOWER_FORKLIFT = create("forklift_lower",  InputConstants.KEY_F, KeyModifier.NONE);

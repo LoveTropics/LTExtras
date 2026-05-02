@@ -1,11 +1,9 @@
 package com.lovetropics.extras.client.screen;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.util.ARGB;
 
 public class CustomSpritesButton extends Button {
     private final WidgetSprites sprites;

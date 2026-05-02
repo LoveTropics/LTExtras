@@ -24,7 +24,7 @@
 //import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 //import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 //
-//@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+//@EventBusSubscriber(Dist.CLIENT)
 //public class WaterBarrierParticle extends SingleQuadParticle {
 //
 //    private static final RenderPipeline RENDER_PIPELINE = RenderPipeline.builder(RenderPipelines.PARTICLE_SNIPPET)

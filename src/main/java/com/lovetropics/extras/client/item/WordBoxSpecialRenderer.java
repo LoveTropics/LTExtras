@@ -11,8 +11,8 @@ import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3fc;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -43,7 +43,7 @@ public class WordBoxSpecialRenderer implements SpecialModelRenderer<Component> {
         public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(Unbaked::new);
 
         @Override
-        public @org.jspecify.annotations.Nullable SpecialModelRenderer<Component> bake(BakingContext context) {
+        public SpecialModelRenderer<Component> bake(BakingContext context) {
             return new WordBoxSpecialRenderer(Minecraft.getInstance().font);
         }
 

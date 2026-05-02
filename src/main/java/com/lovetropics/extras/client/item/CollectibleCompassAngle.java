@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.item.properties.numeric.CompassAngleState;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.world.entity.ItemOwner;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 

@@ -1,7 +1,6 @@
 package com.lovetropics.extras.item.sensor;
 
 import com.lovetropics.extras.ExtraDataComponents;
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.network.message.ClientboundSetEntityMarkedPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,7 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class ServerPlayerSensorManager {
     private static final int REFRESH_INTERVAL_TICKS = 5;
 

@@ -3,11 +3,9 @@ package com.lovetropics.extras.client.entity;
 import com.lovetropics.extras.client.entity.state.PartyBeamRenderState;
 import com.lovetropics.extras.entity.vfx.PartyBeamEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.object.crystal.EndCrystalModel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EndCrystalRenderer;
@@ -21,10 +19,8 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
-import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 public class PartyBeamRenderer extends EntityRenderer<PartyBeamEntity, PartyBeamRenderState> {

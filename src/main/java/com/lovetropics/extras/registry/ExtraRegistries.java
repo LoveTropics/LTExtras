@@ -11,7 +11,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class ExtraRegistries {
     public static final ResourceKey<Registry<Collectible>> COLLECTIBLE = createKey("collectible");
     public static final ResourceKey<Registry<MapConfig>> MAP = createKey("map");

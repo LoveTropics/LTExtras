@@ -1,7 +1,6 @@
 package com.lovetropics.extras.rejoiner;
 
 import com.lovetropics.extras.ExtrasConfig;
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.network.message.ClientboundSetAutoRejoinIntent;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -14,7 +13,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import static net.minecraft.commands.Commands.literal;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class ServerAutoRejoinHandler {
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {

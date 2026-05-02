@@ -1,6 +1,5 @@
 package com.lovetropics.extras.schedule;
 
-import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -12,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class PlayerTimeZone {
     private ZoneId zoneId = ZoneOffset.UTC;
 

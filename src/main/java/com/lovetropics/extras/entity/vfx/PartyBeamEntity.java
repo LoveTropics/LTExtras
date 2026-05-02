@@ -1,6 +1,5 @@
 package com.lovetropics.extras.entity.vfx;
 
-import com.lovetropics.extras.LTExtras;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -21,7 +20,7 @@ import org.joml.Vector3fc;
 
 import javax.annotation.Nullable;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class PartyBeamEntity extends EndCrystal {
     private static final EntityDataAccessor<Vector3fc> DATA_COLOR = SynchedEntityData.defineId(PartyBeamEntity.class, EntityDataSerializers.VECTOR3);
 

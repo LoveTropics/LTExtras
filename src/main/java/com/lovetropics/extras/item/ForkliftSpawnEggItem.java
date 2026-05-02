@@ -1,9 +1,8 @@
 package com.lovetropics.extras.item;
 
 import com.lovetropics.extras.ExtraItems;
-import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.entity.ForkliftEntity;
 import com.lovetropics.extras.entity.ExtraEntities;
+import com.lovetropics.extras.entity.ForkliftEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -13,7 +12,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +31,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 import java.util.Objects;
 
-@EventBusSubscriber(modid = LTExtras.MODID)
+@EventBusSubscriber
 public class ForkliftSpawnEggItem extends Item {
     public ForkliftSpawnEggItem(Properties properties) {
         super(properties);

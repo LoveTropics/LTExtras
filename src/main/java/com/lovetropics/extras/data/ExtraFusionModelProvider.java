@@ -29,7 +29,7 @@
 // * LTExtras
 // * FIRE EMOJI, FIRE EMOJI, FIRE EMOJI
 // */
-//@EventBusSubscriber(modid = LTExtras.MODID, value = Dist.CLIENT)
+//@EventBusSubscriber(Dist.CLIENT)
 //public class ExtraFusionModelProvider extends FusionModelProvider {
 //    public ExtraFusionModelProvider(PackOutput output) {
 //        super(LTExtras.MODID, output);
