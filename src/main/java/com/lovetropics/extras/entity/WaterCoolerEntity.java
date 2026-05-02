@@ -3,7 +3,7 @@ package com.lovetropics.extras.entity;
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.effect.ExtraEffects;
-import com.lovetropics.extras.model_modifer.ModelModifierType;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -45,17 +45,18 @@ public class WaterCoolerEntity extends Entity {
     private static final EntityDataAccessor<Integer> SHAKE_TYPE = SynchedEntityData.defineId(WaterCoolerEntity.class, EntityDataSerializers.INT);
 
     private static final RandomSource random = RandomSource.create();
-    private static final ModelModifierType[] MODIFIER_TYPES = {
-            ModelModifierType.FABULOUS,
-            ModelModifierType.FLAIL,
-            ModelModifierType.HOVERING,
-            ModelModifierType.SHUFFLE,
-            ModelModifierType.UPSIDEDOWN,
-            ModelModifierType.SHRUNK,
-            ModelModifierType.ENLARGED,
-            ModelModifierType.SHRUGGY_ARMS,
-            ModelModifierType.ENDER_ARMS,
-    };
+    // Todo Code Updates
+//    private static final ModelModifierTypeLegacy[] MODIFIER_TYPES = {
+//            ModelModifierTypeLegacy.FABULOUS,
+//            ModelModifierTypeLegacy.FLAIL,
+//            ModelModifierTypeLegacy.HOVERING,
+//            ModelModifierTypeLegacy.SHUFFLE,
+//            ModelModifierTypeLegacy.UPSIDEDOWN,
+//            ModelModifierTypeLegacy.SHRUNK,
+//            ModelModifierTypeLegacy.ENLARGED,
+//            ModelModifierTypeLegacy.SHRUGGY_ARMS,
+//            ModelModifierTypeLegacy.ENDER_ARMS,
+//    };
 
     public final AnimationState shake1AnimationState = new AnimationState();
     public final AnimationState shake2AnimationState = new AnimationState();
@@ -151,10 +152,11 @@ public class WaterCoolerEntity extends Entity {
     }
 
     private static ItemStack getPotionDrop() {
-        MobEffectInstance mobEffect = new MobEffectInstance(ExtraEffects.MODEL_EFFECTS.get(Util.getRandom(MODIFIER_TYPES, random)), 15 * 20, 1);
-        PotionContents potionContents = new PotionContents(Optional.empty(), Optional.of(0x5A8DD6), List.of(), Optional.of(ExtraLangKeys.WATER_COOLER_POTION_NAME.get().toString())).withEffectAdded(mobEffect);
+        // Todo Code Updates
+//        MobEffectInstance mobEffect = new MobEffectInstance(ExtraEffects.MODEL_EFFECTS.get(Util.getRandom(MODIFIER_TYPES, random)), 15 * 20, 1);
+//        PotionContents potionContents = new PotionContents(Optional.empty(), Optional.of(0x5A8DD6), List.of(), Optional.of(ExtraLangKeys.WATER_COOLER_POTION_NAME.get().toString())).withEffectAdded(mobEffect);
         ItemStack itemStack = new ItemStack(Items.POTION, 1);
-        itemStack.set(DataComponents.POTION_CONTENTS, potionContents);
+//        itemStack.set(DataComponents.POTION_CONTENTS, potionContents);
         itemStack.set(DataComponents.CUSTOM_NAME, ExtraLangKeys.WATER_COOLER_POTION_NAME.get());
         itemStack.set(DataComponents.LORE, ItemLore.EMPTY.withLineAdded(ExtraLangKeys.WATER_COOLER_POTION_LORE.get().withColor(TextColor.GRAY)));
         itemStack.set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT

@@ -1,8 +1,6 @@
 package com.lovetropics.extras.effect;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.model_modifer.ModelModifierStore;
-import com.lovetropics.extras.model_modifer.ModelModifierType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -28,7 +26,26 @@ public class ExtraEffects {
 
     public static final DeferredHolder<MobEffect, PropaguledEffect> PROPAGULED = REGISTER.register("propaguled", () -> new PropaguledEffect(MobEffectCategory.HARMFUL, 0x00ddcc).addAttributeModifier(Attributes.MOVEMENT_SPEED, LTExtras.id("effects.propaguled"), -0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
-    public static final Map<ModelModifierType, DeferredHolder<MobEffect, ModelEffect>> MODEL_EFFECTS = new HashMap<>();
+    // Todo Code Updates
+//    public static final Map<ModelModifierTypeLegacy, DeferredHolder<MobEffect, ModelEffect>> MODEL_EFFECTS = new HashMap<>();
+//
+//    static {
+//        for (ModelModifierTypeLegacy value : ModelModifierTypeLegacy.values()) {
+//            if (value.getEffectName() == null) {
+//                continue;
+//            }
+//            ModelEffect modelEffect = new ModelEffect(MobEffectCategory.NEUTRAL, 0x000000, value);
+//            if (value == ModelModifierTypeLegacy.SHRUGGY_ARMS) {
+//                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.location("small_arms_block_range"), -3, AttributeModifier.Operation.ADD_VALUE);
+//                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.location("small_arms_entity_range"), -3, AttributeModifier.Operation.ADD_VALUE);
+//            } else if (value == ModelModifierTypeLegacy.ENDER_ARMS) {
+//                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.location("long_arms_block_range"), 3, AttributeModifier.Operation.ADD_VALUE);
+//                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.location("long_arms_entity_range"), 3, AttributeModifier.Operation.ADD_VALUE);
+//            }
+//            MODEL_EFFECTS.put(value, REGISTER.register("mm_" + value.getSerializedName(), () -> modelEffect));
+//        }
+//
+//    }
 
     static {
         for (ModelModifierType value : ModelModifierType.values()) {
@@ -46,9 +63,6 @@ public class ExtraEffects {
             MODEL_EFFECTS.put(value, REGISTER.register("mm_" + value.getSerializedName(), () -> modelEffect));
         }
 
-    }
-
-
     @SubscribeEvent
     public static void onEffectRemoved(MobEffectEvent.Remove event) {
         removeModelModifiers(event.getEffect().value(), event.getEntity());
@@ -61,7 +75,7 @@ public class ExtraEffects {
 
     private static void removeModelModifiers(MobEffect mobEffect, LivingEntity entity) {
         if (mobEffect instanceof ModelEffect modelEffect) {
-            ModelModifierStore.removeModifier(entity, modelEffect.getType());
+//            ModelModifierStore.removeModifier(entity, modelEffect.getType());
         }
     }
 }

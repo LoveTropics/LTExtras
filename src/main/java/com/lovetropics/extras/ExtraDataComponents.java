@@ -10,7 +10,8 @@ import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.PaintingOverlay;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
-import com.lovetropics.extras.model_modifer.ModelModifierType;
+import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
+import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -89,9 +90,9 @@ public class ExtraDataComponents {
             "gravity",
             builder -> builder.persistent(Codec.floatRange(-10.0f, 10.0f)).networkSynchronized(ByteBufCodecs.FLOAT)
     );
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ModelModifierType>>> WALK_ANIMATION = REGISTER.registerComponentType(
-            "walk_animation",
-            builder -> builder.persistent(ExtraCodecs.compactListCodec(ModelModifierType.CODEC)).networkSynchronized(ModelModifierType.STREAM_CODEC.apply(ByteBufCodecs.list()))
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<Holder<ModelModifier<?>>>>> MODEL_MODIFIER = REGISTER.registerComponentType(
+            "model_modifier",
+            builder -> builder.persistent(ExtraCodecs.compactListCodec(ExtraModelModifierTypes.REGISTRY_CODEC)).networkSynchronized(ExtraModelModifierTypes.STREAM_CODEC.apply(ByteBufCodecs.list()))
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<WalkSound>> WALK_SOUND = REGISTER.registerComponentType(
             "walk_sound",

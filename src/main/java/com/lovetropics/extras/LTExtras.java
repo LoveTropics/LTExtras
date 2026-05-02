@@ -17,6 +17,7 @@ import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
+import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.placeholder.ExtraPlaceholders;
@@ -89,6 +90,7 @@ public class LTExtras {
         ExtraSounds.REGISTER.register(modBus);
         ExtraSerializers.REGISTER.register(modBus);
         ExtraCommandArguments.REGISTER.register(modBus);
+        ExtraModelModifierTypes.REGISTER.register(modBus);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
@@ -119,8 +121,9 @@ public class LTExtras {
                     TpCommand.addTranslations(p);
                     WarpCommand.addTranslations(p);
 
-                    ExtraEffects.MODEL_EFFECTS.forEach((modifier, effect) ->
-                            p.add(effect.value(), modifier.getEffectName()));
+                    // Todo Update Check
+//                    ExtraEffects.MODEL_EFFECTS.forEach((modifier, effect) ->
+//                            p.add(effect.value(), modifier.getEffectName()));
                 })
                 .addDataGenerator(ProviderType.BLOCK_TAGS, block -> {
                     block.tag(ExtraTags.Blocks.PLUMBERS_TNT_EXPLODES)
@@ -167,7 +170,7 @@ public class LTExtras {
         WorldEffectCommand.register(dispatcher);
         WarpCommand.register(dispatcher);
         PoiCommand.register(dispatcher, buildContext);
-        ModelModifierCommand.register(dispatcher);
+        ModelModifierCommand.register(dispatcher, buildContext);
         MountCommand.register(dispatcher, buildContext);
         HandCommand.register(dispatcher);
     }

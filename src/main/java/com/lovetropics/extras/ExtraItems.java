@@ -34,7 +34,9 @@ import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.RangeSelectItemModel;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
 import net.minecraft.client.renderer.item.properties.select.DisplayContext;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentInitializers;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -191,7 +193,8 @@ public class ExtraItems {
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.FEET)
                             .setAsset(PLACEHOLDER_EQUIPMENT_ASSET)
                             .build())
-                    .component(ExtraDataComponents.WALK_ANIMATION, List.of(ModelModifierType.FABULOUS))
+                    .delayedComponent(ExtraDataComponents.MODEL_MODIFIER.get(), modifierList(ExtraModelModifiers.FABULOUS))
+//                    .component(ExtraDataComponents.MODEL_MODIFIER, List.of(ModelModifierTypeLegacy.FABULOUS))
                     .component(ExtraDataComponents.WALK_SOUND, WalkSound.builder().soundEvent(ExtraSounds.HEELS_STEP).cooldown(0.9f).volume(.5f).build())
                     .component(ExtraDataComponents.ADJUST_HEIGHT, 0.2F)
             )
@@ -204,7 +207,7 @@ public class ExtraItems {
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.FEET)
                             .setAsset(PLACEHOLDER_EQUIPMENT_ASSET)
                             .build())
-                    .component(ExtraDataComponents.WALK_ANIMATION, List.of(ModelModifierType.STIFF_LEGS, ModelModifierType.HOP_WALK))
+                    .delayedComponent(ExtraDataComponents.MODEL_MODIFIER.get(), modifierList(ExtraModelModifiers.STIFF_LEGS, ExtraModelModifiers.HOP_WALK))
                     .component(ExtraDataComponents.ADJUST_HEIGHT, 0.45F)
             )
             .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.id("item/big_boot")))
@@ -298,4 +301,16 @@ public class ExtraItems {
             generateCustomCompass(ctx, prov, new CollectibleCompassAngle());
         }
     }
+
+    @SafeVarargs
+    private static DataComponentInitializers.SingleComponentInitializer<List<Holder<ModelModifier<?>>>> modifierList(ResourceKey<ModelModifier<?>>... modifiers) {
+        return context -> {
+            List<Holder<ModelModifier<?>>> holders = new ArrayList<>();
+            for (ResourceKey<ModelModifier<?>> key : modifiers) {
+                holders.add(context.getOrThrow(key));
+            }
+            return holders;
+        };
+    }
+
 }
