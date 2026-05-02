@@ -20,7 +20,7 @@ public record ClientboundSetDisplayTextPacket(int entityId, Component text) impl
             ClientboundSetDisplayTextPacket::new
     );
 
-    public static final Type<ClientboundSetDisplayTextPacket> TYPE = new Type<>(LTExtras.location("hologram_text"));
+    public static final Type<ClientboundSetDisplayTextPacket> TYPE = new Type<>(LTExtras.id("hologram_text"));
 
     public static void handle(ClientboundSetDisplayTextPacket packet, IPayloadContext ctx) {
         Minecraft minecraft = Minecraft.getInstance();

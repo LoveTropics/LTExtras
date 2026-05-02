@@ -20,7 +20,7 @@ import net.minecraft.world.entity.Entity;
 
 public class WaterCoolerModel<T extends Entity> extends EntityModel<WaterCoolerRenderState> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.location("water_cooler"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.id("water_cooler"), "main");
 	private final ModelPart root;
 	private final ModelPart water_jug;
 

@@ -28,7 +28,7 @@ public class InviteOverlay {
     @SubscribeEvent
     public static void onRegisterOverlays(RegisterGuiLayersEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
-        event.registerAbove(VanillaGuiLayers.CHAT, LTExtras.location("invites"), (graphics, deltaTracker) -> {
+        event.registerAbove(VanillaGuiLayers.CHAT, LTExtras.id("invites"), (graphics, deltaTracker) -> {
             LocalPlayer player = minecraft.player;
             if (player == null) {
                 return;

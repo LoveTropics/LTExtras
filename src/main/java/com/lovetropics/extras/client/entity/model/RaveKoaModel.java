@@ -19,7 +19,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
 public class RaveKoaModel extends EntityModel<RaveKoaRenderState> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.location("rave_koa_model"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.id("rave_koa_model"), "main");
     private final ModelPart booth;
 
     private final KeyframeAnimation djAnimation;

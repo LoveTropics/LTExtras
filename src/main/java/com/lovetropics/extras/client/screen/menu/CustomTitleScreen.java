@@ -34,9 +34,9 @@ public class CustomTitleScreen {
     private static final Component CREATE_TEST_WORLD_TEXT = Component.literal("Create Test World");
 
     private static final WidgetSprites CONNECT_SPRITES = new WidgetSprites(
-            LTExtras.location("widget/connect"),
-            LTExtras.location("widget/connect_disabled"),
-            LTExtras.location("widget/connect_highlighted")
+            LTExtras.id("widget/connect"),
+            LTExtras.id("widget/connect_disabled"),
+            LTExtras.id("widget/connect_highlighted")
     );
 
     @SubscribeEvent(priority = EventPriority.LOW)

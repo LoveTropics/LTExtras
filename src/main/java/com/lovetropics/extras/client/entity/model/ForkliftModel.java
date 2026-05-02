@@ -13,7 +13,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
 public class ForkliftModel extends EntityModel<ForkliftRenderState> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.location("forklift"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.id("forklift"), "main");
     private final ModelPart forks;
     private final ModelPart wheelFrontRight;
     private final ModelPart wheelFrontLeft;

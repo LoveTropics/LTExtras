@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ServerboundDriftForkliftPacket(boolean drift, int entityId) implements CustomPacketPayload {
-    public static final Type<ServerboundDriftForkliftPacket> TYPE = new Type<>(LTExtras.location("drift_forklift"));
+    public static final Type<ServerboundDriftForkliftPacket> TYPE = new Type<>(LTExtras.id("drift_forklift"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundDriftForkliftPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, ServerboundDriftForkliftPacket::drift,

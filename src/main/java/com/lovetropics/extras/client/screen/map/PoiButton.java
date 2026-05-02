@@ -30,8 +30,8 @@ class PoiButton extends AbstractButton {
 
     private static final int HOVER_ANIMATION_LENGTH = 8;
 
-    private static final Identifier TOOLTIP_SPRITE = LTExtras.location("widget/poi_tooltip");
-    private static final Identifier BACKGROUND_SPRITE = LTExtras.location("widget/poi_background");
+    private static final Identifier TOOLTIP_SPRITE = LTExtras.id("widget/poi_tooltip");
+    private static final Identifier BACKGROUND_SPRITE = LTExtras.id("widget/poi_background");
     private static final Identifier TITLE_BOX_SPRITE = Identifier.withDefaultNamespace("advancements/title_box");
 
     private final ClientPoi poi;

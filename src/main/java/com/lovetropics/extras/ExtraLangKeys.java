@@ -40,7 +40,7 @@ public enum ExtraLangKeys {
     private final String value;
 
     ExtraLangKeys(String type, String key, String value) {
-        this.key = Util.makeDescriptionId(type, LTExtras.location(key));
+        this.key = Util.makeDescriptionId(type, LTExtras.id(key));
         this.value = value;
     }
 

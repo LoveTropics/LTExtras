@@ -21,7 +21,7 @@ public record ClientboundSetEntityMarkedPacket(
             ClientboundSetEntityMarkedPacket::new
     );
 
-    public static final Type<ClientboundSetEntityMarkedPacket> TYPE = new Type<>(LTExtras.location("set_entity_marked"));
+    public static final Type<ClientboundSetEntityMarkedPacket> TYPE = new Type<>(LTExtras.id("set_entity_marked"));
 
     public static void handle(ClientboundSetEntityMarkedPacket packet, IPayloadContext context) {
         if (packet.appearance.isPresent()) {

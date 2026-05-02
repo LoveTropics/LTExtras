@@ -10,10 +10,10 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.state.PaintingRenderState;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.CommonColors;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -39,7 +39,6 @@ public class PaintingOverlayRenderer {
 
                     if (paintingOverlay.text().isPresent()) {
                         final Component textComponent = paintingOverlay.text().get();
-                        FormattedCharSequence visualOrderText = textComponent.getVisualOrderText();
                         final int textLength = textComponent.getString().length();
 
                         // Bring text in front of painting
@@ -48,16 +47,15 @@ public class PaintingOverlayRenderer {
                         final float scale = 0.01f + scaleAdjust;
                         poseStack.scale(scale, scale, scale);
 
-                        // Todo 26.1 Port - Check This Works
                         collector.submitText(
                                 poseStack,
                                 -textLength * 2,
-                                0,
-                                visualOrderText,
+                                -3,
+                                textComponent.getVisualOrderText(),
                                 false,
-                                Font.DisplayMode.POLYGON_OFFSET,
-                                renderState.lightCoords,
-                                DyeColor.WHITE.getTextColor(),
+                                Font.DisplayMode.NORMAL,
+                                LightCoordsUtil.lightCoordsWithEmission(renderState.lightCoords, 2),
+                                CommonColors.WHITE,
                                 0,
                                 0
                         );

@@ -10,9 +10,9 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 
 public class RaveKoaRenderer extends MobRenderer<RaveKoaEntity, RaveKoaRenderState, RaveKoaModel> {
-    private static final Identifier TEXTURE_MAN_HUNTER = LTExtras.location("textures/entity/koa_man_hunter.png");
-    private static final Identifier TEXTURE_MAN_FISHER = LTExtras.location("textures/entity/koa_man_fisher.png");
-    private static final Identifier TEXTURE_WOMAN_FISHER = LTExtras.location("textures/entity/koa_woman_fisher.png");
+    private static final Identifier TEXTURE_MAN_HUNTER = LTExtras.id("textures/entity/koa_man_hunter.png");
+    private static final Identifier TEXTURE_MAN_FISHER = LTExtras.id("textures/entity/koa_man_fisher.png");
+    private static final Identifier TEXTURE_WOMAN_FISHER = LTExtras.id("textures/entity/koa_woman_fisher.png");
 
     public RaveKoaRenderer(EntityRendererProvider.Context context) {
         super(context, new RaveKoaModel(context.bakeLayer(RaveKoaModel.LAYER_LOCATION)), 0.9f);

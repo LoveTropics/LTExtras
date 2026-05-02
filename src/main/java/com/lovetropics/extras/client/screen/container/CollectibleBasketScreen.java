@@ -46,7 +46,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
 
     private static final Identifier BACKGROUND_LOCATION = Identifier.withDefaultNamespace("textures/gui/container/creative_inventory/tab_items.png");
     private static final Identifier SCROLLER_SPRITE = Identifier.withDefaultNamespace("container/creative_inventory/scroller");
-    private static final Identifier TROPICOIN_SLOT_SPRITE = Identifier.fromNamespaceAndPath(LTExtras.MODID, "currency_slot");
+    private static final Identifier TROPICOIN_SLOT_SPRITE = LTExtras.id("currency_slot");
 
     private static final SimpleContainer TROPICOIN_CONTAINER = new SimpleContainer(1);
 
@@ -87,7 +87,6 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         super.extractRenderState(graphics, mouseX, mouseY, a);
-//        graphics.renderTooltip(graphics, mouseX, mouseY); // // Todo 26.1 Port
 
         ScreenRectangle scroller = scrollerRectangle();
         if (scroller != null) {

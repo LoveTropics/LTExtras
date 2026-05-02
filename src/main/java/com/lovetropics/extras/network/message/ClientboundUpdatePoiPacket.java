@@ -35,7 +35,7 @@ public record ClientboundUpdatePoiPacket(
             ClientboundUpdatePoiPacket::new
     );
 
-    public static final Type<ClientboundUpdatePoiPacket> TYPE = new Type<>(LTExtras.location("update_poi"));
+    public static final Type<ClientboundUpdatePoiPacket> TYPE = new Type<>(LTExtras.id("update_poi"));
 
     public static void handle(ClientboundUpdatePoiPacket packet, IPayloadContext context) {
         ClientMapManager.updatePoi(packet.networkId(), packet.id(), packet.map(), packet.description(), packet.icon(), packet.markerX(), packet.markerY());

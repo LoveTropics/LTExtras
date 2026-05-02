@@ -9,7 +9,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ClientboundOpenCollectibleBasketPacket implements CustomPacketPayload {
     public static final ClientboundOpenCollectibleBasketPacket INSTANCE = new ClientboundOpenCollectibleBasketPacket();
-    public static final Type<ClientboundOpenCollectibleBasketPacket> TYPE = new Type<>(LTExtras.location("open_collectible"));
+    public static final Type<ClientboundOpenCollectibleBasketPacket> TYPE = new Type<>(LTExtras.id("open_collectible"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundOpenCollectibleBasketPacket> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 

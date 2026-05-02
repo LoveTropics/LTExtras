@@ -14,18 +14,13 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.gizmos.GizmoStyle;
-import net.minecraft.gizmos.Gizmos;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.phys.AABB;
 
 public class ForkliftRenderer extends EntityRenderer<ForkliftEntity, ForkliftRenderState> {
-    private static final Identifier TEXTURE = LTExtras.location("textures/entity/forklift.png");
-    private static final RenderType LIGHTS = RenderTypes.eyes(LTExtras.location("textures/entity/forklift_lights.png"));
+    private static final Identifier TEXTURE = LTExtras.id("textures/entity/forklift.png");
+    private static final RenderType LIGHTS = RenderTypes.eyes(LTExtras.id("textures/entity/forklift_lights.png"));
 
     private final ForkliftModel model;
-
-    private static final boolean FORKLIFT_PICKUP_DEBUG = false;
 
     public ForkliftRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -38,7 +33,6 @@ public class ForkliftRenderer extends EntityRenderer<ForkliftEntity, ForkliftRen
         state.yRot = entity.getYRot(partialTick);
         state.wheelRot = entity.getWheelRot(partialTick);
         state.forkHeight = entity.getRenderForkHeight(partialTick);
-        state.pickupAABB = entity.getPickupAABB();
     }
 
     @Override
@@ -58,14 +52,6 @@ public class ForkliftRenderer extends EntityRenderer<ForkliftEntity, ForkliftRen
         submitNodeCollector.submitModel(model, state, poseStack, LIGHTS, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
 
         poseStack.popPose();
-
-        if (FORKLIFT_PICKUP_DEBUG) {
-            poseStack.pushPose();
-            // Todo 26.1 Port
-            AABB move = state.pickupAABB.move(-state.x, -state.y, -state.z);
-            Gizmos.cuboid(move, GizmoStyle.fill(-1)); // I tried to convert to this no idea how it works -UnReal
-            poseStack.popPose();
-        }
     }
 
     @Override

@@ -19,6 +19,7 @@ import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
 import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.mounts.MountCommand;
+import com.lovetropics.extras.placeholder.ExtraPlaceholders;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.techstack.VideoImporter;
 import com.lovetropics.extras.world_effect.WorldEffectCommand;
@@ -56,7 +57,7 @@ public class LTExtras {
 
     public static final String MODID = "ltextras";
 
-    private static final Identifier TAB_ID = LTExtras.location("ltextras");
+    private static final Identifier TAB_ID = LTExtras.id("ltextras");
     public static final ResourceKey<CreativeModeTab> TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, TAB_ID);
 
     @Nullable
@@ -80,7 +81,7 @@ public class LTExtras {
         ExtraBlocks.init();
         ExtraItems.init();
         ExtraEntities.init();
-//        ExtraPlaceholders.init(); // Todo 26.1 Port
+        ExtraPlaceholders.init();
 
         ExtraParticles.REGISTER.register(modBus);
         ExtraEffects.REGISTER.register(modBus);
@@ -181,7 +182,7 @@ public class LTExtras {
         event.add(EntityType.PLAYER, FRICTION);
     }
 
-    public static Identifier location(String path) {
+    public static Identifier id(String path) {
         return Identifier.fromNamespaceAndPath(MODID, path);
     }
 }

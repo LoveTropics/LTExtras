@@ -21,8 +21,8 @@ public class ExtraClickEvents {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     private static final CodecRegistry<Identifier, MapCodec<? extends ExtraClickEvent>> REGISTRY = Util.make(CodecRegistry.resourceLocationKeys(), registry -> {
-        registry.register(LTExtras.location("run_function"), RunFunctionClickEvent.CODEC);
-        registry.register(LTExtras.location("mount_entity"), MountClickEvent.CODEC);
+        registry.register(LTExtras.id("run_function"), RunFunctionClickEvent.CODEC);
+        registry.register(LTExtras.id("mount_entity"), MountClickEvent.CODEC);
     });
 
     public static void handleCustomClickAction(ServerPlayer serverPlayer, Identifier location, Optional<Tag> tag) {

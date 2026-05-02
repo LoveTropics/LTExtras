@@ -17,7 +17,7 @@ public record ClientboundSetSkyColorPacket(int color, int fadeLength) implements
             ClientboundSetSkyColorPacket::new
     );
 
-    public static final Type<ClientboundSetSkyColorPacket> TYPE = new Type<>(LTExtras.location("set_sky_color"));
+    public static final Type<ClientboundSetSkyColorPacket> TYPE = new Type<>(LTExtras.id("set_sky_color"));
 
     public static ClientboundSetSkyColorPacket clear(int fadeLength) {
         return new ClientboundSetSkyColorPacket(CLEAR, fadeLength);

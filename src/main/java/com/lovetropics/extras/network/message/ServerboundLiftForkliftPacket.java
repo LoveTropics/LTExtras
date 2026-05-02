@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ServerboundLiftForkliftPacket(boolean eject, int forkHeight, int entityId) implements CustomPacketPayload {
-    public static final Type<ServerboundLiftForkliftPacket> TYPE = new Type<>(LTExtras.location("lift_forklift"));
+    public static final Type<ServerboundLiftForkliftPacket> TYPE = new Type<>(LTExtras.id("lift_forklift"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundLiftForkliftPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, ServerboundLiftForkliftPacket::eject,

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.state.HoldingEntityRenderState;
 import net.minecraft.resources.Identifier;
 
 public class AmazonRiverDolphinRenderer extends AgeableMobRenderer<AmazonRiverDolphin, AmazonRiverDolphinRenderState, AmazonRiverDolphinModel> {
-    private static final Identifier TEXTURE = LTExtras.location("textures/entity/amazon_river_dolphin.png");
+    private static final Identifier TEXTURE = LTExtras.id("textures/entity/amazon_river_dolphin.png");
 
     public AmazonRiverDolphinRenderer(EntityRendererProvider.Context context) {
         super(

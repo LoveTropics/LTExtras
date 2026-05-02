@@ -22,7 +22,7 @@ public record ClientboundPoiFacesPacket(
             ClientboundPoiFacesPacket::new
     );
 
-    public static final Type<ClientboundPoiFacesPacket> TYPE = new Type<>(LTExtras.location("poi_faces"));
+    public static final Type<ClientboundPoiFacesPacket> TYPE = new Type<>(LTExtras.id("poi_faces"));
 
     public static void handle(ClientboundPoiFacesPacket packet, IPayloadContext context) {
         ClientMapManager.updateFaces(packet.id(), packet.faces());

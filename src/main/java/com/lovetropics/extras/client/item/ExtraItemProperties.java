@@ -11,11 +11,11 @@ import net.neoforged.neoforge.client.event.RegisterRangeSelectItemModelPropertyE
 public class ExtraItemProperties {
     @SubscribeEvent
     public static void registerRangeSelectProperties(RegisterRangeSelectItemModelPropertyEvent event) {
-        event.register(LTExtras.location("collectible_compass_angle"), CollectibleCompassAngle.MAP_CODEC);
+        event.register(LTExtras.id("collectible_compass_angle"), CollectibleCompassAngle.MAP_CODEC);
     }
 
     @SubscribeEvent
     public static void registerConditionalProperties(RegisterConditionalItemModelPropertyEvent event) {
-        event.register(LTExtras.location("has_unseen_collectible"), HasUnseenCollectible.MAP_CODEC);
+        event.register(LTExtras.id("has_unseen_collectible"), HasUnseenCollectible.MAP_CODEC);
     }
 }

@@ -11,7 +11,7 @@ import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 
 public class GlassFrogRenderer extends MobRenderer<GlassFrog, GlassFrogRenderState, GlassFrogModel> {
-    private static final Identifier TEXTURE = LTExtras.location("textures/entity/glass_frog.png");
+    private static final Identifier TEXTURE = LTExtras.id("textures/entity/glass_frog.png");
 
     public GlassFrogRenderer(EntityRendererProvider.Context context) {
         super(context, new GlassFrogModel(context.bakeLayer(GlassFrogModel.LAYER)), 0.2F);

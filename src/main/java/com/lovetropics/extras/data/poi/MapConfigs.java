@@ -22,9 +22,9 @@ public class MapConfigs {
     @SubscribeEvent
     public static void addReloadListener(AddServerReloadListenersEvent event) {
         RegistryAccess registries = event.getRegistryAccess();
-        event.addListener(LTExtras.location("map_configs"), (barrier, resourceManager, backgroundExecutor, gameExecutor) ->
-                POI_LISTER.load(registries, barrier.resourceManager(), resourceManager)
-                        .thenCompose(backgroundExecutor::wait)
+        event.addListener(LTExtras.id("map_configs"), (currentReload, taskExecutor, barrier, reloadExecutor) ->
+                POI_LISTER.load(registries, currentReload.resourceManager(), taskExecutor)
+                        .thenCompose(barrier::wait)
                         .thenAcceptAsync(pois -> {
                             POIS.clear();
                             pois.forEach(holder -> POIS.register(holder.id(), holder));
@@ -33,7 +33,7 @@ public class MapConfigs {
                             if (server != null) {
                                 MapManager.get(server).reload(server);
                             }
-                        }, gameExecutor)
+                        }, reloadExecutor)
         );
     }
 }

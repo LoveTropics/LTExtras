@@ -68,7 +68,7 @@ public class HighHeelsItem extends Item {
     }
 
     public static class ClientExtensions implements IClientItemExtensions {
-        private static final Identifier TEXTURE = LTExtras.location("textures/entity/high_heels.png");
+        private static final Identifier TEXTURE = LTExtras.id("textures/entity/high_heels.png");
 
         private final Supplier<HighHeelsModel> model;
 

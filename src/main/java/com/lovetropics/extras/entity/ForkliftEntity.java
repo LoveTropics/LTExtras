@@ -14,6 +14,8 @@ import net.minecraft.advancements.criterion.BlockPredicate;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.gizmos.GizmoStyle;
+import net.minecraft.gizmos.Gizmos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -22,6 +24,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -78,6 +81,8 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     public static final double FRICTION = 0.85f;
     public static final double DRIFT_FRICTION = 0.9f;
     public static final int DRIFT_TICKS = 50;
+
+    private static final boolean PICKUP_DEBUG = false;
 
     public int driftBuildTicks = 0;
     public int driftDuration = 0;
@@ -292,6 +297,10 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     @Override
     public void tick() {
         super.tick();
+
+        if (level().isClientSide()) {
+            Gizmos.cuboid(getPickupAABB(), GizmoStyle.fill(CommonColors.WHITE));
+        }
 
         interpolation.interpolate();
         this.renderForkHeight0 = this.renderForkHeight;

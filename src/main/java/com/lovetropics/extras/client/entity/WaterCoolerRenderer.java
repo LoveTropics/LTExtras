@@ -18,7 +18,7 @@ import net.minecraft.resources.Identifier;
  * FIRE EMOJI, FIRE EMOJI, FIRE EMOJI
  */
 public class WaterCoolerRenderer extends EntityRenderer<WaterCoolerEntity, WaterCoolerRenderState> {
-    private static final Identifier TEXTURE = LTExtras.location("textures/entity/water_cooler.png");
+    private static final Identifier TEXTURE = LTExtras.id("textures/entity/water_cooler.png");
 
     private final WaterCoolerModel<?> model;
 

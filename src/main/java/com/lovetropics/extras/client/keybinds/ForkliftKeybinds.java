@@ -17,7 +17,7 @@ public class ForkliftKeybinds {
     public static final KeyMapping DRIFT = create("forklift_drift",  InputConstants.KEY_SPACE, KeyModifier.NONE);
     public static final KeyMapping EJECT_FORK_RIDERS = create("eject_fork_riders", InputConstants.KEY_G, KeyModifier.NONE);
 
-    public static final KeyMapping.Category LOBBY_CATEGORY = new KeyMapping.Category(LTExtras.location("lobby"));
+    public static final KeyMapping.Category LOBBY_CATEGORY = new KeyMapping.Category(LTExtras.id("lobby"));
 
     public static void init() {
     }

@@ -18,7 +18,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
  * Model for the Glass Frog, made by TripleHeadedSheep!
  */
 public class GlassFrogModel extends EntityModel<GlassFrogRenderState> {
-    public static final ModelLayerLocation LAYER = new ModelLayerLocation(LTExtras.location("glass_frog"), "main");
+    public static final ModelLayerLocation LAYER = new ModelLayerLocation(LTExtras.id("glass_frog"), "main");
 
     private final ModelPart body_base;
     private final ModelPart leg_back_right_1;

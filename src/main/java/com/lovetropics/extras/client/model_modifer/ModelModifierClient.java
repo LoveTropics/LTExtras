@@ -55,7 +55,7 @@ public class ModelModifierClient {
         CLIENT_MODEL_DATA.put(ModelModifierType.HOP_WALK, new HopWalkModifier());
     }
 
-    public static final ContextKey<List<ModelModifier>> MODIFIERS = new ContextKey<>(LTExtras.location("modifiers"));
+    public static final ContextKey<List<ModelModifier>> MODIFIERS = new ContextKey<>(LTExtras.id("modifiers"));
 
     @SubscribeEvent
     public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {

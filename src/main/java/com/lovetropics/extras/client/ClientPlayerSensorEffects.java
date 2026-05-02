@@ -47,10 +47,10 @@ import java.util.UUID;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ClientPlayerSensorEffects {
-    private static final Identifier MARKER_BOX_SPRITE = LTExtras.location("marker_box");
+    private static final Identifier MARKER_BOX_SPRITE = LTExtras.id("marker_box");
     private static final int MARKER_BOX_INNER_PADDING = 32;
 
-    private static final ContextKey<UUID> UUID_KEY = new ContextKey<>(LTExtras.location("uuid"));
+    private static final ContextKey<UUID> UUID_KEY = new ContextKey<>(LTExtras.id("uuid"));
 
     private static final int VISIBLE_REFRESH_INTERVAL = 10;
 
@@ -75,7 +75,7 @@ public class ClientPlayerSensorEffects {
     }
 
     public static void registerGuiLayers(RegisterGuiLayersEvent event) {
-        event.registerBelow(VanillaGuiLayers.CAMERA_OVERLAYS, LTExtras.location("player_sensor"), ClientPlayerSensorEffects::renderGui);
+        event.registerBelow(VanillaGuiLayers.CAMERA_OVERLAYS, LTExtras.id("player_sensor"), ClientPlayerSensorEffects::renderGui);
     }
 
     private static void renderGui(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {

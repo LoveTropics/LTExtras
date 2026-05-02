@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ServerboundReturnCollectibleItemPacket(Holder<Collectible> collectible) implements CustomPacketPayload {
-    public static final Type<ServerboundReturnCollectibleItemPacket> TYPE = new Type<>(LTExtras.location("return_collectible"));
+    public static final Type<ServerboundReturnCollectibleItemPacket> TYPE = new Type<>(LTExtras.id("return_collectible"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundReturnCollectibleItemPacket> STREAM_CODEC = StreamCodec.composite(
             Collectible.STREAM_CODEC, ServerboundReturnCollectibleItemPacket::collectible,

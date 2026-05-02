@@ -11,7 +11,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public record ClientboundSetAutoRejoinIntent(AutoRejoinIntent intent) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, ClientboundSetAutoRejoinIntent> STREAM_CODEC = AutoRejoinIntent.STREAM_CODEC.map(ClientboundSetAutoRejoinIntent::new, ClientboundSetAutoRejoinIntent::intent);
 
-    public static final Type<ClientboundSetAutoRejoinIntent> TYPE = new Type<>(LTExtras.location("set_auto_rejoin_intent"));
+    public static final Type<ClientboundSetAutoRejoinIntent> TYPE = new Type<>(LTExtras.id("set_auto_rejoin_intent"));
 
     public static void handle(ClientboundSetAutoRejoinIntent packet, IPayloadContext ctx) {
         ClientAutoRejoinHandler.handleIntent(packet.intent);

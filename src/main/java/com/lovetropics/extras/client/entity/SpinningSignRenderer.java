@@ -16,13 +16,14 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 
 public class SpinningSignRenderer extends EntityRenderer<SpinningSignEntity, SpinningSignRenderState> {
-    private static final Identifier TEXTURE = LTExtras.location("textures/entity/spinning_sign.png");
+    private static final Identifier TEXTURE = LTExtras.id("textures/entity/spinning_sign.png");
 
     private final SpinningSignModel model;
     private final ItemModelResolver itemModelResolver;
@@ -68,16 +69,15 @@ public class SpinningSignRenderer extends EntityRenderer<SpinningSignEntity, Spi
                 poseStack.translate(0F, y, -5.01F);
                 poseStack.scale(scale, scale, scale);
                 FormattedCharSequence actualLine = text.getVisualOrderText();
-                float x1 = (float) -this.getFont().width(actualLine) / 2;
                 submitNodeCollector.submitText(
                         poseStack,
-                        x1,
+                        -getFont().width(actualLine) / 2.0f,
                         0,
                         actualLine,
                         false,
-                        Font.DisplayMode.POLYGON_OFFSET,
-                        renderState.lightCoords,
-                        DyeColor.WHITE.getTextColor(),
+                        Font.DisplayMode.NORMAL,
+                        LightCoordsUtil.lightCoordsWithEmission(renderState.lightCoords, 2),
+                        CommonColors.WHITE,
                         0,
                         0
                 );

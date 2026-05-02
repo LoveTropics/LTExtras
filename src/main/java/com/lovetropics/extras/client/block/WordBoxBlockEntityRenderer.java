@@ -23,7 +23,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.item.FallingBlockEntity;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -31,7 +30,7 @@ import java.util.List;
 
 public class WordBoxBlockEntityRenderer implements BlockEntityRenderer<WordBoxBlockEntity, WordBoxRenderState> {
 
-    public static final ContextKey<Component> KEY_COMPONENT = new ContextKey<>(LTExtras.location("word_box/component"));
+    public static final ContextKey<Component> KEY_COMPONENT = new ContextKey<>(LTExtras.id("word_box/component"));
     public static final float OFFSET = 0.01f;
     public static final float Y_OFFSET = 0.5f;
 
@@ -94,7 +93,7 @@ public class WordBoxBlockEntityRenderer implements BlockEntityRenderer<WordBoxBl
                     false,
                     Font.DisplayMode.POLYGON_OFFSET,
                     lightCoords,
-                    DyeColor.WHITE.getTextColor(),
+                    TEXT_COLOR,
                     0,
                     0
             );

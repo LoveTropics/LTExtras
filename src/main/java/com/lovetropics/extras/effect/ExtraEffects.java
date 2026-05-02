@@ -26,7 +26,7 @@ public class ExtraEffects {
 
     public static final DeferredHolder<MobEffect, ForkliftBoostEffect> FORKLIFT_BOOST = REGISTER.register("forklift_boost", () -> new ForkliftBoostEffect(MobEffectCategory.BENEFICIAL, 0x75f7ff));
 
-    public static final DeferredHolder<MobEffect, PropaguledEffect> PROPAGULED = REGISTER.register("propaguled", () -> new PropaguledEffect(MobEffectCategory.HARMFUL, 0x00ddcc).addAttributeModifier(Attributes.MOVEMENT_SPEED, LTExtras.location("effects.propaguled"), -0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+    public static final DeferredHolder<MobEffect, PropaguledEffect> PROPAGULED = REGISTER.register("propaguled", () -> new PropaguledEffect(MobEffectCategory.HARMFUL, 0x00ddcc).addAttributeModifier(Attributes.MOVEMENT_SPEED, LTExtras.id("effects.propaguled"), -0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
     public static final Map<ModelModifierType, DeferredHolder<MobEffect, ModelEffect>> MODEL_EFFECTS = new HashMap<>();
 
@@ -37,11 +37,11 @@ public class ExtraEffects {
             }
             ModelEffect modelEffect = new ModelEffect(MobEffectCategory.NEUTRAL, 0x000000, value);
             if (value == ModelModifierType.SHRUGGY_ARMS) {
-                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.location("small_arms_block_range"), -3, AttributeModifier.Operation.ADD_VALUE);
-                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.location("small_arms_entity_range"), -3, AttributeModifier.Operation.ADD_VALUE);
+                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.id("small_arms_block_range"), -3, AttributeModifier.Operation.ADD_VALUE);
+                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.id("small_arms_entity_range"), -3, AttributeModifier.Operation.ADD_VALUE);
             } else if (value == ModelModifierType.ENDER_ARMS) {
-                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.location("long_arms_block_range"), 3, AttributeModifier.Operation.ADD_VALUE);
-                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.location("long_arms_entity_range"), 3, AttributeModifier.Operation.ADD_VALUE);
+                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.id("long_arms_block_range"), 3, AttributeModifier.Operation.ADD_VALUE);
+                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.id("long_arms_entity_range"), 3, AttributeModifier.Operation.ADD_VALUE);
             }
             MODEL_EFFECTS.put(value, REGISTER.register("mm_" + value.getSerializedName(), () -> modelEffect));
         }

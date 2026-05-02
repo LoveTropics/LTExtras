@@ -21,9 +21,9 @@ public class WorldEffectConfigs {
     @SubscribeEvent
     public static void addReloadListener(AddServerReloadListenersEvent event) {
         RegistryAccess registries = event.getRegistryAccess();
-        event.addListener(LTExtras.location("world_effects"), (barrier, resourceManager, backgroundExecutor, gameExecutor) ->
-                LISTER.load(registries, barrier.resourceManager(), resourceManager)
-                        .thenCompose(backgroundExecutor::wait)
+        event.addListener(LTExtras.id("world_effects"), (currentReload, taskExecutor, barrier, reloadExecutor) ->
+                LISTER.load(registries, currentReload.resourceManager(), taskExecutor)
+                        .thenCompose(barrier::wait)
                         .thenAcceptAsync(effects -> {
                             REGISTRY.clear();
                             effects.forEach(holder ->
@@ -33,7 +33,7 @@ public class WorldEffectConfigs {
                             if (server != null) {
                                 WorldEffectManager.reload(server);
                             }
-                        }, gameExecutor)
+                        }, reloadExecutor)
         );
     }
 }

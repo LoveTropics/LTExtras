@@ -16,7 +16,7 @@ import net.minecraft.util.Mth;
 
 public class SpinningSignModel extends EntityModel<SpinningSignRenderState> {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.location("spinning_sign"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.id("spinning_sign"), "main");
     private final ModelPart root;
     private final ModelPart sign_panel;
     private final ModelPart sign_panel2;

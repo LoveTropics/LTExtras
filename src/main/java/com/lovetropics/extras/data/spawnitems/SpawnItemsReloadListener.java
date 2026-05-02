@@ -19,7 +19,7 @@ import java.util.Map;
 
 @EventBusSubscriber
 public class SpawnItemsReloadListener extends SimpleJsonResourceReloadListener<SpawnItems> {
-    private static final ResourceKey<Registry<SpawnItems>> REGISTRY_KEY = ResourceKey.createRegistryKey(LTExtras.location("spawn_items"));
+    private static final ResourceKey<Registry<SpawnItems>> REGISTRY_KEY = ResourceKey.createRegistryKey(LTExtras.id("spawn_items"));
 
     public static final BiMap<Identifier, SpawnItems> REGISTRY = Maps.synchronizedBiMap(HashBiMap.create());
 
@@ -29,7 +29,7 @@ public class SpawnItemsReloadListener extends SimpleJsonResourceReloadListener<S
 
     @SubscribeEvent
     static void onAddReloadListeners(AddServerReloadListenersEvent event) {
-        event.addListener(LTExtras.location("spawn_items"), new SpawnItemsReloadListener(event.getRegistryAccess()));
+        event.addListener(LTExtras.id("spawn_items"), new SpawnItemsReloadListener(event.getRegistryAccess()));
     }
 
     @Override

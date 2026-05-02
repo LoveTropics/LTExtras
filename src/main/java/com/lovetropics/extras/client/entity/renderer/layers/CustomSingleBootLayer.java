@@ -31,8 +31,6 @@ public class CustomSingleBootLayer<S extends HumanoidRenderState, M extends Huma
         }
     }
 
-
-
     public void translateToFeet(PoseStack poseStack, ItemStack stack) {
         var y = 0.05 + stack.getOrDefault(ExtraDataComponents.ADJUST_HEIGHT, 0.0f);
         poseStack.translate(-0.125F, y, -0.4F);

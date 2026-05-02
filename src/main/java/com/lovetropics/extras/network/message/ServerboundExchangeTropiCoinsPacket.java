@@ -22,7 +22,7 @@ public record ServerboundExchangeTropiCoinsPacket(boolean store, int count) impl
             ServerboundExchangeTropiCoinsPacket::new
     );
 
-    public static final Type<ServerboundExchangeTropiCoinsPacket> TYPE = new Type<>(Identifier.fromNamespaceAndPath(LTExtras.MODID, "exchange_tropicoins"));
+    public static final Type<ServerboundExchangeTropiCoinsPacket> TYPE = new Type<>(LTExtras.id("exchange_tropicoins"));
 
     public static void handle(ServerboundExchangeTropiCoinsPacket packet, IPayloadContext context) {
         if (context.player() instanceof ServerPlayer player) {

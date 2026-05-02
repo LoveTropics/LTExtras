@@ -21,7 +21,7 @@ public record InteractActionData(List<ClickEvent> clickEvents, boolean cancelEve
         for (ClickEvent clickEvent : clickEvents) {
             switch (clickEvent) {
                 case ClickEvent.RunCommand runCommand:
-                    CommandSourceStack targetSource = player.createCommandSourceStack().withPermission(LevelBasedPermissionSet.MODERATOR);
+                    CommandSourceStack targetSource = player.createCommandSourceStack().withPermission(LevelBasedPermissionSet.GAMEMASTER);
                     player.level().getServer()
                             .getCommands()
                             .performPrefixedCommand(targetSource, runCommand.command());

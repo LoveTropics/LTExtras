@@ -16,11 +16,6 @@ public class CustomSpritesButton extends Button {
     @Override
     protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprites.get(active, isHoveredOrFocused()), getX(), getY(), getWidth(), getHeight(), alpha);
-//        renderString(graphics, Minecraft.getInstance().font, ARGB.color(alpha, getFGColor())); // Todo 26.1 Port
-    }
-
-    @Override
-    public int getFGColor() {
-        return super.getFGColor();
+        extractDefaultLabel(graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
     }
 }

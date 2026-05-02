@@ -175,14 +175,14 @@ public class ExtraItems {
                             .setEquipSound(SoundEvents.ARMOR_EQUIP_GENERIC)
                             .build())
             )
-            .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.location("item/hard_hat")))
+            .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.id("item/hard_hat")))
             .register();
 
     public static final ItemEntry<Item> REFLECTIVE_VEST = REGISTRATE.item("reflective_vest", Item::new)
             .properties(p -> p.stacksTo(1)
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.CHEST)
                             .setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER)
-                            .setAsset(ResourceKey.create(EquipmentAssets.ROOT_ID, LTExtras.location("reflective_vest")))
+                            .setAsset(ResourceKey.create(EquipmentAssets.ROOT_ID, LTExtras.id("reflective_vest")))
                             .build())
             )
             .defaultModel()
@@ -209,7 +209,7 @@ public class ExtraItems {
                     .component(ExtraDataComponents.WALK_ANIMATION, List.of(ModelModifierType.STIFF_LEGS, ModelModifierType.HOP_WALK))
                     .component(ExtraDataComponents.ADJUST_HEIGHT, 0.45F)
             )
-            .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.location("item/big_boot")))
+            .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.id("item/big_boot")))
             .register();
 
     public static final ItemEntry<Item> FORKLIFT_CERTIFICATION = REGISTRATE.item("forklift_certification", Item::new)
@@ -241,7 +241,7 @@ public class ExtraItems {
     }
 
     private static class Models {
-        public static final ModelTemplate GLASSES_EQUIPPED_TEMPLATE = ModelTemplates.createItem(LTExtras.location("template_glasses_equipped").toString(), "_equipped", TextureSlot.LAYER0);
+        public static final ModelTemplate GLASSES_EQUIPPED_TEMPLATE = ModelTemplates.createItem(LTExtras.id("template_glasses_equipped").toString(), "_equipped", TextureSlot.LAYER0);
 
         private static void generateForkliftCertification(DataGenContext<Item, CollectibleBasketItem> ctx, RegistrateItemModelGenerator prov) {
             prov.itemModelOutput.accept(ctx.get(), conditional(new HasUnseenCollectible(),

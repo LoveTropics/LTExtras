@@ -20,7 +20,7 @@ public class LogoRendererMixin {
     @Final
     private boolean keepLogoThroughFade;
     @Unique
-    private static final Identifier LOVE_TROPICS_TEXTURE = LTExtras.location("textures/gui/title.png");
+    private static final Identifier LOVE_TROPICS_TEXTURE = LTExtras.id("textures/gui/title.png");
 
     @ModifyConstant(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IF)V", constant = @Constant(intValue = 30))
     private int modifyDefaultHeight(int height) {

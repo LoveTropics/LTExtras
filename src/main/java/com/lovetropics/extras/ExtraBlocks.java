@@ -195,7 +195,7 @@ public class ExtraBlocks {
     public static final BlockEntry<WaterBarrierBlock> WATER_BARRIER = REGISTRATE.block("water_barrier", WaterBarrierBlock::new)
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.noLootTable())
-            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("item/barrier"))))
+            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), TextureMapping.getItemTexture(Items.BARRIER)))
             .item()
             .model(() -> Models::generateWaterBarrierItem)
             .build()
@@ -204,7 +204,7 @@ public class ExtraBlocks {
     public static final BlockEntry<LightweightBarrierBlock> LIGHTWEIGHT_BARRIER = REGISTRATE.block("lightweight_barrier", LightweightBarrierBlock::new)
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.strength(0.0F, 3.6e6f).noLootTable())
-            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("item/barrier"))))
+            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), TextureMapping.getItemTexture(Items.BARRIER)))
             .item()
             .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), Items.BARRIER, ModelTemplates.FLAT_ITEM))
             .build()
@@ -215,7 +215,7 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.noLootTable())
             .blockstate(() -> (ctx, prov)
-                    -> prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("item/barrier"))))
+                    -> prov.createAirLikeBlock(ctx.get(), TextureMapping.getItemTexture(Items.BARRIER)))
             .simpleBlockEntity(RoleBarrierBlock.RoleBarrierBE::new)
             .item()
             .model(() -> (ctx, prov)
@@ -227,7 +227,7 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.noLootTable())
             .blockstate(() -> (ctx, prov)
-                    -> prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("item/barrier"))))
+                    -> prov.createAirLikeBlock(ctx.get(), TextureMapping.getItemTexture(Items.BARRIER)))
             .item()
             .model(() -> (ctx, prov)
                     -> prov.generateFlatItem(ctx.get(), Items.BARRIER, ModelTemplates.FLAT_ITEM))
@@ -238,7 +238,7 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.noLootTable().explosionResistance(0.0f))
             .blockstate(() -> (ctx, prov)
-                    -> prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("item/barrier"))))
+                    -> prov.createAirLikeBlock(ctx.get(), TextureMapping.getItemTexture(Items.BARRIER)))
             .item()
             .model(() -> (ctx, prov)
                     -> prov.generateFlatItem(ctx.get(), Items.BARRIER, ModelTemplates.FLAT_ITEM))
@@ -249,7 +249,7 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.BARRIER)
             .properties(p -> p.noLootTable())
             .blockstate(() -> (ctx, prov) ->
-                    prov.createAirLikeBlock(ctx.get(), new Material(Identifier.withDefaultNamespace("block/water_still")))
+                    prov.createAirLikeBlock(ctx.get(), prov.mcBlockTexture("water_still"))
             )
             .item()
             .model(() -> Models::generateFakeWaterItem)
@@ -277,14 +277,14 @@ public class ExtraBlocks {
     public static final BlockEntry<PanelBlock> GLASS_PANEL = REGISTRATE.block("glass_panel", PanelBlock::new)
             .initialProperties(() -> Blocks.GLASS)
             .blockstate(() -> (ctx, prov) -> {
-                TextureMapping textures = TextureMapping.defaultTexture(new Material(ModelLocationUtils.getModelLocation(Blocks.GLASS)));
+                TextureMapping textures = TextureMapping.defaultTexture(Blocks.GLASS);
                 MultiVariant variant = plainVariant(ModelTemplates.TRAPDOOR_TOP.create(ctx.get(), textures, prov.modelOutput));
                 prov.blockStateOutput.accept(dispatch(ctx.get(), variant).with(BlockModelGenerators.ROTATIONS_COLUMN_WITH_FACING));
             })
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
             .item()
             .model(() -> (ctx, prov) -> {
-                TextureMapping textures = TextureMapping.defaultTexture(new Material(ModelLocationUtils.getModelLocation(Blocks.GLASS)));
+                TextureMapping textures = TextureMapping.defaultTexture(Blocks.GLASS);
                 prov.generateWithTemplate(ctx.get(), ModelTemplates.TRAPDOOR_BOTTOM, textures);
             })
             .build()
@@ -311,7 +311,7 @@ public class ExtraBlocks {
             .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), Items.STRUCTURE_VOID))
             .item()
             .model(() -> (ctx, prov) ->
-                    prov.generateFlatItem(ctx.get(), new Material(Identifier.withDefaultNamespace("item/structure_void")))
+                    prov.generateFlatItem(ctx.get(), TextureMapping.getItemTexture(Items.STRUCTURE_VOID))
             )
             .build()
             .register();
@@ -356,7 +356,7 @@ public class ExtraBlocks {
                 .tag(BlockTags.NEEDS_IRON_TOOL)
                 .blockstate(() -> (ctx, prov) -> Models.generateLadder(ctx, prov, texture))
                 .item()
-                .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), new Material(prov.modLoc("block/" + texture))))
+                .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), prov.modBlockTexture(texture)))
                 .build();
     }
 
@@ -419,7 +419,7 @@ public class ExtraBlocks {
         return REGISTRATE.block("edgeless_" + color + "_stained_glass", p -> new StainedGlassBlock(dyeColor, p))
                 .initialProperties(() -> Blocks.GLASS)
                 .blockstate(() -> (ctx, prov) ->
-                        prov.generate(ctx.get(), TexturedModel.CUBE.updateTexture(textures -> textures.put(TextureSlot.ALL, new Material(prov.modLoc("block/edgeless/edgeless_" + color + "_stained_glass")))))
+                        prov.generate(ctx.get(), TexturedModel.CUBE.updateTexture(textures -> textures.put(TextureSlot.ALL, prov.modBlockTexture("edgeless/edgeless_" + color + "_stained_glass"))))
                 )
                 .simpleItem()
                 .register();
@@ -431,7 +431,7 @@ public class ExtraBlocks {
             .properties(p -> p.noLootTable())
             .blockstate(() -> Models::generateReeds)
             .item()
-            .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), new Material(prov.modLoc("block/" + ctx.getName() + "_top_tall"))))
+            .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), prov.modBlockTexture(ctx.getName() + "_top_tall")))
             .build()
             .register();
 
@@ -440,7 +440,7 @@ public class ExtraBlocks {
             .blockstate(() -> Models::generateSugarCane)
             .defaultLoot()
             .item()
-            .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), new Material(prov.modLoc("block/" + ctx.getName() + "_top"))))
+            .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), prov.modBlockTexture(ctx.getName() + "_top")))
             .build()
             .register();
 
@@ -500,7 +500,7 @@ public class ExtraBlocks {
                         .blockstate(() -> (ctx, prov) -> {
                             Identifier model = prov.getBuilder()
                                     .transformTemplate(template -> template.parent(prov.modLoc("block/glow_sticks")))
-                                    .texture(Models.GLOW_STICKS, new Material(prov.modLoc("block/glow_sticks/" + dyeName)))
+                                    .texture(Models.GLOW_STICKS, prov.modBlockTexture("glow_sticks/" + dyeName))
                                     .build(ctx.get());
                             prov.blockStateOutput.accept(dispatch(ctx.get(), createRotatedVariants(plainModel(model))));
                         })
@@ -562,8 +562,8 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.CRAFTING_TABLE)
             .blockstate(() -> (ctx, prov) ->
                     prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE_TOP.updateTexture(textureMapping -> {
-                        textureMapping.put(TextureSlot.SIDE, new Material(prov.modLoc("block/recycling_table_side")));
-                        textureMapping.put(TextureSlot.TOP, new Material(prov.modLoc("block/recycling_table_top")));
+                        textureMapping.put(TextureSlot.SIDE, prov.modBlockTexture("recycling_table_side"));
+                        textureMapping.put(TextureSlot.TOP, prov.modBlockTexture("recycling_table_top"));
                     })))
             .simpleItem()
             .lang("Recycling Table")
@@ -575,8 +575,8 @@ public class ExtraBlocks {
             .properties(p -> p.sound(SoundType.SLIME_BLOCK))
             .blockstate(() -> (ctx, prov) ->
                     prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE_TOP.updateTexture(textureMapping -> {
-                        textureMapping.put(TextureSlot.SIDE, new Material(prov.modLoc("block/lime_side")));
-                        textureMapping.put(TextureSlot.TOP, new Material(prov.modLoc("block/lime_top")));
+                        textureMapping.put(TextureSlot.SIDE, prov.modBlockTexture("lime_side"));
+                        textureMapping.put(TextureSlot.TOP, prov.modBlockTexture("lime_top"));
                     })))
             .lang("Block of Lime")
             .simpleItem()
@@ -593,9 +593,9 @@ public class ExtraBlocks {
     public static final BlockEntry<SlabBlock> SLICED_LIME = REGISTRATE.block("sliced_lime", SlabBlock::new)
             .initialProperties(LIME_BLOCK)
             .blockstate(() -> (ctx, prov) -> {
-                Material side = new Material(prov.modLoc("block/lime_side"));
-                Material end = new Material(prov.modLoc("block/lime_top"));
-                Material inside = new Material(prov.modLoc("block/lime_inside"));
+                Material side = prov.modBlockTexture("lime_side");
+                Material end = prov.modBlockTexture("lime_top");
+                Material inside = prov.modBlockTexture("lime_inside");
                 TextureMapping bottomTextures = new TextureMapping()
                         .put(TextureSlot.SIDE, side)
                         .put(TextureSlot.BOTTOM, end)
@@ -623,7 +623,7 @@ public class ExtraBlocks {
             .tag(BlockTags.MINEABLE_WITH_SHOVEL)
             .blockstate(() -> (ctx, prov) ->
                     prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE.updateTexture(textureMapping -> {
-                        textureMapping.put(TextureSlot.ALL, new Material(prov.mcLoc("block/dirt_path_top")));
+                        textureMapping.put(TextureSlot.ALL, prov.mcBlockTexture("dirt_path_top"));
                     })))
             .simpleItem()
             .register();
@@ -825,7 +825,7 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.BROWN_MUSHROOM_BLOCK)
             .blockstate(() -> (ctx, prov) -> {
                 prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE.updateTexture(textureMapping -> {
-                    textureMapping.put(TextureSlot.ALL, new Material(prov.mcLoc("block/brown_mushroom_block")));
+                    textureMapping.put(TextureSlot.ALL, prov.mcBlockTexture("brown_mushroom_block"));
                 }));
             })
             .simpleItem()
@@ -833,7 +833,7 @@ public class ExtraBlocks {
 
     public static final BlockEntry<SpeedySlabBlock> SPEEDY_SPRUCE_SLAB = speedySlab(Blocks.SPRUCE_SLAB, Blocks.SPRUCE_PLANKS);
     public static final BlockEntry<SpeedySlabBlock> SPEEDY_MUD_BRICKS_SLAB = speedySlab(Blocks.MUD_BRICK_SLAB, Blocks.MUD_BRICKS);
-    public static final BlockEntry<SpeedySlabBlock> SPEEDY_PACKED_MUD_SLAB = speedySlab(LTExtras.location("packed_mud_slab"), () -> PACKED_MUD_SLAB.get(), Blocks.PACKED_MUD);
+    public static final BlockEntry<SpeedySlabBlock> SPEEDY_PACKED_MUD_SLAB = speedySlab(LTExtras.id("packed_mud_slab"), () -> PACKED_MUD_SLAB.get(), Blocks.PACKED_MUD);
 
     private static BlockEntry<SpeedySlabBlock> speedySlab(Block slab, Block fullBlock) {
         return speedySlab(getId(slab.builtInRegistryHolder()), () -> slab, fullBlock);
@@ -861,7 +861,7 @@ public class ExtraBlocks {
     }
 
     public static final BlockEntry<SpeedyZone> SPEEDY_ZONE = REGISTRATE.block("speedy_zone", SpeedyZone::new)
-            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), new Material(prov.mcLoc("item/sugar"))))
+            .blockstate(() -> (ctx, prov) -> prov.createAirLikeBlock(ctx.get(), TextureMapping.getItemTexture(Items.SUGAR)))
             .properties(p -> p.noOcclusion().noCollision().strength(-1.0F, 3600000.0F))
             .item()
             .model(() -> (ctx, prov) -> prov.generateFlatItem(ctx.get(), Items.SUGAR, ModelTemplates.FLAT_ITEM))
@@ -1724,7 +1724,7 @@ public class ExtraBlocks {
         }
 
         private static MultiVariant barsModel(RegistrateBlockModelGenerator prov, DataGenContext<Block, ?> ctx, ModelTemplate modelTemplate) {
-            Material tex = new Material(ModelLocationUtils.getModelLocation(ctx.get()));
+            Material tex = TextureMapping.getBlockTexture(ctx.get());
             return plainVariant(modelTemplate.create(ctx.get(),
                     new TextureMapping()
                             .put(BARS, tex)

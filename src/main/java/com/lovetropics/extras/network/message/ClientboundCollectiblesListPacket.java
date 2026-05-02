@@ -20,7 +20,7 @@ public record ClientboundCollectiblesListPacket(List<Holder<Collectible>> collec
             ClientboundCollectiblesListPacket::new
     );
 
-    public static final Type<ClientboundCollectiblesListPacket> TYPE = new Type<>(LTExtras.location("collectibles_list"));
+    public static final Type<ClientboundCollectiblesListPacket> TYPE = new Type<>(LTExtras.id("collectibles_list"));
 
     public ClientboundCollectiblesListPacket {
         collectibles = List.copyOf(collectibles);

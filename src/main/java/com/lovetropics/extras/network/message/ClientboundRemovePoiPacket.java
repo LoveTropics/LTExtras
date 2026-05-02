@@ -16,7 +16,7 @@ public record ClientboundRemovePoiPacket(
             ClientboundRemovePoiPacket::new
     );
 
-    public static final Type<ClientboundRemovePoiPacket> TYPE = new Type<>(LTExtras.location("remove_poi"));
+    public static final Type<ClientboundRemovePoiPacket> TYPE = new Type<>(LTExtras.id("remove_poi"));
 
     public static void handle(ClientboundRemovePoiPacket packet, IPayloadContext context) {
         ClientMapManager.removePoi(packet.id());

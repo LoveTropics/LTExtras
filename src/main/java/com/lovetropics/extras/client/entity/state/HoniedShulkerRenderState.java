@@ -8,7 +8,7 @@ import net.minecraft.world.entity.monster.Shulker;
 
 public class HoniedShulkerRenderState {
 
-    public static final ContextKey<Boolean> HONIED = new ContextKey<>(LTExtras.location("shulker/honied"));
+    public static final ContextKey<Boolean> HONIED = new ContextKey<>(LTExtras.id("shulker/honied"));
 
     public static void updateHoniedRenderState(Shulker entity, ShulkerRenderState renderState) {
         renderState.setRenderData(HONIED, entity.getData(ExtraAttachments.HONIED));

@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.util.Mth;
 
 public class HighHeelsModel extends HumanoidModel<HumanoidRenderState> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.location("high_heels"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(LTExtras.id("high_heels"), "main");
 
     public HighHeelsModel(ModelPart root) {
         super(root);

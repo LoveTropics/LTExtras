@@ -10,6 +10,6 @@ import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 public class ExtraSpecialRenderers {
     @SubscribeEvent
     public static void register(RegisterSpecialModelRendererEvent event) {
-        event.register(LTExtras.location("word_box"), WordBoxSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(LTExtras.id("word_box"), WordBoxSpecialRenderer.Unbaked.MAP_CODEC);
     }
 }

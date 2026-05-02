@@ -55,7 +55,7 @@ public class MapManager extends SavedData {
     }));
 
     private static final SavedDataType<MapManager> TYPE = new SavedDataType<>(
-            LTExtras.location("map_poi"),
+            LTExtras.id("map_poi"),
             MapManager::new,
             CODEC
     );

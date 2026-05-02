@@ -20,8 +20,8 @@ import net.minecraft.util.Mth;
 public class AmazonRiverDolphinModel extends EntityModel<AmazonRiverDolphinRenderState> {
     public static final MeshTransformer BABY_TRANSFORMER = MeshTransformer.scaling(0.5F);
 
-    public static final ModelLayerLocation LAYER = new ModelLayerLocation(LTExtras.location("amazon_river_dolphin"), "main");
-    public static final ModelLayerLocation BABY_LAYER = new ModelLayerLocation(LTExtras.location("amazon_river_dolphin_baby"), "main");
+    public static final ModelLayerLocation LAYER = new ModelLayerLocation(LTExtras.id("amazon_river_dolphin"), "main");
+    public static final ModelLayerLocation BABY_LAYER = new ModelLayerLocation(LTExtras.id("amazon_river_dolphin_baby"), "main");
 
     private final ModelPart chest;
     private final ModelPart head;

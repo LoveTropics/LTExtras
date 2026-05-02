@@ -102,7 +102,7 @@ public class VideoImporter {
                 id.append('_');
             }
         });
-        return LTExtras.location(id.toString());
+        return LTExtras.id(id.toString());
     }
 
     private record ImportedVideo(

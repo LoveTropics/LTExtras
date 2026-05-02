@@ -25,7 +25,7 @@ public record ServerboundSetTimeZonePacket(ZoneId id) implements CustomPacketPay
             packet -> packet.id.getId()
     );
 
-    public static final Type<ServerboundSetTimeZonePacket> TYPE = new Type<>(LTExtras.location("set_time_zone"));
+    public static final Type<ServerboundSetTimeZonePacket> TYPE = new Type<>(LTExtras.id("set_time_zone"));
 
     public static void handle(ServerboundSetTimeZonePacket packet, IPayloadContext ctx) {
         ServerPlayer player = (ServerPlayer) ctx.player();

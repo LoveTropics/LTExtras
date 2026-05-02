@@ -27,6 +27,6 @@ public class ExtraRegistries {
     }
 
     private static <T> ResourceKey<Registry<T>> createKey(String name) {
-        return ResourceKey.createRegistryKey(LTExtras.location(name));
+        return ResourceKey.createRegistryKey(LTExtras.id(name));
     }
 }

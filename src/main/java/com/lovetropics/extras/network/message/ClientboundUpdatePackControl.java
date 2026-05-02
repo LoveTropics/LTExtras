@@ -13,7 +13,7 @@ public record ClientboundUpdatePackControl(
 ) implements CustomPacketPayload {
     public static final StreamCodec<ByteBuf, ClientboundUpdatePackControl> STREAM_CODEC = PackControl.State.STREAM_CODEC.map(ClientboundUpdatePackControl::new, ClientboundUpdatePackControl::state);
 
-    public static final Type<ClientboundUpdatePackControl> TYPE = new Type<>(LTExtras.location("update_resource_packs"));
+    public static final Type<ClientboundUpdatePackControl> TYPE = new Type<>(LTExtras.id("update_resource_packs"));
 
     public static void handle(ClientboundUpdatePackControl packet, IPayloadContext context) {
         ClientPackControl.updatePacks(packet.state);

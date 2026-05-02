@@ -22,7 +22,7 @@ public class ClientPlayerForkliftHUD {
 
     public static void registerGuiLayers(RegisterGuiLayersEvent event) {
         DRIFT_BAR = new ForkliftDriftBarRenderer(Minecraft.getInstance());
-        event.registerBelow(VanillaGuiLayers.CAMERA_OVERLAYS, LTExtras.location("forklift_hud"), ClientPlayerForkliftHUD::renderGui);
+        event.registerBelow(VanillaGuiLayers.CAMERA_OVERLAYS, LTExtras.id("forklift_hud"), ClientPlayerForkliftHUD::renderGui);
     }
 
     private static void renderGui(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {

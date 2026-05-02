@@ -53,7 +53,7 @@ public class ForkliftSpawnEggItem extends Item {
 
                 player.awardStat(Stats.ITEM_USED.get(ExtraItems.FORKLIFT_SPAWN_EGG.asItem()));
                 serverLevel.gameEvent(player, GameEvent.ENTITY_PLACE, entity.position());
-                stack.shrink(1);
+                stack.consume(1, player);
 
                 event.setCanceled(true);
             }

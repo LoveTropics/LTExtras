@@ -1,4 +1,4 @@
-// Todo 26.1 Port
+// TODO 26.1 port
 //package com.lovetropics.extras.client.particle;
 //
 //import com.lovetropics.extras.LTExtras;
@@ -28,7 +28,7 @@
 //public class WaterBarrierParticle extends SingleQuadParticle {
 //
 //    private static final RenderPipeline RENDER_PIPELINE = RenderPipeline.builder(RenderPipelines.PARTICLE_SNIPPET)
-//            .withLocation(LTExtras.location("pipeline/water_barrier_particle"))
+//            .withLocation(LTExtras.id("pipeline/water_barrier_particle"))
 //            .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
 //            .withDepthWrite(true)
 //            .withBlend(BlendFunction.TRANSLUCENT).build();

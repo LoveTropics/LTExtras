@@ -77,7 +77,7 @@ repositories {
 
 dependencies {
     // TODO: HACK - We get Registrate at runtime through JarJar from Tropicraft. We should rather prefer to depend on the slim jar.
-    jarJar(compileOnly("com.tterrag.registrate:Registrate-LT:MC26.1-${registrate_version}")) {
+    jarJar(compileOnly("com.tterrag.registrate:Registrate:MC26.1-${registrate_version}")) {
         version {
             strictly "[MC26.1-${registrate_version},MC26.2)"
             prefer "MC26.1-${registrate_version}"
@@ -85,7 +85,7 @@ dependencies {
     }
 
     jarJar(implementation("org.lovetropics:LTLib:$ltlib_version"))
-//    jarJar(implementation("eu.pb4:placeholder-api-lt:$placeholder_api_version"))
+    jarJar(implementation("eu.pb4:placeholder-api-lt:$placeholder_api_version"))
 
 //    implementation "maven.modrinth:fusion-connected-textures:$fusion_version"
 

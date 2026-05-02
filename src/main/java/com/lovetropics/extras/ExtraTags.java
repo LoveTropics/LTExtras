@@ -46,7 +46,7 @@ public class ExtraTags {
         public static final TagKey<Collectible> DONATION_GOAL = modTag("donation_goal");
 
         static TagKey<Collectible> modTag(String name) {
-            return TagKey.create(ExtraRegistries.COLLECTIBLE, LTExtras.location(name));
+            return TagKey.create(ExtraRegistries.COLLECTIBLE, LTExtras.id(name));
         }
     }
 }

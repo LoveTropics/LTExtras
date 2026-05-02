@@ -2,6 +2,7 @@ package com.lovetropics.extras.block;
 
 import com.lovetropics.extras.ExtendedFluidState;
 import com.lovetropics.extras.client.particle.ExtraParticles;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -31,9 +33,10 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
     private static final FluidState WATERLOGGED_FLUID = createNoDripState(Fluids.WATER.getSource(false));
 
     private static FluidState createNoDripState(FluidState parent) {
-//        FluidState state = new FluidState(parent.getType(), (Reference2ObjectArrayMap<Property<?>, Comparable<?>>) parent.getValues(), parent.propertiesCodec);
-        ((ExtendedFluidState) (Object) parent).setNoDripParticles();
-        return parent; // Todo 26.1 - Check this code
+        // Well, this is terrible
+        FluidState state = new FluidState(parent.getType(), parent.getProperties().toArray(Property[]::new), parent.getValues().map(Property.Value::value).toArray(Comparable[]::new));
+        ((ExtendedFluidState) (Object) state).setNoDripParticles();
+        return state;
     }
 
     public WaterBarrierBlock(Properties properties) {

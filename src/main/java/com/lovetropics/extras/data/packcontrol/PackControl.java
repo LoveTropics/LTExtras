@@ -37,7 +37,7 @@ import static net.minecraft.commands.Commands.literal;
 public class PackControl extends SavedData {
 
     public static final SavedDataType<PackControl> ID = new SavedDataType<>(
-            LTExtras.location("pack_control"),
+            LTExtras.id("pack_control"),
             PackControl::new,
             RecordCodecBuilder.create(instance -> instance.group(
                     State.CODEC.fieldOf("state").forGetter(o -> o.state)

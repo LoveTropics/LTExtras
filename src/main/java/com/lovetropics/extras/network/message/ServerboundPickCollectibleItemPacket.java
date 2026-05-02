@@ -14,7 +14,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public record ServerboundPickCollectibleItemPacket(Holder<Collectible> collectible) implements CustomPacketPayload {
     private static final int NOT_FOUND = -1;
 
-    public static final Type<ServerboundPickCollectibleItemPacket> TYPE = new Type<>(LTExtras.location("pick_collectible"));
+    public static final Type<ServerboundPickCollectibleItemPacket> TYPE = new Type<>(LTExtras.id("pick_collectible"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundPickCollectibleItemPacket> STREAM_CODEC = StreamCodec.composite(
             Collectible.STREAM_CODEC, ServerboundPickCollectibleItemPacket::collectible,
