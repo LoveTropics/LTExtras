@@ -1,6 +1,2 @@
-@NullMarked
+@org.jspecify.annotations.NullMarked
 package com.lovetropics.extras.client;
-
-import org.jspecify.annotations.NullMarked;
-
-

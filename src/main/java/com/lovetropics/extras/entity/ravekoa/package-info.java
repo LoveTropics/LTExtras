@@ -1,6 +1,4 @@
-@NullMarked
+@org.jspecify.annotations.NullMarked
 package com.lovetropics.extras.entity.ravekoa;
-
-import org.jspecify.annotations.NullMarked;
 
 

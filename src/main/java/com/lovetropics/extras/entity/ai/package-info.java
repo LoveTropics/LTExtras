@@ -1,6 +1,2 @@
-@NullMarked
+@org.jspecify.annotations.NullMarked
 package com.lovetropics.extras.entity.ai;
-
-import org.jspecify.annotations.NullMarked;
-
-

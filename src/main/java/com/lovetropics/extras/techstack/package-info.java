@@ -1,6 +1,2 @@
-@NullMarked
+@org.jspecify.annotations.NullMarked
 package com.lovetropics.extras.techstack;
-
-import org.jspecify.annotations.NullMarked;
-
-

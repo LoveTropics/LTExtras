@@ -1,6 +1,2 @@
-@NullMarked
+@org.jspecify.annotations.NullMarked
 package com.lovetropics.extras.client.screen.map;
-
-import org.jspecify.annotations.NullMarked;
-
-

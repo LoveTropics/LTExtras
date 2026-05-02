@@ -1,6 +1,5 @@
 package com.lovetropics.extras.entity.glass_frog;
 
-import com.google.common.collect.ImmutableList;
 import com.lovetropics.extras.entity.ExtraEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -13,12 +12,11 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
-import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.frog.Frog;
@@ -34,6 +32,7 @@ import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * A small, translucent frog native to Amazonian streams. Serves as a bioindicator for healthy freshwater ecosystems and provides food for larger predators.
@@ -41,28 +40,9 @@ import javax.annotation.Nullable;
  * Mostly code borrowed from the vanilla frog.
  */
 public class GlassFrog extends Animal {
-    protected static final ImmutableList<SensorType<? extends Sensor<? super GlassFrog>>> SENSOR_TYPES = ImmutableList.of(
-            SensorType.NEAREST_LIVING_ENTITIES, SensorType.HURT_BY, SensorType.FROG_TEMPTATIONS, SensorType.IS_IN_WATER
-    );
-    protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(
-            MemoryModuleType.LOOK_TARGET,
-            MemoryModuleType.NEAREST_LIVING_ENTITIES,
-            MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
-            MemoryModuleType.WALK_TARGET,
-            MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
-            MemoryModuleType.PATH,
-            MemoryModuleType.BREED_TARGET,
-            MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS,
-            MemoryModuleType.LONG_JUMP_MID_JUMP,
-            MemoryModuleType.ATTACK_TARGET,
-            MemoryModuleType.TEMPTING_PLAYER,
-            MemoryModuleType.TEMPTATION_COOLDOWN_TICKS,
-            MemoryModuleType.IS_TEMPTED,
-            MemoryModuleType.HURT_BY,
-            MemoryModuleType.HURT_BY_ENTITY,
-            MemoryModuleType.NEAREST_ATTACKABLE,
-            MemoryModuleType.IS_IN_WATER,
-            MemoryModuleType.IS_PANICKING
+    private static final Brain.Provider<GlassFrog> BRAIN_PROVIDER = Brain.provider(
+            List.of(SensorType.NEAREST_LIVING_ENTITIES, SensorType.HURT_BY, SensorType.FROG_TEMPTATIONS, SensorType.IS_IN_WATER),
+            frog -> GlassFrogAi.activities()
     );
 
     public int jumpDelay = 0;
@@ -92,7 +72,7 @@ public class GlassFrog extends Animal {
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
         GlassFrog frog = ExtraEntities.GLASS_FROG.create(level, EntitySpawnReason.BREEDING);
         if (frog != null) {
-//            GlassFrogAi.initMemories(frog, level.getRandom()); // Todo 26.1 Port
+            GlassFrogAi.initMemories(frog, level.getRandom());
         }
 
         return frog;
@@ -102,7 +82,7 @@ public class GlassFrog extends Animal {
     public SpawnGroupData finalizeSpawn(
             ServerLevelAccessor levelAccessor, DifficultyInstance difficultyInstance, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData
     ) {
-//        GlassFrogAi.initMemories(this, levelAccessor.getRandom()); // Todo 26.1 Port
+        GlassFrogAi.initMemories(this, levelAccessor.getRandom());
         return super.finalizeSpawn(levelAccessor, difficultyInstance, spawnReason, spawnGroupData);
     }
 
@@ -111,27 +91,20 @@ public class GlassFrog extends Animal {
         return super.calculateFallDamage(fallDistance, damageMultiplier) - 5;
     }
 
-    // Todo 26.1 Port
+    @Override
+    protected Brain<GlassFrog> makeBrain(Brain.Packed packedBrain) {
+        return BRAIN_PROVIDER.makeBrain(this, packedBrain);
+    }
 
-//    @Override
-//    protected Brain.Provider<GlassFrog> brainProvider() {
-//        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
-//    }
-//
-//    @Override
-//    protected Brain<? extends LivingEntity> makeBrain(Brain.Packed packedBrain) {
-//        return GlassFrogAi.makeBrain(this.brainProvider().makeBrain(packedBrain));;
-//    }
-
-//    @Override
-//    public Brain<GlassFrog> getBrain() {
-//        return (Brain<GlassFrog>) super.getBrain();
-//    }
+    @Override
+    public Brain<GlassFrog> getBrain() {
+        return (Brain<GlassFrog>) super.getBrain();
+    }
 
     @Override
     protected void customServerAiStep(ServerLevel level) {
-//        this.getBrain().tick(level, this); // Todo 26.1 Port
-//        GlassFrogAi.updateActivity(this);
+        this.getBrain().tick(level, this);
+        GlassFrogAi.updateActivity(this);
         super.customServerAiStep(level);
 
         if ((!this.getNavigation().isDone() || this.getTarget() != null) && (this.onGround() || this.isInWater())) {
