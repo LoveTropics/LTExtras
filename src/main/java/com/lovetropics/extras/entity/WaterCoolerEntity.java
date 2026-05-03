@@ -156,7 +156,6 @@ public class WaterCoolerEntity extends Entity {
     }
 
     private static ItemStack getPotionDrop() {
-        // Todo Code Updates
         MobEffectInstance mobEffect = new MobEffectInstance(Util.getRandom(MODIFIER_TYPES, random), 15 * 20, 1);
         PotionContents potionContents = new PotionContents(Optional.empty(), Optional.of(0x5A8DD6), List.of(), Optional.of(ExtraLangKeys.WATER_COOLER_POTION_NAME.get().toString())).withEffectAdded(mobEffect);
         ItemStack itemStack = new ItemStack(Items.POTION, 1);
