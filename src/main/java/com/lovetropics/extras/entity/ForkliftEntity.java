@@ -298,7 +298,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     public void tick() {
         super.tick();
 
-        if (level().isClientSide()) {
+        if (PICKUP_DEBUG && level().isClientSide()) {
             Gizmos.cuboid(getPickupAABB(), GizmoStyle.fill(CommonColors.WHITE));
         }
 
