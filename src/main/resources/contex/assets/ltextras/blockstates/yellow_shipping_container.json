@@ -1,0 +1,26 @@
+{
+  "neoforge:definition_type": "contex:definition",
+  "contex_meta": [
+    {
+      "type": "contex:full",
+      "predicate": {
+        "type": "contex:same_block"
+      },
+      "occlusion_mode": "solid_or_self",
+      "state_predicate": { },
+      "textures": [
+        {
+          "main_texture": "ltextras:block/yellow_shipping_container",
+          "compact/hor": "ltextras:block/yellow_shipping_container_hor",
+          "compact/vert": "ltextras:block/yellow_shipping_container_vert",
+          "compact/cross": "ltextras:block/yellow_shipping_container_cross",
+          "compact/full": "ltextras:block/yellow_shipping_container_full"
+        }
+      ]
+    }
+  ],
+  "strategy": "contex:compact",
+  "variants": {
+    "": { "model": "ltextras:block/yellow_shipping_container" }
+  }
+}

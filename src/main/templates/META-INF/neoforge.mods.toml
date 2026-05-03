@@ -30,3 +30,11 @@ type = "required"
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
+
+
+[[dependencies.${mod_id}]]
+modId = "contex"
+type = "optional"
+versionRange = "*"
+ordering = "BEFORE"
+side = "CLIENT"

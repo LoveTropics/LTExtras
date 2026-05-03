@@ -72,6 +72,13 @@ repositories {
             includeGroup 'maven.modrinth'
         }
     }
+    maven {
+        name = 'CurseMaven'
+        url = 'https://www.cursemaven.com'
+        content {
+            includeGroup('curse.maven')
+        }
+    }
     mavenLocal()
 }
 
@@ -86,9 +93,8 @@ dependencies {
 
     jarJar(implementation("org.lovetropics:LTLib:$ltlib_version"))
     jarJar(implementation("eu.pb4:placeholder-api-lt:$placeholder_api_version"))
-
-//    implementation "maven.modrinth:fusion-connected-textures:$fusion_version"
-
+    
+    runtimeOnly("curse.maven:contex-1296805:7806346")
     runtimeOnly 'maven.modrinth:tropicraft:9.10.0+26.1'
 }
 
