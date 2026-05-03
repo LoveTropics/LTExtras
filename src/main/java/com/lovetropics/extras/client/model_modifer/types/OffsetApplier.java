@@ -5,10 +5,10 @@ import com.lovetropics.extras.model_modifer.types.OffsetType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 
-public record OffsetApplier() implements ModelApplier<OffsetType.Data> {
+public record OffsetApplier() implements ModelApplier<OffsetType.Modifier> {
 
     @Override
-    public void applyToTransforms(OffsetType.Data data, PoseStack poseStack, LivingEntityRenderState state) {
+    public void applyToTransforms(OffsetType.Modifier data, PoseStack poseStack, LivingEntityRenderState state) {
         poseStack.translate(data.x() / 16.0f, data.y() / 16.0f, data.z() / 16.0f);
     }
 }

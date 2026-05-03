@@ -3,15 +3,17 @@ package com.lovetropics.extras.client.model_modifer;
 import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.client.model_modifer.types.ConstantModelApplier;
+import com.lovetropics.extras.client.model_modifer.types.CompositeTypeModelApplier;
+import com.lovetropics.extras.client.model_modifer.types.NoShadowApplier;
+import com.lovetropics.extras.client.model_modifer.types.OperationModelApplier;
 import com.lovetropics.extras.client.model_modifer.types.FabulousWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.FlailWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.HopWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.HoveringWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.LongArmsApplier;
+import com.lovetropics.extras.client.model_modifer.types.OffsetApplier;
 import com.lovetropics.extras.client.model_modifer.types.ScaleModelApplier;
 import com.lovetropics.extras.client.model_modifer.types.ShuffleWalkApplier;
-import com.lovetropics.extras.client.model_modifer.types.StiffLegsApplier;
 import com.lovetropics.extras.client.model_modifer.types.UpsidedownApplier;
 import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.model_modifer.ModelModifier;
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ModelModifierClient {
@@ -56,18 +59,20 @@ public class ModelModifierClient {
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.UPSIDEDOWN.get(), new UpsidedownApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.SHRUGGY_ARMS.get(), new ShuffleWalkApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.ENDER_ARMS.get(), new LongArmsApplier());
-        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.STIFF_LEGS.get(), new StiffLegsApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.HOP_WALK.get(), new HopWalkApplier());
-        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.CONSTANT.get(), new ConstantModelApplier());
+        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.CONSTANT.get(), new OperationModelApplier());
+        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.COMPOSITE.get(), new CompositeTypeModelApplier());
+        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.OFFSET.get(), new OffsetApplier());
+        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.NO_SHADOW.get(), new NoShadowApplier());
 
         ExtraModelModifierTypes.REGISTER.getEntries().forEach(entry -> {
             if (!CLIENT_MODEL_DATA.containsKey(entry.get())) {
-                LOGGER.warn("No model applier registered for model modifier type: {}", entry.getKey().identifier());
+                LOGGER.error("No model applier registered for model modifier type: {}", entry.getKey().identifier());
             }
         });
     }
 
-    public static final ContextKey<List<ModelModifier<?>>> MODIFIERS = new ContextKey<>(LTExtras.location("modifiers"));
+    public static final ContextKey<List<ModelModifier<?>>> MODIFIERS = new ContextKey<>(LTExtras.id("modifiers"));
 
     @SubscribeEvent
     public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
@@ -107,7 +112,7 @@ public class ModelModifierClient {
         }
         float adjustHeight = stack.getOrDefault(ExtraDataComponents.ADJUST_HEIGHT, 0.0f);
         if (adjustHeight != 0.0F) {
-            modifiers.add(new OffsetType.Data(0.0f, adjustHeight * 20, 0.0f));
+            modifiers.add(new OffsetType.Modifier(0.0f, adjustHeight * 20, 0.0f));
         }
     }
 
@@ -141,25 +146,26 @@ public class ModelModifierClient {
         }
     }
 
-    static class Applier {
-        static <T extends ModelModifier<?>> ModelApplier<T> forType(ModelModifierType<T> type) {
-            ModelApplier<T> applier = (ModelApplier<T>) CLIENT_MODEL_DATA.get(type);
+    public static class Applier {
+
+        public static <T extends ModelModifier<?>> void applyFor(T modifier, Consumer<ModelApplier<T>> consumer) {
+            ModelApplier<T> applier = (ModelApplier<T>) CLIENT_MODEL_DATA.get(modifier.type());
             if (applier == null) {
-                throw new IllegalStateException("No model applier registered for type: " + type);
+                throw new IllegalStateException("No model applier registered for type: " + modifier.type());
             }
-            return applier;
+            consumer.accept(applier);
         }
 
-        static <T extends ModelModifier<?>> void extract(ModelModifier<T> modifier, LivingEntity livingEntity, LivingEntityRenderState state) {
-            forType(modifier.type()).extractRenderState(modifier.data(), livingEntity, state);
+        public static <T extends ModelModifier<?>> void extract(T modifier, LivingEntity livingEntity, LivingEntityRenderState state) {
+            applyFor(modifier, applier -> applier.extractRenderState(modifier, livingEntity, state));
         }
 
-        static <T extends ModelModifier<?>> void applyToModel(ModelModifier<T> modifier, LivingEntityRenderState state, EntityModel<?> model) {
-            forType(modifier.type()).applyToModel(modifier.data(), state, model);
+        public static <T extends ModelModifier<?>> void applyToModel(T modifier, LivingEntityRenderState state, EntityModel<?> model) {
+            applyFor(modifier, applier -> applier.applyToModel(modifier, state, model));
         }
 
-        static <T extends ModelModifier<?>> void applyToTransforms(ModelModifier<T> modifier, PoseStack poseStack, LivingEntityRenderState state) {
-            forType(modifier.type()).applyToTransforms(modifier.data(), poseStack, state);
+        public static <T extends ModelModifier<?>> void applyToTransforms(T modifier, PoseStack poseStack, LivingEntityRenderState state) {
+            applyFor(modifier, applier -> applier.applyToTransforms(modifier, poseStack, state));
         }
     }
 }

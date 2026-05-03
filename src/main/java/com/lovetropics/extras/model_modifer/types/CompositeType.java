@@ -11,37 +11,32 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.List;
 
-public class CompositeType implements ModelModifierType<CompositeType.Data> {
+public class CompositeType implements ModelModifierType<CompositeType.Modifier> {
 
-    public record Data(List<ModelModifier<?>> modifiers) implements ModelModifier<CompositeType.Data> {
+    public record Modifier(List<ModelModifier<?>> modifiers) implements ModelModifier<Modifier> {
 
-        public static final MapCodec<Data> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                ExtraModelModifierTypes.CODEC.listOf().fieldOf("modifiers").forGetter(Data::modifiers)
-        ).apply(instance, Data::new));
+        public static final MapCodec<Modifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                ExtraModelModifierTypes.CODEC.listOf().fieldOf("modifiers").forGetter(Modifier::modifiers)
+        ).apply(instance, Modifier::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, Data> STREAM_CODEC = StreamCodec.composite(
-                ExtraModelModifierTypes.DIRECT_STREAM_CODEC.apply(ByteBufCodecs.list()), Data::modifiers,
-                Data::new
+        public static final StreamCodec<RegistryFriendlyByteBuf, Modifier> STREAM_CODEC = StreamCodec.composite(
+                ExtraModelModifierTypes.DIRECT_STREAM_CODEC.apply(ByteBufCodecs.list()), Modifier::modifiers,
+                Modifier::new
         );
 
         @Override
-        public CompositeType.Data data() {
-            return this;
-        }
-
-        @Override
-        public ModelModifierType<CompositeType.Data> type() {
+        public ModelModifierType<Modifier> type() {
             return ExtraModelModifierTypes.COMPOSITE.get();
         }
     }
 
     @Override
-    public MapCodec<CompositeType.Data> codec() {
-        return CompositeType.Data.CODEC;
+    public MapCodec<Modifier> codec() {
+        return Modifier.CODEC;
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Data> streamCodec() {
-        return CompositeType.Data.STREAM_CODEC;
+    public StreamCodec<RegistryFriendlyByteBuf, Modifier> streamCodec() {
+        return Modifier.STREAM_CODEC;
     }
 }
