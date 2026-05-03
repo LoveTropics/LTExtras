@@ -1,4 +1,4 @@
-package com.lovetropics.extras.command.arugments;
+package com.lovetropics.extras.command.arguments;
 
 import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.model_modifer.ModelModifier;
@@ -9,7 +9,6 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.ResourceOrIdArgument;
 import net.minecraft.core.Holder;
-import net.minecraft.world.level.storage.loot.LootTable;
 
 public class ModelModifierArgument extends ResourceOrIdArgument<ModelModifier<?>> {
 

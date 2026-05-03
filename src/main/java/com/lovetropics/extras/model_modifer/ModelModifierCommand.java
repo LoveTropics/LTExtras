@@ -1,9 +1,8 @@
 package com.lovetropics.extras.model_modifer;
 
 import com.google.common.collect.Sets;
-import com.lovetropics.extras.command.arugments.ModelModifierArgument;
+import com.lovetropics.extras.command.arguments.ModelModifierArgument;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
-import com.lovetropics.extras.registry.ExtraRegistries;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -12,7 +11,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -21,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;

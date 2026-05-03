@@ -120,10 +120,17 @@ public class LTExtras {
 
                     TpCommand.addTranslations(p);
                     WarpCommand.addTranslations(p);
-
-                    // Todo Update Check
-//                    ExtraEffects.MODEL_EFFECTS.forEach((modifier, effect) ->
-//                            p.add(effect.value(), modifier.getEffectName()));
+                    
+                    p.add(ExtraEffects.FABULOUS.get(), "Fabulous Walk");
+                    p.add(ExtraEffects.FLAIL.get(), "Flail Walk");
+                    p.add(ExtraEffects.HOVERING.get(), "Hovering");
+                    p.add(ExtraEffects.SHUFFLE.get(), "The Shuffle");
+                    p.add(ExtraEffects.UPSIDEDOWN.get(), "Upside Down");
+                    p.add(ExtraEffects.SHRUNK.get(), "Shrunk");
+                    p.add(ExtraEffects.ENDER_ARMS.get(), "Ender Arms");
+                    p.add(ExtraEffects.SHRUGGY_ARMS.get(), "Shruggy Arms");
+                    p.add(ExtraEffects.STIFF_LEGS.get(), "Stiff Legs");
+                    p.add(ExtraEffects.HOP_WALK.get(), "Hop Walk");
                 })
                 .addDataGenerator(ProviderType.BLOCK_TAGS, block -> {
                     block.tag(ExtraTags.Blocks.PLUMBERS_TNT_EXPLODES)

@@ -8,7 +8,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.entity.LivingEntity;
 
-public class CompositeTypeModelApplier implements ModelApplier<CompositeType.Modifier> {
+public class CompositeTypeApplier implements ModelApplier<CompositeType.Modifier> {
 
     @Override
     public void applyToModel(CompositeType.Modifier data, LivingEntityRenderState state, EntityModel<?> model) {

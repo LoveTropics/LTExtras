@@ -3,16 +3,16 @@ package com.lovetropics.extras.client.model_modifer;
 import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.client.model_modifer.types.CompositeTypeModelApplier;
+import com.lovetropics.extras.client.model_modifer.types.CompositeTypeApplier;
 import com.lovetropics.extras.client.model_modifer.types.NoShadowApplier;
-import com.lovetropics.extras.client.model_modifer.types.OperationModelApplier;
+import com.lovetropics.extras.client.model_modifer.types.OperationApplier;
 import com.lovetropics.extras.client.model_modifer.types.FabulousWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.FlailWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.HopWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.HoveringWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.LongArmsApplier;
 import com.lovetropics.extras.client.model_modifer.types.OffsetApplier;
-import com.lovetropics.extras.client.model_modifer.types.ScaleModelApplier;
+import com.lovetropics.extras.client.model_modifer.types.ScaleApplier;
 import com.lovetropics.extras.client.model_modifer.types.ShuffleWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.UpsidedownApplier;
 import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
@@ -51,7 +51,7 @@ public class ModelModifierClient {
     private static final Map<ModelModifierType<?>, ModelApplier<?>> CLIENT_MODEL_DATA = new HashMap<>();
 
     public static void init() {
-        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.SCALE.get(), new ScaleModelApplier());
+        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.SCALE.get(), new ScaleApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.FABULOUS.get(), new FabulousWalkApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.FLAIL.get(), new FlailWalkApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.HOVERING.get(), new HoveringWalkApplier());
@@ -60,8 +60,8 @@ public class ModelModifierClient {
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.SHRUGGY_ARMS.get(), new ShuffleWalkApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.ENDER_ARMS.get(), new LongArmsApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.HOP_WALK.get(), new HopWalkApplier());
-        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.CONSTANT.get(), new OperationModelApplier());
-        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.COMPOSITE.get(), new CompositeTypeModelApplier());
+        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.CONSTANT.get(), new OperationApplier());
+        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.COMPOSITE.get(), new CompositeTypeApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.OFFSET.get(), new OffsetApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.NO_SHADOW.get(), new NoShadowApplier());
 

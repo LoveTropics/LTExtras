@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 
 import java.util.Map;
 
-public record OperationModelApplier() implements ModelApplier<OperationType.Modifier> {
+public record OperationApplier() implements ModelApplier<OperationType.Modifier> {
 
     @Override
     public void applyToModel(OperationType.Modifier data, LivingEntityRenderState state, EntityModel<?> model) {

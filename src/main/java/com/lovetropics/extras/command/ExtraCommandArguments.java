@@ -1,7 +1,7 @@
 package com.lovetropics.extras.command;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.command.arugments.ModelModifierArgument;
+import com.lovetropics.extras.command.arguments.ModelModifierArgument;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
