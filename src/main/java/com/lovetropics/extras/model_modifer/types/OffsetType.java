@@ -10,39 +10,37 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-public record OffsetType() implements ModelModifierType<OffsetType.Data> {
+public record OffsetType() implements ModelModifierType<OffsetType.Modifier> {
 
-    public record Data(float x, float y, float z) implements ModelModifier<Data> {
-        public static final MapCodec<Data> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.FLOAT.fieldOf("x").forGetter(Data::x),
-                Codec.FLOAT.fieldOf("y").forGetter(Data::y),
-                Codec.FLOAT.fieldOf("z").forGetter(Data::z)
-        ).apply(instance, Data::new));
+    public record Modifier(float x, float y, float z) implements ModelModifier<Modifier> {
 
-        public static StreamCodec<RegistryFriendlyByteBuf, Data> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.FLOAT, Data::x,
-                ByteBufCodecs.FLOAT, Data::y,
-                ByteBufCodecs.FLOAT, Data::z,
-                Data::new);
+        private static final Codec<Float> RANGE_FLOAT_CODEC = Codec.floatRange(1, 15);
 
-        @Override
-        public Data data() {
-            return this;
-        }
+        public static final MapCodec<Modifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                RANGE_FLOAT_CODEC.fieldOf("x").forGetter(Modifier::x),
+                RANGE_FLOAT_CODEC.fieldOf("y").forGetter(Modifier::y),
+                RANGE_FLOAT_CODEC.fieldOf("z").forGetter(Modifier::z)
+        ).apply(instance, Modifier::new));
+
+        public static StreamCodec<RegistryFriendlyByteBuf, Modifier> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.FLOAT, Modifier::x,
+                ByteBufCodecs.FLOAT, Modifier::y,
+                ByteBufCodecs.FLOAT, Modifier::z,
+                Modifier::new);
 
         @Override
-        public ModelModifierType<Data> type() {
+        public ModelModifierType<Modifier> type() {
             return ExtraModelModifierTypes.OFFSET.get();
         }
     }
 
     @Override
-    public MapCodec<OffsetType.Data> codec() {
-       return Data.CODEC;
+    public MapCodec<Modifier> codec() {
+       return Modifier.CODEC;
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Data> streamCodec() {
-        return Data.STREAM_CODEC;
+    public StreamCodec<RegistryFriendlyByteBuf, Modifier> streamCodec() {
+        return Modifier.STREAM_CODEC;
     }
 }

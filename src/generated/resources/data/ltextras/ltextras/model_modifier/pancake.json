@@ -1,0 +1,12 @@
+{
+  "type": "ltextras:composite",
+  "modifiers": [
+    {
+      "type": "ltextras:scale",
+      "scaleY": -0.1
+    },
+    {
+      "type": "ltextras:no_shadow"
+    }
+  ]
+}

@@ -5,10 +5,10 @@ import com.lovetropics.extras.model_modifer.types.ScaleType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 
-public record ScaleModelApplier() implements ModelApplier<ScaleType.Data> {
+public record ScaleModelApplier() implements ModelApplier<ScaleType.Modifier> {
 
     @Override
-    public void applyToTransforms(ScaleType.Data data, PoseStack poseStack, LivingEntityRenderState state) {
-        poseStack.scale(data.scaleX(), data.scaleY(), data.scaleZ());
+    public void applyToTransforms(ScaleType.Modifier data, PoseStack poseStack, LivingEntityRenderState state) {
+        poseStack.scale(data.scaleX().orElse(1f), data.scaleY().orElse(1f), data.scaleZ().orElse(1f));
     }
 }

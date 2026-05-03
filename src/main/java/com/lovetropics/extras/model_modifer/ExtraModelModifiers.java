@@ -17,8 +17,11 @@ public class ExtraModelModifiers {
     public static final ResourceKey<ModelModifier<?>> ENDER_ARMS = key("ender_arms");
     public static final ResourceKey<ModelModifier<?>> STIFF_LEGS = key("stiff_legs");
     public static final ResourceKey<ModelModifier<?>> HOP_WALK = key("hop_walk");
+    public static final ResourceKey<ModelModifier<?>> SMALL_ARMS = key("small_arms");
+    public static final ResourceKey<ModelModifier<?>> T_POSE = key("t_pose");
+    public static final ResourceKey<ModelModifier<?>> PANCAKE = key("pancake");
 
     private static ResourceKey<ModelModifier<?>> key(String name) {
-        return ResourceKey.create(ExtraRegistries.MODEL_MODIFIER, LTExtras.location(name));
+        return ResourceKey.create(ExtraRegistries.MODEL_MODIFIER, LTExtras.id(name));
     }
 }

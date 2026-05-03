@@ -10,39 +10,36 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-public record ScaleType() implements ModelModifierType<ScaleType.Data> {
+import java.util.Optional;
 
-    public record Data(float scaleX, float scaleY, float scaleZ) implements ModelModifier<Data> {
-        public static final MapCodec<Data> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.FLOAT.fieldOf("scaleX").forGetter(Data::scaleX),
-                Codec.FLOAT.fieldOf("scaleY").forGetter(Data::scaleY),
-                Codec.FLOAT.fieldOf("scaleZ").forGetter(Data::scaleZ)
-        ).apply(instance, Data::new));
+public record ScaleType() implements ModelModifierType<ScaleType.Modifier> {
 
-        public static StreamCodec<RegistryFriendlyByteBuf, Data> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.FLOAT, Data::scaleX,
-                ByteBufCodecs.FLOAT, Data::scaleY,
-                ByteBufCodecs.FLOAT, Data::scaleZ,
-                Data::new);
+    public record Modifier(Optional<Float> scaleX, Optional<Float>  scaleY, Optional<Float> scaleZ) implements ModelModifier<Modifier> {
+        public static final MapCodec<Modifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.FLOAT.optionalFieldOf("scaleX").forGetter(Modifier::scaleX),
+                Codec.FLOAT.optionalFieldOf("scaleY").forGetter(Modifier::scaleY),
+                Codec.FLOAT.optionalFieldOf("scaleZ").forGetter(Modifier::scaleZ)
+        ).apply(instance, Modifier::new));
 
-        @Override
-        public Data data() {
-            return this;
-        }
+        public static StreamCodec<RegistryFriendlyByteBuf, Modifier> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.FLOAT.apply(ByteBufCodecs::optional), Modifier::scaleX,
+                ByteBufCodecs.FLOAT.apply(ByteBufCodecs::optional), Modifier::scaleY,
+                ByteBufCodecs.FLOAT.apply(ByteBufCodecs::optional), Modifier::scaleZ,
+                Modifier::new);
 
         @Override
-        public ModelModifierType<Data> type() {
+        public ModelModifierType<Modifier> type() {
             return ExtraModelModifierTypes.SCALE.get();
         }
     }
 
     @Override
-    public MapCodec<ScaleType.Data> codec() {
-       return Data.CODEC;
+    public MapCodec<Modifier> codec() {
+       return Modifier.CODEC;
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Data> streamCodec() {
-        return Data.STREAM_CODEC;
+    public StreamCodec<RegistryFriendlyByteBuf, Modifier> streamCodec() {
+        return Modifier.STREAM_CODEC;
     }
 }

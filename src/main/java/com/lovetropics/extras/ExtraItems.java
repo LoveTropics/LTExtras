@@ -194,7 +194,6 @@ public class ExtraItems {
                             .setAsset(PLACEHOLDER_EQUIPMENT_ASSET)
                             .build())
                     .delayedComponent(ExtraDataComponents.MODEL_MODIFIER.get(), modifierList(ExtraModelModifiers.FABULOUS))
-//                    .component(ExtraDataComponents.MODEL_MODIFIER, List.of(ModelModifierTypeLegacy.FABULOUS))
                     .component(ExtraDataComponents.WALK_SOUND, WalkSound.builder().soundEvent(ExtraSounds.HEELS_STEP).cooldown(0.9f).volume(.5f).build())
                     .component(ExtraDataComponents.ADJUST_HEIGHT, 0.2F)
             )

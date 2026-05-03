@@ -47,35 +47,35 @@ public class ExtraEffects {
 //
 //    }
 
-    static {
-        for (ModelModifierType value : ModelModifierType.values()) {
-            if (value.getEffectName() == null) {
-                continue;
-            }
-            ModelEffect modelEffect = new ModelEffect(MobEffectCategory.NEUTRAL, 0x000000, value);
-            if (value == ModelModifierType.SHRUGGY_ARMS) {
-                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.id("small_arms_block_range"), -3, AttributeModifier.Operation.ADD_VALUE);
-                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.id("small_arms_entity_range"), -3, AttributeModifier.Operation.ADD_VALUE);
-            } else if (value == ModelModifierType.ENDER_ARMS) {
-                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.id("long_arms_block_range"), 3, AttributeModifier.Operation.ADD_VALUE);
-                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.id("long_arms_entity_range"), 3, AttributeModifier.Operation.ADD_VALUE);
-            }
-            MODEL_EFFECTS.put(value, REGISTER.register("mm_" + value.getSerializedName(), () -> modelEffect));
-        }
-
-    @SubscribeEvent
-    public static void onEffectRemoved(MobEffectEvent.Remove event) {
-        removeModelModifiers(event.getEffect().value(), event.getEntity());
-    }
-
-    @SubscribeEvent
-    public static void onEffectRemoved(MobEffectEvent.Expired event) {
-        removeModelModifiers(event.getEffectInstance().getEffect().value(), event.getEntity());
-    }
-
-    private static void removeModelModifiers(MobEffect mobEffect, LivingEntity entity) {
-        if (mobEffect instanceof ModelEffect modelEffect) {
-//            ModelModifierStore.removeModifier(entity, modelEffect.getType());
-        }
-    }
+//    static {
+//        for (ModelModifierType value : ModelModifierType.values()) {
+//            if (value.getEffectName() == null) {
+//                continue;
+//            }
+//            ModelEffect modelEffect = new ModelEffect(MobEffectCategory.NEUTRAL, 0x000000, value);
+//            if (value == ModelModifierType.SHRUGGY_ARMS) {
+//                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.id("small_arms_block_range"), -3, AttributeModifier.Operation.ADD_VALUE);
+//                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.id("small_arms_entity_range"), -3, AttributeModifier.Operation.ADD_VALUE);
+//            } else if (value == ModelModifierType.ENDER_ARMS) {
+//                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.id("long_arms_block_range"), 3, AttributeModifier.Operation.ADD_VALUE);
+//                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.id("long_arms_entity_range"), 3, AttributeModifier.Operation.ADD_VALUE);
+//            }
+//            MODEL_EFFECTS.put(value, REGISTER.register("mm_" + value.getSerializedName(), () -> modelEffect));
+//        }
+//
+//    @SubscribeEvent
+//    public static void onEffectRemoved(MobEffectEvent.Remove event) {
+//        removeModelModifiers(event.getEffect().value(), event.getEntity());
+//    }
+//
+//    @SubscribeEvent
+//    public static void onEffectRemoved(MobEffectEvent.Expired event) {
+//        removeModelModifiers(event.getEffectInstance().getEffect().value(), event.getEntity());
+//    }
+//
+//    private static void removeModelModifiers(MobEffect mobEffect, LivingEntity entity) {
+//        if (mobEffect instanceof ModelEffect modelEffect) {
+////            ModelModifierStore.removeModifier(entity, modelEffect.getType());
+//        }
+//    }
 }
