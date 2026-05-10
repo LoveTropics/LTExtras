@@ -59,7 +59,7 @@ public class PaintingOverlayRenderer {
                                 0,
                                 0
                         );
-                    } else if (paintingOverlay.itemStack().isPresent()) {
+                    } else if (paintingOverlay.template().isPresent()) {
                         final float scale = 1.f + scaleAdjust;
                         poseStack.scale(scale, scale, scale);
 

@@ -17,6 +17,7 @@ import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.List;
 import java.util.UUID;
@@ -97,7 +98,7 @@ class PoiButton extends AbstractButton {
         }
 
         switch (poi.icon()) {
-            case PoiConfig.ItemIcon(ItemStack item) -> graphics.fakeItem(item, iconX, iconY);
+            case PoiConfig.ItemIcon(ItemStackTemplate item) -> graphics.fakeItem(item.create(), iconX, iconY);
             case PoiConfig.TextureIcon(Identifier texture) ->
                     graphics.blit(RenderPipelines.GUI_TEXTURED, texture, iconX, iconY, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE, CommonColors.WHITE);
         }

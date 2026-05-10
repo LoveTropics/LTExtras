@@ -2,6 +2,8 @@ package com.lovetropics.extras.collectible;
 
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.registry.ExtraRegistries;
+import com.lovetropics.lib.codec.MoreCodecs;
+import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -18,41 +20,40 @@ import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class Collectible implements DataComponentHolder {
+public class Collectible{
     public static final Codec<Collectible> DIRECT_CODEC = RecordCodecBuilder.create(i -> i.group(
-            BuiltInRegistries.ITEM.holderByNameCodec().fieldOf("item").forGetter(c -> c.item),
-            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(c -> c.components),
+            MoreCodecs.SINGLE_STACK_TEMPLATE.fieldOf("item").forGetter(c -> c.item),
             Codec.BOOL.fieldOf("auto_equip").orElse(false).forGetter(c -> c.autoEquip)
     ).apply(i, Collectible::new));
     public static final Codec<Holder<Collectible>> CODEC = RegistryFileCodec.create(ExtraRegistries.COLLECTIBLE, DIRECT_CODEC);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Collectible> DIRECT_STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.holderRegistry(Registries.ITEM), c -> c.item,
-            DataComponentPatch.STREAM_CODEC, c -> c.components,
+            ItemStackTemplate.STREAM_CODEC, c -> c.item,
             ByteBufCodecs.BOOL, c -> c.autoEquip,
             Collectible::new
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<Collectible>> STREAM_CODEC = ByteBufCodecs.holder(ExtraRegistries.COLLECTIBLE, DIRECT_STREAM_CODEC);
 
-    private final Holder<Item> item;
-    private final DataComponentPatch components;
-    private final DataComponentMap combinedComponents;
+    private final ItemStackTemplate item;
     private final boolean autoEquip;
 
-    private Collectible(Holder<Item> item, DataComponentPatch components, boolean autoEquip) {
+    private Collectible(ItemStackTemplate item, boolean autoEquip) {
         this.item = item;
-        this.components = components;
-        this.combinedComponents = PatchedDataComponentMap.fromPatch(item.value().components(), components);
         this.autoEquip = autoEquip;
     }
 
+    public Collectible(ItemStackTemplate stack) {
+        this(stack, false);
+    }
+
     public Collectible(ItemStack stack) {
-        this(stack.typeHolder(), componentsWithoutMarker(stack.getComponentsPatch()), false);
+        this(ItemStackTemplate.fromNonEmptyStack(stack));
     }
 
     @Nullable
@@ -61,7 +62,7 @@ public class Collectible implements DataComponentHolder {
         if (marker == null) {
             return null;
         }
-        return marker.collectible().orElseGet(() -> Holder.direct(new Collectible(stack)));
+        return marker.collectible().orElseGet(() -> Holder.direct(new Collectible(ItemStackTemplate.fromNonEmptyStack(stack))));
     }
 
     public static boolean isCollectible(ItemStack stack) {
@@ -83,9 +84,7 @@ public class Collectible implements DataComponentHolder {
     }
 
     public static ItemStack createUnmarkedItemStack(Holder<Collectible> collectible) {
-        ItemStack stack = new ItemStack(collectible.value().item());
-        stack.applyComponents(collectible.value().components());
-        return stack;
+        return collectible.value().item.create();
     }
 
     public static void addMarkerTo(UUID player, Holder<Collectible> collectible, ItemStack stack) {
@@ -99,12 +98,8 @@ public class Collectible implements DataComponentHolder {
         return autoEquip;
     }
 
-    public Holder<Item> item() {
+    public ItemStackTemplate item() {
         return item;
-    }
-
-    public DataComponentPatch components() {
-        return components;
     }
 
     public static boolean matches(Holder<Collectible> collectible, ItemStack stack) {
@@ -116,10 +111,10 @@ public class Collectible implements DataComponentHolder {
             // If the item specifies its source collectible, we don't care if the item looks exactly the same
             return marker.collectible().get().equals(collectible);
         } else {
-            if (!stack.is(collectible.value().item())) {
+            if (!stack.is(collectible.value().item().item())) {
                 return false;
             }
-            return collectible.value().components().equals(componentsWithoutMarker(stack.getComponentsPatch()));
+            return collectible.value().item().components().equals(componentsWithoutMarker(stack.getComponentsPatch()));
         }
     }
 
@@ -133,18 +128,14 @@ public class Collectible implements DataComponentHolder {
             return true;
         }
         if (obj instanceof Collectible collectible) {
-            return item.equals(collectible.item) && components.equals(collectible.components);
+            return item.equals(collectible.item) && autoEquip == collectible.autoEquip;
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return item.hashCode() * 31 + components.hashCode();
+        return item.hashCode() * 31 + Boolean.hashCode(autoEquip);
     }
 
-    @Override
-    public DataComponentMap getComponents() {
-        return combinedComponents;
-    }
 }

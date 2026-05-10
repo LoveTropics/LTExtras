@@ -15,7 +15,7 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 @EventBusSubscriber
 public class WorldEffectConfigs {
-    public static final CodecRegistry<Identifier, Named<WorldEffect>> REGISTRY = CodecRegistry.resourceLocationKeys();
+    public static final CodecRegistry<Identifier, Named<WorldEffect>> REGISTRY = CodecRegistry.idKeys();
     private static final SimpleDataPackLister<WorldEffect> LISTER = new SimpleDataPackLister<>("world_effects", ExtraRegistries.WORLD_EFFECT, WorldEffect.CODEC);
 
     @SubscribeEvent

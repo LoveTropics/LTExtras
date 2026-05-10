@@ -14,6 +14,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -61,12 +62,12 @@ public record PoiConfig(
         );
     }
 
-    public record ItemIcon(ItemStack item) implements Icon {
+    public record ItemIcon(ItemStackTemplate item) implements Icon {
         public static final Codec<ItemIcon> CODEC = RecordCodecBuilder.create(i -> i.group(
-                MoreCodecs.ITEM_STACK.fieldOf("item").forGetter(ItemIcon::item)
+                MoreCodecs.SINGLE_STACK_TEMPLATE.fieldOf("item").forGetter(ItemIcon::item)
         ).apply(i, ItemIcon::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, ItemIcon> STREAM_CODEC = StreamCodec.composite(
-                ItemStack.STREAM_CODEC, ItemIcon::item,
+                ItemStackTemplate.STREAM_CODEC, ItemIcon::item,
                 ItemIcon::new
         );
     }

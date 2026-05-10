@@ -127,7 +127,7 @@ public class CollectibleStore {
         if (player != null) {
             Collectible value = collectible.value();
             if (value.autoEquip()) {
-                Equippable equippable = value.get(DataComponents.EQUIPPABLE);
+                Equippable equippable = value.item().get(DataComponents.EQUIPPABLE);
                 if (equippable != null) {
                     ItemStack currentItem = player.getItemBySlot(equippable.slot());
                     if (!currentItem.has(ExtraDataComponents.COLLECTIBLE)) {

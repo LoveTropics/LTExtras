@@ -15,7 +15,7 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 @EventBusSubscriber
 public class MapConfigs {
-    public static final CodecRegistry<Identifier, Named<PoiConfig>> POIS = CodecRegistry.resourceLocationKeys();
+    public static final CodecRegistry<Identifier, Named<PoiConfig>> POIS = CodecRegistry.idKeys();
 
     private static final SimpleDataPackLister<PoiConfig> POI_LISTER = new SimpleDataPackLister<>("ltextras/map_poi", ExtraRegistries.POI, PoiConfig.CODEC);
 
