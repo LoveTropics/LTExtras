@@ -22,7 +22,6 @@
     "ResourceKeyArgumentAccessor",
     "RideCommandMixin",
     "ScaffoldingBlockMixin",
-    "ServerCommonPacketListenerImplMixin",
     "ServerGamePacketListenerImplMixin",
     "ShulkerMixin",
     "WardenMixin",
