@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/sugar_cane",
   "textures": {
-    "cross": "ltextras:block/papyrus"
+    "cross": "ltextras:block/papyrus/plain_papyrus_umbel"
   }
 }

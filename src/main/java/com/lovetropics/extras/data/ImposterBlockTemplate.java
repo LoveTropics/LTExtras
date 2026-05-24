@@ -58,7 +58,7 @@ public final class ImposterBlockTemplate {
                                 Identifier model = prov.getBuilder()
                                         .transformTemplate(template -> {
                                             template.parent(prov.mcLoc("block/sugar_cane"));
-                                        }).texture(TextureSlot.CROSS, prov.modBlockTexture("papyrus")).build(prov.modLoc("block/" + modelName));
+                                        }).texture(TextureSlot.CROSS, prov.modBlockTexture("papyrus/" + modelName)).build(prov.modLoc("block/" + modelName));
                                 return plainVariant(model);
                             })));
         }
