@@ -50,7 +50,7 @@ public class ExtraEffects {
 
 
     private static DeferredHolder<MobEffect, ModelModifierEffect> modelEffect(ResourceKey<ModelModifier<?>> modifier, UnaryOperator<ModelModifierEffect> builder) {
-        return REGISTER.register("mm_" + modifier.identifier().getPath(), () -> new ModelModifierEffect(MobEffectCategory.NEUTRAL, 0x000000, modifier));
+        return REGISTER.register("mm_" + modifier.identifier().getPath(), () -> builder.apply(new ModelModifierEffect(MobEffectCategory.NEUTRAL, 0x000000, modifier)));
     }
 
     private static DeferredHolder<MobEffect, ModelModifierEffect> modelEffect(ResourceKey<ModelModifier<?>> modifier) {

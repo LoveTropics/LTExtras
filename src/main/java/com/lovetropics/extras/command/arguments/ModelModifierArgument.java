@@ -1,7 +1,7 @@
 package com.lovetropics.extras.command.arguments;
 
-import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.model_modifer.ModelModifier;
+import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -13,7 +13,7 @@ import net.minecraft.core.Holder;
 public class ModelModifierArgument extends ResourceOrIdArgument<ModelModifier<?>> {
 
     protected ModelModifierArgument(CommandBuildContext context) {
-        super(context, ExtraRegistries.MODEL_MODIFIER, ExtraModelModifierTypes.CODEC);
+        super(context, ExtraRegistries.MODEL_MODIFIER, ExtraModelModifiers.CODEC);
     }
 
     public static ModelModifierArgument modifier(CommandBuildContext context) {

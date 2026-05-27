@@ -8,31 +8,26 @@
       "type": "ltextras:no_shadow"
     },
     {
-      "type": "ltextras:composite",
-      "modifiers": [
-        {
-          "type": "ltextras:constant",
-          "operation": "set",
-          "parts": {
-            "left_arm": {
-              "xRot": 0.0,
-              "yRot": 0.0
-            },
-            "left_leg": {
-              "xRot": 0.0,
-              "yRot": 0.0
-            },
-            "right_arm": {
-              "xRot": 0.0,
-              "yRot": 0.0
-            },
-            "right_leg": {
-              "xRot": 0.0,
-              "yRot": 0.0
-            }
-          }
+      "type": "ltextras:operation",
+      "operation": "set",
+      "parts": {
+        "left_arm": {
+          "xRot": 0.0,
+          "yRot": 0.0
+        },
+        "left_leg": {
+          "xRot": 0.0,
+          "yRot": 0.0
+        },
+        "right_arm": {
+          "xRot": 0.0,
+          "yRot": 0.0
+        },
+        "right_leg": {
+          "xRot": 0.0,
+          "yRot": 0.0
         }
-      ]
+      }
     }
   ]
 }

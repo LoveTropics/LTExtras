@@ -5,7 +5,7 @@ import com.lovetropics.extras.model_modifer.types.UnitType;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.entity.LivingEntity;
 
-public record NoShadowApplier() implements ModelApplier<UnitType> {
+public record NoShadowApplier() implements ModelApplier.Unit {
     @Override
     public void extractRenderState(UnitType data, LivingEntity livingEntity, LivingEntityRenderState state) {
         state.shadowPieces.clear();

@@ -7,7 +7,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 
-public class LongArmsApplier implements ModelApplier<UnitType> {
+public class EnderArmsApplier implements ModelApplier.Unit {
 
     @Override
     public void applyToModel(UnitType data, LivingEntityRenderState state, EntityModel<?> model) {

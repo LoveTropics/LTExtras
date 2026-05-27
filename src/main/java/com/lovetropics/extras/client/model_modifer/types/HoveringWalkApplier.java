@@ -3,12 +3,10 @@ package com.lovetropics.extras.client.model_modifer.types;
 import com.lovetropics.extras.client.model_modifer.ModelApplier;
 import com.lovetropics.extras.model_modifer.types.UnitType;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Mth;
 
-public record HoveringWalkApplier() implements ModelApplier<UnitType> {
+public record HoveringWalkApplier() implements ModelApplier.Unit {
 
     @Override
     public void applyToTransforms(UnitType data, PoseStack poseStack, LivingEntityRenderState state) {
