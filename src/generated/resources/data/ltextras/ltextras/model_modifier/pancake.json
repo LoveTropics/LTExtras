@@ -3,7 +3,11 @@
   "modifiers": [
     {
       "type": "ltextras:scale",
-      "scaleY": -0.1
+      "scale": [
+        1.0,
+        0.05,
+        1.0
+      ]
     },
     {
       "type": "ltextras:no_shadow"

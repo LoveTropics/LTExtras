@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Mth;
 
-public record FabulousWalkApplier() implements ModelApplier<UnitType> {
+public record FabulousWalkApplier() implements ModelApplier.Unit {
     @Override
     public void applyToModel(UnitType data, LivingEntityRenderState state, EntityModel<?> model) {
         if (!(state instanceof HumanoidRenderState humanoidState) || !(model instanceof HumanoidModel<?> humanoidModel)) {

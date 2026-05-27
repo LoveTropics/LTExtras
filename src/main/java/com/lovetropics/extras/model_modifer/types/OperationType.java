@@ -13,37 +13,58 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
-public class OperationType implements ModelModifierType<OperationType.Modifier> {
+public record OperationType(Operation operation, Map<String, ModelPartData> modifiers) implements ModelModifier<OperationType> {
 
-    public record Modifier(Operation operation, Map<String, ModelPartData> modifiers) implements ModelModifier<Modifier> {
+    public static final MapCodec<OperationType> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+            Operation.CODEC.fieldOf("operation").forGetter(OperationType::operation),
+            Codec.unboundedMap(Codec.STRING, ModelPartData.CODEC).fieldOf("parts").forGetter(OperationType::modifiers)
+    ).apply(i, OperationType::new));
 
-        public static final MapCodec<Modifier> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-                Operation.CODEC.fieldOf("operation").forGetter(Modifier::operation),
-                Codec.unboundedMap(Codec.STRING, ModelPartData.CODEC).fieldOf("parts").forGetter(Modifier::modifiers)
-        ).apply(i, Modifier::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, OperationType> STREAM_CODEC = StreamCodec.composite(
+            Operation.STREAM_CODEC, OperationType::operation,
+            ByteBufCodecs.map(HashMap::new, ByteBufCodecs.STRING_UTF8, ModelPartData.STREAM_CODEC), OperationType::modifiers,
+            OperationType::new
+    );
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, Modifier> STREAM_CODEC = StreamCodec.composite(
-                Operation.STREAM_CODEC, Modifier::operation,
-                ByteBufCodecs.map(HashMap::new, ByteBufCodecs.STRING_UTF8, ModelPartData.STREAM_CODEC), Modifier::modifiers,
-                Modifier::new
-        );
+    @Override
+    public ModelModifierType<OperationType> type() {
+        return ExtraModelModifierTypes.OPERATION.get();
+    }
 
-        @Override
-        public ModelModifierType<Modifier> type() {
-            return ExtraModelModifierTypes.CONSTANT.get();
+    public static class Builder {
+
+        private final Map<String, ModelPartData> parts = new HashMap<>();
+        private final Operation operation;
+
+        public Builder(Operation operation) {
+            this.operation = operation;
         }
-    }
 
-    @Override
-    public MapCodec<Modifier> codec() {
-        return Modifier.CODEC;
-    }
+        public static Builder builder(Operation operation) {
+            return new Builder(operation);
+        }
 
-    @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Modifier> streamCodec() {
-        return Modifier.STREAM_CODEC;
+        public Builder part(String name, Consumer<ModelPartData.Builder> consumer) {
+            ModelPartData.Builder builder = new ModelPartData.Builder();
+            consumer.accept(builder);
+            parts.put(name, builder.build());
+            return this;
+        }
+
+        public Builder parts(List<String> partNames, Consumer<ModelPartData.Builder> consumer) {
+            for (String partName : partNames) {
+                part(partName, consumer);
+            }
+            return this;
+        }
+
+        public OperationType build() {
+            return new OperationType(operation, parts);
+        }
     }
 }
 

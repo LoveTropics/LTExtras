@@ -10,7 +10,7 @@ import com.lovetropics.extras.client.model_modifer.types.FabulousWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.FlailWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.HopWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.HoveringWalkApplier;
-import com.lovetropics.extras.client.model_modifer.types.LongArmsApplier;
+import com.lovetropics.extras.client.model_modifer.types.EnderArmsApplier;
 import com.lovetropics.extras.client.model_modifer.types.OffsetApplier;
 import com.lovetropics.extras.client.model_modifer.types.ScaleApplier;
 import com.lovetropics.extras.client.model_modifer.types.ShuffleWalkApplier;
@@ -58,9 +58,9 @@ public class ModelModifierClient {
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.SHUFFLE.get(), new ShuffleWalkApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.UPSIDEDOWN.get(), new UpsidedownApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.SHRUGGY_ARMS.get(), new ShuffleWalkApplier());
-        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.ENDER_ARMS.get(), new LongArmsApplier());
+        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.ENDER_ARMS.get(), new EnderArmsApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.HOP_WALK.get(), new HopWalkApplier());
-        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.CONSTANT.get(), new OperationApplier());
+        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.OPERATION.get(), new OperationApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.COMPOSITE.get(), new CompositeTypeApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.OFFSET.get(), new OffsetApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.NO_SHADOW.get(), new NoShadowApplier());
@@ -112,7 +112,7 @@ public class ModelModifierClient {
         }
         float adjustHeight = stack.getOrDefault(ExtraDataComponents.ADJUST_HEIGHT, 0.0f);
         if (adjustHeight != 0.0F) {
-            modifiers.add(new OffsetType.Modifier(0.0f, adjustHeight * 20, 0.0f));
+            modifiers.add(new OffsetType(0.0f, adjustHeight * 20, 0.0f));
         }
     }
 

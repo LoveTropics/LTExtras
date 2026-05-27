@@ -9,37 +9,36 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+import org.jspecify.annotations.NullUnmarked;
 
 import java.util.Optional;
+import java.util.function.Function;
 
-public record ScaleType() implements ModelModifierType<ScaleType.Modifier> {
+public record ScaleType(float x, float y, float z) implements ModelModifier<ScaleType>  {
 
-    public record Modifier(Optional<Float> scaleX, Optional<Float>  scaleY, Optional<Float> scaleZ) implements ModelModifier<Modifier> {
-        public static final MapCodec<Modifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.FLOAT.optionalFieldOf("scaleX").forGetter(Modifier::scaleX),
-                Codec.FLOAT.optionalFieldOf("scaleY").forGetter(Modifier::scaleY),
-                Codec.FLOAT.optionalFieldOf("scaleZ").forGetter(Modifier::scaleZ)
-        ).apply(instance, Modifier::new));
+    public static final MapCodec<ScaleType> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ExtraCodecs.VECTOR3F.fieldOf("scale").forGetter(ScaleType::toVector)
+    ).apply(instance, ScaleType::new));
 
-        public static StreamCodec<RegistryFriendlyByteBuf, Modifier> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.FLOAT.apply(ByteBufCodecs::optional), Modifier::scaleX,
-                ByteBufCodecs.FLOAT.apply(ByteBufCodecs::optional), Modifier::scaleY,
-                ByteBufCodecs.FLOAT.apply(ByteBufCodecs::optional), Modifier::scaleZ,
-                Modifier::new);
+    public static StreamCodec<RegistryFriendlyByteBuf, ScaleType> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.FLOAT, ScaleType::x,
+            ByteBufCodecs.FLOAT, ScaleType::y,
+            ByteBufCodecs.FLOAT, ScaleType::z,
+            ScaleType::new);
 
-        @Override
-        public ModelModifierType<Modifier> type() {
-            return ExtraModelModifierTypes.SCALE.get();
-        }
+    private ScaleType(Vector3fc vec) {
+        this(vec.x(), vec.y(), vec.z());
+    }
+
+    private Vector3fc toVector() {
+        return new Vector3f(x, y, z);
     }
 
     @Override
-    public MapCodec<Modifier> codec() {
-       return Modifier.CODEC;
-    }
-
-    @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Modifier> streamCodec() {
-        return Modifier.STREAM_CODEC;
+    public ModelModifierType<ScaleType> type() {
+        return ExtraModelModifierTypes.SCALE.get();
     }
 }

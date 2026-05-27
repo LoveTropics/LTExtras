@@ -4,9 +4,9 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.data.poi.PoiConfig;
-import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
+import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.world_effect.WorldEffect;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -35,7 +35,7 @@ public class ExtraRegistries {
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(COLLECTIBLE, Collectible.DIRECT_CODEC, Collectible.DIRECT_CODEC);
         event.dataPackRegistry(MAP, MapConfig.DIRECT_CODEC, MapConfig.DIRECT_CODEC);
-        event.dataPackRegistry(MODEL_MODIFIER, ExtraModelModifierTypes.CODEC, ExtraModelModifierTypes.CODEC);
+        event.dataPackRegistry(MODEL_MODIFIER, ExtraModelModifiers.CODEC, ExtraModelModifiers.CODEC);
     }
 
     @SubscribeEvent

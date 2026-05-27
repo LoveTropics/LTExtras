@@ -10,8 +10,8 @@ import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.PaintingOverlay;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
-import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.model_modifer.ModelModifier;
+import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -92,7 +92,7 @@ public class ExtraDataComponents {
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<Holder<ModelModifier<?>>>>> MODEL_MODIFIER = REGISTER.registerComponentType(
             "model_modifier",
-            builder -> builder.persistent(ExtraCodecs.compactListCodec(ExtraModelModifierTypes.REGISTRY_CODEC)).networkSynchronized(ExtraModelModifierTypes.STREAM_CODEC.apply(ByteBufCodecs.list()))
+            builder -> builder.persistent(ExtraCodecs.compactListCodec(ExtraModelModifiers.REGISTRY_CODEC)).networkSynchronized(ExtraModelModifiers.STREAM_CODEC.apply(ByteBufCodecs.list()))
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<WalkSound>> WALK_SOUND = REGISTER.registerComponentType(
             "walk_sound",
