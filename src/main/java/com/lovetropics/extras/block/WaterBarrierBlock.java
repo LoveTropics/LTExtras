@@ -82,9 +82,4 @@ public class WaterBarrierBlock extends CustomBarrierBlock implements SimpleWater
         // Changed to set air instead of the fluid state
         return level.setBlock(pos, Blocks.AIR.defaultBlockState(), level.isClientSide() ? Block.UPDATE_ALL_IMMEDIATE : Block.UPDATE_ALL);
     }
-
-    @Override
-    protected ParticleOptions createParticle() {
-        return ExtraParticles.WATER_BARRIER.get();
-    }
 }

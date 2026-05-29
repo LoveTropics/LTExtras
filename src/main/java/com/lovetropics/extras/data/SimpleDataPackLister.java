@@ -7,6 +7,7 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.FileToIdConverter;
@@ -34,8 +35,8 @@ public record SimpleDataPackLister<T>(String root, ResourceKey<Registry<T>> regi
         return FileToIdConverter.json(root);
     }
 
-    public CompletableFuture<List<Named<T>>> load(RegistryAccess registryAccess, ResourceManager resourceManager, Executor executor) {
-        RegistryOps<JsonElement> ops = registryAccess.createSerializationContext(JsonOps.INSTANCE);
+    public CompletableFuture<List<Named<T>>> load(HolderLookup.Provider provider, ResourceManager resourceManager, Executor executor) {
+        RegistryOps<JsonElement> ops = provider.createSerializationContext(JsonOps.INSTANCE);
         return CompletableFuture.supplyAsync(() -> listEntries(ops, resourceManager, executor), executor).thenCompose(Function.identity());
     }
 

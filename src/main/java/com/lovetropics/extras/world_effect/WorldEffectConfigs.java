@@ -11,7 +11,11 @@ import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+import net.neoforged.neoforge.resource.ContextAwareReloadListener;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @EventBusSubscriber
 public class WorldEffectConfigs {
@@ -20,9 +24,10 @@ public class WorldEffectConfigs {
 
     @SubscribeEvent
     public static void addReloadListener(AddServerReloadListenersEvent event) {
-        RegistryAccess registries = event.getRegistryAccess();
-        event.addListener(LTExtras.id("world_effects"), (currentReload, taskExecutor, barrier, reloadExecutor) ->
-                LISTER.load(registries, currentReload.resourceManager(), taskExecutor)
+        event.addListener(LTExtras.id("world_effects"), new ContextAwareReloadListener() {
+            @Override
+            public CompletableFuture<Void> reload(SharedState currentReload, Executor taskExecutor, PreparationBarrier barrier, Executor reloadExecutor) {
+                return LISTER.load(getRegistryLookup(), currentReload.resourceManager(), taskExecutor)
                         .thenCompose(barrier::wait)
                         .thenAcceptAsync(effects -> {
                             REGISTRY.clear();
@@ -33,7 +38,8 @@ public class WorldEffectConfigs {
                             if (server != null) {
                                 WorldEffectManager.reload(server);
                             }
-                        }, reloadExecutor)
-        );
+                        }, reloadExecutor);
+            }
+        });
     }
 }

@@ -1,6 +1,5 @@
 package com.lovetropics.extras.item.sensor;
 
-import com.lovetropics.lib.codec.MoreCodecs;
 import com.lovetropics.lib.permission.PermissionsApi;
 import com.lovetropics.lib.permission.role.Role;
 import com.lovetropics.lib.permission.role.RoleReader;
@@ -11,6 +10,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +21,8 @@ public record PlayerSensor(
         Appearance appearance
 ) {
     public static final Codec<PlayerSensor> CODEC = RecordCodecBuilder.create(i -> i.group(
-            MoreCodecs.listOrUnit(Codec.STRING).optionalFieldOf("tag", List.of()).forGetter(PlayerSensor::tags),
-            MoreCodecs.listOrUnit(Codec.STRING).optionalFieldOf("roles", List.of()).forGetter(PlayerSensor::roles),
+            ExtraCodecs.compactListCodec(Codec.STRING).optionalFieldOf("tag", List.of()).forGetter(PlayerSensor::tags),
+            ExtraCodecs.compactListCodec(Codec.STRING).optionalFieldOf("roles", List.of()).forGetter(PlayerSensor::roles),
             Appearance.CODEC.fieldOf("appearance").forGetter(PlayerSensor::appearance)
     ).apply(i, PlayerSensor::new));
 

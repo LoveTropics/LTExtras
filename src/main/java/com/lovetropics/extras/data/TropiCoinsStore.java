@@ -37,16 +37,6 @@ public class TropiCoinsStore {
         event.getEntity().getData(ExtraAttachments.TROPICOINS_STORE);
     }
 
-    @SubscribeEvent
-    public static void onPlayerClone(PlayerEvent.Clone event) {
-        Player original = event.getOriginal();
-        Player player = event.getEntity();
-        if (event.isWasDeath()) {
-            player.getData(ExtraAttachments.TROPICOINS_STORE).setAmount(original.getData(ExtraAttachments.TROPICOINS_STORE).getAmount());
-            player.syncData(ExtraAttachments.TROPICOINS_STORE);
-        }
-    }
-
     public void setAmount(int amount) {
         this.amount = amount;
     }

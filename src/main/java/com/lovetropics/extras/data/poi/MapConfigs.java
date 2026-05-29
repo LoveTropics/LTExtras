@@ -11,7 +11,11 @@ import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+import net.neoforged.neoforge.resource.ContextAwareReloadListener;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @EventBusSubscriber
 public class MapConfigs {
@@ -21,9 +25,10 @@ public class MapConfigs {
 
     @SubscribeEvent
     public static void addReloadListener(AddServerReloadListenersEvent event) {
-        RegistryAccess registries = event.getRegistryAccess();
-        event.addListener(LTExtras.id("map_configs"), (currentReload, taskExecutor, barrier, reloadExecutor) ->
-                POI_LISTER.load(registries, currentReload.resourceManager(), taskExecutor)
+        event.addListener(LTExtras.id("map_configs"), new ContextAwareReloadListener() {
+            @Override
+            public CompletableFuture<Void> reload(SharedState currentReload, Executor taskExecutor, PreparationBarrier barrier, Executor reloadExecutor) {
+                return POI_LISTER.load(getRegistryLookup(), currentReload.resourceManager(), taskExecutor)
                         .thenCompose(barrier::wait)
                         .thenAcceptAsync(pois -> {
                             POIS.clear();
@@ -33,7 +38,8 @@ public class MapConfigs {
                             if (server != null) {
                                 MapManager.get(server).reload(server);
                             }
-                        }, reloadExecutor)
-        );
+                        }, reloadExecutor);
+            }
+        });
     }
 }

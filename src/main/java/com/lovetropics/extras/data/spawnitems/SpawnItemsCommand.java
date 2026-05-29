@@ -9,6 +9,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -36,9 +37,9 @@ public class SpawnItemsCommand {
                                         return Command.SINGLE_SUCCESS;
                                     }
 
-                                    for (SpawnItems.Stack stack : set.items()) {
-                                        if (!player.addItem(stack.build())) {
-                                            player.drop(stack.build(), true, true);
+                                    for (ItemStackTemplate stack : set.items()) {
+                                        if (!player.addItem(stack.create())) {
+                                            player.drop(stack.create(), true, true);
                                         }
                                     }
                                     context.getSource().sendSuccess(() -> Component.translatable("spawnitems.restored_successfully"), false);

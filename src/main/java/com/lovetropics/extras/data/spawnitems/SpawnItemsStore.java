@@ -7,6 +7,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -22,7 +23,7 @@ import java.util.function.Predicate;
 
 @EventBusSubscriber
 public final class SpawnItemsStore {
-    public static final MapCodec<SpawnItemsStore> MAP_CODEC = Codec.unboundedMap(Identifier.CODEC, SpawnItems.Stack.CODEC.listOf()).xmap(
+    public static final MapCodec<SpawnItemsStore> MAP_CODEC = Codec.unboundedMap(Identifier.CODEC, ItemStackTemplate.CODEC.listOf()).xmap(
             stacksById -> {
                 SpawnItemsStore store = new SpawnItemsStore();
                 stacksById.forEach((id, stacks) -> {
@@ -35,7 +36,7 @@ public final class SpawnItemsStore {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private final Map<Identifier, List<SpawnItems.Stack>> receivedItems = new HashMap<>();
+    private final Map<Identifier, List<ItemStackTemplate>> receivedItems = new HashMap<>();
 
     @SubscribeEvent
     static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
@@ -50,8 +51,8 @@ public final class SpawnItemsStore {
 
         for (var entry : diff.entrySet()) {
             entry.getValue().forEach(stack -> {
-                if (!player.addItem(stack.build())) {
-                    player.level().addFreshEntity(player.drop(stack.build(), true, true));
+                if (!player.addItem(stack.create())) {
+                    player.level().addFreshEntity(player.drop(stack.create(), true, true));
                 }
             });
 
@@ -69,8 +70,8 @@ public final class SpawnItemsStore {
         }
     }
 
-    private static Map<Identifier, List<SpawnItems.Stack>> getDiff(ServerPlayer player, Map<Identifier, List<SpawnItems.Stack>> old) {
-        Map<Identifier, List<SpawnItems.Stack>> diff = new HashMap<>();
+    private static Map<Identifier, List<ItemStackTemplate>> getDiff(ServerPlayer player, Map<Identifier, List<ItemStackTemplate>> old) {
+        Map<Identifier, List<ItemStackTemplate>> diff = new HashMap<>();
         SpawnItemsReloadListener.REGISTRY.forEach((location, items) -> {
             var oldReceived = old.getOrDefault(location, List.of());
             if (items.canApplyToPlayer(player)) {
