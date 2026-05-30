@@ -35,6 +35,7 @@ public class ModelModifierDataGen {
         context.register(ExtraModelModifiers.UPSIDEDOWN, ExtraModelModifierTypes.UPSIDEDOWN.get());
         context.register(ExtraModelModifiers.SHRUGGY_ARMS, ExtraModelModifierTypes.SHRUGGY_ARMS.get());
         context.register(ExtraModelModifiers.ENDER_ARMS, ExtraModelModifierTypes.ENDER_ARMS.get());
+        context.register(ExtraModelModifiers.DANACE, ExtraModelModifierTypes.DANCE.get());
         context.register(ExtraModelModifiers.HOP_WALK, new HopWalkType());
 
         context.register(ExtraModelModifiers.SHRUNK, new ScaleType(1.0f, 0.8f, 1.0f));

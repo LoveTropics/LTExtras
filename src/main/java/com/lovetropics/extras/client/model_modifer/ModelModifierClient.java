@@ -4,6 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.client.model_modifer.types.CompositeTypeApplier;
+import com.lovetropics.extras.client.model_modifer.types.DanceApplier;
 import com.lovetropics.extras.client.model_modifer.types.NoShadowApplier;
 import com.lovetropics.extras.client.model_modifer.types.OperationApplier;
 import com.lovetropics.extras.client.model_modifer.types.FabulousWalkApplier;
@@ -64,6 +65,7 @@ public class ModelModifierClient {
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.COMPOSITE.get(), new CompositeTypeApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.OFFSET.get(), new OffsetApplier());
         CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.NO_SHADOW.get(), new NoShadowApplier());
+        CLIENT_MODEL_DATA.put(ExtraModelModifierTypes.DANCE.get(), new DanceApplier());
 
         ExtraModelModifierTypes.REGISTER.getEntries().forEach(entry -> {
             if (!CLIENT_MODEL_DATA.containsKey(entry.get())) {
