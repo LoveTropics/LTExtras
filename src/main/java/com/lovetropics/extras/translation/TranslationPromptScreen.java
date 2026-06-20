@@ -34,7 +34,7 @@ public class TranslationPromptScreen extends Screen {
 
         layout.addChild(new MultiLineTextWidget(MESSAGE, font).setCentered(true).setMaxWidth(MAX_WIDTH));
 
-        layout.addChild(CommonButtons.language(Button.DEFAULT_WIDTH, button -> minecraft.setScreen(new LanguageSelectScreen(this, minecraft.options, minecraft.getLanguageManager())), false));
+        layout.addChild(CommonButtons.language(Button.DEFAULT_WIDTH, button -> minecraft.setScreenAndShow(new LanguageSelectScreen(this, minecraft.options, minecraft.getLanguageManager())), false));
 
         layout.addChild(Button.builder(CommonComponents.GUI_DONE, b -> onClose()).build(), layout.newCellSettings().paddingVertical(10));
     }

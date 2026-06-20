@@ -95,7 +95,7 @@ public class ServerClosedScreen extends Screen {
 
     @Override
     public void onClose() {
-        minecraft.setScreen(new TitleScreen());
+        minecraft.setScreenAndShow(new TitleScreen());
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.lovetropics.extras.ExtraTags;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -17,7 +18,7 @@ public class EntityInteractionEvents {
         final Entity target = interactEvent.getTarget();
         final ItemStack itemUsed = interactEvent.getItemStack();
 
-        if (target.getType() == EntityType.SHULKER && itemUsed.is(ExtraTags.Items.HONIES)) {
+        if (target.getType() == EntityTypes.SHULKER && itemUsed.is(ExtraTags.Items.HONIES)) {
             target.setData(ExtraAttachments.HONIED, true);
         }
     }

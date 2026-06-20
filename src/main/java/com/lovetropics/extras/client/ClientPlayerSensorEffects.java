@@ -23,6 +23,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
@@ -159,7 +160,7 @@ public class ClientPlayerSensorEffects {
     }
 
     public static <T extends LivingEntityRenderState> void captureModelPose(T state, EntityModel<?> model, PoseStack poseStack) {
-        if (state.entityType != EntityType.PLAYER) {
+        if (state.entityType != EntityTypes.PLAYER) {
             return;
         }
         UUID playerId = state.getRenderData(UUID_KEY);
@@ -223,7 +224,7 @@ public class ClientPlayerSensorEffects {
     private static Vector3f toScreenPos(PoseStack poseStack, float x, float y, float z) {
         Vector3f pos = new Vector3f(x, y, z).mul(1.0f / 16.0f);
         poseStack.last().pose().transformPosition(pos);
-        RenderSystem.getModelViewMatrix().transformPosition(pos);
+        RenderSystem.getModelViewMatrixCopy().transformPosition(pos);
         capturedProjectionMatrix.transformProject(pos);
         return pos.set((pos.x + 1.0f) / 2.0f, 1.0f - (pos.y + 1.0f) / 2.0f, pos.z);
     }

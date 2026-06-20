@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.Vec3;
 
 public class ConveyorBeltBlock extends HorizontalDirectionalBlock {
 
@@ -51,8 +52,9 @@ public class ConveyorBeltBlock extends HorizontalDirectionalBlock {
             return;
         }
 
-        double dx = pos.getCenter().x() - item.getX();
-        double dz = pos.getCenter().z() - item.getZ();
+        Vec3 centerPos = Vec3.atCenterOf(pos);
+        double dx = centerPos.x() - item.getX();
+        double dz = centerPos.z() - item.getZ();
 
         double stepX = direction.getStepX();
         double stepZ = direction.getStepZ();

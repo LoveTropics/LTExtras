@@ -34,7 +34,7 @@ public class CleaningItemFrameItem extends ItemFrameItem {
             Level level = context.getLevel();
 
             HangingEntity hangingentity = CleaningItemFrame.create(level, blockpos1, direction);
-            EntityType.<HangingEntity>createDefaultStackConfig(level, itemstack, player).accept(hangingentity);
+            EntityType.<HangingEntity>createDefaultStackConfig(level, itemstack, player).apply(hangingentity);
             if (hangingentity.survives()) {
                 if (!level.isClientSide()) {
                     hangingentity.playPlacementSound();

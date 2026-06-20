@@ -68,14 +68,14 @@ public class ClientCollectiblesList {
     private static void notifyCollections(List<Holder<Collectible>> newCollectibles) {
         Minecraft minecraft = Minecraft.getInstance();
         for (Holder<Collectible> newCollectible : newCollectibles) {
-            minecraft.getToastManager().addToast(new CollectibleToast(newCollectible));
+            minecraft.gui.toastManager().addToast(new CollectibleToast(newCollectible));
         }
         minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0f));
     }
 
     public static void openScreen() {
         Minecraft minecraft = Minecraft.getInstance();
-        minecraft.setScreen(new CollectibleBasketScreen(minecraft.player.getInventory()));
+        minecraft.setScreenAndShow(new CollectibleBasketScreen(minecraft.player.getInventory()));
         get().hasUnseen = false;
     }
 

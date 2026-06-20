@@ -11,6 +11,7 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.Component;
@@ -31,6 +32,7 @@ public class CustomTitleScreen {
     private static final Component QUIT_TEXT = Component.translatable("menu.quit");
     private static final Component ACCESSIBILITY_TEXT = Component.translatable("options.accessibility");
     private static final Component LANGUAGE_TEXT = Component.translatable("options.language");
+    private static final Component FRIENDS_TEXT = Component.translatable("gui.friends.open");
     private static final Component CREATE_TEST_WORLD_TEXT = Component.literal("Create Test World");
 
     private static final WidgetSprites CONNECT_SPRITES = new WidgetSprites(
@@ -49,7 +51,8 @@ public class CustomTitleScreen {
         Button quit = findButton(event, QUIT_TEXT);
         Button accessibility = findButton(event, ACCESSIBILITY_TEXT);
         Button language = findButton(event, LANGUAGE_TEXT);
-        if (singleplayer == null || multiplayer == null || realms == null || mods == null || options == null || quit == null || accessibility == null || language == null) {
+        Button friends = findButton(event, FRIENDS_TEXT);
+        if (singleplayer == null || multiplayer == null || realms == null || mods == null || options == null || quit == null || accessibility == null || language == null || friends == null) {
             // Screen has been changed in some way we didn't expect - player might have installed another mod that changes it, let that apply
             return;
         }
@@ -83,9 +86,16 @@ public class CustomTitleScreen {
         options.setY(bottomRowY);
         quit.setY(bottomRowY);
 
-        int sideButtonY = (singleplayer.getY() + bottomRowY) / 2;
-        language.setY(sideButtonY);
-        accessibility.setY(sideButtonY);
+        int iconButtonsY = multiplayer.getY() - multiplayer.getHeight() - 4;
+        language.setY(iconButtonsY);
+        accessibility.setY(iconButtonsY);
+        friends.setY(iconButtonsY);
+
+        // They need extra offset in order to be aligned with everything else
+        int extraOffset = 2;
+        language.setX(language.getX() - language.getWidth() / 2 - extraOffset);
+        accessibility.setX(accessibility.getX() - accessibility.getWidth() / 2 - extraOffset);
+        friends.setX(friends.getX() - friends.getWidth() / 2 - extraOffset);
     }
 
     private static void connectToEvent(Screen parentScreen) {

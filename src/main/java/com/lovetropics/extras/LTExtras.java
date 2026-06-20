@@ -30,10 +30,13 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.references.BlockItemIds;
+import net.minecraft.references.ItemIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.CreativeModeTab;
@@ -125,14 +128,14 @@ public class LTExtras {
                 })
                 .addDataGenerator(ProviderType.BLOCK_TAGS, block -> {
                     block.tag(ExtraTags.Blocks.PLUMBERS_TNT_EXPLODES)
-                            .add(Blocks.MUD, Blocks.PACKED_MUD, Blocks.DIRT)
+                            .add(BlockItemIds.MUD.block(), BlockItemIds.PACKED_MUD.block(), BlockItemIds.DIRT.block())
                             .add(TagEntry.optionalElement(Identifier.fromNamespaceAndPath("tropicraft", "mud")))
                             .add(TagEntry.optionalElement(Identifier.fromNamespaceAndPath("tropicraft", "mud_with_pianguas")))
                     ;
                 })
                 .addDataGenerator(ProviderType.ITEM_TAGS, item -> {
                     item.tag(ExtraTags.Items.HONIES)
-                            .add(Items.HONEY_BOTTLE)
+                            .add(ItemIds.HONEY_BOTTLE)
                             ;
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
@@ -179,7 +182,7 @@ public class LTExtras {
     }
 
     private void onModifyAttributes(EntityAttributeModificationEvent event) {
-        event.add(EntityType.PLAYER, FRICTION);
+        event.add(EntityTypes.PLAYER, FRICTION);
     }
 
     public static Identifier id(String path) {

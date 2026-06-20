@@ -2,6 +2,7 @@ package com.lovetropics.extras.effect;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
@@ -31,7 +32,7 @@ public class PropaguledEffect extends MobEffect {
         }
 
         @Override
-        public boolean renderGuiIcon(MobEffectInstance instance, Gui gui, GuiGraphicsExtractor guiGraphics, int x, int y, float z, float alpha) {
+        public boolean renderGuiIcon(MobEffectInstance instance, Hud gui, GuiGraphicsExtractor guiGraphics, int x, int y, float z, float alpha) {
             guiGraphics.fakeItem(Items.MANGROVE_PROPAGULE.getDefaultInstance(), x + 4, y + 3);
             return true;
         }

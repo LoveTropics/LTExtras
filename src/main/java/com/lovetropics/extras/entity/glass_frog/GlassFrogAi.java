@@ -13,6 +13,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.behavior.AnimalMakeLove;
@@ -75,7 +76,7 @@ public class GlassFrogAi {
         return ActivityData.create(
                 Activity.IDLE,
                 ImmutableList.of(
-                        Pair.of(0, SetEntityLookTargetSometimes.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60))),
+                        Pair.of(0, SetEntityLookTargetSometimes.create(EntityTypes.PLAYER, 6.0F, UniformInt.of(30, 60))),
                         Pair.of(0, new AnimalMakeLove(ExtraEntities.GLASS_FROG.get())),
                         Pair.of(1, new FollowTemptation(livingEntity -> 1.25F)),
                         Pair.of(
@@ -109,7 +110,7 @@ public class GlassFrogAi {
         return ActivityData.create(
                 Activity.SWIM,
                 ImmutableList.of(
-                        Pair.of(0, SetEntityLookTargetSometimes.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60))),
+                        Pair.of(0, SetEntityLookTargetSometimes.create(EntityTypes.PLAYER, 6.0F, UniformInt.of(30, 60))),
                         Pair.of(1, new FollowTemptation(livingEntity -> 1.25F)),
                         Pair.of(
                                 2,

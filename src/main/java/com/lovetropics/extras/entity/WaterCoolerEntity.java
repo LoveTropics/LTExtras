@@ -6,6 +6,7 @@ import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -156,7 +157,7 @@ public class WaterCoolerEntity extends Entity {
         ItemStack itemStack = new ItemStack(Items.POTION, 1);
         itemStack.set(DataComponents.POTION_CONTENTS, potionContents);
         itemStack.set(DataComponents.CUSTOM_NAME, ExtraLangKeys.WATER_COOLER_POTION_NAME.get());
-        itemStack.set(DataComponents.LORE, ItemLore.EMPTY.withLineAdded(ExtraLangKeys.WATER_COOLER_POTION_LORE.get().withColor(ChatFormatting.GRAY.getColor())));
+        itemStack.set(DataComponents.LORE, ItemLore.EMPTY.withLineAdded(ExtraLangKeys.WATER_COOLER_POTION_LORE.get().withColor(TextColor.GRAY)));
         itemStack.set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT
                 .withHidden(DataComponents.ATTRIBUTE_MODIFIERS, true)
                 .withHidden(DataComponents.POTION_CONTENTS, true)

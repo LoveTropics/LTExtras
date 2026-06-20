@@ -52,7 +52,7 @@
     "client.menu.TitleScreenMixin",
     "client.packcontrol.PackSelectionModelMixin",
     "client.rejoiner.ClientCommonPacketListenerImplMixin",
-    "client.translation.MinecraftMixin"
+    "client.translation.GuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1

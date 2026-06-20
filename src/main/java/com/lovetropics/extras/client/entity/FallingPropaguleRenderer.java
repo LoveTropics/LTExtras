@@ -46,7 +46,7 @@ public class FallingPropaguleRenderer extends EntityRenderer<FallingPropagule, F
         poseStack.mulPose(Axis.YP.rotationDegrees(state.ageInTicks * 20 % 360));
         poseStack.translate(-0.5f, 0f, -0.5f);
 
-        submitNodeCollector.submitMovingBlock(poseStack, state.movingBlockRenderState);
+        submitNodeCollector.submitMovingBlock(poseStack, state.movingBlockRenderState, state.outlineColor);
         poseStack.popPose();
     }
 

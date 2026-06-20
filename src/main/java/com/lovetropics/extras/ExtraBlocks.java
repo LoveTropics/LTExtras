@@ -104,6 +104,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -396,16 +397,16 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.DIRT)
             .properties(p -> p.sound(SoundType.SAND))
             .item()
-            .model(() -> (ctx, prov) -> Models.generateBlockItem(ctx, prov, Blocks.BLACK_CONCRETE_POWDER))
+            .model(() -> (ctx, prov) -> Models.generateBlockItem(ctx, prov, Blocks.CONCRETE_POWDER.black()))
             .build()
             .blockstate(() -> (ctx, prov) -> {
-                Variant variant = plainModel(ModelLocationUtils.getModelLocation(Blocks.BLACK_CONCRETE_POWDER));
+                Variant variant = plainModel(ModelLocationUtils.getModelLocation(Blocks.CONCRETE_POWDER.black()));
                 prov.blockStateOutput.accept(dispatch(ctx.get(), createRotatedVariants(variant)));
             })
             .register();
 
     public static final BlockEntry<StainedGlassBlock> SMOOTH_LIGHT_GRAY_STAINED_GLASS = REGISTRATE.block("smooth_light_gray_stained_glass", p -> new StainedGlassBlock(DyeColor.LIGHT_GRAY, p))
-            .initialProperties(() -> Blocks.LIGHT_GRAY_STAINED_GLASS)
+            .initialProperties(() -> Blocks.STAINED_GLASS.lightGray())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
             .simpleItem()
             .register();
@@ -633,14 +634,14 @@ public class ExtraBlocks {
             .tag(BlockTags.STAIRS)
             .blockstate(() -> Models.slabBlock(Blocks.PACKED_MUD.builtInRegistryHolder(), Models.TextureType.normal()))
             .item()
-            .tag(ItemTags.STAIRS)
+            .tag(BlockItemTags.STAIRS.item())
             .build()
             .register();
 
     public static final BlockEntry<RotatedPillarBlock> BLOODWOOD_LOG = REGISTRATE
             .block("bloodwood_log", RotatedPillarBlock::new)
-            .properties(p -> Blocks.logProperties(Blocks.RED_CONCRETE.defaultMapColor(), Blocks.PALE_OAK_WOOD.defaultMapColor(), SoundType.WOOD))
-            .tag(BlockTags.LOGS, BlockTags.LOGS_THAT_BURN, BlockTags.MINEABLE_WITH_AXE)
+            .properties(p -> Blocks.logProperties(Blocks.CONCRETE.red().defaultMapColor(), Blocks.PALE_OAK_WOOD.defaultMapColor(), SoundType.WOOD))
+            .tag(BlockTags.LOGS, BlockItemTags.LOGS_THAT_BURN.block(), BlockTags.MINEABLE_WITH_AXE)
             .blockstate(() -> (ctx, prov) -> prov.generateLogBlock(ctx.get()))
             .item()
             .tag(ItemTags.LOGS, ItemTags.LOGS_THAT_BURN)
@@ -695,7 +696,7 @@ public class ExtraBlocks {
         }
 
         public static WaterloggableButtonTemplate stone(BlockSetType type, Block textureBlock) {
-            return new WaterloggableButtonTemplate(type, 20, textureBlock, new TagKey[]{BlockTags.STONE_BUTTONS, BlockTags.MINEABLE_WITH_PICKAXE}, new TagKey[]{ItemTags.STONE_BUTTONS});
+            return new WaterloggableButtonTemplate(type, 20, textureBlock, new TagKey[]{BlockTags.STONE_BUTTONS, BlockTags.MINEABLE_WITH_PICKAXE}, new TagKey[]{BlockItemTags.STONE_BUTTONS.block()});
         }
     }
 
@@ -801,7 +802,7 @@ public class ExtraBlocks {
             .add(Blocks.SMOOTH_STONE, SpeedyBlock::opaque)
             .add(Blocks.GRAVEL, SpeedyBlock::opaque)
             .add(Blocks.DIRT_PATH, p -> SpeedyBlock.transparent(PATH_SHAPE, p))
-            .add(Blocks.BLACK_CONCRETE_POWDER, SpeedyBlock::opaque)
+            .add(Blocks.CONCRETE.black(), SpeedyBlock::opaque)
             .add(Blocks.PACKED_MUD, SpeedyBlock::opaque)
             .add(Blocks.MUD_BRICKS, SpeedyBlock::opaque)
             .add(Blocks.ROOTED_DIRT, SpeedyBlock::opaque)
@@ -878,79 +879,9 @@ public class ExtraBlocks {
             .simpleItem()
             .register();
 
-    private static final List<Block> CONCRETE_POWDERS = List.of(
-            Blocks.WHITE_CONCRETE_POWDER,
-            Blocks.ORANGE_CONCRETE_POWDER,
-            Blocks.MAGENTA_CONCRETE_POWDER,
-            Blocks.LIGHT_BLUE_CONCRETE_POWDER,
-            Blocks.YELLOW_CONCRETE_POWDER,
-            Blocks.LIME_CONCRETE_POWDER,
-            Blocks.PINK_CONCRETE_POWDER,
-            Blocks.GRAY_CONCRETE_POWDER,
-            Blocks.LIGHT_GRAY_CONCRETE_POWDER,
-            Blocks.CYAN_CONCRETE_POWDER,
-            Blocks.PURPLE_CONCRETE_POWDER,
-            Blocks.BLUE_CONCRETE_POWDER,
-            Blocks.BROWN_CONCRETE_POWDER,
-            Blocks.GREEN_CONCRETE_POWDER,
-            Blocks.RED_CONCRETE_POWDER,
-            Blocks.BLACK_CONCRETE_POWDER
-    );
-
-    private static final List<Block> CONCRETES = List.of(
-            Blocks.WHITE_CONCRETE,
-            Blocks.ORANGE_CONCRETE,
-            Blocks.MAGENTA_CONCRETE,
-            Blocks.LIGHT_BLUE_CONCRETE,
-            Blocks.YELLOW_CONCRETE,
-            Blocks.LIME_CONCRETE,
-            Blocks.PINK_CONCRETE,
-            Blocks.GRAY_CONCRETE,
-            Blocks.LIGHT_GRAY_CONCRETE,
-            Blocks.CYAN_CONCRETE,
-            Blocks.PURPLE_CONCRETE,
-            Blocks.BLUE_CONCRETE,
-            Blocks.BROWN_CONCRETE,
-            Blocks.GREEN_CONCRETE,
-            Blocks.RED_CONCRETE,
-            Blocks.BLACK_CONCRETE
-    );
-
-    private static final List<Block> TERRACOTTA_BLOCKS = List.of(
-            Blocks.TERRACOTTA,
-            Blocks.WHITE_TERRACOTTA,
-            Blocks.ORANGE_TERRACOTTA,
-            Blocks.MAGENTA_TERRACOTTA,
-            Blocks.LIGHT_BLUE_TERRACOTTA,
-            Blocks.YELLOW_TERRACOTTA,
-            Blocks.LIME_TERRACOTTA,
-            Blocks.PINK_TERRACOTTA,
-            Blocks.GRAY_TERRACOTTA,
-            Blocks.LIGHT_GRAY_TERRACOTTA,
-            Blocks.CYAN_TERRACOTTA,
-            Blocks.PURPLE_TERRACOTTA,
-            Blocks.BLUE_TERRACOTTA,
-            Blocks.BROWN_TERRACOTTA,
-            Blocks.GREEN_TERRACOTTA,
-            Blocks.RED_TERRACOTTA,
-            Blocks.BLACK_TERRACOTTA,
-            Blocks.WHITE_GLAZED_TERRACOTTA,
-            Blocks.ORANGE_GLAZED_TERRACOTTA,
-            Blocks.MAGENTA_GLAZED_TERRACOTTA,
-            Blocks.LIGHT_BLUE_GLAZED_TERRACOTTA,
-            Blocks.YELLOW_GLAZED_TERRACOTTA,
-            Blocks.LIME_GLAZED_TERRACOTTA,
-            Blocks.PINK_GLAZED_TERRACOTTA,
-            Blocks.GRAY_GLAZED_TERRACOTTA,
-            Blocks.LIGHT_GRAY_GLAZED_TERRACOTTA,
-            Blocks.CYAN_GLAZED_TERRACOTTA,
-            Blocks.PURPLE_GLAZED_TERRACOTTA,
-            Blocks.BLUE_GLAZED_TERRACOTTA,
-            Blocks.BROWN_GLAZED_TERRACOTTA,
-            Blocks.GREEN_GLAZED_TERRACOTTA,
-            Blocks.RED_GLAZED_TERRACOTTA,
-            Blocks.BLACK_GLAZED_TERRACOTTA
-    );
+    private static final List<Block> CONCRETE_POWDERS = Blocks.CONCRETE_POWDER.asList();
+    private static final List<Block> CONCRETES = Blocks.CONCRETE.asList();
+    private static final List<Block> TERRACOTTA_BLOCKS = Stream.concat(Blocks.DYED_TERRACOTTA.asList().stream(), Blocks.GLAZED_TERRACOTTA.asList().stream()).toList();
 
     private static final TemplateBuilder<Block, ImposterBlockTemplate> IMPOSTER_BLOCK_TEMPLATES = new TemplateBuilder<Block, ImposterBlockTemplate>()
             .add(Blocks.BRAIN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
@@ -1039,7 +970,7 @@ public class ExtraBlocks {
                     .tag(BlockTags.STAIRS)
                     .blockstate(() -> Models.stairsBlock(object, textureType))
                     .item()
-                    .tag(ItemTags.STAIRS)
+                    .tag(BlockItemTags.STAIRS.item())
                     .build()
                     .register()
             );
@@ -1051,7 +982,7 @@ public class ExtraBlocks {
                     .tag(BlockTags.SLABS)
                     .blockstate(() -> Models.slabBlock(object, textureType))
                     .item()
-                    .tag(ItemTags.SLABS)
+                    .tag(BlockItemTags.SLABS.item())
                     .build()
                     .register()
             );
@@ -1063,7 +994,7 @@ public class ExtraBlocks {
                     .tag(BlockTags.FENCES)
                     .blockstate(() -> Models.fenceBlock(block, textureType))
                     .item()
-                    .tag(ItemTags.FENCES)
+                    .tag(BlockItemTags.FENCES.item())
                     .model(() -> (ctx, prov) -> {
                         Identifier model = ModelTemplates.FENCE_INVENTORY.create(ctx.get(), TextureMapping.defaultTexture(new Material(Models.getMainTexture(block, textureType))), prov.modelOutput);
                         prov.createWithExistingModel(ctx.get(), model);
@@ -1342,12 +1273,12 @@ public class ExtraBlocks {
 
     private static final TemplateBuilder<CeilingCarpetBlock, BlockFactory<CeilingCarpetBlock>> CEILING_CARPET_TEMPLATES = new TemplateBuilder<CeilingCarpetBlock, BlockFactory<CeilingCarpetBlock>>()
             .add(Blocks.SAND, CeilingCarpetBlock::new)
-            .add(Blocks.GREEN_WOOL, CeilingCarpetBlock::new)
+            .add(Blocks.WOOL.green(), CeilingCarpetBlock::new)
             .add(Blocks.MOSS_BLOCK, CeilingCarpetBlock::new);
 
     public static final Map<Holder<Block>, BlockEntry<? extends CeilingCarpetBlock>> CEILING_CARPET_BLOCKS = CEILING_CARPET_TEMPLATES
             .build((object, factory) -> REGISTRATE.block(getName(object) + "_ceiling_carpet", CeilingCarpetBlock::new)
-                    .initialProperties(() -> Blocks.WHITE_CARPET)
+                    .initialProperties(() -> Blocks.CARPET.white())
                     .blockstate(() -> (ctx, prov) -> Models.generateCeilingCarpet(object, ctx, prov))
                     .simpleItem()
                     .register()
@@ -1358,7 +1289,7 @@ public class ExtraBlocks {
 
     public static final Map<Holder<Block>, BlockEntry<? extends WaterLoggableCarpet>> WATER_LOGGABLE_CARPET_BLOCKS = WATER_LOGGABLE_CARPET_TEMPLATES
             .build((object, factory) -> REGISTRATE.block(getName(object) + "_water_loggable_carpet", WaterLoggableCarpet::new)
-                    .initialProperties(() -> Blocks.WHITE_CARPET)
+                    .initialProperties(() -> Blocks.CARPET.white())
                     .blockstate(() -> (ctx, prov) -> Models.generateWaterLoggableCarpet(object, ctx, prov))
                     .simpleItem()
                     .register()

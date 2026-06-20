@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -42,7 +43,7 @@ public class DisplayBlockRender implements BlockEntityRenderer<DisplayBlockEntit
             relativePos = relativePos.above();
         }
         state.rotationAngle = rotationAngle;
-        state.lightCoords = LevelRenderer.getLightCoords(LevelRenderer.BrightnessGetter.DEFAULT, blockEntity.getLevel(), blockEntity.getBlockState(), relativePos);
+        state.lightCoords = LightCoordsUtil.getLightCoords(LightCoordsUtil.BrightnessGetter.DEFAULT, blockEntity.getLevel(), blockEntity.getBlockState(), relativePos);
 
         itemModelResolver.updateForTopItem(state.itemStack, blockEntity.getItemStack(), ItemDisplayContext.GROUND, null, null, 0);
     }

@@ -30,7 +30,7 @@ public record InteractActionData(List<ClickEvent> clickEvents, boolean cancelEve
                     player.openDialog(showDialog.dialog());
                     break;
                 case ClickEvent.Custom custom:
-                    player.level().getServer().handleCustomClickAction(custom.id(), custom.payload());
+                    player.level().getServer().handleCustomClickAction(custom.id(), custom.payload(), player, player.getGameProfile());
                     break;
                 default:
             }
