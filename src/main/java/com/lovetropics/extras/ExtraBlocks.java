@@ -168,6 +168,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -802,7 +804,7 @@ public class ExtraBlocks {
             .add(Blocks.SMOOTH_STONE, SpeedyBlock::opaque)
             .add(Blocks.GRAVEL, SpeedyBlock::opaque)
             .add(Blocks.DIRT_PATH, p -> SpeedyBlock.transparent(PATH_SHAPE, p))
-            .add(Blocks.CONCRETE.black(), SpeedyBlock::opaque)
+            .add(Blocks.CONCRETE_POWDER.black(), SpeedyBlock::opaque)
             .add(Blocks.PACKED_MUD, SpeedyBlock::opaque)
             .add(Blocks.MUD_BRICKS, SpeedyBlock::opaque)
             .add(Blocks.ROOTED_DIRT, SpeedyBlock::opaque)
@@ -881,7 +883,9 @@ public class ExtraBlocks {
 
     private static final List<Block> CONCRETE_POWDERS = Blocks.CONCRETE_POWDER.asList();
     private static final List<Block> CONCRETES = Blocks.CONCRETE.asList();
-    private static final List<Block> TERRACOTTA_BLOCKS = Stream.concat(Blocks.DYED_TERRACOTTA.asList().stream(), Blocks.GLAZED_TERRACOTTA.asList().stream()).toList();
+    private static final List<Block> TERRACOTTA_BLOCKS = Stream.of(Collections.singleton(Blocks.TERRACOTTA),Blocks.DYED_TERRACOTTA.asList(), Blocks.GLAZED_TERRACOTTA.asList())
+            .flatMap(Collection::stream)
+            .toList();
 
     private static final TemplateBuilder<Block, ImposterBlockTemplate> IMPOSTER_BLOCK_TEMPLATES = new TemplateBuilder<Block, ImposterBlockTemplate>()
             .add(Blocks.BRAIN_CORAL_BLOCK, ImposterBlockTemplate.simpleCube())
