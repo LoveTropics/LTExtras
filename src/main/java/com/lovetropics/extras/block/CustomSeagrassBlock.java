@@ -23,8 +23,7 @@ import java.util.function.Supplier;
 public class CustomSeagrassBlock extends SeagrassBlock {
 
     private final String scientificName;
-    @Nullable
-    private final Supplier<Supplier<? extends TallSeagrassBlock>> tall;
+    private final @Nullable Supplier<Supplier<? extends TallSeagrassBlock>> tall;
 
     public CustomSeagrassBlock(Properties properties, String scientificName, @Nullable Supplier<Supplier<? extends TallSeagrassBlock>> tall) {
         super(properties);

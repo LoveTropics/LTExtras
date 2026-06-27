@@ -16,8 +16,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -35,8 +35,7 @@ public class CollectibleStore {
             CollectibleStore::asData
     );
 
-    @Nullable
-    private ServerPlayer player;
+    private @Nullable ServerPlayer player;
 
     private final List<Holder<Collectible>> collectibles = new ArrayList<>();
     private boolean hasUnseen;

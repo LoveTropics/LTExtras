@@ -58,8 +58,7 @@ public class RaveKoaEntity extends PathfinderMob {
     }
 
     @Override
-    @Nullable
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData) {
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData) {
         setPersistenceRequired();
         return super.finalizeSpawn(level, difficulty, spawnReason, spawnGroupData);
     }

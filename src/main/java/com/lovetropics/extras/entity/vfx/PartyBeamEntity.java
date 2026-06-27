@@ -18,14 +18,13 @@ import net.neoforged.neoforge.event.level.ExplosionEvent;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @EventBusSubscriber
 public class PartyBeamEntity extends EndCrystal {
     private static final EntityDataAccessor<Vector3fc> DATA_COLOR = SynchedEntityData.defineId(PartyBeamEntity.class, EntityDataSerializers.VECTOR3);
 
-    @Nullable
-    private BlockPos targetPos = null;
+    private @Nullable BlockPos targetPos = null;
 
     public PartyBeamEntity(EntityType<? extends EndCrystal> type, Level level) {
         super(type, level);

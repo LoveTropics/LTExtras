@@ -19,7 +19,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
 
 public class ServerClosedScreen extends Screen {
@@ -31,8 +31,7 @@ public class ServerClosedScreen extends Screen {
     private final Component description;
 
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
-    @Nullable
-    private final AutoJoinServerPinger pinger;
+    private final @Nullable AutoJoinServerPinger pinger;
 
     public ServerClosedScreen(Type type, DisconnectionDetails details, ServerData server) {
         super(TITLE);

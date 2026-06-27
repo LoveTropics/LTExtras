@@ -21,7 +21,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Optional;
 
 public class PrimedPlumbersTnt extends PrimedTnt {
@@ -43,8 +43,7 @@ public class PrimedPlumbersTnt extends PrimedTnt {
         }
     };
 
-    @Nullable
-    private EntityReference<LivingEntity> owner;
+    private @Nullable EntityReference<LivingEntity> owner;
     private float explosionPower;
 
     public PrimedPlumbersTnt(EntityType<? extends PrimedPlumbersTnt> type, Level level) {

@@ -22,7 +22,6 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.Avatar;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -37,8 +36,8 @@ import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEve
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -175,8 +174,7 @@ public class ClientPlayerSensorEffects {
         }
     }
 
-    @Nullable
-    private static CapturedScreenBoxes capturePlayerPose(UUID entityId, PoseStack poseStack, HumanoidModel<?> humanoidModel) {
+    private static @Nullable CapturedScreenBoxes capturePlayerPose(UUID entityId, PoseStack poseStack, HumanoidModel<?> humanoidModel) {
         poseStack.pushPose();
         humanoidModel.head.translateAndRotate(poseStack);
         ScreenBox faceBox = toScreenBox(poseStack, -4.0f, -8.0f, -4.0f, 4.0f, 0.0f, 4.0f);
@@ -187,8 +185,7 @@ public class ClientPlayerSensorEffects {
         return null;
     }
 
-    @Nullable
-    private static ScreenBox toScreenBox(PoseStack poseStack, float x0, float y0, float z0, float x1, float y1, float z1) {
+    private static @Nullable ScreenBox toScreenBox(PoseStack poseStack, float x0, float y0, float z0, float x1, float y1, float z1) {
         Vector3f[] vertices = {
                 toScreenPos(poseStack, x0, y0, z0),
                 toScreenPos(poseStack, x0, y0, z1),

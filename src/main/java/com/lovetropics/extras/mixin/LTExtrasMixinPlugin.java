@@ -1,11 +1,11 @@
 package com.lovetropics.extras.mixin;
 
 import net.neoforged.fml.ModList;
+import org.jspecify.annotations.Nullable;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -18,8 +18,7 @@ public final class LTExtrasMixinPlugin implements IMixinConfigPlugin {
     }
 
     @Override
-    @Nullable
-    public String getRefMapperConfig() {
+    public @Nullable String getRefMapperConfig() {
         return null;
     }
 
@@ -37,8 +36,7 @@ public final class LTExtrasMixinPlugin implements IMixinConfigPlugin {
     }
 
     @Override
-    @Nullable
-    public List<String> getMixins() {
+    public @Nullable List<String> getMixins() {
         return null;
     }
 

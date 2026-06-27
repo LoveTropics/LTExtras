@@ -7,19 +7,17 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.DisconnectionDetails;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-import javax.annotation.Nullable;
-
 @Mixin(ClientCommonPacketListenerImpl.class)
 public class ClientCommonPacketListenerImplMixin {
     @Shadow
     @Final
-    @Nullable
-    protected ServerData serverData;
+    protected @Nullable ServerData serverData;
 
     @WrapOperation(method = "onDisconnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientCommonPacketListenerImpl;createDisconnectScreen(Lnet/minecraft/network/DisconnectionDetails;)Lnet/minecraft/client/gui/screens/Screen;"))
     private Screen onDisconnect(ClientCommonPacketListenerImpl instance, DisconnectionDetails details, Operation<Screen> original) {

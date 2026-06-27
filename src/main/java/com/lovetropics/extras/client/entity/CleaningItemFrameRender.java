@@ -10,8 +10,6 @@ import net.minecraft.client.renderer.entity.ItemFrameRenderer;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.CommonColors;
-import org.joml.Matrix4f;
 
 public class CleaningItemFrameRender extends ItemFrameRenderer<CleaningItemFrame> {
 

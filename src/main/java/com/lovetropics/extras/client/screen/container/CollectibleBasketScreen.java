@@ -36,7 +36,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 // Stop doing scrolling
@@ -70,8 +70,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     private boolean draggingScroller;
     private double dragOffsetY;
 
-    @Nullable
-    private Slot tropiCoinSlot;
+    private @Nullable Slot tropiCoinSlot;
 
     public CollectibleBasketScreen(Inventory playerInventory) {
         super(new Menu(playerInventory.player, new CollectibleContainer(ClientCollectiblesList.get())), playerInventory, TITLE, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
@@ -169,8 +168,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_LOCATION, leftPos, topPos, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 256, 256, CommonColors.WHITE);
     }
     
-    @Nullable
-    private ScreenRectangle scrollerRectangle() {
+    private @Nullable ScreenRectangle scrollerRectangle() {
         if (!canScroll()) {
             return null;
         }
@@ -285,8 +283,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
     }
 
-    @Nullable
-    private static Slot getSlotIn(Slot slot, AbstractContainerMenu menu) {
+    private static @Nullable Slot getSlotIn(Slot slot, AbstractContainerMenu menu) {
         for (Slot otherSlot : menu.slots) {
             if (slot.isSameInventory(otherSlot) && slot.getContainerSlot() == otherSlot.getContainerSlot()) {
                 return otherSlot;
@@ -351,8 +348,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
             return 1;
         }
 
-        @Nullable
-        public Holder<Collectible> getCollectible() {
+        public @Nullable Holder<Collectible> getCollectible() {
             return container.getCollectible(index);
         }
     }
@@ -379,8 +375,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
             return list.isEmpty();
         }
 
-        @Nullable
-        public Holder<Collectible> getCollectible(int slot) {
+        public @Nullable Holder<Collectible> getCollectible(int slot) {
             List<Holder<Collectible>> collectibles = list.collectibles();
             int index = getIndexForSlot(slot);
             if (index >= 0 && index < collectibles.size()) {

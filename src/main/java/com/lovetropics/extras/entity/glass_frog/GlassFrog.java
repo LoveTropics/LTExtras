@@ -31,7 +31,7 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -67,9 +67,8 @@ public class GlassFrog extends Animal {
         return stack.is(ItemTags.FROG_FOOD);
     }
 
-    @Nullable
     @Override
-    public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
+    public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
         GlassFrog frog = ExtraEntities.GLASS_FROG.create(level, EntitySpawnReason.BREEDING);
         if (frog != null) {
             GlassFrogAi.initMemories(frog, level.getRandom());
@@ -79,7 +78,7 @@ public class GlassFrog extends Animal {
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(
+    public @Nullable SpawnGroupData finalizeSpawn(
             ServerLevelAccessor levelAccessor, DifficultyInstance difficultyInstance, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData
     ) {
         GlassFrogAi.initMemories(this, levelAccessor.getRandom());

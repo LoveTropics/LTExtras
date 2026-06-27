@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,7 +23,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 @Mixin(Display.TextDisplay.class)
@@ -47,11 +47,9 @@ public abstract class TextDisplayMixin extends Display {
             .build();
 
     @Unique
-    @Nullable
-    private String ltextras$templateText;
+    private @Nullable String ltextras$templateText;
     @Unique
-    @Nullable
-    private TextNode ltextras$parsedTemplate;
+    private @Nullable TextNode ltextras$parsedTemplate;
 
     @Unique
     private final Map<ServerPlayer, Component> ltextras$trackingPlayers = new Reference2ObjectOpenHashMap<>();

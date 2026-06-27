@@ -4,7 +4,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class MoveBackToOriginGoal extends RandomStrollGoal {
     private final Vec3 vec;
@@ -36,9 +36,8 @@ public class MoveBackToOriginGoal extends RandomStrollGoal {
         return false;
     }
 
-    @Nullable
     @Override
-    protected Vec3 getPosition() {
+    protected @Nullable Vec3 getPosition() {
         return vec;
     }
 }

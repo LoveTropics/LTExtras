@@ -17,8 +17,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.CustomClickActionEvent;
 import org.slf4j.Logger;
 
-import java.util.Optional;
-
 @EventBusSubscriber
 public class ExtraClickEvents {
 

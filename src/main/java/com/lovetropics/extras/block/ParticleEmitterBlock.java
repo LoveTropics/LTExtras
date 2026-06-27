@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ParticleEmitterBlock extends BaseEntityBlock {
     public static final MapCodec<ParticleEmitterBlock> CODEC = simpleCodec(ParticleEmitterBlock::new);
@@ -31,15 +31,13 @@ public class ParticleEmitterBlock extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
-    @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new ParticleEmitterBlockEntity(ExtraBlocks.PARTICLE_EMITTER_BE.get(), pos, state);
     }
 
-    @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, ExtraBlocks.PARTICLE_EMITTER_BE.get(), ParticleEmitterBlockEntity::tick);
     }
 }

@@ -6,17 +6,16 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.ExtraCodecs;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 public class ExtrasTechstackSubscriber {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    @Nullable
-    private static TechstackEventSubscriber subscriber;
+    private static @Nullable TechstackEventSubscriber subscriber;
 
     private ExtrasTechstackSubscriber() {
     }
@@ -28,8 +27,7 @@ public class ExtrasTechstackSubscriber {
         subscriber = buildSubscriber(uri, token);
     }
 
-    @Nullable
-    private static TechstackEventSubscriber buildSubscriber(String uriString, String token) {
+    private static @Nullable TechstackEventSubscriber buildSubscriber(String uriString, String token) {
         if (uriString.isBlank() || token.isBlank()) {
             return null;
         }

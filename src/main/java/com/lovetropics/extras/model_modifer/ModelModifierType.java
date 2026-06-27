@@ -36,8 +36,7 @@ public enum ModelModifierType implements StringRepresentable {
 
     private final int id;
     private final String name;
-    @Nullable
-    private final String effectName;
+    private final @Nullable String effectName;
 
     /**
      * @param id numerical ID for network encoding
@@ -54,8 +53,7 @@ public enum ModelModifierType implements StringRepresentable {
         this(id, name, null);
     }
 
-    @Nullable
-    public String getEffectName() {
+    public @Nullable String getEffectName() {
         return effectName;
     }
 

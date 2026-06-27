@@ -3,26 +3,19 @@ package com.lovetropics.extras.collectible;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.lovetropics.lib.codec.MoreCodecs;
-import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponentHolder;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.PatchedDataComponentMap;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,8 +49,7 @@ public class Collectible{
         this(ItemStackTemplate.fromNonEmptyStack(stack));
     }
 
-    @Nullable
-    public static Holder<Collectible> byItem(ItemStack stack) {
+    public static @Nullable Holder<Collectible> byItem(ItemStack stack) {
         CollectibleMarker marker = stack.get(ExtraDataComponents.COLLECTIBLE);
         if (marker == null) {
             return null;

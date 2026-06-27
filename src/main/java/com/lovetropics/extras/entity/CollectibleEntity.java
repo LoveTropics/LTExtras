@@ -26,7 +26,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class CollectibleEntity extends Entity {
     private static final String KEY_COLLECTIBLE = "collectible";
@@ -35,8 +35,7 @@ public class CollectibleEntity extends Entity {
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(CollectibleEntity.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Boolean> DATA_PARTICLES = SynchedEntityData.defineId(CollectibleEntity.class, EntityDataSerializers.BOOLEAN);
 
-    @Nullable
-    private Holder<Collectible> collectible;
+    private @Nullable Holder<Collectible> collectible;
 
     public CollectibleEntity(EntityType<?> type, Level level) {
         super(type, level);
@@ -173,8 +172,7 @@ public class CollectibleEntity extends Entity {
         return true;
     }
 
-    @Nullable
-    public Holder<Collectible> getCollectible() {
+    public @Nullable Holder<Collectible> getCollectible() {
         return collectible;
     }
 }

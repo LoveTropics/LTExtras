@@ -53,7 +53,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -270,8 +270,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     }
 
     @Override
-    @Nullable
-    public LivingEntity getControllingPassenger() {
+    public @Nullable LivingEntity getControllingPassenger() {
         Entity firstPassenger = getFirstPassenger();
         LivingEntity controllingPassenger;
         if (firstPassenger instanceof LivingEntity passenger) {
@@ -289,8 +288,7 @@ public class ForkliftEntity extends Entity implements PlayerRideable {
     }
 
     @Override
-    @Nullable
-    public InterpolationHandler getInterpolation() {
+    public @Nullable InterpolationHandler getInterpolation() {
         return interpolation;
     }
 

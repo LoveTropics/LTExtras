@@ -14,7 +14,7 @@ import net.minecraft.network.protocol.status.ServerboundStatusRequestPacket;
 import net.minecraft.server.network.EventLoopGroupHolder;
 import net.minecraft.util.Util;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.time.Instant;
@@ -29,8 +29,7 @@ public class AutoJoinServerPinger {
 
     private final ServerAddress address;
 
-    @Nullable
-    private CompletableFuture<Boolean> pendingPing;
+    private @Nullable CompletableFuture<Boolean> pendingPing;
     private Instant lastPingTime = Instant.now();
 
     public AutoJoinServerPinger(String address) {

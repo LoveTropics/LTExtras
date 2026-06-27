@@ -12,12 +12,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class WorldParticleEffectHandler {
-    @Nullable
-    private static ParticlesEffect effect;
+    private static @Nullable ParticlesEffect effect;
 
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Pre event) {

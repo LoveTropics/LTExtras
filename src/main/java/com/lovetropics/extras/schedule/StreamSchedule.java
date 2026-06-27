@@ -10,9 +10,9 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Util;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -56,8 +56,7 @@ public record StreamSchedule(List<Entry> entries) {
                 });
     }
 
-    @Nullable
-    public Entry currentAt(Instant time) {
+    public @Nullable Entry currentAt(Instant time) {
         for (Entry entry : entries) {
             if (!entry.startTime().isAfter(time) && !time.isAfter(entry.endTime())) {
                 return entry;
@@ -66,8 +65,7 @@ public record StreamSchedule(List<Entry> entries) {
         return null;
     }
 
-    @Nullable
-    public Entry nextAfter(Instant time) {
+    public @Nullable Entry nextAfter(Instant time) {
         for (Entry entry : entries) {
             if (entry.startTime().isAfter(time)) {
                 return entry;

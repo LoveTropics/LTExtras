@@ -11,7 +11,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -64,8 +64,7 @@ public class ServerPlayerSensorManager {
     }
 
     private static class SensorState {
-        @Nullable
-        private PlayerSensor activeSensor;
+        private @Nullable PlayerSensor activeSensor;
         private final Set<UUID> trackedPlayers = new HashSet<>();
         private final Set<UUID> markedPlayers = new HashSet<>();
 

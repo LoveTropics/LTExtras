@@ -23,7 +23,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,8 +58,7 @@ public class CollectibleCompassItem extends Item {
         return InteractionResult.CONSUME;
     }
 
-    @Nullable
-    private static Target tryLocateCollectible(Level level, Player player) {
+    private static @Nullable Target tryLocateCollectible(Level level, Player player) {
         CollectibleStore collectibles = CollectibleStore.get(player);
 
         List<CollectibleEntity> candidates = level.getEntitiesOfClass(CollectibleEntity.class, player.getBoundingBox().inflate(SEARCH_RANGE), entity -> {

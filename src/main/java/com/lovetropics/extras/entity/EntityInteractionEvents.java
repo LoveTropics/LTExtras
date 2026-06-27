@@ -3,7 +3,6 @@ package com.lovetropics.extras.entity;
 import com.lovetropics.extras.ExtraTags;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;

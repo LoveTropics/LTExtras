@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.ToIntFunction;
 
 public class AdjustableLampBlock extends RedstoneLampBlock {
@@ -30,8 +30,7 @@ public class AdjustableLampBlock extends RedstoneLampBlock {
     }
 
     @Override
-    @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         final boolean lit = context.getLevel().hasNeighborSignal(context.getClickedPos());
         return defaultBlockState().setValue(LIT, lit);
     }

@@ -169,8 +169,7 @@ public class TeleportPadBlock extends Block implements EntityBlock, SimpleWaterl
     }
 
     @Override
-    @Nullable
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new TeleportPadBlockEntity(ExtraBlocks.TELEPORT_PAD_ENTITY.get(), pos, state);
     }
 

@@ -170,8 +170,7 @@ public class JumpPadBlock extends HorizontalDirectionalBlock implements EntityBl
     }
 
     @Override
-    @Nullable
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new JumpPadBlockEntity(ExtraBlocks.JUMP_PAD_ENTITY.get(), pos, state);
     }
 

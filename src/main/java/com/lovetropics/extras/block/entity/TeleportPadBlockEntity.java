@@ -8,13 +8,12 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TeleportPadBlockEntity extends BlockEntity {
     private static final String TAG_TARGET_POS = "target";
 
-    @Nullable
-    private Vec3 targetPos;
+    private @Nullable Vec3 targetPos;
 
     public TeleportPadBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -24,8 +23,7 @@ public class TeleportPadBlockEntity extends BlockEntity {
         this.targetPos = targetPos;
     }
 
-    @Nullable
-    public Vec3 getTargetPos() {
+    public @Nullable Vec3 getTargetPos() {
         return targetPos;
     }
 

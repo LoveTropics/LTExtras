@@ -19,8 +19,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class SubmergedLilyBlock extends LilyPadBlock implements SimpleWaterloggedBlock {
 
@@ -67,8 +66,7 @@ public class SubmergedLilyBlock extends LilyPadBlock implements SimpleWaterlogge
     }
 
     @Override
-    @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         FluidState fluidstate = pContext.getLevel().getFluidState(pContext.getClickedPos());
         if (fluidstate.getType() == Fluids.WATER) {
             return super.getStateForPlacement(pContext).setValue(BlockStateProperties.WATERLOGGED, true);

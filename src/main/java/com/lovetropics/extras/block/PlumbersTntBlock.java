@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class PlumbersTntBlock extends TntBlock {
 

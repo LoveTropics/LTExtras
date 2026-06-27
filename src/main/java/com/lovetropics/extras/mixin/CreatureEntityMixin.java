@@ -11,16 +11,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-
-import javax.annotation.Nullable;
 
 @Mixin(PathfinderMob.class)
 public abstract class CreatureEntityMixin extends Mob implements ExtendedCreatureEntity {
     // home
     private boolean theresNoPlaceLikeHome;
-    @Nullable
-    private Vec3 homePos;
+    private @Nullable Vec3 homePos;
     private int homeRange;
 
     // external controller

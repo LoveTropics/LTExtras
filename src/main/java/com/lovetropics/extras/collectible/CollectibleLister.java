@@ -99,8 +99,7 @@ public class CollectibleLister {
         }
     }
 
-    @Nullable
-    private static Entry loadPlayerData(UUID profileId, PlayerDataStorage playerDataStorage, RegistryOps<Tag> ops) {
+    private static @Nullable Entry loadPlayerData(UUID profileId, PlayerDataStorage playerDataStorage, RegistryOps<Tag> ops) {
         CompoundTag tag;
         try {
             Path path = playerDataStorage.getPlayerDir().toPath().resolve(profileId + PLAYER_DATA_SUFFIX);

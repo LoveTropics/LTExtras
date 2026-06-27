@@ -73,9 +73,8 @@ public class DisplayBlock extends BaseEntityBlock {
         return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
-    @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, ExtraBlocks.DISPLAY_BLOCK_ENTITY.get(), DisplayBlockEntity::serverTick);
     }
 }

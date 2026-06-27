@@ -9,7 +9,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -27,8 +27,7 @@ public class SchedulePlaceholders {
     private static final Duration FETCH_INTERVAL = Duration.ofMinutes(5);
 
     private static CompletableFuture<?> fetchFuture = CompletableFuture.completedFuture(null);
-    @Nullable
-    private static StreamSchedule schedule;
+    private static @Nullable StreamSchedule schedule;
     private static Instant lastFetchTime = Instant.EPOCH;
 
     static {

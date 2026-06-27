@@ -32,7 +32,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -122,8 +122,7 @@ public class MapManager extends SavedData {
         }
     }
 
-    @Nullable
-    public Named<PoiConfig> getPoiAccessibleTo(ServerPlayer player, Identifier id) {
+    public @Nullable Named<PoiConfig> getPoiAccessibleTo(ServerPlayer player, Identifier id) {
         Named<PoiConfig> holder = MapConfigs.POIS.get(id);
         return holder != null && isAccessibleFor(holder, player) ? holder : null;
     }

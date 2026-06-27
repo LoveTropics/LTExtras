@@ -10,7 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.dolphin.Dolphin;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Freshwater dolphin found in Amazon rivers.
@@ -29,8 +29,7 @@ public class AmazonRiverDolphin extends Dolphin {
         builder.define(MOUTH_OPEN, false);
     }
 
-    @Nullable
-    public Dolphin getBreedOffspring(ServerLevel level, AgeableMob mob) {
+    public @Nullable Dolphin getBreedOffspring(ServerLevel level, AgeableMob mob) {
         return ExtraEntities.AMAZON_RIVER_DOLPHIN.create(level, EntitySpawnReason.BREEDING);
     }
 

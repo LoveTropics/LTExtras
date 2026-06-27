@@ -55,9 +55,8 @@ public class WarehouseRoadBoosterBlock extends Block {
         return SHAPES.get(blockState.getValue(FACING));
     }
 
-    @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 

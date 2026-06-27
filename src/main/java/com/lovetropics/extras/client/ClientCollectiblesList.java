@@ -12,15 +12,14 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ClientCollectiblesList {
-    @Nullable
-    private static ClientCollectiblesList instance;
+    private static @Nullable ClientCollectiblesList instance;
 
     private List<Holder<Collectible>> collectibles = List.of();
     private List<ItemStack> itemStacks = List.of();
@@ -30,8 +29,7 @@ public class ClientCollectiblesList {
         return Objects.requireNonNull(instance, "Cannot get collectibles list, not currently in a world");
     }
 
-    @Nullable
-    public static ClientCollectiblesList getOrNull() {
+    public static @Nullable ClientCollectiblesList getOrNull() {
         return instance;
     }
 

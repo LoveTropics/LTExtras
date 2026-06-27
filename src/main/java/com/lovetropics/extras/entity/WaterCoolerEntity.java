@@ -4,7 +4,6 @@ import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.syncher.EntityDataAccessor;

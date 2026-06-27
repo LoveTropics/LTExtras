@@ -11,7 +11,6 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.Component;
@@ -104,8 +103,7 @@ public class CustomTitleScreen {
         ConnectScreen.startConnecting(parentScreen, Minecraft.getInstance(), address, serverData, false, null);
     }
 
-    @Nullable
-    private static Button findButton(ScreenEvent.Init.Post event, Component label) {
+    private static @Nullable Button findButton(ScreenEvent.Init.Post event, Component label) {
         return (Button) event.getListenersList().stream()
                 .filter(widget -> widget instanceof Button button && button.getMessage().equals(label))
                 .findFirst()

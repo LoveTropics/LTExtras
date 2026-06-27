@@ -5,7 +5,6 @@ import com.lovetropics.extras.data.Named;
 import com.lovetropics.extras.data.SimpleDataPackLister;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.lovetropics.lib.codec.CodecRegistry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.SubscribeEvent;
