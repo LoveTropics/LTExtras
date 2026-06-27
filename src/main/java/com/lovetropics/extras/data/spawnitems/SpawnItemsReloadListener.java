@@ -4,8 +4,8 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import com.lovetropics.extras.LTExtras;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -23,13 +23,13 @@ public class SpawnItemsReloadListener extends SimpleJsonResourceReloadListener<S
 
     public static final BiMap<Identifier, SpawnItems> REGISTRY = Maps.synchronizedBiMap(HashBiMap.create());
 
-    public SpawnItemsReloadListener(HolderLookup.Provider registries) {
-        super(registries, SpawnItems.CODEC, REGISTRY_KEY);
+    public SpawnItemsReloadListener() {
+        super(SpawnItems.CODEC, FileToIdConverter.registry(REGISTRY_KEY));
     }
 
     @SubscribeEvent
     static void onAddReloadListeners(AddServerReloadListenersEvent event) {
-        event.addListener(LTExtras.id("spawn_items"), new SpawnItemsReloadListener(event.getRegistryAccess()));
+        event.addListener(LTExtras.id("spawn_items"), new SpawnItemsReloadListener());
     }
 
     @Override
