@@ -40,15 +40,6 @@ public abstract class LivingEntityMixin extends Entity {
         return speed;
     }
 
-    // Todo 26.1 Port
-//    @Override
-//    public void updateFluidHeightAndDoFluidPushing() {
-//        super.updateFluidHeightAndDoFluidPushing();
-//        if (hasEffect(ExtraEffects.FISH_EYE)) {
-//            forgeFluidTypeHeight.removeDouble(NeoForgeMod.WATER_TYPE.value());
-//        }
-//    }
-
     @Override
     public boolean isPushedByFluid(FluidType type) {
         if (type == NeoForgeMod.WATER_TYPE.value() && hasEffect(ExtraEffects.FISH_EYE)) {

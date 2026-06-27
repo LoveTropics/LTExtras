@@ -11,6 +11,7 @@
     "BlockStateExtensionMixin",
     "CreatureEntityMixin",
     "DedicatedServerMixin",
+    "EntityFluidInteractionMixin",
     "EntityMixin",
     "FluidStateMixin",
     "ForgeHooksMixin",

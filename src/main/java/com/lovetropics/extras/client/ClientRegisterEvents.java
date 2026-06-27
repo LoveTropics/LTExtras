@@ -1,5 +1,6 @@
 package com.lovetropics.extras.client;
 
+import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraBlocks;
 import com.lovetropics.extras.client.block.DisplayBlockRender;
 import com.lovetropics.extras.client.block.WordBoxBlockEntityRenderer;
@@ -18,6 +19,7 @@ import com.lovetropics.extras.effect.PropaguledEffect;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.ShulkerRenderer;
 import net.minecraft.world.entity.EntityType;
@@ -43,11 +45,11 @@ public class ClientRegisterEvents {
     public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
         event.registerEntityModifier(FallingBlockRenderer.class, WordBoxBlockEntityRenderer::updateFallingBlockRenderState);
         event.registerEntityModifier(ShulkerRenderer.class, HoniedShulkerRenderState::updateHoniedRenderState);
+        event.registerEntityModifier(new TypeToken<LivingEntityRenderer<?, ?, ?>>() {}, CustomSingleBootLayer::updateBootRenderState);
     }
 
     @SubscribeEvent
     public static void addLayers(EntityRenderersEvent.AddLayers event) {
-
         for (EntityType<?> entityType : event.getEntityTypes()) {
             EntityRenderer<?, ?> renderer = event.getRenderer(entityType);
             if (renderer instanceof HumanoidMobRenderer<?, ?, ?> humanoidMobRenderer) {

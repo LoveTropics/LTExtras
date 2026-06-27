@@ -67,14 +67,6 @@ public class EntityMixin {
         }
     }
 
-    // Todo 26.1 Port
-//    @Inject(method = "updateFluidOnEyes", at = @At("RETURN"))
-//    private void updateFluidOnEyes(CallbackInfo ci) {
-//        if ((Object) this instanceof LivingEntity livingEntity && livingEntity.hasEffect(ExtraEffects.FISH_EYE)) {
-//            forgeFluidTypeOnEyes = NeoForgeMod.EMPTY_TYPE.value();
-//        }
-//    }
-
     @Inject(method = "nextStep", at = @At("RETURN"), cancellable = true)
     private void nextStep(CallbackInfoReturnable<Float> cir) {
         if ((Object) this instanceof LivingEntity livingEntity) {
