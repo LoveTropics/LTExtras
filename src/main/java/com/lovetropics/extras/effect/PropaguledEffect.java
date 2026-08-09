@@ -25,14 +25,14 @@ public class PropaguledEffect extends MobEffect {
     public static class ClientExtensions implements IClientMobEffectExtensions {
 
         @Override
-        public boolean renderInventoryIcon(MobEffectInstance instance, AbstractContainerScreen<?> screen, GuiGraphicsExtractor guiGraphics, int x, int y, int blitOffset) {
-            guiGraphics.fakeItem(Items.MANGROVE_PROPAGULE.getDefaultInstance(), x + 1, y + 6);
+        public boolean extractInventoryIcon(MobEffectInstance instance, AbstractContainerScreen<?> screen, GuiGraphicsExtractor graphics, int x, int y, int width, int height, int color) {
+            graphics.fakeItem(Items.MANGROVE_PROPAGULE.getDefaultInstance(), x + 1, y + 6);
             return true;
         }
 
         @Override
-        public boolean renderGuiIcon(MobEffectInstance instance, Hud gui, GuiGraphicsExtractor guiGraphics, int x, int y, float z, float alpha) {
-            guiGraphics.fakeItem(Items.MANGROVE_PROPAGULE.getDefaultInstance(), x + 4, y + 3);
+        public boolean extractHudIcon(MobEffectInstance instance, Hud hud, GuiGraphicsExtractor graphics, int x, int y, int width, int height, int color) {
+            graphics.fakeItem(Items.MANGROVE_PROPAGULE.getDefaultInstance(), x + 1, y + 6);
             return true;
         }
     }
