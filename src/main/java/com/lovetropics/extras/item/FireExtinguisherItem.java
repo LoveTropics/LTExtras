@@ -35,7 +35,7 @@ import java.util.function.Predicate;
 
 public class FireExtinguisherItem extends BlockItem {
     /** Modifiable in FireExtinguisher data component */
-    public static final int DEFAULT_SHOOT_DIST = 12;
+    public static final float DEFAULT_SHOOT_DIST = 12;
     public static final float DEFAULT_IMPULSE_ON_HIT = 0.25f;
     public static final float DEFAULT_IMPULSE_ON_MISS = 0.05f;
 

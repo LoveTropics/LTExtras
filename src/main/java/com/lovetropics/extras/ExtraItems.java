@@ -9,14 +9,12 @@ import com.lovetropics.extras.item.CollectibleBasketItem;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.CustomBootsItem;
 import com.lovetropics.extras.item.EntityWandItem;
-import com.lovetropics.extras.item.ForkliftSpawnEggItem;
 import com.lovetropics.extras.item.HighHeelsItem;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
 import com.lovetropics.extras.item.TropicMapItem;
 import com.lovetropics.extras.item.WalkSound;
-import com.lovetropics.extras.item.WaterCoolerSpawnEggItem;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.lovetropics.extras.sounds.ExtraSounds;
@@ -215,10 +213,12 @@ public class ExtraItems {
     public static final ItemEntry<Item> FORKLIFT_CERTIFICATION = REGISTRATE.item("forklift_certification", Item::new)
             .register();
 
-    public static final ItemEntry<ForkliftSpawnEggItem> FORKLIFT_SPAWN_EGG = REGISTRATE.item("forklift_spawn_egg", ForkliftSpawnEggItem::new)
+    public static final ItemEntry<SpawnEggItem> FORKLIFT_SPAWN_EGG = REGISTRATE.item("forklift_spawn_egg", SpawnEggItem::new)
+            .properties(properties -> properties.spawnEgg(ExtraEntities.FORKLIFT.get()))
             .register();
 
-    public static final ItemEntry<WaterCoolerSpawnEggItem> WATER_COOLER_SPAWN_EGG = REGISTRATE.item("water_cooler_spawn_egg", WaterCoolerSpawnEggItem::new)
+    public static final ItemEntry<SpawnEggItem> WATER_COOLER_SPAWN_EGG = REGISTRATE.item("water_cooler_spawn_egg", SpawnEggItem::new)
+            .properties(properties -> properties.spawnEgg(ExtraEntities.WATER_COOLER.get()))
             .register();
 
     public static final ItemEntry<SpawnEggItem> AMAZON_RIVER_DOLPHIN_SPAWN_EGG = REGISTRATE.item("amazon_river_dolphin_spawn_egg", SpawnEggItem::new)

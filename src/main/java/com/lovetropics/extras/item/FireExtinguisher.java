@@ -14,11 +14,11 @@ public record FireExtinguisher(
     float shootDist
 ) {
     public static final Codec<FireExtinguisher> CODEC = RecordCodecBuilder.create(i -> i.group(
-            Codec.FLOAT.fieldOf("impulse_on_hit").forGetter(FireExtinguisher::impulseOnHit),
-            Codec.FLOAT.fieldOf("impulse_on_miss").forGetter(FireExtinguisher::impulseOnMiss),
+            Codec.FLOAT.optionalFieldOf("impulse_on_hit", FireExtinguisherItem.DEFAULT_IMPULSE_ON_HIT).forGetter(FireExtinguisher::impulseOnHit),
+            Codec.FLOAT.optionalFieldOf("impulse_on_miss", FireExtinguisherItem.DEFAULT_IMPULSE_ON_MISS).forGetter(FireExtinguisher::impulseOnMiss),
             Codec.INT.fieldOf("durability_loss_per_tick").forGetter(FireExtinguisher::durabilityLossPerTick),
             Codec.BOOL.fieldOf("should_extinguish").forGetter(FireExtinguisher::shouldExtinguish),
-            Codec.FLOAT.fieldOf("shoot_dist").forGetter(FireExtinguisher::shootDist)
+            Codec.FLOAT.optionalFieldOf("shoot_dist", FireExtinguisherItem.DEFAULT_SHOOT_DIST).forGetter(FireExtinguisher::shootDist)
     ).apply(i, FireExtinguisher::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, FireExtinguisher> STREAM_CODEC = StreamCodec.composite(
