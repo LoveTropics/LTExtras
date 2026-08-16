@@ -1,0 +1,9 @@
+[
+  {
+    "type": "attribute",
+    "value": {
+      "minecraft:visual/fog_color": "#ffaa00",
+      "minecraft:visual/sky_color": "#0fffff"
+    }
+  }
+]

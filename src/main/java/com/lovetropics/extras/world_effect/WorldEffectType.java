@@ -6,7 +6,7 @@ import net.minecraft.util.StringRepresentable;
 
 public enum WorldEffectType implements StringRepresentable {
     COMPOSITE("composite", CompositeWorldEffect.MAP_CODEC),
-    SKY_COLOR("sky_color", SkyColorEffect.CODEC),
+    SKY_COLOR("attribute", EnvironmentAttributeEffect.CODEC),
     PARTICLES("particles", ParticlesEffect.CODEC),
     ;
 

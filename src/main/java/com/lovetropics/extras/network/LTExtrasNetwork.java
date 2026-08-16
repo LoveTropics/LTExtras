@@ -8,7 +8,7 @@ import com.lovetropics.extras.network.message.ClientboundRemovePoiPacket;
 import com.lovetropics.extras.network.message.ClientboundSetAutoRejoinIntent;
 import com.lovetropics.extras.network.message.ClientboundSetDisplayTextPacket;
 import com.lovetropics.extras.network.message.ClientboundSetEntityMarkedPacket;
-import com.lovetropics.extras.network.message.ClientboundSetSkyColorPacket;
+import com.lovetropics.extras.network.message.ClientboundSetEnvironmentAttributePacket;
 import com.lovetropics.extras.network.message.ClientboundUpdatePackControl;
 import com.lovetropics.extras.network.message.ClientboundUpdatePoiPacket;
 import com.lovetropics.extras.network.message.ClientboundWorldParticleEffectsPacket;
@@ -36,7 +36,7 @@ public class LTExtrasNetwork {
         registrar.playToServer(ServerboundLiftForkliftPacket.TYPE, ServerboundLiftForkliftPacket.STREAM_CODEC, ServerboundLiftForkliftPacket::handle);
         registrar.playToServer(ServerboundDriftForkliftPacket.TYPE, ServerboundDriftForkliftPacket.STREAM_CODEC, ServerboundDriftForkliftPacket::handle);
         registrar.playToClient(ClientboundSetDisplayTextPacket.TYPE, ClientboundSetDisplayTextPacket.STREAM_CODEC, ClientboundSetDisplayTextPacket::handle);
-        registrar.playToClient(ClientboundSetSkyColorPacket.TYPE, ClientboundSetSkyColorPacket.STREAM_CODEC, ClientboundSetSkyColorPacket::handle);
+        registrar.playToClient(ClientboundSetEnvironmentAttributePacket.TYPE, ClientboundSetEnvironmentAttributePacket.STREAM_CODEC, ClientboundSetEnvironmentAttributePacket::handle);
         registrar.playToClient(ClientboundWorldParticleEffectsPacket.TYPE, ClientboundWorldParticleEffectsPacket.STREAM_CODEC, ClientboundWorldParticleEffectsPacket::handle);
         registrar.playToClient(ClientboundSetAutoRejoinIntent.TYPE, ClientboundSetAutoRejoinIntent.STREAM_CODEC, ClientboundSetAutoRejoinIntent::handle);
         registrar.playToClient(ClientboundUpdatePoiPacket.TYPE, ClientboundUpdatePoiPacket.STREAM_CODEC, ClientboundUpdatePoiPacket::handle);
