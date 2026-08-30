@@ -63,7 +63,7 @@ public class DisplayBlockEntity extends BlockEntity {
             displayBlockEntity.itemStack = outputItemOpt.get().copy();
             displayBlockEntity.conversionProgress = 0;
         }
-        displayBlockEntity.level.sendBlockUpdated(displayBlockEntity.getBlockPos(), displayBlockEntity.getBlockState(), displayBlockEntity.getBlockState(), 3);
+        displayBlockEntity.level.sendBlockUpdated(displayBlockEntity.getBlockPos(), displayBlockEntity.getBlockState(), displayBlockEntity.getBlockState(), Block.UPDATE_ALL);
     }
 
     @Override

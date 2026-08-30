@@ -18,6 +18,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Optional;
+
 public class DisplayBlockRender implements BlockEntityRenderer<DisplayBlockEntity, DisplayBlockRenderState> {
 
     private final ItemModelResolver itemModelResolver;
@@ -35,13 +37,13 @@ public class DisplayBlockRender implements BlockEntityRenderer<DisplayBlockEntit
     public void extractRenderState(DisplayBlockEntity blockEntity, DisplayBlockRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
         BlockPos relativePos = blockEntity.getBlockPos();
-        Direction rotationAngle = blockEntity.getBlockState().getValueOrElse(RoatedDisplayBlock.FACING, null);
-        if (rotationAngle != null) {
-            relativePos = relativePos.relative(rotationAngle);
+        Optional<Direction> rotationAngle = blockEntity.getBlockState().getOptionalValue(RoatedDisplayBlock.FACING);
+        if (rotationAngle.isPresent()) {
+            relativePos = relativePos.relative(rotationAngle.get());
         } else {
             relativePos = relativePos.above();
         }
-        state.rotationAngle = rotationAngle;
+        state.rotationAngle = rotationAngle.orElse(null);
         state.lightCoords = LightCoordsUtil.getLightCoords(LightCoordsUtil.BrightnessGetter.DEFAULT, blockEntity.getLevel(), blockEntity.getBlockState(), relativePos);
 
         itemModelResolver.updateForTopItem(state.itemStack, blockEntity.getItemStack(), ItemDisplayContext.GROUND, null, null, 0);
