@@ -25,7 +25,10 @@ public abstract class EntityFluidInteractionMixin {
     @Inject(method = "update", at = @At("RETURN"))
     private void update(Entity entity, boolean ignoreCurrent, CallbackInfo ci) {
         if (entity instanceof LivingEntity living && living.hasEffect(ExtraEffects.FISH_EYE)) {
-            trackerByFluid.get(FluidTags.WATER).reset();
+            EntityFluidInteraction.Tracker tracker = trackerByFluid.get(FluidTags.WATER);
+            if (tracker != null) {
+                tracker.reset();
+            }
         }
     }
 }
