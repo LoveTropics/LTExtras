@@ -7,6 +7,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityFluidInteraction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.fluids.FluidType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,17 +20,14 @@ import java.util.Map;
 
 @Mixin(EntityFluidInteraction.class)
 public abstract class EntityFluidInteractionMixin {
+
     @Shadow
-    @Final
-    private Map<TagKey<Fluid>, EntityFluidInteraction.Tracker> trackerByFluid;
+    protected abstract EntityFluidInteraction.Tracker getTrackerFor(FluidType fluid);
 
     @Inject(method = "update", at = @At("RETURN"))
     private void update(Entity entity, boolean ignoreCurrent, CallbackInfo ci) {
         if (entity instanceof LivingEntity living && living.hasEffect(ExtraEffects.FISH_EYE)) {
-            EntityFluidInteraction.Tracker tracker = trackerByFluid.get(FluidTags.WATER);
-            if (tracker != null) {
-                tracker.reset();
-            }
+            this.getTrackerFor(NeoForgeMod.WATER_TYPE.value()).reset();
         }
     }
 }
