@@ -1,0 +1,12 @@
+{
+  "type": "ltextras:operation",
+  "operation": "set",
+  "parts": {
+    "left_leg": {
+      "xRot": 0.0
+    },
+    "right_leg": {
+      "xRot": 0.0
+    }
+  }
+}

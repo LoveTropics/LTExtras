@@ -1,0 +1,21 @@
+{
+  "type": "ltextras:composite",
+  "modifiers": [
+    {
+      "type": "ltextras:operation",
+      "operation": "set",
+      "parts": {
+        "left_arm": {
+          "xRot": 0.0,
+          "yRot": 0.0,
+          "zRot": 270.0
+        },
+        "right_arm": {
+          "xRot": 0.0,
+          "yRot": 0.0,
+          "zRot": 90.0
+        }
+      }
+    }
+  ]
+}

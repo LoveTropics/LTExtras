@@ -3,7 +3,9 @@ package com.lovetropics.extras.entity;
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.effect.ExtraEffects;
-import com.lovetropics.extras.model_modifer.ModelModifierType;
+import com.lovetropics.extras.effect.ModelModifierEffect;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -15,6 +17,7 @@ import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
@@ -31,6 +34,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -45,17 +49,18 @@ public class WaterCoolerEntity extends Entity {
     private static final EntityDataAccessor<Integer> SHAKE_TYPE = SynchedEntityData.defineId(WaterCoolerEntity.class, EntityDataSerializers.INT);
 
     private static final RandomSource random = RandomSource.create();
-    private static final ModelModifierType[] MODIFIER_TYPES = {
-            ModelModifierType.FABULOUS,
-            ModelModifierType.FLAIL,
-            ModelModifierType.HOVERING,
-            ModelModifierType.SHUFFLE,
-            ModelModifierType.UPSIDEDOWN,
-            ModelModifierType.SHRUNK,
-            ModelModifierType.ENLARGED,
-            ModelModifierType.SHRUGGY_ARMS,
-            ModelModifierType.ENDER_ARMS,
-    };
+
+    private static final List<DeferredHolder<MobEffect, ModelModifierEffect>> MODIFIER_TYPES = List.of(
+            ExtraEffects.FABULOUS,
+            ExtraEffects.HOVERING,
+            ExtraEffects.SHUFFLE,
+            ExtraEffects.UPSIDEDOWN,
+            ExtraEffects.SHRUNK,
+            ExtraEffects.SHRUGGY_ARMS,
+            ExtraEffects.ENDER_ARMS,
+            ExtraEffects.STIFF_LEGS,
+            ExtraEffects.HOP_WALK
+    );
 
     public final AnimationState shake1AnimationState = new AnimationState();
     public final AnimationState shake2AnimationState = new AnimationState();
@@ -151,7 +156,7 @@ public class WaterCoolerEntity extends Entity {
     }
 
     private static ItemStack getPotionDrop() {
-        MobEffectInstance mobEffect = new MobEffectInstance(ExtraEffects.MODEL_EFFECTS.get(Util.getRandom(MODIFIER_TYPES, random)), 15 * 20, 1);
+        MobEffectInstance mobEffect = new MobEffectInstance(Util.getRandom(MODIFIER_TYPES, random), 15 * 20, 1);
         PotionContents potionContents = new PotionContents(Optional.empty(), Optional.of(0x5A8DD6), List.of(), Optional.of(ExtraLangKeys.WATER_COOLER_POTION_NAME.get().toString())).withEffectAdded(mobEffect);
         ItemStack itemStack = new ItemStack(Items.POTION, 1);
         itemStack.set(DataComponents.POTION_CONTENTS, potionContents);

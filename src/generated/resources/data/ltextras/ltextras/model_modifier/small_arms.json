@@ -1,0 +1,12 @@
+{
+  "type": "ltextras:operation",
+  "operation": "remove",
+  "parts": {
+    "left_arm": {
+      "y": -3.25
+    },
+    "right_arm": {
+      "y": -3.25
+    }
+  }
+}

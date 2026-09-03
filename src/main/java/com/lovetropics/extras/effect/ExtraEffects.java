@@ -1,9 +1,11 @@
 package com.lovetropics.extras.effect;
 
 import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
+import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
-import com.lovetropics.extras.model_modifer.ModelModifierType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,8 +17,7 @@ import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.function.UnaryOperator;
 
 @EventBusSubscriber
 public class ExtraEffects {
@@ -28,26 +29,33 @@ public class ExtraEffects {
 
     public static final DeferredHolder<MobEffect, PropaguledEffect> PROPAGULED = REGISTER.register("propaguled", () -> new PropaguledEffect(MobEffectCategory.HARMFUL, 0x00ddcc).addAttributeModifier(Attributes.MOVEMENT_SPEED, LTExtras.id("effects.propaguled"), -0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
-    public static final Map<ModelModifierType, DeferredHolder<MobEffect, ModelEffect>> MODEL_EFFECTS = new HashMap<>();
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> FABULOUS = modelEffect(ExtraModelModifiers.FABULOUS);
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> FLAIL = modelEffect(ExtraModelModifiers.FLAIL);
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> HOVERING = modelEffect(ExtraModelModifiers.HOVERING);
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> SHUFFLE = modelEffect(ExtraModelModifiers.SHUFFLE);
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> UPSIDEDOWN = modelEffect(ExtraModelModifiers.UPSIDEDOWN);
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> SHRUNK = modelEffect(ExtraModelModifiers.ENLARGED);
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> SHRUGGY_ARMS = modelEffect(ExtraModelModifiers.SHRUGGY_ARMS, effect -> {
+        effect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.id("small_arms_block_range"), -3, AttributeModifier.Operation.ADD_VALUE);
+        effect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.id("small_arms_entity_range"), -3, AttributeModifier.Operation.ADD_VALUE);
+        return effect;
+    });
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> ENDER_ARMS = modelEffect(ExtraModelModifiers.ENDER_ARMS, effect -> {
+        effect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.id("long_arms_block_range"), 3, AttributeModifier.Operation.ADD_VALUE);
+        effect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.id("long_arms_entity_range"), 3, AttributeModifier.Operation.ADD_VALUE);
+        return effect;
+    });
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> STIFF_LEGS = modelEffect(ExtraModelModifiers.STIFF_LEGS);
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> HOP_WALK = modelEffect(ExtraModelModifiers.HOP_WALK);
 
-    static {
-        for (ModelModifierType value : ModelModifierType.values()) {
-            if (value.getEffectName() == null) {
-                continue;
-            }
-            ModelEffect modelEffect = new ModelEffect(MobEffectCategory.NEUTRAL, 0x000000, value);
-            if (value == ModelModifierType.SHRUGGY_ARMS) {
-                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.id("small_arms_block_range"), -3, AttributeModifier.Operation.ADD_VALUE);
-                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.id("small_arms_entity_range"), -3, AttributeModifier.Operation.ADD_VALUE);
-            } else if (value == ModelModifierType.ENDER_ARMS) {
-                modelEffect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.id("long_arms_block_range"), 3, AttributeModifier.Operation.ADD_VALUE);
-                modelEffect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.id("long_arms_entity_range"), 3, AttributeModifier.Operation.ADD_VALUE);
-            }
-            MODEL_EFFECTS.put(value, REGISTER.register("mm_" + value.getSerializedName(), () -> modelEffect));
-        }
 
+    private static DeferredHolder<MobEffect, ModelModifierEffect> modelEffect(ResourceKey<ModelModifier<?>> modifier, UnaryOperator<ModelModifierEffect> builder) {
+        return REGISTER.register("mm_" + modifier.identifier().getPath(), () -> builder.apply(new ModelModifierEffect(MobEffectCategory.NEUTRAL, 0x000000, modifier)));
     }
 
+    private static DeferredHolder<MobEffect, ModelModifierEffect> modelEffect(ResourceKey<ModelModifier<?>> modifier) {
+        return modelEffect(modifier, effect -> effect);
+    }
 
     @SubscribeEvent
     public static void onEffectRemoved(MobEffectEvent.Remove event) {
@@ -60,8 +68,8 @@ public class ExtraEffects {
     }
 
     private static void removeModelModifiers(MobEffect mobEffect, LivingEntity entity) {
-        if (mobEffect instanceof ModelEffect modelEffect) {
-            ModelModifierStore.removeModifier(entity, modelEffect.getType());
+        if (mobEffect instanceof ModelModifierEffect modelEffect) {
+            ModelModifierStore.removeModifier(entity, modelEffect.getEffect(entity));
         }
     }
 }

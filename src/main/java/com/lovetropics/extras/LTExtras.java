@@ -17,6 +17,7 @@ import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
+import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.placeholder.ExtraPlaceholders;
@@ -89,6 +90,7 @@ public class LTExtras {
         ExtraSounds.REGISTER.register(modBus);
         ExtraSerializers.REGISTER.register(modBus);
         ExtraCommandArguments.REGISTER.register(modBus);
+        ExtraModelModifierTypes.REGISTER.register(modBus);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
@@ -118,9 +120,17 @@ public class LTExtras {
 
                     TpCommand.addTranslations(p);
                     WarpCommand.addTranslations(p);
-
-                    ExtraEffects.MODEL_EFFECTS.forEach((modifier, effect) ->
-                            p.add(effect.value(), modifier.getEffectName()));
+                    
+                    p.add(ExtraEffects.FABULOUS.get(), "Fabulous Walk");
+                    p.add(ExtraEffects.FLAIL.get(), "Flail Walk");
+                    p.add(ExtraEffects.HOVERING.get(), "Hovering");
+                    p.add(ExtraEffects.SHUFFLE.get(), "The Shuffle");
+                    p.add(ExtraEffects.UPSIDEDOWN.get(), "Upside Down");
+                    p.add(ExtraEffects.SHRUNK.get(), "Shrunk");
+                    p.add(ExtraEffects.ENDER_ARMS.get(), "Ender Arms");
+                    p.add(ExtraEffects.SHRUGGY_ARMS.get(), "Shruggy Arms");
+                    p.add(ExtraEffects.STIFF_LEGS.get(), "Stiff Legs");
+                    p.add(ExtraEffects.HOP_WALK.get(), "Hop Walk");
                 })
                 .addDataGenerator(ProviderType.BLOCK_TAGS, block -> {
                     block.tag(ExtraTags.Blocks.PLUMBERS_TNT_EXPLODES)
@@ -167,7 +177,7 @@ public class LTExtras {
         WorldEffectCommand.register(dispatcher);
         WarpCommand.register(dispatcher);
         PoiCommand.register(dispatcher, buildContext);
-        ModelModifierCommand.register(dispatcher);
+        ModelModifierCommand.register(dispatcher, buildContext);
         MountCommand.register(dispatcher, buildContext);
         HandCommand.register(dispatcher);
     }

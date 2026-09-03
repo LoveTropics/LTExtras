@@ -1,68 +1,17 @@
 package com.lovetropics.extras.model_modifer;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.ByIdMap;
-import net.minecraft.util.StringRepresentable;
-import org.jspecify.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.IntFunction;
+public interface ModelModifierType<T extends ModelModifier<?>> {
+    MapCodec<T> codec();
 
-public enum ModelModifierType implements StringRepresentable {
-    DEFAULT(0, "default"),
-    FABULOUS(1, "fabulous", "Fabulous Walk"),
-    FLAIL(2, "flail", "Flail Walk"),
-    HOVERING(3, "hovering", "Hovering"),
-    SHUFFLE(4, "shuffle", "The Shuffle"),
-    UPSIDEDOWN(5, "upsidedown", "Upside Down"),
-    SHRUNK(6, "shrunk", "Shrunk"),
-    ENLARGED(7, "enlarged", "Enlarged"),
-    RAISED_HIGH_HEELS(8, "raised_high_heels"),
-    SHRUGGY_ARMS(9, "shruggy_arms", "Shruggy Arms"),
-    ENDER_ARMS(10, "ender_arms", "Ender Arms"),
-    STIFF_LEGS(11, "stiff_legs", "Stiff Legs"),
-    HOP_WALK(12, "hop_walk", "Hop Walk")
-    ;
+    StreamCodec<RegistryFriendlyByteBuf, T> streamCodec();
 
-    public static final StringRepresentable.EnumCodec<ModelModifierType> CODEC = StringRepresentable.fromEnum(ModelModifierType::values);
-
-    public static final IntFunction<ModelModifierType> BY_ID = ByIdMap.continuous(i -> i.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
-    public static final StreamCodec<ByteBuf, ModelModifierType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, i -> i.id);
-
-    public static final List<String> NAMES = Arrays.stream(values()).map(ModelModifierType::getSerializedName).toList();
-
-    private final int id;
-    private final String name;
-    private final @Nullable String effectName;
-
-    /**
-     * @param id numerical ID for network encoding
-     * @param name serialized name
-     * @param effectName localized name is value is not null a Mob Effect will be registered
-     */
-    ModelModifierType(int id, String name, @Nullable String effectName) {
-        this.id = id;
-        this.name = name;
-        this.effectName = effectName;
+    static <T extends ModelModifier<?>> Simple<T> simple(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
+        return new Simple<>(codec, streamCodec);
     }
 
-    ModelModifierType(int id, String name) {
-        this(id, name, null);
-    }
-
-    public @Nullable String getEffectName() {
-        return effectName;
-    }
-
-    public static ModelModifierType fromName(String name) {
-        return CODEC.byName(name, DEFAULT);
-    }
-
-    @Override
-    public String getSerializedName() {
-        return name;
-    }
+    record Simple<T extends ModelModifier<?>> (MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) implements ModelModifierType<T> {}
 }
