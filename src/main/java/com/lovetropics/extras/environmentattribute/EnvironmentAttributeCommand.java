@@ -74,30 +74,6 @@ public class EnvironmentAttributeCommand {
                                                 builder
                                         ))
                         ))
-                )
-                .then(literal("enable")
-                        .then(bundleArgument("bundle")
-                                .then(argument("transition", time())
-                                        .executes(context ->
-                                                enableBundle(context, getBundle(context, "bundle"), getInteger(context, "transition"))
-                                        )
-                                )
-                                .executes(context ->
-                                        enableBundle(context, getBundle(context, "bundle"), 0)
-                                )
-                        )
-                )
-                .then(literal("disable")
-                        .then(bundleArgument("bundle")
-                                .then(argument("transition", time())
-                                        .executes(context ->
-                                                disableBundle(context, getBundle(context, "bundle"), getInteger(context, "transition"))
-                                        )
-                                )
-                                .executes(context ->
-                                        disableBundle(context, getBundle(context, "bundle"), 0)
-                                )
-                        )
                 );
         command = layerCommands(
                 buildContext,
@@ -162,6 +138,30 @@ public class EnvironmentAttributeCommand {
                         .executes(context ->
                                 clearAttributes(context, layerGetter, 0)
                         )
+                )
+                .then(literal("applyall")
+                        .then(bundleArgument("bundle")
+                                .then(argument("transition", time())
+                                        .executes(context ->
+                                                applyBundle(context, getBundle(context, "bundle"), getInteger(context, "transition"), layerGetter.get(context))
+                                        )
+                                )
+                                .executes(context ->
+                                        applyBundle(context, getBundle(context, "bundle"), 0, layerGetter.get(context))
+                                )
+                        )
+                )
+                .then(literal("clearall")
+                        .then(bundleArgument("bundle")
+                                .then(argument("transition", time())
+                                        .executes(context ->
+                                                clearBundle(context, getBundle(context, "bundle"), getInteger(context, "transition"), layerGetter.get(context))
+                                        )
+                                )
+                                .executes(context ->
+                                        clearBundle(context, getBundle(context, "bundle"), 0, layerGetter.get(context))
+                                )
+                        )
                 );
     }
 
@@ -204,9 +204,8 @@ public class EnvironmentAttributeCommand {
         return ServerDynamicEasManager.clearAttribute(context.getSource().getLevel(), layerGetter.get(context), attribute, transitionTicks) ? 1 : 0;
     }
 
-    private static int enableBundle(CommandContext<CommandSourceStack> context, Named<EnvironmentAttributeMap> bundle, int transitionTicks) {
+    private static int applyBundle(CommandContext<CommandSourceStack> context, Named<EnvironmentAttributeMap> bundle, int transitionTicks, Identifier layerId) {
         ServerLevel level = context.getSource().getLevel();
-        Identifier layerId = bundleToLayerId(bundle);
         EnvironmentAttributeMap attributes = bundle.value();
         for (EnvironmentAttribute<?> attribute : attributes.keySet()) {
             modifyAttributeFromMap(level, layerId, attributes, attribute, transitionTicks);
@@ -222,18 +221,13 @@ public class EnvironmentAttributeCommand {
         ServerDynamicEasManager.modifyAttribute(level, layerId, attribute, entry.modifier(), entry.argument(), transitionTicks);
     }
 
-    private static int disableBundle(CommandContext<CommandSourceStack> context, Named<EnvironmentAttributeMap> bundle, int transitionTicks) {
+    private static int clearBundle(CommandContext<CommandSourceStack> context, Named<EnvironmentAttributeMap> bundle, int transitionTicks, Identifier layerId) {
         ServerLevel level = context.getSource().getLevel();
-        Identifier layerId = bundleToLayerId(bundle);
         EnvironmentAttributeMap attributes = bundle.value();
         for (EnvironmentAttribute<?> attribute : attributes.keySet()) {
             ServerDynamicEasManager.clearAttribute(level, layerId, attribute, transitionTicks);
         }
         return 1;
-    }
-
-    private static Identifier bundleToLayerId(Named<EnvironmentAttributeMap> bundle) {
-        return bundle.key().identifier().withPrefix("bundle/");
     }
 
     private static RequiredArgumentBuilder<CommandSourceStack, Identifier> bundleArgument(String name) {
