@@ -22,7 +22,7 @@ import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.placeholder.ExtraPlaceholders;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.techstack.VideoImporter;
-import com.lovetropics.extras.world_effect.WorldEffectCommand;
+import com.lovetropics.extras.environmentattribute.EnvironmentAttributeCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
@@ -164,7 +164,7 @@ public class LTExtras {
         GenerateCollectibleCommand.register(dispatcher, buildContext);
         SpawnItemsCommand.register(dispatcher);
         TpCommand.register(dispatcher);
-        WorldEffectCommand.register(dispatcher);
+        EnvironmentAttributeCommand.register(dispatcher, buildContext);
         WarpCommand.register(dispatcher);
         PoiCommand.register(dispatcher, buildContext);
         ModelModifierCommand.register(dispatcher);

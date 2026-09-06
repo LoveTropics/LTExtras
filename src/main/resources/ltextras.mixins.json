@@ -25,6 +25,7 @@
     "RideCommandMixin",
     "ScaffoldingBlockMixin",
     "ServerGamePacketListenerImplMixin",
+    "ServerLevelMixin",
     "ShulkerMixin",
     "WardenMixin",
     "collectible.ItemStackMixin",
@@ -40,6 +41,7 @@
   "client": [
     "client.AbstractWidgetAccess",
     "client.CapeLayerMixin",
+    "client.ClientLevelMixin",
     "client.ClientPacketListenerMixin",
     "client.FallingBlockRendererMixin",
     "client.GameRendererMixin",
