@@ -17,12 +17,14 @@ import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
+import com.lovetropics.extras.environmentattribute.EnvironmentAttributeCommand;
+import com.lovetropics.extras.environmentattribute.ExtraAttributeTypes;
+import com.lovetropics.extras.environmentattribute.ExtraEnvironmentAttributes;
 import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.placeholder.ExtraPlaceholders;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.techstack.VideoImporter;
-import com.lovetropics.extras.environmentattribute.EnvironmentAttributeCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
@@ -89,6 +91,8 @@ public class LTExtras {
         ExtraSounds.REGISTER.register(modBus);
         ExtraSerializers.REGISTER.register(modBus);
         ExtraCommandArguments.REGISTER.register(modBus);
+        ExtraAttributeTypes.register(modBus);
+        ExtraEnvironmentAttributes.REGISTER.register(modBus);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
@@ -132,7 +136,7 @@ public class LTExtras {
                 .addDataGenerator(ProviderType.ITEM_TAGS, item -> {
                     item.tag(ExtraTags.Items.HONIES)
                             .add(ItemIds.HONEY_BOTTLE)
-                            ;
+                    ;
                 })
                 .generic(TAB_ID.getPath(), Registries.CREATIVE_MODE_TAB, () -> CreativeModeTab.builder()
                         .title(registrate().addLang("itemGroup", TAB_ID, "LTExtras"))
