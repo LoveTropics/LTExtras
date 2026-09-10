@@ -90,7 +90,7 @@ public final class PapyrusStemBlock extends Block implements SimpleWaterloggedBl
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         BlockState stateBelow = level.getBlockState(pos.below());
 
-        return stateBelow.is(BlockTags.DIRT) || stateBelow.is(this);
+        return stateBelow.is(BlockTags.SUBSTRATE_OVERWORLD) || stateBelow.is(this);
     }
 
     @Override
