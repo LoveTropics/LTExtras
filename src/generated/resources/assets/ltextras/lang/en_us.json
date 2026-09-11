@@ -510,7 +510,7 @@
   "item.ltextras.wrench": "Wrench",
   "item.ltextras.yellow_key": "Yellow Key",
   "itemGroup.ltextras.ltextras": "LTExtras",
-  "key.categories.ltextras.lobby": "Forklift Controls",
+  "key.category.ltextras.forklift": "Forklift Controls",
   "key.ltextras.eject_fork_riders": "Eject Riders",
   "key.ltextras.forklift_drift": "Drift",
   "key.ltextras.forklift_lower": "Lower Forklift",

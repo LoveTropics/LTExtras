@@ -114,7 +114,7 @@ public class LTExtras {
                     p.add("ltextras.friction", "Friction");
 
                     String keybindBase = "key." + MODID + ".";
-                    p.add("key.categories." + MODID + ".lobby", "Forklift Controls");
+                    p.add("key.category." + MODID + ".forklift", "Forklift Controls");
                     p.add(keybindBase + "forklift_raise", "Raise Forklift");
                     p.add(keybindBase + "forklift_lower", "Lower Forklift");
                     p.add(keybindBase + "forklift_drift", "Drift");

@@ -12,12 +12,12 @@ import net.neoforged.neoforge.client.settings.KeyModifier;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ForkliftKeybinds {
+    public static final KeyMapping.Category CATEGORY = new KeyMapping.Category(LTExtras.id("forklift"));
+
     public static final KeyMapping RAISE_FORKLIFT = create("forklift_raise",  InputConstants.KEY_R, KeyModifier.NONE);
     public static final KeyMapping LOWER_FORKLIFT = create("forklift_lower",  InputConstants.KEY_F, KeyModifier.NONE);
     public static final KeyMapping DRIFT = create("forklift_drift",  InputConstants.KEY_SPACE, KeyModifier.NONE);
     public static final KeyMapping EJECT_FORK_RIDERS = create("eject_fork_riders", InputConstants.KEY_G, KeyModifier.NONE);
-
-    public static final KeyMapping.Category LOBBY_CATEGORY = new KeyMapping.Category(LTExtras.id("lobby"));
 
     public static void init() {
     }
@@ -26,7 +26,7 @@ public class ForkliftKeybinds {
     private static KeyMapping create(String id, int key, KeyModifier modifier) {
         final String modid = LTExtras.MODID;
         String description = "key." + modid + "." + id;
-        return new KeyMapping(description, KeyConflictContext.IN_GAME, modifier, InputConstants.Type.KEYSYM, key, LOBBY_CATEGORY);
+        return new KeyMapping(description, KeyConflictContext.IN_GAME, modifier, InputConstants.Type.KEYSYM, key, CATEGORY);
     }
 
 
@@ -36,6 +36,6 @@ public class ForkliftKeybinds {
         event.register(LOWER_FORKLIFT);
         event.register(DRIFT);
         event.register(EJECT_FORK_RIDERS);
-        event.registerCategory(LOBBY_CATEGORY);
+        event.registerCategory(CATEGORY);
     }
 }
