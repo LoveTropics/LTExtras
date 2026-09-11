@@ -5,9 +5,6 @@
       "type": "ltextras:hovering"
     },
     {
-      "type": "ltextras:hovering"
-    },
-    {
       "type": "ltextras:operation",
       "operation": "set",
       "parts": {

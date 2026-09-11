@@ -1,3 +1,9 @@
 {
-  "type": "ltextras:dance"
+  "type": "ltextras:composite",
+  "modifiers": [
+    {
+      "type": "ltextras:animation",
+      "animation": "ltextras:dance"
+    }
+  ]
 }

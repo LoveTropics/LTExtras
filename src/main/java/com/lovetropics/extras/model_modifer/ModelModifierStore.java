@@ -13,10 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record ModelModifierStore(List<Holder<ModelModifier<?>>> appliedModifiers) {
-    public static final MapCodec<ModelModifierStore> MAP_CODEC = Codec.list(ExtraModelModifiers.REGISTRY_CODEC).xmap(
-            ModelModifierStore::of,
-            ModelModifierStore::appliedModifiers
-    ).fieldOf("applied_modifiers");
+    public static final MapCodec<ModelModifierStore> MAP_CODEC = Codec.list(ExtraModelModifiers.REGISTRY_CODEC)
+            .xmap(ModelModifierStore::of, ModelModifierStore::appliedModifiers)
+            .fieldOf("applied_modifiers");
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ModelModifierStore> STREAM_CODEC = StreamCodec.composite(
             ExtraModelModifiers.STREAM_CODEC.apply(ByteBufCodecs.list()), ModelModifierStore::appliedModifiers,

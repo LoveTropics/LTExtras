@@ -7,7 +7,6 @@ import com.lovetropics.extras.data.poi.PoiConfig;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
-import com.lovetropics.extras.world_effect.WorldEffect;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;

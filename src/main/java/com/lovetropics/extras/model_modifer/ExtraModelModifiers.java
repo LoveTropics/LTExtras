@@ -12,8 +12,8 @@ import net.minecraft.resources.ResourceKey;
 
 public class ExtraModelModifiers {
 
-    public static final Codec<ModelModifier<?>> CODEC = ExtraRegistries.MODIFIER_TYPES.byNameCodec().
-            dispatch("type", ModelModifier::type, ModelModifierType::codec);
+    public static final Codec<ModelModifier<?>> CODEC = ExtraRegistries.MODIFIER_TYPES.byNameCodec()
+            .dispatch("type", ModelModifier::type, ModelModifierType::codec);
     public static final Codec<Holder<ModelModifier<?>>> REGISTRY_CODEC = RegistryFileCodec.create(ExtraRegistries.MODEL_MODIFIER, CODEC, true);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ModelModifier<?>> DIRECT_STREAM_CODEC = ByteBufCodecs.registry(ExtraRegistries.MODIFIER_TYPE_KEY)

@@ -11,7 +11,7 @@ import java.util.function.BiFunction;
 public enum Operation implements StringRepresentable {
     SET("set", (_, passed) -> passed),
     ADD("add", Float::sum),
-    REMOVE("remove", (original, passed) -> original - passed)
+    REMOVE("remove", (original, passed) -> original - passed),
     ;
 
     private final String name;
