@@ -1,0 +1,14 @@
+{
+  "length": 1,
+  "animations": [
+    {
+      "bone": "right_arm",
+      "target": "rotation",
+      "keyframes": [
+        {"timestamp": 0, "target": [0, 0, 0], "interpolation": "linear"},
+        {"timestamp": 1, "target": [102.5, 0, 0], "interpolation": "linear"}
+      ]
+    }
+  ],
+  "loop": true
+}

@@ -15,6 +15,5 @@ public interface ModelApplier<T extends ModelModifier<?>> {
 
     default void extractRenderState(T data, LivingEntity livingEntity, LivingEntityRenderState state) {}
 
-
     interface Unit extends ModelApplier<UnitType> {}
 }

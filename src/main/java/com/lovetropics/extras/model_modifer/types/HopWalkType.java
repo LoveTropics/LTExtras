@@ -30,8 +30,6 @@ public record HopWalkType(float hopAmount) implements ModelModifier<HopWalkType>
         this(DEFAULT_HOP_AMOUNT);
     }
 
-
-
     @Override
     public ModelModifierType<HopWalkType> type() {
         return ExtraModelModifierTypes.HOP_WALK.get();
