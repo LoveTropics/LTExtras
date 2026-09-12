@@ -1,0 +1,26 @@
+{
+  "neoforge:definition_type": "contex:definition",
+  "contex_meta": [
+    {
+      "type": "contex:full",
+      "predicate": {
+        "type": "contex:same_block"
+      },
+      "occlusion_mode": "solid_or_self",
+      "state_predicate": { },
+      "textures": [
+        {
+          "main_texture": "ltextras:block/warehouse_road",
+          "compact/hor": "ltextras:block/warehouse_road_hor",
+          "compact/vert": "ltextras:block/warehouse_road_vert",
+          "compact/cross": "ltextras:block/warehouse_road_cross",
+          "compact/full": "ltextras:block/warehouse_road_full"
+        }
+      ]
+    }
+  ],
+  "strategy": "contex:compact",
+  "variants": {
+    "": { "model": "ltextras:block/warehouse_road" }
+  }
+}
