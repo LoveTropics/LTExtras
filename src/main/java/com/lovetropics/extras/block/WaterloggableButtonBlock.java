@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import org.jspecify.annotations.Nullable;
 
 public class WaterloggableButtonBlock extends ButtonBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -34,9 +35,15 @@ public class WaterloggableButtonBlock extends ButtonBlock implements SimpleWater
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        BlockState parentState = super.getStateForPlacement(ctx);
+        if (parentState == null) {
+            return null;
+        }
+
         FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
-        return super.getStateForPlacement(ctx).setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+        return parentState.setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
     @Override
