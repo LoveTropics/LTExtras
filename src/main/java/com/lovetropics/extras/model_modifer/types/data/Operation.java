@@ -15,7 +15,7 @@ public enum Operation implements StringRepresentable {
     ;
 
     private final String name;
-    private final BiFunction<Float, Float, Float> function;
+    private final OperationFunction function;
 
     public static final Codec<Operation> CODEC = StringRepresentable.fromEnum(Operation::values);
     public static final StreamCodec<FriendlyByteBuf, Operation> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(Operation.class);
@@ -35,9 +35,7 @@ public enum Operation implements StringRepresentable {
     }
 
     @FunctionalInterface
-    interface OperationFunction extends BiFunction<Float, Float, Float> {
-
-        @Override
-        Float apply(Float original, Float passed);
+    interface OperationFunction {
+        float apply(float original, float passed);
     }
 }
