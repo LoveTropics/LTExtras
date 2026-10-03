@@ -20,7 +20,7 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 public class ExtraRegistries {
     public static final ResourceKey<Registry<Collectible>> COLLECTIBLE = createKey("collectible");
     public static final ResourceKey<Registry<MapConfig>> MAP = createKey("map");
-    public static final ResourceKey<Registry<ModelModifier<?>>> MODEL_MODIFIER = createKey("model_modifier");
+    public static final ResourceKey<Registry<ModelModifier>> MODEL_MODIFIER = createKey("model_modifier");
     public static final ResourceKey<Registry<ModelModifierType<?>>> MODIFIER_TYPE_KEY = createKey("modifier_type");
 
     public static final Registry<ModelModifierType<?>> MODIFIER_TYPES = new RegistryBuilder<>(MODIFIER_TYPE_KEY)

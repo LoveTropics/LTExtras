@@ -13,7 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.ArrayList;
 import java.util.List;
 
-public record CompositeType(List<ModelModifier<?>> modifiers) implements ModelModifier<CompositeType> {
+public record CompositeType(List<ModelModifier> modifiers) implements ModelModifier {
 
     public static final MapCodec<CompositeType> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ExtraModelModifiers.CODEC.listOf().fieldOf("modifiers").forGetter(CompositeType::modifiers)
@@ -30,13 +30,13 @@ public record CompositeType(List<ModelModifier<?>> modifiers) implements ModelMo
     }
 
     public static class Builder {
-        private final List<ModelModifier<?>> modifiers = new ArrayList<>();
+        private final List<ModelModifier> modifiers = new ArrayList<>();
 
         public static Builder builder() {
             return new Builder();
         }
 
-        public Builder add(ModelModifier<?> modifier) {
+        public Builder add(ModelModifier modifier) {
             this.modifiers.add(modifier);
             return this;
         }

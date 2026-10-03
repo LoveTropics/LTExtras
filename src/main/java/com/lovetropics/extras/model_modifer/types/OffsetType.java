@@ -10,7 +10,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-public record OffsetType(float x, float y, float z) implements ModelModifier<OffsetType> {
+public record OffsetType(float x, float y, float z) implements ModelModifier {
 
     private static final Codec<Float> RANGE_FLOAT_CODEC = Codec.floatRange(0, 16);
 

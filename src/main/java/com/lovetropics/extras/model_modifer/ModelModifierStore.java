@@ -12,7 +12,7 @@ import net.minecraft.world.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public record ModelModifierStore(List<Holder<ModelModifier<?>>> appliedModifiers) {
+public record ModelModifierStore(List<Holder<ModelModifier>> appliedModifiers) {
     public static final MapCodec<ModelModifierStore> MAP_CODEC = Codec.list(ExtraModelModifiers.REGISTRY_CODEC)
             .xmap(ModelModifierStore::of, ModelModifierStore::appliedModifiers)
             .fieldOf("applied_modifiers");
@@ -21,11 +21,11 @@ public record ModelModifierStore(List<Holder<ModelModifier<?>>> appliedModifiers
             ExtraModelModifiers.STREAM_CODEC.apply(ByteBufCodecs.list()), ModelModifierStore::appliedModifiers,
             ModelModifierStore::of);
 
-    public static ModelModifierStore of(List<Holder<ModelModifier<?>>> modifiers) {
+    public static ModelModifierStore of(List<Holder<ModelModifier>> modifiers) {
         return new ModelModifierStore(new ArrayList<>(modifiers));
     }
 
-    public static void addModifier(Entity entity, Holder<ModelModifier<?>> modifier) {
+    public static void addModifier(Entity entity, Holder<ModelModifier> modifier) {
         ModelModifierStore store = getOrDefault(entity);
         /*if (store.appliedModifiers.contains(modifier)) {
             return;
@@ -34,7 +34,7 @@ public record ModelModifierStore(List<Holder<ModelModifier<?>>> appliedModifiers
         entity.syncData(ExtraAttachments.MODEL_MODIFIERS);
     }
 
-    public static void removeModifier(Entity entity, Holder<ModelModifier<?>> modifier) {
+    public static void removeModifier(Entity entity, Holder<ModelModifier> modifier) {
         ModelModifierStore store = getOrDefault(entity);
         if(store.appliedModifiers.remove(modifier)) {
             entity.syncData(ExtraAttachments.MODEL_MODIFIERS);

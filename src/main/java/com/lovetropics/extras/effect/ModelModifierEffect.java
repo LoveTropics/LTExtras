@@ -12,9 +12,9 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class ModelModifierEffect extends MobEffect {
 
-    private final ResourceKey<ModelModifier<?>> modifier;
+    private final ResourceKey<ModelModifier> modifier;
 
-    protected ModelModifierEffect(MobEffectCategory category, int color, ResourceKey<ModelModifier<?>> modifier) {
+    protected ModelModifierEffect(MobEffectCategory category, int color, ResourceKey<ModelModifier> modifier) {
         super(category, color);
         this.modifier = modifier;
     }
@@ -24,8 +24,8 @@ public class ModelModifierEffect extends MobEffect {
         ModelModifierStore.addModifier(entity, this.getEffect(entity));
     }
 
-    public Holder.Reference<ModelModifier<?>> getEffect(LivingEntity livingEntity) {
-        Registry<ModelModifier<?>> modelModifiers = livingEntity.level().getServer().registryAccess().lookupOrThrow(ExtraRegistries.MODEL_MODIFIER);
+    public Holder.Reference<ModelModifier> getEffect(LivingEntity livingEntity) {
+        Registry<ModelModifier> modelModifiers = livingEntity.level().getServer().registryAccess().lookupOrThrow(ExtraRegistries.MODEL_MODIFIER);
         return modelModifiers.getOrThrow(this.modifier);
     }
 }

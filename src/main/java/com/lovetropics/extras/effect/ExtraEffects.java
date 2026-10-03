@@ -49,11 +49,11 @@ public class ExtraEffects {
     public static final DeferredHolder<MobEffect, ModelModifierEffect> HOP_WALK = modelEffect(ExtraModelModifiers.HOP_WALK);
 
 
-    private static DeferredHolder<MobEffect, ModelModifierEffect> modelEffect(ResourceKey<ModelModifier<?>> modifier, UnaryOperator<ModelModifierEffect> builder) {
+    private static DeferredHolder<MobEffect, ModelModifierEffect> modelEffect(ResourceKey<ModelModifier> modifier, UnaryOperator<ModelModifierEffect> builder) {
         return REGISTER.register("mm_" + modifier.identifier().getPath(), () -> builder.apply(new ModelModifierEffect(MobEffectCategory.NEUTRAL, 0x000000, modifier)));
     }
 
-    private static DeferredHolder<MobEffect, ModelModifierEffect> modelEffect(ResourceKey<ModelModifier<?>> modifier) {
+    private static DeferredHolder<MobEffect, ModelModifierEffect> modelEffect(ResourceKey<ModelModifier> modifier) {
         return modelEffect(modifier, effect -> effect);
     }
 

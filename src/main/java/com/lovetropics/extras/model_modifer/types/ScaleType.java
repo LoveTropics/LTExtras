@@ -3,7 +3,6 @@ package com.lovetropics.extras.model_modifer.types;
 import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -12,12 +11,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
-import org.jspecify.annotations.NullUnmarked;
 
-import java.util.Optional;
-import java.util.function.Function;
-
-public record ScaleType(float x, float y, float z) implements ModelModifier<ScaleType>  {
+public record ScaleType(float x, float y, float z) implements ModelModifier {
 
     public static final MapCodec<ScaleType> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ExtraCodecs.VECTOR3F.fieldOf("scale").forGetter(ScaleType::toVector)

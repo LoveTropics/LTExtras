@@ -10,7 +10,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.ResourceOrIdArgument;
 import net.minecraft.core.Holder;
 
-public class ModelModifierArgument extends ResourceOrIdArgument<ModelModifier<?>> {
+public class ModelModifierArgument extends ResourceOrIdArgument<ModelModifier> {
 
     protected ModelModifierArgument(CommandBuildContext context) {
         super(context, ExtraRegistries.MODEL_MODIFIER, ExtraModelModifiers.CODEC);
@@ -20,7 +20,7 @@ public class ModelModifierArgument extends ResourceOrIdArgument<ModelModifier<?>
         return new ModelModifierArgument(context);
     }
 
-    public static Holder<ModelModifier<?>> getModifier(CommandContext<CommandSourceStack> context, String name) throws CommandSyntaxException {
+    public static Holder<ModelModifier> getModifier(CommandContext<CommandSourceStack> context, String name) throws CommandSyntaxException {
         return getResource(context, name);
     }
 }

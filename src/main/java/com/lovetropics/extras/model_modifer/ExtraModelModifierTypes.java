@@ -35,7 +35,7 @@ public class ExtraModelModifierTypes {
     public static final DeferredHolder<ModelModifierType<?>, UnitType> UPSIDEDOWN = unit("upsidedown");
     public static final DeferredHolder<ModelModifierType<?>, UnitType> NO_SHADOW = unit("no_shadow");
 
-    private static <T extends ModelModifier<?>> DeferredHolder<ModelModifierType<?>, ModelModifierType<T>> register(String name, MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
+    private static <T extends ModelModifier> DeferredHolder<ModelModifierType<?>, ModelModifierType<T>> register(String name, MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
         return REGISTER.register(name, () -> ModelModifierType.simple(codec, streamCodec));
     }
 

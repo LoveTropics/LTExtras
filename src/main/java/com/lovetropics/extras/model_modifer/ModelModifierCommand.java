@@ -60,7 +60,7 @@ public class ModelModifierCommand {
         );
     }
 
-    private static int addModifier(CommandContext<CommandSourceStack> ctx, Holder<ModelModifier<?>> modifier, Collection<? extends Entity> entities)  {
+    private static int addModifier(CommandContext<CommandSourceStack> ctx, Holder<ModelModifier> modifier, Collection<? extends Entity> entities)  {
         for (Entity entity : entities) {
             ModelModifierStore.addModifier(entity, modifier);
         }
@@ -70,7 +70,7 @@ public class ModelModifierCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int removeModifier(CommandContext<CommandSourceStack> ctx, Holder<ModelModifier<?>> modifier, Collection<? extends Entity> entities)  {
+    private static int removeModifier(CommandContext<CommandSourceStack> ctx, Holder<ModelModifier> modifier, Collection<? extends Entity> entities)  {
         for (Entity entity : entities) {
             ModelModifierStore.removeModifier(entity, modifier);
             entity.syncData(ExtraAttachments.MODEL_MODIFIERS);
@@ -95,8 +95,8 @@ public class ModelModifierCommand {
         List<String> modifiers = new ArrayList<>();
 
         for (Entity entity : entities) {
-            List<Holder<ModelModifier<?>>> modelModifierTypes = ModelModifierStore.getOrDefault(entity).appliedModifiers();
-            for (Holder<ModelModifier<?>> modelModifierType : modelModifierTypes) {
+            List<Holder<ModelModifier>> modelModifierTypes = ModelModifierStore.getOrDefault(entity).appliedModifiers();
+            for (Holder<ModelModifier> modelModifierType : modelModifierTypes) {
                 if (!modifiers.contains(modelModifierType.getRegisteredName())) {
                     modifiers.add(modelModifierType.getRegisteredName());
                 }
@@ -113,8 +113,8 @@ public class ModelModifierCommand {
         Set<String> set = Sets.newHashSet();
 
         for (Entity entity : entities) {
-            List<Holder<ModelModifier<?>>> holders = ModelModifierStore.getOrDefault(entity).appliedModifiers();
-            for (Holder<ModelModifier<?>> holder : holders) {
+            List<Holder<ModelModifier>> holders = ModelModifierStore.getOrDefault(entity).appliedModifiers();
+            for (Holder<ModelModifier> holder : holders) {
                 holder.unwrapKey().ifPresent(key -> set.add(key.identifier().toString()));
             }
             set.addAll(holders.stream().map(Holder::getRegisteredName).toList());

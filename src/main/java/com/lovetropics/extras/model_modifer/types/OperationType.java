@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public record OperationType(Operation operation, Map<String, ModelPartData> modifiers) implements ModelModifier<OperationType> {
+public record OperationType(Operation operation, Map<String, ModelPartData> modifiers) implements ModelModifier {
 
     public static final MapCodec<OperationType> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             Operation.CODEC.fieldOf("operation").forGetter(OperationType::operation),

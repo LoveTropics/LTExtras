@@ -303,10 +303,10 @@ public class ExtraItems {
     }
 
     @SafeVarargs
-    private static DataComponentInitializers.SingleComponentInitializer<List<Holder<ModelModifier<?>>>> modifierList(ResourceKey<ModelModifier<?>>... modifiers) {
+    private static DataComponentInitializers.SingleComponentInitializer<List<Holder<ModelModifier>>> modifierList(ResourceKey<ModelModifier>... modifiers) {
         return context -> {
-            List<Holder<ModelModifier<?>>> holders = new ArrayList<>();
-            for (ResourceKey<ModelModifier<?>> key : modifiers) {
+            List<Holder<ModelModifier>> holders = new ArrayList<>();
+            for (ResourceKey<ModelModifier> key : modifiers) {
                 holders.add(context.getOrThrow(key));
             }
             return holders;

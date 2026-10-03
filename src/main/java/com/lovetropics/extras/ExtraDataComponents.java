@@ -90,7 +90,7 @@ public class ExtraDataComponents {
             "gravity",
             builder -> builder.persistent(Codec.floatRange(-10.0f, 10.0f)).networkSynchronized(ByteBufCodecs.FLOAT)
     );
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<Holder<ModelModifier<?>>>>> MODEL_MODIFIER = REGISTER.registerComponentType(
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<Holder<ModelModifier>>>> MODEL_MODIFIER = REGISTER.registerComponentType(
             "model_modifier",
             builder -> builder.persistent(ExtraCodecs.compactListCodec(ExtraModelModifiers.REGISTRY_CODEC)).networkSynchronized(ExtraModelModifiers.STREAM_CODEC.apply(ByteBufCodecs.list()))
     );

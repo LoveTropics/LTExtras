@@ -10,7 +10,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
-public record AnimationType(Identifier id) implements ModelModifier<AnimationType> {
+public record AnimationType(Identifier id) implements ModelModifier {
 
     public static final MapCodec<AnimationType> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Identifier.CODEC.fieldOf("animation").forGetter(AnimationType::id)

@@ -6,7 +6,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
-public class UnitType implements ModelModifier<UnitType>, ModelModifierType<UnitType> {
+public class UnitType implements ModelModifier, ModelModifierType<UnitType> {
 
     private final MapCodec<UnitType> codec = MapCodec.unit(this);
     private final StreamCodec<RegistryFriendlyByteBuf, UnitType> streamCodec = StreamCodec.unit(this);

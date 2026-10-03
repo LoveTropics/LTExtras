@@ -7,7 +7,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.entity.LivingEntity;
 
-public interface ModelApplier<T extends ModelModifier<?>> {
+public interface ModelApplier<T extends ModelModifier> {
 
     default void applyToModel(T data, LivingEntityRenderState state, EntityModel<?> model) {}
 

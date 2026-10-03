@@ -14,7 +14,6 @@ import com.lovetropics.extras.registry.ExtraRegistries;
 import net.minecraft.client.model.geom.PartNames;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -31,7 +30,7 @@ public class ModelModifierDataGen {
                 .add(ExtraRegistries.MODEL_MODIFIER, ModelModifierDataGen::generateModelModifiers));
     }
 
-    private static void generateModelModifiers(BootstrapContext<ModelModifier<?>> context) {
+    private static void generateModelModifiers(BootstrapContext<ModelModifier> context) {
         context.register(ExtraModelModifiers.FABULOUS, ExtraModelModifierTypes.FABULOUS.get());
         context.register(ExtraModelModifiers.FLAIL, ExtraModelModifierTypes.FLAIL.get());
         context.register(ExtraModelModifiers.SHUFFLE, ExtraModelModifierTypes.SHUFFLE.get());

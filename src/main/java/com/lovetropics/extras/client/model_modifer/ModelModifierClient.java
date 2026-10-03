@@ -74,13 +74,13 @@ public class ModelModifierClient {
         });
     }
 
-    public static final ContextKey<List<ModelModifier<?>>> MODIFIERS = new ContextKey<>(LTExtras.id("modifiers"));
+    public static final ContextKey<List<ModelModifier>> MODIFIERS = new ContextKey<>(LTExtras.id("modifiers"));
 
     @SubscribeEvent
     public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
         TypeToken<LivingEntityRenderer<LivingEntity, LivingEntityRenderState, ?>> token = new TypeToken<>() {};
 
-        List<ModelModifier<?>> scratchModifiers = new ArrayList<>();
+        List<ModelModifier> scratchModifiers = new ArrayList<>();
         event.registerEntityModifier(token, (entity, renderState) -> {
             for (EquipmentSlot slot : EquipmentSlot.VALUES) {
                 ItemStack itemStack = entity.getItemBySlot(slot);
@@ -89,14 +89,14 @@ public class ModelModifierClient {
                 }
             }
 
-            for (Holder<ModelModifier<?>> modelModifierType : ModelModifierStore.getOrDefault(entity).appliedModifiers()) {
+            for (Holder<ModelModifier> modelModifierType : ModelModifierStore.getOrDefault(entity).appliedModifiers()) {
                 scratchModifiers.add(modelModifierType.value());
             }
 
             if (!scratchModifiers.isEmpty()) {
-                List<ModelModifier<?>> modifiers = List.copyOf(scratchModifiers);
+                List<ModelModifier> modifiers = List.copyOf(scratchModifiers);
                 renderState.setRenderData(MODIFIERS, modifiers);
-                for (ModelModifier<?> modifier : modifiers) {
+                for (ModelModifier modifier : modifiers) {
                     Applier.extract(modifier, entity, renderState);
                 }
             }
@@ -107,9 +107,9 @@ public class ModelModifierClient {
 
 
 
-    private static void addModifiersFromStack(List<ModelModifier<?>> modifiers, ItemStack stack) {
-        List<Holder<ModelModifier<?>>> modifierTypes = stack.getOrDefault(ExtraDataComponents.MODEL_MODIFIER, List.of());
-        for (Holder<ModelModifier<?>> modifierType : modifierTypes) {
+    private static void addModifiersFromStack(List<ModelModifier> modifiers, ItemStack stack) {
+        List<Holder<ModelModifier>> modifierTypes = stack.getOrDefault(ExtraDataComponents.MODEL_MODIFIER, List.of());
+        for (Holder<ModelModifier> modifierType : modifierTypes) {
             modifiers.add(modifierType.value());
         }
         float adjustHeight = stack.getOrDefault(ExtraDataComponents.ADJUST_HEIGHT, 0.0f);
@@ -120,11 +120,11 @@ public class ModelModifierClient {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?, ?> event) {
-        List<ModelModifier<?>> modifiers = event.getRenderState().getRenderData(MODIFIERS);
+        List<ModelModifier> modifiers = event.getRenderState().getRenderData(MODIFIERS);
         if (modifiers != null) {
             PoseStack poseStack = event.getPoseStack();
             poseStack.pushPose();
-            for (ModelModifier<?> modifier : modifiers) {
+            for (ModelModifier modifier : modifiers) {
                 Applier.applyToTransforms(modifier, poseStack, event.getRenderState());
             }
         }
@@ -132,7 +132,7 @@ public class ModelModifierClient {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onRenderLivingPost(RenderLivingEvent.Post<?, ?, ?> event) {
-        List<ModelModifier<?>> modifiers = event.getRenderState().getRenderData(MODIFIERS);
+        List<ModelModifier> modifiers = event.getRenderState().getRenderData(MODIFIERS);
         if (modifiers != null) {
             PoseStack poseStack = event.getPoseStack();
             poseStack.popPose();
@@ -140,9 +140,9 @@ public class ModelModifierClient {
     }
 
     public static void applyToModel(LivingEntityRenderState renderState, EntityModel<?> model) {
-        List<ModelModifier<?>> renderData = renderState.getRenderData(MODIFIERS);
+        List<ModelModifier> renderData = renderState.getRenderData(MODIFIERS);
         if (renderData != null) {
-            for (ModelModifier<?> modifier : renderData) {
+            for (ModelModifier modifier : renderData) {
                 Applier.applyToModel(modifier, renderState, model);
             }
         }
@@ -150,7 +150,7 @@ public class ModelModifierClient {
 
     public static class Applier {
 
-        public static <T extends ModelModifier<?>> void applyFor(T modifier, Consumer<ModelApplier<T>> consumer) {
+        public static <T extends ModelModifier> void applyFor(T modifier, Consumer<ModelApplier<T>> consumer) {
             ModelApplier<T> applier = (ModelApplier<T>) CLIENT_MODEL_DATA.get(modifier.type());
             if (applier == null) {
                 throw new IllegalStateException("No model applier registered for type: " + modifier.type());
@@ -158,15 +158,15 @@ public class ModelModifierClient {
             consumer.accept(applier);
         }
 
-        public static <T extends ModelModifier<?>> void extract(T modifier, LivingEntity livingEntity, LivingEntityRenderState state) {
+        public static <T extends ModelModifier> void extract(T modifier, LivingEntity livingEntity, LivingEntityRenderState state) {
             applyFor(modifier, applier -> applier.extractRenderState(modifier, livingEntity, state));
         }
 
-        public static <T extends ModelModifier<?>> void applyToModel(T modifier, LivingEntityRenderState state, EntityModel<?> model) {
+        public static <T extends ModelModifier> void applyToModel(T modifier, LivingEntityRenderState state, EntityModel<?> model) {
             applyFor(modifier, applier -> applier.applyToModel(modifier, state, model));
         }
 
-        public static <T extends ModelModifier<?>> void applyToTransforms(T modifier, PoseStack poseStack, LivingEntityRenderState state) {
+        public static <T extends ModelModifier> void applyToTransforms(T modifier, PoseStack poseStack, LivingEntityRenderState state) {
             applyFor(modifier, applier -> applier.applyToTransforms(modifier, poseStack, state));
         }
     }
