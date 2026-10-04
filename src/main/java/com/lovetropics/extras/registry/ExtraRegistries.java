@@ -4,6 +4,7 @@ import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.data.poi.PoiConfig;
+import com.lovetropics.extras.mounts.Mount;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
@@ -30,6 +31,7 @@ public class ExtraRegistries {
     // Fake registries
     public static final ResourceKey<Registry<EnvironmentAttributeMap>> ENVIRONMENT_ATTRIBUTE_BUNDLE = createKey("environment_attribute_bundle");
     public static final ResourceKey<Registry<PoiConfig>> POI = createKey("poi");
+    public static final ResourceKey<Registry<Mount>> MOUNT = createKey("mount");
 
     @SubscribeEvent
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {

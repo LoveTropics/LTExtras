@@ -5,6 +5,7 @@ import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.data.TropiCoinsStore;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsStore;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
+import com.lovetropics.extras.mounts.MountStore;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -53,6 +54,12 @@ public class ExtraAttachments {
             "honied", () -> AttachmentType.builder(() -> false)
                     .serialize(Codec.BOOL.fieldOf("honied"))
                     .sync(ByteBufCodecs.BOOL)
+                    .build()
+    );
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<MountStore>> MOUNT = REGISTER.register(
+            "mount_store", () -> AttachmentType.builder(MountStore::new)
+                    .serialize(MountStore.MAP_CODEC)
                     .build()
     );
 }

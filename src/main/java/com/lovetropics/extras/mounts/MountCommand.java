@@ -1,16 +1,24 @@
 package com.lovetropics.extras.mounts;
 
+import com.lovetropics.extras.data.Named;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.tterrag.registrate.providers.RegistrateLangProvider;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.commands.SummonCommand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -20,26 +28,38 @@ import static net.minecraft.commands.Commands.literal;
 
 public class MountCommand {
 
+    private static final String ID_ARGUMENT = "id";
+    private static final DynamicCommandExceptionType ENTITY_NOT_FOUND = new DynamicCommandExceptionType(type -> Component.translatable("commands.mount.entity_not_found", "%s"));
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         // @formatter:off
         dispatcher.register(literal("mount")
-                .then(argument("player", EntityArgument.player())
-                        .then(argument("entity", ResourceArgument.resource(context, Registries.ENTITY_TYPE))
-                                .executes(ctx -> summonMount(ctx.getSource(), ResourceArgument.getSummonableEntityType(ctx, "entity"), new CompoundTag()))
-                                .then(argument("nbt", CompoundTagArgument.compoundTag())
-                                        .executes(ctx -> summonMount(ctx.getSource(), ResourceArgument.getSummonableEntityType(ctx, "entity"), CompoundTagArgument.getCompoundTag(ctx, "nbt")))
-                                )
-                        )
-                )
+            .then(argument(ID_ARGUMENT, IdentifierArgument.id())
+                .suggests((_, builder) ->
+                    SharedSuggestionProvider.suggestResource(MountConfigs.MOUNTS.keySet(), builder))
+                .executes(MountCommand::summonDefinedMount)
+            )
         );
         // @formatter:on
     }
 
-    private static int summonMount(CommandSourceStack source, Holder.Reference<EntityType<?>> entity, CompoundTag nbt) throws CommandSyntaxException {
+    private static int summonDefinedMount(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        CommandSourceStack source = context.getSource();
         Entity commandEntity = source.getEntityOrException();
-        Entity spawnEntity = SummonCommand.createEntity(source, entity, source.getPosition(), nbt, false);
-        commandEntity.startRiding(spawnEntity, true, false);
-        spawnEntity.addTag(ExtraMountController.KILL_DISMOUNT);
-        return Command.SINGLE_SUCCESS;
+        Identifier id = IdentifierArgument.getId(context, ID_ARGUMENT);
+        Named<Mount> entity = MountConfigs.MOUNTS.get(id);
+        if (entity == null) {
+            throw ENTITY_NOT_FOUND.create(id);
+        }
+
+        if (entity.value().spawnFor(commandEntity, source.getLevel())) {
+            return Command.SINGLE_SUCCESS;
+        }
+
+        return 0;
+    }
+
+    public static void addTranslations(RegistrateLangProvider provider) {
+        provider.add("commands.mount.entity_not_found", "Mount not found in registry: %s");
     }
 }
