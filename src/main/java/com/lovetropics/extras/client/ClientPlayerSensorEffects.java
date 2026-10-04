@@ -200,8 +200,10 @@ public class ClientPlayerSensorEffects {
         float minY = Float.MAX_VALUE;
         float maxX = -Float.MAX_VALUE;
         float maxY = -Float.MAX_VALUE;
+        boolean zZeroToOne = RenderSystem.getDevice().getDeviceInfo().isZZeroToOne();
         for (Vector3f vertex : vertices) {
-            if (vertex.z >= 1.0f || vertex.z <= 0.1f) {
+            // Fully behind the camera
+            if (vertex.z < (zZeroToOne ? 0.0f : -1.0f)) {
                 return null;
             } else if (vertex.x <= -2.0f || vertex.x >= 2.0f || vertex.y <= -2.0f || vertex.y >= 2.0f) {
                 return null;
