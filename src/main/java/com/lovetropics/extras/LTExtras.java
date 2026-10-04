@@ -17,6 +17,7 @@ import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
+import com.lovetropics.extras.gamerules.ExtraGamerules;
 import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.environmentattribute.EnvironmentAttributeCommand;
 import com.lovetropics.extras.environmentattribute.ExtraAttributeTypes;
@@ -97,6 +98,7 @@ public class LTExtras {
         ExtraAttributeTypes.register(modBus);
         ExtraEnvironmentAttributes.REGISTER.register(modBus);
         ExtraFunctions.REGISTRY.register(modBus);
+        ExtraGamerules.REGISTER.register(modBus);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
