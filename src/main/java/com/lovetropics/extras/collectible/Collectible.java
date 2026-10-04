@@ -19,30 +19,34 @@ import org.jspecify.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class Collectible{
+public class Collectible {
     public static final Codec<Collectible> DIRECT_CODEC = RecordCodecBuilder.create(i -> i.group(
             MoreCodecs.SINGLE_STACK_TEMPLATE.fieldOf("item").forGetter(c -> c.item),
-            Codec.BOOL.fieldOf("auto_equip").orElse(false).forGetter(c -> c.autoEquip)
+            Codec.BOOL.optionalFieldOf("auto_equip", false).forGetter(c -> c.autoEquip),
+            CollectibleLock.CODEC.optionalFieldOf("lock").forGetter(c -> c.lock)
     ).apply(i, Collectible::new));
     public static final Codec<Holder<Collectible>> CODEC = RegistryFileCodec.create(ExtraRegistries.COLLECTIBLE, DIRECT_CODEC);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Collectible> DIRECT_STREAM_CODEC = StreamCodec.composite(
             ItemStackTemplate.STREAM_CODEC, c -> c.item,
             ByteBufCodecs.BOOL, c -> c.autoEquip,
+            CollectibleLock.STREAM_CODEC.apply(ByteBufCodecs::optional), c -> c.lock,
             Collectible::new
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<Collectible>> STREAM_CODEC = ByteBufCodecs.holder(ExtraRegistries.COLLECTIBLE, DIRECT_STREAM_CODEC);
 
     private final ItemStackTemplate item;
     private final boolean autoEquip;
+    private final Optional<CollectibleLock> lock;
 
-    private Collectible(ItemStackTemplate item, boolean autoEquip) {
+    private Collectible(ItemStackTemplate item, boolean autoEquip, Optional<CollectibleLock> lock) {
         this.item = item;
         this.autoEquip = autoEquip;
+        this.lock = lock;
     }
 
     public Collectible(ItemStackTemplate stack) {
-        this(stack, false);
+        this(stack, false, Optional.empty());
     }
 
     public Collectible(ItemStack stack) {
@@ -86,12 +90,16 @@ public class Collectible{
         ));
     }
 
+    public ItemStackTemplate item() {
+        return item;
+    }
+
     public boolean autoEquip() {
         return autoEquip;
     }
 
-    public ItemStackTemplate item() {
-        return item;
+    public Optional<CollectibleLock> lock() {
+        return lock;
     }
 
     public static boolean matches(Holder<Collectible> collectible, ItemStack stack) {
@@ -120,14 +128,16 @@ public class Collectible{
             return true;
         }
         if (obj instanceof Collectible collectible) {
-            return item.equals(collectible.item) && autoEquip == collectible.autoEquip;
+            return item.equals(collectible.item) && autoEquip == collectible.autoEquip && lock.equals(collectible.lock);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return item.hashCode() * 31 + Boolean.hashCode(autoEquip);
+        int hash = item.hashCode();
+        hash = hash * 31 + Boolean.hashCode(autoEquip);
+        hash = hash * 31 + lock.hashCode();
+        return hash;
     }
-
 }

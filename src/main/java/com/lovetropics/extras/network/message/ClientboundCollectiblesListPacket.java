@@ -12,9 +12,15 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 
-public record ClientboundCollectiblesListPacket(List<Holder<Collectible>> collectibles, boolean silent, boolean hasUnseen) implements CustomPacketPayload {
+public record ClientboundCollectiblesListPacket(
+        List<Holder<Collectible>> collectibles,
+        List<Holder<Collectible>> lockedCollectibles,
+        boolean silent,
+        boolean hasUnseen
+) implements CustomPacketPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundCollectiblesListPacket> STREAM_CODEC = StreamCodec.composite(
             Collectible.STREAM_CODEC.apply(ByteBufCodecs.list()), ClientboundCollectiblesListPacket::collectibles,
+            Collectible.STREAM_CODEC.apply(ByteBufCodecs.list()), ClientboundCollectiblesListPacket::lockedCollectibles,
             ByteBufCodecs.BOOL, ClientboundCollectiblesListPacket::silent,
             ByteBufCodecs.BOOL, ClientboundCollectiblesListPacket::hasUnseen,
             ClientboundCollectiblesListPacket::new
@@ -24,10 +30,11 @@ public record ClientboundCollectiblesListPacket(List<Holder<Collectible>> collec
 
     public ClientboundCollectiblesListPacket {
         collectibles = List.copyOf(collectibles);
+        lockedCollectibles = List.copyOf(lockedCollectibles);
     }
 
     public static void handle(ClientboundCollectiblesListPacket packet, IPayloadContext context) {
-        ClientCollectiblesList.get().update(packet.collectibles, packet.silent, packet.hasUnseen);
+        ClientCollectiblesList.get().update(packet.collectibles, packet.lockedCollectibles, packet.silent, packet.hasUnseen);
     }
 
     @Override

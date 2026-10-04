@@ -1,5 +1,7 @@
 package com.lovetropics.extras.client;
 
+import com.google.common.collect.ImmutableList;
+import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.client.screen.container.CollectibleBasketScreen;
 import com.lovetropics.extras.collectible.Collectible;
 import net.minecraft.client.Minecraft;
@@ -15,14 +17,15 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ClientCollectiblesList {
     private static @Nullable ClientCollectiblesList instance;
 
-    private List<Holder<Collectible>> collectibles = List.of();
-    private List<ItemStack> itemStacks = List.of();
+    private List<Entry> entries = List.of();
     private boolean hasUnseen;
 
     public static ClientCollectiblesList get() {
@@ -43,20 +46,31 @@ public class ClientCollectiblesList {
         instance = null;
     }
 
-    public List<Holder<Collectible>> collectibles() {
-        return collectibles;
+    public List<Entry> entries() {
+        return entries;
     }
 
-    public List<ItemStack> itemStacks() {
-        return itemStacks;
-    }
+    public void update(List<Holder<Collectible>> collectibles, List<Holder<Collectible>> lockedCollectibles, boolean silent, boolean hasUnseen) {
+        Set<Holder<Collectible>> oldCollectibles = entries.stream()
+                .filter(e -> !e.locked)
+                .map(e -> e.collectible)
+                .collect(Collectors.toSet());
+        List<Holder<Collectible>> newCollectibles = collectibles.stream()
+                .filter(c -> !oldCollectibles.contains(c))
+                .toList();
 
-    public void update(List<Holder<Collectible>> collectibles, boolean silent, boolean hasUnseen) {
-        Minecraft minecraft = Minecraft.getInstance();
-        List<Holder<Collectible>> newCollectibles = collectibles.stream().filter(c -> !this.collectibles.contains(c)).toList();
-        this.collectibles = List.copyOf(collectibles);
-        UUID playerId = minecraft.player.getUUID();
-        itemStacks = collectibles.stream().map(collectible -> Collectible.createItemStack(collectible, playerId)).toList();
+        UUID playerId = Minecraft.getInstance().player.getUUID();
+        ImmutableList.Builder<Entry> newEntries = ImmutableList.builder();
+        for (Holder<Collectible> collectible : collectibles) {
+            newEntries.add(new Entry(collectible, Collectible.createItemStack(collectible, playerId), false));
+        }
+        for (Holder<Collectible> lockedCollectible : lockedCollectibles) {
+            ItemStack itemStack = Collectible.createItemStack(lockedCollectible, playerId);
+            lockedCollectible.value().lock().ifPresent(l -> itemStack.set(ExtraDataComponents.COLLECTIBLE_LOCK, l));
+            newEntries.add(new Entry(lockedCollectible, itemStack, true));
+        }
+        entries = newEntries.build();
+
         if (!silent && !newCollectibles.isEmpty()) {
             notifyCollections(newCollectibles);
         }
@@ -78,10 +92,17 @@ public class ClientCollectiblesList {
     }
 
     public boolean isEmpty() {
-        return collectibles.isEmpty();
+        return entries.isEmpty();
     }
 
     public boolean hasUnseen() {
         return hasUnseen;
+    }
+
+    public record Entry(
+            Holder<Collectible> collectible,
+            ItemStack itemStack,
+            boolean locked
+    ) {
     }
 }

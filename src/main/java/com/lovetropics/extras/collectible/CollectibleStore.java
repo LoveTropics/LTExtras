@@ -3,8 +3,10 @@ package com.lovetropics.extras.collectible;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
+import com.lovetropics.extras.registry.ExtraRegistries;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -21,6 +23,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @EventBusSubscriber
 public class CollectibleStore {
@@ -118,7 +121,12 @@ public class CollectibleStore {
 
     private void sendToClient(boolean silent) {
         if (player != null) {
-            PacketDistributor.sendToPlayer(player, new ClientboundCollectiblesListPacket(collectibles, silent, hasUnseen));
+            Registry<Collectible> collectibleRegistry = player.level().registryAccess().lookupOrThrow(ExtraRegistries.COLLECTIBLE);
+            List<Holder<Collectible>> lockedCollectibles = collectibleRegistry.listElements()
+                    .filter(c -> c.value().lock().isPresent())
+                    .filter(c -> !collectibles.contains(c))
+                    .collect(Collectors.toUnmodifiableList());
+            PacketDistributor.sendToPlayer(player, new ClientboundCollectiblesListPacket(collectibles, lockedCollectibles, silent, hasUnseen));
         }
     }
 

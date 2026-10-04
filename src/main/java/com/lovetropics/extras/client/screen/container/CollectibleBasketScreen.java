@@ -47,6 +47,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     private static final Identifier BACKGROUND_LOCATION = Identifier.withDefaultNamespace("textures/gui/container/creative_inventory/tab_items.png");
     private static final Identifier SCROLLER_SPRITE = Identifier.withDefaultNamespace("container/creative_inventory/scroller");
     private static final Identifier TROPICOIN_SLOT_SPRITE = LTExtras.id("currency_slot");
+    private static final Identifier LOCKED_SPRITE = LTExtras.id("lock");
 
     private static final SimpleContainer TROPICOIN_CONTAINER = new SimpleContainer(1);
 
@@ -64,6 +65,9 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
 
     private static final int TROPICOIN_SLOT_X = -24;
     private static final int TROPICOIN_SLOT_Y = BACKGROUND_HEIGHT - 24;
+
+    private static final int LOCK_WIDTH = 7;
+    private static final int LOCK_HEIGHT = 8;
 
     private float scroll;
     private boolean draggingScroller;
@@ -119,6 +123,15 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     @Override
+    protected void renderSlotContents(GuiGraphicsExtractor graphics, ItemStack itemStack, Slot slot, @Nullable String itemCount) {
+        super.renderSlotContents(graphics, itemStack, slot, itemCount);
+        if (slot instanceof CollectibleSlot collectibleSlot && collectibleSlot.isLocked()) {
+            graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, 0x30000000);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, LOCKED_SPRITE, slot.x + 17 - LOCK_WIDTH, slot.y + 17 - LOCK_HEIGHT, LOCK_WIDTH, LOCK_HEIGHT);
+        }
+    }
+
+    @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         double mouseX = event.x();
         double mouseY = event.y();
@@ -162,9 +175,10 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_LOCATION, leftPos, topPos, 0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 256, 256, CommonColors.WHITE);
     }
-    
+
     private @Nullable ScreenRectangle scrollerRectangle() {
         if (!canScroll()) {
             return null;
@@ -261,7 +275,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
     }
 
     private void tryPickCollectible(Slot slot, CollectibleSlot collectibleSlot) {
-        Holder<Collectible> collectible = collectibleSlot.getCollectible();
+        Holder<Collectible> collectible = collectibleSlot.getPickableCollectible();
         if (collectible != null) {
             menu.setCarried(slot.getItem().copy());
             ClientPacketDistributor.sendToServer(new ServerboundPickCollectibleItemPacket(collectible));
@@ -354,8 +368,14 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
             return 1;
         }
 
-        public @Nullable Holder<Collectible> getCollectible() {
-            return container.getCollectible(index);
+        public @Nullable Holder<Collectible> getPickableCollectible() {
+            ClientCollectiblesList.Entry entry = container.getEntry(index);
+            return entry != null && !entry.locked() ? entry.collectible() : null;
+        }
+
+        public boolean isLocked() {
+            ClientCollectiblesList.Entry entry = container.getEntry(index);
+            return entry != null && entry.locked();
         }
     }
 
@@ -381,21 +401,21 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
             return list.isEmpty();
         }
 
-        public @Nullable Holder<Collectible> getCollectible(int slot) {
-            List<Holder<Collectible>> collectibles = list.collectibles();
+        public ClientCollectiblesList.@Nullable Entry getEntry(int slot) {
+            List<ClientCollectiblesList.Entry> entries = list.entries();
             int index = getIndexForSlot(slot);
-            if (index >= 0 && index < collectibles.size()) {
-                return collectibles.get(index);
+            if (index >= 0 && index < entries.size()) {
+                return entries.get(index);
             }
             return null;
         }
 
         @Override
         public ItemStack getItem(int slot) {
-            List<ItemStack> stacks = list.itemStacks();
+            List<ClientCollectiblesList.Entry> entries = list.entries();
             int index = getIndexForSlot(slot);
-            if (index >= 0 && index < stacks.size()) {
-                return stacks.get(index);
+            if (index >= 0 && index < entries.size()) {
+                return entries.get(index).itemStack();
             }
             return ItemStack.EMPTY;
         }
@@ -428,7 +448,7 @@ public class CollectibleBasketScreen extends AbstractContainerScreen<Collectible
         }
 
         public int contentRows() {
-            return Mth.positiveCeilDiv(list.collectibles().size(), COLUMNS);
+            return Mth.positiveCeilDiv(list.entries().size(), COLUMNS);
         }
 
         private int getIndexForSlot(int slot) {

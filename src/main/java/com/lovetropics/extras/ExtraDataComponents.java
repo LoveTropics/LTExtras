@@ -1,10 +1,10 @@
 package com.lovetropics.extras;
 
 import com.lovetropics.extras.collectible.CollectibleDisplayInfo;
+import com.lovetropics.extras.collectible.CollectibleLock;
 import com.lovetropics.extras.collectible.CollectibleMarker;
 import com.lovetropics.extras.consume_actions.ConsumeAction;
 import com.lovetropics.extras.consume_actions.ConsumeActions;
-import com.lovetropics.extras.data.Named;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.FireExtinguisher;
@@ -13,8 +13,8 @@ import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.PaintingOverlay;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
-import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
+import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -22,9 +22,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.contents.objects.AtlasSprite;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Unit;
@@ -50,6 +52,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleCompassItem.Target>> COLLECTIBLE_TARGET = REGISTER.registerComponentType(
             "collectible_target",
             builder -> builder.persistent(CollectibleCompassItem.Target.CODEC).networkSynchronized(CollectibleCompassItem.Target.STREAM_CODEC).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleLock>> COLLECTIBLE_LOCK = REGISTER.registerComponentType(
+            "collectible_lock",
+            builder -> builder.persistent(CollectibleLock.CODEC).networkSynchronized(CollectibleLock.STREAM_CODEC).cacheEncoding()
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> COIN_COUNT = REGISTER.registerComponentType(
             "coin_count",
@@ -134,6 +140,8 @@ public class ExtraDataComponents {
             builder -> builder.persistent(ConsumeActions.CODEC).cacheEncoding()
     );
 
+    private static final AtlasSprite LOCK_SPRITE = new AtlasSprite(AtlasIds.GUI, LTExtras.id("lock"));
+
     @SubscribeEvent
     public static void addToTooltip(ItemTooltipEvent event) {
         ItemStack itemStack = event.getItemStack();
@@ -142,6 +150,16 @@ public class ExtraDataComponents {
         Holder<MapConfig> map = itemStack.get(ExtraDataComponents.MAP);
         if (map != null) {
             tooltip.add(ComponentUtils.mergeStyles(map.value().description().copy(), Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        }
+
+        CollectibleLock collectibleLock = itemStack.get(ExtraDataComponents.COLLECTIBLE_LOCK);
+        if (collectibleLock != null) {
+            if (!tooltip.isEmpty()) {
+                tooltip.set(0, Component.object(LOCK_SPRITE).append(" ").append(tooltip.getFirst()));
+                tooltip.addAll(1, collectibleLock.tooltip());
+            } else {
+                tooltip.addAll(collectibleLock.tooltip());
+            }
         }
 
         CollectibleDisplayInfo collectibleLore = itemStack.get(ExtraDataComponents.COLLECTIBLE_LORE);
