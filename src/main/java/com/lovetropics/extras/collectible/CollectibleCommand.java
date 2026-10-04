@@ -20,6 +20,8 @@ import net.minecraft.commands.arguments.ResourceOrTagArgument;
 import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -77,6 +79,9 @@ public class CollectibleCommand {
                                 .then(argument("collectible", resourceOrTag(buildContext, ExtraRegistries.COLLECTIBLE))
                                         .executes(c -> give(c, getPlayers(c, "target"), getResourceOrTag(c, "collectible", ExtraRegistries.COLLECTIBLE)))
                                 )
+                                .then(literal("*")
+                                        .executes(c -> giveAll(c, getPlayers(c, "target")))
+                                )
                         )
                 )
                 .then(literal("clear")
@@ -116,6 +121,19 @@ public class CollectibleCommand {
 
     private static Holder.Reference<Collectible> getCollectible(CommandContext<CommandSourceStack> context, String argument) throws CommandSyntaxException {
         return ResourceKeyArgumentAccessor.callResolveKey(context, argument, ExtraRegistries.COLLECTIBLE, ERROR_INVALID_COLLECTIBLE);
+    }
+
+    private static int giveAll(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players) throws CommandSyntaxException {
+        RegistryAccess.Frozen registryAccess = ctx.getSource().getServer().registryAccess();
+        Registry<Collectible> registry = registryAccess.lookupOrThrow(ExtraRegistries.COLLECTIBLE);
+        for (Holder<Collectible> collectibleHolder : registry.asHolderIdMap()) {
+            for (ServerPlayer player : players) {
+                CollectibleStore collectibles = CollectibleStore.get(player);
+                collectibles.give(collectibleHolder);
+            }
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal("Gave all collectibles items to " + players.size() + " players"), true);
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int give(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> players, ItemInput item) throws CommandSyntaxException {
