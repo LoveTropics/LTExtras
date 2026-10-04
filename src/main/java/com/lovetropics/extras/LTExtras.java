@@ -21,6 +21,7 @@ import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.environmentattribute.EnvironmentAttributeCommand;
 import com.lovetropics.extras.environmentattribute.ExtraAttributeTypes;
 import com.lovetropics.extras.environmentattribute.ExtraEnvironmentAttributes;
+import com.lovetropics.extras.functions.ExtraFunctions;
 import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.placeholder.ExtraPlaceholders;
@@ -95,6 +96,7 @@ public class LTExtras {
         ExtraModelModifierTypes.REGISTER.register(modBus);
         ExtraAttributeTypes.register(modBus);
         ExtraEnvironmentAttributes.REGISTER.register(modBus);
+        ExtraFunctions.REGISTRY.register(modBus);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
