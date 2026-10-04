@@ -2,6 +2,9 @@ package com.lovetropics.extras;
 
 import com.lovetropics.extras.collectible.CollectibleDisplayInfo;
 import com.lovetropics.extras.collectible.CollectibleMarker;
+import com.lovetropics.extras.consume_actions.ConsumeAction;
+import com.lovetropics.extras.consume_actions.ConsumeActions;
+import com.lovetropics.extras.data.Named;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.FireExtinguisher;
@@ -125,6 +128,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> INFINITE = REGISTER.registerComponentType(
             "infinite",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(Unit.STREAM_CODEC)
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ConsumeAction>> CONSUME_ACTION = REGISTER.registerComponentType(
+            "consume_action",
+            builder -> builder.persistent(ConsumeActions.CODEC).cacheEncoding()
     );
 
     @SubscribeEvent
