@@ -11,6 +11,7 @@ public class ConsumeActions {
 
     public static final CodecRegistry<Identifier, MapCodec<? extends ConsumeAction>> REGISTRY = Util.make(CodecRegistry.idKeys(), registry -> {
         registry.register(LTExtras.id("mount"), MountConsumeAction.CODEC);
+        registry.register(LTExtras.id("disguise"), DisguiseConsumeAction.CODEC);
     });
 
     public static final Codec<ConsumeAction> CODEC = REGISTRY.dispatch(ConsumeAction::getCodec, mapCodec -> mapCodec);
