@@ -92,7 +92,7 @@ public class ExtraDataComponents {
             "image",
             builder -> builder.persistent(ImageData.CODEC).cacheEncoding()
     );
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<PlayerSensor>> PLAYER_SENSOR = REGISTER.registerComponentType(
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<PlayerSensor>>> PLAYER_SENSOR = REGISTER.registerComponentType(
             "player_sensor",
             builder -> builder.persistent(PlayerSensor.CODEC).networkSynchronized(PlayerSensor.STREAM_CODEC).cacheEncoding()
     );

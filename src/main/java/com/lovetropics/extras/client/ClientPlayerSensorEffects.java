@@ -25,6 +25,7 @@ import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec2;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -35,13 +36,13 @@ import net.neoforged.neoforge.client.renderstate.AvatarRenderStateModifier;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -57,8 +58,14 @@ public class ClientPlayerSensorEffects {
     private static final Map<UUID, PlayerSensor.Appearance> MARKED_PLAYERS = new Object2ObjectOpenHashMap<>();
     private static final Set<UUID> VISIBLE_MARKED_PLAYERS = new ObjectArraySet<>();
 
-    private static final List<CapturedScreenBoxes> CAPTURED_SCREEN_POS = new ArrayList<>();
+    private static final List<CapturedPose> CAPTURED_SCREEN_POSE = new ArrayList<>();
     private static Matrix4f capturedProjectionMatrix = new Matrix4f();
+
+    private static final float HEAD_SIZE = 8.0f;
+    private static final float MIN_HEAD_Y = -HEAD_SIZE;
+    private static final float MIN_HEAD_XZ = -HEAD_SIZE / 2.0f;
+    private static final float MAX_HEAD_Y = 0.0f;
+    private static final float MAX_HEAD_XZ = HEAD_SIZE / 2.0f;
 
     public static void mark(int entityId, PlayerSensor.Appearance appearance) {
         ClientLevel level = Minecraft.getInstance().level;
@@ -84,7 +91,7 @@ public class ClientPlayerSensorEffects {
             return;
         }
 
-        for (CapturedScreenBoxes capturedScreenBoxes : CAPTURED_SCREEN_POS) {
+        for (CapturedPose capturedScreenBoxes : CAPTURED_SCREEN_POSE) {
             UUID playerId = capturedScreenBoxes.playerId;
             Player target = level.getPlayerByUUID(playerId);
             PlayerSensor.Appearance appearance = MARKED_PLAYERS.get(playerId);
@@ -94,11 +101,16 @@ public class ClientPlayerSensorEffects {
             renderGuiMarker(graphics, capturedScreenBoxes, appearance);
         }
 
-        CAPTURED_SCREEN_POS.clear();
+        CAPTURED_SCREEN_POSE.clear();
     }
 
-    private static void renderGuiMarker(GuiGraphicsExtractor graphics, CapturedScreenBoxes screenBoxes, PlayerSensor.Appearance appearance) {
-        GuiBox face = screenBoxes.face.toGui(graphics);
+    private static void renderGuiMarker(GuiGraphicsExtractor graphics, CapturedPose capturedPose, PlayerSensor.Appearance appearance) {
+        ScreenBox faceBox = toScreenBox(capturedPose, MIN_HEAD_XZ, MIN_HEAD_Y, MIN_HEAD_XZ, MAX_HEAD_XZ, MAX_HEAD_Y, MAX_HEAD_XZ);
+        if (faceBox == null) {
+            return;
+        }
+
+        GuiBox face = faceBox.toGui(graphics);
         int faceSize = Math.max(face.width(), face.height());
 
         float alpha = Mth.clampedMap(faceSize, 10, 20, 0.0f, 1.0f);
@@ -107,15 +119,36 @@ public class ClientPlayerSensorEffects {
         }
 
         int faceBoxSize = faceSize + MARKER_BOX_INNER_PADDING;
-        int markerColor = ARGB.color(alpha, appearance.color());
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, MARKER_BOX_SPRITE, face.centerX() - faceBoxSize / 2, face.centerY() - faceBoxSize / 2, faceBoxSize, faceBoxSize, markerColor);
+        if (appearance.markerBoxColor().isPresent()) {
+            int markerColor = ARGB.color(alpha, appearance.markerBoxColor().get());
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, MARKER_BOX_SPRITE, face.centerX() - faceBoxSize / 2, face.centerY() - faceBoxSize / 2, faceBoxSize, faceBoxSize, markerColor);
+        }
 
-        Optional<PlayerSensor.Sprite> faceSprite = appearance.faceDecoration();
-        if (faceSprite.isPresent()) {
-            int spriteWidth = faceSprite.get().width();
-            int spriteHeight = faceSprite.get().height();
-            int color = ARGB.white(alpha);
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, faceSprite.get().location(), face.centerX() - spriteWidth / 2, face.centerY() - faceBoxSize / 2 - spriteHeight, spriteWidth, spriteHeight, color);
+        for (PlayerSensor.Decoration decoration : appearance.decorations()) {
+            int scale = decoration.fixedSize() ? 1 : faceBoxSize;
+            int spriteWidth = Math.round(decoration.size().x * scale);
+            int spriteHeight = Math.round(decoration.size().y * scale);
+            int spriteOffsetX = Math.round(decoration.offset().x * scale);
+            int spriteOffsetY = Math.round(decoration.offset().y * scale);
+            int color = ARGB.multiplyAlpha(decoration.color(), alpha);
+
+            if (decoration.faceAnchor().isPresent()) {
+                Vector3f directionToFace = capturedPose.toWorldMatrix.transformPosition(new Vector3f(0.0f, 0.0f, 0.0f)).normalize();
+                Vector3f faceForward = capturedPose.toWorldMatrix.transformDirection(new Vector3f(0.0f, 0.0f, 1.0f));
+                if (faceForward.dot(directionToFace) < 0.15f) {
+                    continue;
+                }
+                Vec2 anchor = decoration.faceAnchor().get();
+                Vector3f anchorScreen = toScreenPos(capturedPose, Mth.lerp(anchor.x, MIN_HEAD_XZ, MAX_HEAD_XZ), Mth.lerp(anchor.y, MIN_HEAD_Y, MAX_HEAD_Y), MIN_HEAD_XZ + 0.5f);
+                if (isVertexOffScreen(anchorScreen)) {
+                    continue;
+                }
+                int anchorX = Mth.floor(anchorScreen.x() * graphics.guiWidth());
+                int anchorY = Mth.floor(anchorScreen.y() * graphics.guiHeight());
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, decoration.sprite(), anchorX + spriteOffsetX, anchorY + spriteOffsetY, spriteWidth, spriteHeight, color);
+            } else {
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, decoration.sprite(), face.centerX() + spriteOffsetX, face.centerY() - faceBoxSize / 2 + spriteOffsetY, spriteWidth, spriteHeight, color);
+            }
         }
     }
 
@@ -167,45 +200,36 @@ public class ClientPlayerSensorEffects {
             return;
         }
         if (model instanceof HumanoidModel<?> humanoidModel) {
-            CapturedScreenBoxes capture = capturePlayerPose(playerId, poseStack, humanoidModel);
-            if (capture != null) {
-                CAPTURED_SCREEN_POS.add(capture);
-            }
+            CAPTURED_SCREEN_POSE.add(capturePlayerPose(playerId, poseStack, humanoidModel));
         }
     }
 
-    private static @Nullable CapturedScreenBoxes capturePlayerPose(UUID entityId, PoseStack poseStack, HumanoidModel<?> humanoidModel) {
+    private static CapturedPose capturePlayerPose(UUID entityId, PoseStack poseStack, HumanoidModel<?> humanoidModel) {
         poseStack.pushPose();
         humanoidModel.head.translateAndRotate(poseStack);
-        ScreenBox faceBox = toScreenBox(poseStack, -4.0f, -8.0f, -4.0f, 4.0f, 0.0f, 4.0f);
+        Matrix4f toWorldMatrix = new Matrix4f(poseStack.last().pose());
+        Matrix4f toScreenMatrix = RenderSystem.getModelViewMatrixCopy().mul(poseStack.last().pose());
         poseStack.popPose();
-        if (faceBox != null) {
-            return new CapturedScreenBoxes(entityId, faceBox);
-        }
-        return null;
+        return new CapturedPose(entityId, toWorldMatrix, toScreenMatrix);
     }
 
-    private static @Nullable ScreenBox toScreenBox(PoseStack poseStack, float x0, float y0, float z0, float x1, float y1, float z1) {
+    private static @Nullable ScreenBox toScreenBox(CapturedPose pose, float x0, float y0, float z0, float x1, float y1, float z1) {
         Vector3f[] vertices = {
-                toScreenPos(poseStack, x0, y0, z0),
-                toScreenPos(poseStack, x0, y0, z1),
-                toScreenPos(poseStack, x0, y1, z0),
-                toScreenPos(poseStack, x0, y1, z1),
-                toScreenPos(poseStack, x1, y0, z0),
-                toScreenPos(poseStack, x1, y0, z1),
-                toScreenPos(poseStack, x1, y1, z0),
-                toScreenPos(poseStack, x1, y1, z1)
+                toScreenPos(pose, x0, y0, z0),
+                toScreenPos(pose, x0, y0, z1),
+                toScreenPos(pose, x0, y1, z0),
+                toScreenPos(pose, x0, y1, z1),
+                toScreenPos(pose, x1, y0, z0),
+                toScreenPos(pose, x1, y0, z1),
+                toScreenPos(pose, x1, y1, z0),
+                toScreenPos(pose, x1, y1, z1)
         };
         float minX = Float.MAX_VALUE;
         float minY = Float.MAX_VALUE;
         float maxX = -Float.MAX_VALUE;
         float maxY = -Float.MAX_VALUE;
-        boolean zZeroToOne = RenderSystem.getDevice().getDeviceInfo().isZZeroToOne();
         for (Vector3f vertex : vertices) {
-            // Fully behind the camera
-            if (vertex.z < (zZeroToOne ? 0.0f : -1.0f)) {
-                return null;
-            } else if (vertex.x <= -2.0f || vertex.x >= 2.0f || vertex.y <= -2.0f || vertex.y >= 2.0f) {
+            if (isVertexOffScreen(vertex)) {
                 return null;
             }
             minX = Math.min(minX, vertex.x);
@@ -216,19 +240,33 @@ public class ClientPlayerSensorEffects {
         return new ScreenBox(minX, minY, maxX, maxY);
     }
 
+    private static boolean isVertexOffScreen(Vector3f vertex) {
+        boolean zZeroToOne = RenderSystem.getDevice().getDeviceInfo().isZZeroToOne();
+        // Fully behind the camera
+        if (vertex.z < (zZeroToOne ? 0.0f : -1.0f)) {
+            return true;
+        } else if (vertex.x <= -2.0f || vertex.x >= 2.0f || vertex.y <= -2.0f || vertex.y >= 2.0f) {
+            return true;
+        }
+        return false;
+    }
+
     public static void captureProjectionMatrix(Matrix4f projectionMatrix) {
         capturedProjectionMatrix = projectionMatrix;
     }
 
-    private static Vector3f toScreenPos(PoseStack poseStack, float x, float y, float z) {
+    private static Vector3f toScreenPos(CapturedPose pose, float x, float y, float z) {
         Vector3f pos = new Vector3f(x, y, z).mul(1.0f / 16.0f);
-        poseStack.last().pose().transformPosition(pos);
-        RenderSystem.getModelViewMatrixCopy().transformPosition(pos);
+        pose.toScreenMatrix.transformPosition(pos);
         capturedProjectionMatrix.transformProject(pos);
         return pos.set((pos.x + 1.0f) / 2.0f, 1.0f - (pos.y + 1.0f) / 2.0f, pos.z);
     }
 
-    private record CapturedScreenBoxes(UUID playerId, ScreenBox face) {
+    private record CapturedPose(
+            UUID playerId,
+            Matrix4fc toWorldMatrix,
+            Matrix4fc toScreenMatrix
+    ) {
     }
 
     private record ScreenBox(float x0, float y0, float x1, float y1) {

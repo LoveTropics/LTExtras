@@ -1,6 +1,7 @@
 package com.lovetropics.extras;
 
 import com.lovetropics.extras.collectible.Collectible;
+import com.lovetropics.extras.item.sensor.PlayerSensor;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -47,6 +48,14 @@ public class ExtraTags {
 
         static TagKey<Collectible> modTag(String name) {
             return TagKey.create(ExtraRegistries.COLLECTIBLE, LTExtras.id(name));
+        }
+    }
+
+    public static class PlayerSensors extends ExtraTags {
+        public static final TagKey<PlayerSensor> ALWAYS_VISIBLE = modTag("always_visible");
+
+        static TagKey<PlayerSensor> modTag(String name) {
+            return TagKey.create(ExtraRegistries.PLAYER_SENSOR, LTExtras.id(name));
         }
     }
 }
