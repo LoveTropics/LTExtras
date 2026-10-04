@@ -33,6 +33,7 @@
     "collectible.MerchantResultSlotMixin",
     "collectible.ServerPlayerGameModeMixin",
     "collectible.SlotMixin",
+    "collectible.VillagerTradeMixin",
     "no_vanilla.AdvancementTreeMixin",
     "no_vanilla.DropVanillaAdvancementsMixin",
     "placeholder.TextDisplayAccessor",
