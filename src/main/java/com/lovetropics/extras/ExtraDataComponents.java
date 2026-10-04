@@ -6,6 +6,7 @@ import com.lovetropics.extras.collectible.CollectibleMarker;
 import com.lovetropics.extras.consume_actions.ConsumeAction;
 import com.lovetropics.extras.consume_actions.ConsumeActions;
 import com.lovetropics.extras.data.poi.MapConfig;
+import com.lovetropics.extras.extension.LingeringPotionExtension;
 import com.lovetropics.extras.item.CollectibleCompassItem;
 import com.lovetropics.extras.item.FireExtinguisher;
 import com.lovetropics.extras.item.ImageData;
@@ -138,6 +139,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ConsumeAction>> CONSUME_ACTION = REGISTER.registerComponentType(
             "consume_action",
             builder -> builder.persistent(ConsumeActions.CODEC).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<LingeringPotionExtension>> LINGERING_POTION_EXTENSION = REGISTER.registerComponentType(
+            "lingering_potion",
+            builder -> builder.persistent(LingeringPotionExtension.CODEC).cacheEncoding()
     );
 
     private static final AtlasSprite LOCK_SPRITE = new AtlasSprite(AtlasIds.GUI, LTExtras.id("lock"));

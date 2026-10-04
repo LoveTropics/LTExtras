@@ -5,6 +5,7 @@
   "plugin": "com.lovetropics.extras.mixin.LTExtrasMixinPlugin",
   "mixins": [
     "AbstractContainerMenuAccess",
+    "AreaEffectCloudMixin",
     "BlockBehaviourMixin",
     "BlockMixin",
     "BlockPropertiesMixin",
