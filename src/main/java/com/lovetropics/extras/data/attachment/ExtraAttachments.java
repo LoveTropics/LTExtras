@@ -5,6 +5,7 @@ import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.consume_actions.DisguiseConsumeAction;
 import com.lovetropics.extras.data.TropiCoinsStore;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsStore;
+import com.lovetropics.extras.extension.CustomTradeExtension;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.mounts.MountStore;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
@@ -67,6 +68,12 @@ public class ExtraAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<DisguiseConsumeAction.DisguiseTimerStore>> DISGUISE_TIMER_STORE = REGISTER.register(
             "disguise_timer_store", () -> AttachmentType.builder(() -> DisguiseConsumeAction.DisguiseTimerStore.EMPTY)
                     .serialize(DisguiseConsumeAction.DisguiseTimerStore.CODEC)
+                    .build()
+    );
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<CustomTradeExtension>> TRADE_OVERRIDE = REGISTER.register(
+            "trade_override", () -> AttachmentType.builder(() -> CustomTradeExtension.EMPTY)
+                    .serialize(CustomTradeExtension.TRADE_CODEC)
                     .build()
     );
 }

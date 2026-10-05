@@ -29,6 +29,7 @@
     "ServerGamePacketListenerImplMixin",
     "ServerLevelMixin",
     "ShulkerMixin",
+    "VillagerMixin",
     "WardenMixin",
     "collectible.ItemStackMixin",
     "collectible.MerchantResultSlotMixin",
