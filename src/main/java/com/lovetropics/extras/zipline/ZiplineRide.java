@@ -15,7 +15,6 @@ public final class ZiplineRide {
     private static final double GRAVITY = 0.1;
     private static final double DRAG = 0.99;
     private static final double MIN_SPEED = 5.0 / SharedConstants.TICKS_PER_SECOND;
-    private static final double MIN_UPWARD_SPEED = 10.0 / SharedConstants.TICKS_PER_SECOND;
     // How steep the rope has to climb (sine of its angle) before riders are pulled up at the full minimum upward speed
     private static final double UPWARD_SLOPE = 0.1;
     private static final double PULL_ACCELERATION = 0.02;
@@ -106,7 +105,8 @@ public final class ZiplineRide {
      */
     private double minSpeed() {
         double climb = segment.tangent(t).y * direction;
-        return Mth.lerp(Mth.clamp(climb / UPWARD_SLOPE, 0.0, 1.0), MIN_SPEED, MIN_UPWARD_SPEED);
+        double minUpwardSpeed = segment.settings().minUpwardSpeed() / SharedConstants.TICKS_PER_SECOND;
+        return Mth.lerp(Mth.clamp(climb / UPWARD_SLOPE, 0.0, 1.0), MIN_SPEED, minUpwardSpeed);
     }
 
     private void updateDirection(Vec3 moveInput) {

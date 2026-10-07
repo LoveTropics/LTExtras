@@ -12,14 +12,12 @@ import org.jspecify.annotations.Nullable;
  */
 public final class ZiplineSegment {
     public static final int MAX_SPAN = 128;
-    public static final int MAX_SLACK = 10;
-    public static final int DEFAULT_SLACK = 2;
     private static final double SAG_PER_SLACK = 0.02;
     private static final double EPSILON = 1.0e-7;
 
     private final BlockPos from;
     private final BlockPos to;
-    private final int slack;
+    private final ZiplineSettings settings;
     private final Vec3 start;
     private final Vec3 end;
     private final double sag;
@@ -28,13 +26,13 @@ public final class ZiplineSegment {
      * @param start where the rope is tied on the pole at {@code from}
      * @param end   where the rope is tied on the pole at {@code to}
      */
-    public ZiplineSegment(BlockPos from, Vec3 start, BlockPos to, Vec3 end, int slack) {
+    public ZiplineSegment(BlockPos from, Vec3 start, BlockPos to, Vec3 end, ZiplineSettings settings) {
         this.from = from;
         this.to = to;
-        this.slack = slack;
+        this.settings = settings;
         this.start = start;
         this.end = end;
-        sag = start.distanceTo(end) * slack * SAG_PER_SLACK;
+        sag = start.distanceTo(end) * settings.slack() * SAG_PER_SLACK;
     }
 
     public BlockPos from() {
@@ -45,12 +43,12 @@ public final class ZiplineSegment {
         return to;
     }
 
-    public int slack() {
-        return slack;
+    public ZiplineSettings settings() {
+        return settings;
     }
 
     public ZiplineSegment reversed() {
-        return new ZiplineSegment(to, end, from, start, slack);
+        return new ZiplineSegment(to, end, from, start, settings);
     }
 
     public Vec3 point(double t) {

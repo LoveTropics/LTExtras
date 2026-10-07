@@ -9,18 +9,18 @@ import net.minecraft.world.phys.Vec3;
  * @param targetAnchorOffset where the rope is tied on the target pole, relative to it, so that the rope can be placed
  *                           without the target pole being loaded
  */
-public record ZiplineConnection(BlockPos target, Vec3 targetAnchorOffset, int slack) {
+public record ZiplineConnection(BlockPos target, Vec3 targetAnchorOffset, ZiplineSettings settings) {
     public static final Codec<ZiplineConnection> CODEC = RecordCodecBuilder.create(i -> i.group(
             BlockPos.CODEC.fieldOf("target").forGetter(ZiplineConnection::target),
             Vec3.CODEC.optionalFieldOf("target_anchor", ZiplinePoleBlock.FLOOR_ANCHOR).forGetter(ZiplineConnection::targetAnchorOffset),
-            Codec.INT.optionalFieldOf("slack", 0).forGetter(ZiplineConnection::slack)
+            ZiplineSettings.MAP_CODEC.forGetter(ZiplineConnection::settings)
     ).apply(i, ZiplineConnection::new));
 
     public Vec3 targetAnchor() {
         return Vec3.atLowerCornerOf(target).add(targetAnchorOffset);
     }
 
-    public ZiplineConnection withSlack(int slack) {
-        return new ZiplineConnection(target, targetAnchorOffset, slack);
+    public ZiplineConnection withSettings(ZiplineSettings settings) {
+        return new ZiplineConnection(target, targetAnchorOffset, settings);
     }
 }

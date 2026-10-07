@@ -1,8 +1,8 @@
 package com.lovetropics.extras.client;
 
 import com.lovetropics.extras.ExtraItems;
+import com.lovetropics.extras.client.screen.ZiplineSettingsScreen;
 import com.lovetropics.extras.network.message.ServerboundZiplineRidePacket;
-import com.lovetropics.extras.network.message.ServerboundZiplineSlackPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.level.block.state.BlockState;
@@ -77,7 +77,9 @@ public final class ClientZiplineHandler {
 
         ZiplineSegment segment = ropeHit.segment();
         if (holdingWrench) {
-            ClientPacketDistributor.sendToServer(new ServerboundZiplineSlackPacket(segment.from(), segment.to(), !player.isShiftKeyDown()));
+            if (player.mayBuild()) {
+                minecraft.gui.setScreen(new ZiplineSettingsScreen(segment));
+            }
             consume(event);
         } else if (canAttach(player)) {
             Vec3 tangent = segment.tangent(ropeHit.t());

@@ -42,7 +42,14 @@ public enum ExtraLangKeys {
     ZIPLINE_DISCONNECTED("zipline", "disconnected", "Poles disconnected."),
     ZIPLINE_POLE_FULL("zipline", "pole_full", "A pole can only have two ziplines."),
     ZIPLINE_TOO_FAR("zipline", "too_far", "Poles are too far apart (max %s blocks)."),
-    ZIPLINE_SLACK("zipline", "slack", "Slack: %s/%s")
+    ZIPLINE_SETTINGS_TITLE("zipline", "settings", "Zipline Settings"),
+    ZIPLINE_SETTINGS_SAVED("zipline", "settings_saved", "Zipline settings saved."),
+    ZIPLINE_SLACK("zipline", "slack", "Slack: %s"),
+    ZIPLINE_SLACK_TOOLTIP("zipline", "slack.tooltip", "How much the rope sags between its poles."),
+    ZIPLINE_MIN_UPWARD_SPEED("zipline", "min_upward_speed", "Min. Upward Speed: %s blocks/s"),
+    ZIPLINE_MIN_UPWARD_SPEED_TOOLTIP("zipline", "min_upward_speed.tooltip", "How fast riders are pulled along when the rope climbs."),
+    ZIPLINE_CAN_LET_GO("zipline", "can_let_go", "Riders Can Let Go"),
+    ZIPLINE_CAN_LET_GO_TOOLTIP("zipline", "can_let_go.tooltip", "Whether riders can let go of the rope by sneaking or jumping. Otherwise, they hold on until the end of the line.")
     ;
 
     private final String key;

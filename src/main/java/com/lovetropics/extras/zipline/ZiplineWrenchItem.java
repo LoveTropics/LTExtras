@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Use on two poles in turn to connect or disconnect them.
- * Using it on a rope to change its slack is handled on the client since ropes are not blocks nor entities.
+ * Using it on a rope to open its settings is handled on the client since ropes are not blocks nor entities.
  */
 public class ZiplineWrenchItem extends Item {
     public ZiplineWrenchItem(Properties properties) {
@@ -73,7 +73,7 @@ public class ZiplineWrenchItem extends Item {
         if (from.isFull() || to.isFull()) {
             return ExtraLangKeys.ZIPLINE_POLE_FULL.get().withStyle(ChatFormatting.RED);
         }
-        ZiplinePoleBlockEntity.connect(level, selectedPos, pos, ZiplineSegment.DEFAULT_SLACK);
+        ZiplinePoleBlockEntity.connect(level, selectedPos, pos, ZiplineSettings.DEFAULT);
         return ExtraLangKeys.ZIPLINE_CONNECTED.get().withStyle(ChatFormatting.GREEN);
     }
 

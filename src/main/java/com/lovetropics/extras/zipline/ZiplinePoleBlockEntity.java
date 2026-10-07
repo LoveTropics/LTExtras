@@ -36,10 +36,10 @@ public class ZiplinePoleBlockEntity extends BlockEntity {
         super(type, pos, state);
     }
 
-    public static boolean connect(Level level, BlockPos from, BlockPos to, int slack) {
+    public static boolean connect(Level level, BlockPos from, BlockPos to, ZiplineSettings settings) {
         if (level.getBlockEntity(from) instanceof ZiplinePoleBlockEntity fromPole && level.getBlockEntity(to) instanceof ZiplinePoleBlockEntity toPole) {
-            fromPole.addConnection(new ZiplineConnection(to, toPole.getAnchorOffset(), slack));
-            toPole.addConnection(new ZiplineConnection(from, fromPole.getAnchorOffset(), slack));
+            fromPole.addConnection(new ZiplineConnection(to, toPole.getAnchorOffset(), settings));
+            toPole.addConnection(new ZiplineConnection(from, fromPole.getAnchorOffset(), settings));
             return true;
         }
         return false;
@@ -54,12 +54,12 @@ public class ZiplinePoleBlockEntity extends BlockEntity {
         }
     }
 
-    public static void setSlack(Level level, BlockPos from, BlockPos to, int slack) {
+    public static void setSettings(Level level, BlockPos from, BlockPos to, ZiplineSettings settings) {
         if (level.getBlockEntity(from) instanceof ZiplinePoleBlockEntity fromPole) {
-            fromPole.updateSlack(to, slack);
+            fromPole.updateSettings(to, settings);
         }
         if (level.getBlockEntity(to) instanceof ZiplinePoleBlockEntity toPole) {
-            toPole.updateSlack(from, slack);
+            toPole.updateSettings(from, settings);
         }
     }
 
@@ -85,7 +85,7 @@ public class ZiplinePoleBlockEntity extends BlockEntity {
     }
 
     public ZiplineSegment getSegment(ZiplineConnection connection) {
-        return new ZiplineSegment(worldPosition, getAnchor(), connection.target(), connection.targetAnchor(), connection.slack());
+        return new ZiplineSegment(worldPosition, getAnchor(), connection.target(), connection.targetAnchor(), connection.settings());
     }
 
     public boolean isFull() {
@@ -111,8 +111,8 @@ public class ZiplinePoleBlockEntity extends BlockEntity {
         }
     }
 
-    private void updateSlack(BlockPos target, int slack) {
-        connections.replaceAll(connection -> connection.target().equals(target) ? connection.withSlack(slack) : connection);
+    private void updateSettings(BlockPos target, ZiplineSettings settings) {
+        connections.replaceAll(connection -> connection.target().equals(target) ? connection.withSettings(settings) : connection);
         markUpdated();
     }
 

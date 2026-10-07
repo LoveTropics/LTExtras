@@ -91,8 +91,9 @@ public final class ZiplineRider {
             return false;
         }
 
-        boolean jumpedOff = isPlayer && jumping;
-        boolean leaving = isPlayer && (entity.isShiftKeyDown() || jumping || entity.isSpectator());
+        boolean canLetGo = isPlayer && ride.segment().settings().canLetGo();
+        boolean jumpedOff = canLetGo && jumping;
+        boolean leaving = (isPlayer && entity.isSpectator()) || (canLetGo && (entity.isShiftKeyDown() || jumping));
         Vec3 moveInput = isPlayer ? getMoveInput(entity, input) : Vec3.ZERO;
         if (leaving || !ride.tick(ZiplineIndex.get(entity.level()), moveInput)) {
             stopRiding(entity);
