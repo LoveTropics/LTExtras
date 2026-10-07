@@ -15,6 +15,10 @@ public final class ZiplineRide {
     private static final double GRAVITY = 0.1;
     private static final double DRAG = 0.99;
     private static final double MIN_SPEED = 5.0 / SharedConstants.TICKS_PER_SECOND;
+    private static final double MIN_UPWARD_SPEED = 10.0 / SharedConstants.TICKS_PER_SECOND;
+    // How steep the rope has to climb (sine of its angle) before riders are pulled up at the full minimum upward speed
+    private static final double UPWARD_SLOPE = 0.1;
+    private static final double PULL_ACCELERATION = 0.02;
     private static final double MAX_SPEED = 2.0;
     private static final double TURN_ACCELERATION = 0.05;
     private static final double TURN_INPUT_THRESHOLD = -0.5;
@@ -83,14 +87,26 @@ public final class ZiplineRide {
                 turning = false;
             }
         } else {
-            velocity = (velocity - segment.tangent(t).y * GRAVITY) * DRAG;
-            if (velocity * direction < MIN_SPEED) {
-                velocity = direction * MIN_SPEED;
+            double speed = velocity * direction;
+            double minSpeed = minSpeed();
+            double newSpeed = (velocity - segment.tangent(t).y * GRAVITY) * DRAG * direction;
+            if (newSpeed < minSpeed) {
+                // Pulled along instead of slowing down any further, building up speed if the minimum just went up
+                newSpeed = Math.min(Math.max(speed, newSpeed) + PULL_ACCELERATION, minSpeed);
             }
+            velocity = direction * newSpeed;
         }
         velocity = Mth.clamp(velocity, -MAX_SPEED, MAX_SPEED);
 
         return advance(index);
+    }
+
+    /**
+     * Riders are kept going faster when climbing, so that ziplines don't crawl up against gravity.
+     */
+    private double minSpeed() {
+        double climb = segment.tangent(t).y * direction;
+        return Mth.lerp(Mth.clamp(climb / UPWARD_SLOPE, 0.0, 1.0), MIN_SPEED, MIN_UPWARD_SPEED);
     }
 
     private void updateDirection(Vec3 moveInput) {
