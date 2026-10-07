@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "minecraft:block/iron_block",
+    "pole": "minecraft:block/iron_block"
+  },
+  "elements": [
+    {
+      "from": [5, 4, 15],
+      "to": [11, 12, 16],
+      "faces": {
+        "north": {"texture": "#pole"},
+        "east": {"texture": "#pole"},
+        "south": {"texture": "#pole", "cullface": "south"},
+        "west": {"texture": "#pole"},
+        "up": {"texture": "#pole"},
+        "down": {"texture": "#pole"}
+      }
+    },
+    {
+      "from": [7, 7, 9.5],
+      "to": [9, 9, 15],
+      "faces": {
+        "east": {"texture": "#pole"},
+        "west": {"texture": "#pole"},
+        "up": {"texture": "#pole"},
+        "down": {"texture": "#pole"}
+      }
+    },
+    {
+      "from": [6.5, 6.5, 6.5],
+      "to": [9.5, 9.5, 9.5],
+      "faces": {
+        "north": {"texture": "#pole"},
+        "east": {"texture": "#pole"},
+        "south": {"texture": "#pole"},
+        "west": {"texture": "#pole"},
+        "up": {"texture": "#pole"},
+        "down": {"texture": "#pole"}
+      }
+    }
+  ]
+}

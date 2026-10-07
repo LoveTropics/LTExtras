@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -37,8 +38,8 @@ public class ZiplinePoleBlockEntity extends BlockEntity {
 
     public static boolean connect(Level level, BlockPos from, BlockPos to, int slack) {
         if (level.getBlockEntity(from) instanceof ZiplinePoleBlockEntity fromPole && level.getBlockEntity(to) instanceof ZiplinePoleBlockEntity toPole) {
-            fromPole.addConnection(new ZiplineConnection(to, slack));
-            toPole.addConnection(new ZiplineConnection(from, slack));
+            fromPole.addConnection(new ZiplineConnection(to, toPole.getAnchorOffset(), slack));
+            toPole.addConnection(new ZiplineConnection(from, fromPole.getAnchorOffset(), slack));
             return true;
         }
         return false;
@@ -75,6 +76,18 @@ public class ZiplinePoleBlockEntity extends BlockEntity {
         return null;
     }
 
+    public Vec3 getAnchorOffset() {
+        return ZiplinePoleBlock.getAnchorOffset(getBlockState());
+    }
+
+    public Vec3 getAnchor() {
+        return Vec3.atLowerCornerOf(worldPosition).add(getAnchorOffset());
+    }
+
+    public ZiplineSegment getSegment(ZiplineConnection connection) {
+        return new ZiplineSegment(worldPosition, getAnchor(), connection.target(), connection.targetAnchor(), connection.slack());
+    }
+
     public boolean isFull() {
         return connections.size() >= MAX_CONNECTIONS;
     }
@@ -82,7 +95,7 @@ public class ZiplinePoleBlockEntity extends BlockEntity {
     public AABB getRenderBounds() {
         AABB bounds = new AABB(worldPosition).expandTowards(0.0, 1.0, 0.0);
         for (ZiplineConnection connection : connections) {
-            bounds = bounds.minmax(new ZiplineSegment(worldPosition, connection.target(), connection.slack()).bounds());
+            bounds = bounds.minmax(getSegment(connection).bounds());
         }
         return bounds;
     }

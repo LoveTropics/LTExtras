@@ -32,14 +32,13 @@ public final class ZiplineIndex {
 
     public @Nullable ZiplineSegment getSegment(BlockPos from, BlockPos to) {
         ZiplinePoleBlockEntity pole = poles.get(from);
-        ZiplineConnection connection;
         if (pole != null) {
-            connection = pole.getConnection(to);
-        } else {
-            ZiplinePoleBlockEntity otherPole = poles.get(to);
-            connection = otherPole != null ? otherPole.getConnection(from) : null;
+            ZiplineConnection connection = pole.getConnection(to);
+            return connection != null ? pole.getSegment(connection) : null;
         }
-        return connection != null ? new ZiplineSegment(from, to, connection.slack()) : null;
+        ZiplinePoleBlockEntity otherPole = poles.get(to);
+        ZiplineConnection connection = otherPole != null ? otherPole.getConnection(from) : null;
+        return connection != null ? otherPole.getSegment(connection).reversed() : null;
     }
 
     public List<ZiplineSegment> getSegmentsFrom(BlockPos pos) {
@@ -49,7 +48,7 @@ public final class ZiplineIndex {
         }
         List<ZiplineSegment> segments = new ArrayList<>(pole.getConnections().size());
         for (ZiplineConnection connection : pole.getConnections()) {
-            segments.add(new ZiplineSegment(pos, connection.target(), connection.slack()));
+            segments.add(pole.getSegment(connection));
         }
         return segments;
     }
@@ -97,7 +96,7 @@ public final class ZiplineIndex {
                 if (!ownsSegment(pole.getBlockPos(), connection.target())) {
                     continue;
                 }
-                ZiplineSegment segment = new ZiplineSegment(pole.getBlockPos(), connection.target(), connection.slack());
+                ZiplineSegment segment = pole.getSegment(connection);
                 if (!segment.bounds().inflate(radius).intersects(rayBounds)) {
                     continue;
                 }

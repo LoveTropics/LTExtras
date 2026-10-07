@@ -55,7 +55,7 @@ public class ZiplinePoleRenderer implements BlockEntityRenderer<ZiplinePoleBlock
         BlockPos pos = pole.getBlockPos();
         for (ZiplineConnection connection : pole.getConnections()) {
             if (index.ownsSegment(pos, connection.target())) {
-                state.ropes.add(extractRope(level, new ZiplineSegment(pos, connection.target(), connection.slack())));
+                state.ropes.add(extractRope(level, pole.getSegment(connection)));
             }
         }
     }

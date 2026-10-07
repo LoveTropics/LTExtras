@@ -14,7 +14,6 @@ public final class ZiplineSegment {
     public static final int MAX_SPAN = 128;
     public static final int MAX_SLACK = 10;
     public static final int DEFAULT_SLACK = 2;
-    public static final double ANCHOR_HEIGHT = 2.0;
     private static final double SAG_PER_SLACK = 0.02;
     private static final double EPSILON = 1.0e-7;
 
@@ -25,17 +24,17 @@ public final class ZiplineSegment {
     private final Vec3 end;
     private final double sag;
 
-    public ZiplineSegment(BlockPos from, BlockPos to, int slack) {
+    /**
+     * @param start where the rope is tied on the pole at {@code from}
+     * @param end   where the rope is tied on the pole at {@code to}
+     */
+    public ZiplineSegment(BlockPos from, Vec3 start, BlockPos to, Vec3 end, int slack) {
         this.from = from;
         this.to = to;
         this.slack = slack;
-        start = anchor(from);
-        end = anchor(to);
+        this.start = start;
+        this.end = end;
         sag = start.distanceTo(end) * slack * SAG_PER_SLACK;
-    }
-
-    public static Vec3 anchor(BlockPos pole) {
-        return new Vec3(pole.getX() + 0.5, pole.getY() + ANCHOR_HEIGHT, pole.getZ() + 0.5);
     }
 
     public BlockPos from() {
@@ -51,7 +50,7 @@ public final class ZiplineSegment {
     }
 
     public ZiplineSegment reversed() {
-        return new ZiplineSegment(to, from, slack);
+        return new ZiplineSegment(to, end, from, start, slack);
     }
 
     public Vec3 point(double t) {

@@ -1485,10 +1485,23 @@ public class ExtraBlocks {
 
     public static final BlockEntry<ZiplinePoleBlock> ZIPLINE_POLE = REGISTRATE.block("zipline_pole", ZiplinePoleBlock::new)
             .properties(p -> p.mapColor(MapColor.METAL).strength(2.0f).sound(SoundType.METAL).noCollision().noOcclusion().pushReaction(PushReaction.BLOCK))
-            .blockstate(() -> (ctx, prov) -> prov.createDoubleBlock(ctx.get(),
-                    plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_top")),
-                    plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_bottom"))
-            ))
+            .blockstate(() -> (ctx, prov) -> {
+                MultiVariant bottom = plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_bottom"));
+                MultiVariant top = plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_top"));
+                MultiVariant wall = plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_wall"));
+                MultiVariant ceiling = plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_ceiling"));
+                prov.blockStateOutput.accept(dispatch(ctx.get())
+                        .with(PropertyDispatch.initial(ZiplinePoleBlock.FACE, ZiplinePoleBlock.FACING, ZiplinePoleBlock.HALF).generate((face, facing, half) -> switch (face) {
+                            case FLOOR -> half == DoubleBlockHalf.UPPER ? top : bottom;
+                            case WALL -> wall.with(switch (facing) {
+                                case Direction.EAST -> Y_ROT_90;
+                                case Direction.SOUTH -> Y_ROT_180;
+                                case Direction.WEST -> Y_ROT_270;
+                                default -> NOP;
+                            });
+                            case CEILING -> ceiling;
+                        })));
+            })
             .loot((lootTables, block) -> lootTables.add(block,
                     lootTable().withPool(lootTables.applyExplosionCondition(block, LootPool.lootPool()
                             .setRolls(exactly(1))

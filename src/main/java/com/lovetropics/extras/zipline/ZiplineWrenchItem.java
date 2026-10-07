@@ -59,7 +59,7 @@ public class ZiplineWrenchItem extends Item {
             return ExtraLangKeys.ZIPLINE_SELECTED_POLE_MISSING.get().withStyle(ChatFormatting.RED);
         }
         // Before looking the poles up, so that a far away selected pole doesn't get its chunk loaded
-        if (!ZiplineSegment.anchor(selectedPos).closerThan(ZiplineSegment.anchor(pos), ZiplineSegment.MAX_SPAN)) {
+        if (!selectedPos.closerThan(pos, ZiplineSegment.MAX_SPAN)) {
             return ExtraLangKeys.ZIPLINE_TOO_FAR.format(ZiplineSegment.MAX_SPAN).withStyle(ChatFormatting.RED);
         }
         if (!(level.getBlockEntity(selectedPos) instanceof ZiplinePoleBlockEntity from)

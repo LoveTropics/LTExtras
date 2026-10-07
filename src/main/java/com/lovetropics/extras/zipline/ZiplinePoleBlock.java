@@ -18,29 +18,50 @@ import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Map;
+
 /**
- * A two block-tall pole that ziplines are strung between. It has no collision so that riders can fly past it.
+ * Ziplines are strung between these. Standing on the floor, it is a two block-tall pole, but it can also be mounted on
+ * a wall or hung from a ceiling as a single block. It has no collision so that riders can fly past it, and it doesn't
+ * need the block that it is attached to in order to stay up.
  */
 public class ZiplinePoleBlock extends Block implements EntityBlock {
     public static final MapCodec<ZiplinePoleBlock> CODEC = simpleCodec(ZiplinePoleBlock::new);
+    public static final EnumProperty<AttachFace> FACE = BlockStateProperties.ATTACH_FACE;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
+    // Only the floor pole has an upper half
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
-    private static final VoxelShape SHAPE = Block.box(6.0, 0.0, 6.0, 10.0, 16.0, 10.0);
+    // Where ropes are tied, relative to the block holding the block entity
+    public static final Vec3 FLOOR_ANCHOR = new Vec3(0.5, 2.0, 0.5);
+    public static final Vec3 MOUNTED_ANCHOR = new Vec3(0.5, 0.5, 0.5);
+
+    private static final VoxelShape FLOOR_SHAPE = Block.box(6.0, 0.0, 6.0, 10.0, 16.0, 10.0);
+    private static final Map<Direction, VoxelShape> WALL_SHAPES = Shapes.rotateHorizontal(Block.box(5.0, 4.0, 6.5, 11.0, 12.0, 16.0));
+    private static final VoxelShape CEILING_SHAPE = Block.box(5.0, 6.5, 5.0, 11.0, 16.0, 11.0);
 
     public ZiplinePoleBlock(Properties properties) {
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(HALF, DoubleBlockHalf.LOWER));
+        registerDefaultState(stateDefinition.any()
+                .setValue(FACE, AttachFace.FLOOR)
+                .setValue(FACING, Direction.NORTH)
+                .setValue(HALF, DoubleBlockHalf.LOWER)
+        );
     }
 
     @Override
@@ -52,14 +73,26 @@ public class ZiplinePoleBlock extends Block implements EntityBlock {
         return state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
     }
 
+    public static Vec3 getAnchorOffset(BlockState state) {
+        return state.getValue(FACE) == AttachFace.FLOOR ? FLOOR_ANCHOR : MOUNTED_ANCHOR;
+    }
+
+    private static VoxelShape getShape(BlockState state) {
+        return switch (state.getValue(FACE)) {
+            case FLOOR -> FLOOR_SHAPE;
+            case WALL -> WALL_SHAPES.get(state.getValue(FACING));
+            case CEILING -> CEILING_SHAPE;
+        };
+    }
+
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
+        return getShape(state);
     }
 
     @Override
     protected VoxelShape getEntityInsideCollisionShape(BlockState state, BlockGetter level, BlockPos pos, Entity entity) {
-        return SHAPE;
+        return getShape(state);
     }
 
     @Override
@@ -78,27 +111,39 @@ public class ZiplinePoleBlock extends Block implements EntityBlock {
 
     @Override
     protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
-        DoubleBlockHalf half = state.getValue(HALF);
-        boolean towardsOtherHalf = directionToNeighbour.getAxis() == Direction.Axis.Y && (half == DoubleBlockHalf.LOWER) == (directionToNeighbour == Direction.UP);
-        if (towardsOtherHalf && !(neighbourState.is(this) && neighbourState.getValue(HALF) != half)) {
-            return Blocks.AIR.defaultBlockState();
+        if (state.getValue(FACE) == AttachFace.FLOOR) {
+            DoubleBlockHalf half = state.getValue(HALF);
+            boolean towardsOtherHalf = directionToNeighbour.getAxis() == Direction.Axis.Y && (half == DoubleBlockHalf.LOWER) == (directionToNeighbour == Direction.UP);
+            if (towardsOtherHalf && !(neighbourState.is(this) && neighbourState.getValue(HALF) != half)) {
+                return Blocks.AIR.defaultBlockState();
+            }
         }
         return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
     }
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockPos pos = context.getClickedPos();
-        Level level = context.getLevel();
-        if (pos.getY() < level.getMaxY() && level.getBlockState(pos.above()).canBeReplaced(context)) {
-            return defaultBlockState();
-        }
-        return null;
+        BlockState state = defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+        Direction face = context.replacingClickedOnBlock() ? Direction.UP : context.getClickedFace();
+        return switch (face) {
+            case UP -> {
+                BlockPos pos = context.getClickedPos();
+                Level level = context.getLevel();
+                if (pos.getY() < level.getMaxY() && level.getBlockState(pos.above()).canBeReplaced(context)) {
+                    yield state.setValue(FACE, AttachFace.FLOOR);
+                }
+                yield null;
+            }
+            case DOWN -> state.setValue(FACE, AttachFace.CEILING);
+            default -> state.setValue(FACE, AttachFace.WALL).setValue(FACING, face);
+        };
     }
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity by, ItemStack itemStack) {
-        level.setBlockAndUpdate(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER));
+        if (state.getValue(FACE) == AttachFace.FLOOR) {
+            level.setBlockAndUpdate(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER));
+        }
     }
 
     @Override
@@ -130,8 +175,18 @@ public class ZiplinePoleBlock extends Block implements EntityBlock {
     }
 
     @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(HALF);
+        builder.add(FACE, FACING, HALF);
     }
 
     @Override
