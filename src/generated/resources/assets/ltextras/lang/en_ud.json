@@ -409,6 +409,7 @@
   "block.ltextras.yellow_terracotta_slab": "qɐןS ɐʇʇoɔɐɹɹǝ⟘ ʍoןןǝʎ",
   "block.ltextras.yellow_terracotta_stairs": "sɹıɐʇS ɐʇʇoɔɐɹɹǝ⟘ ʍoןןǝʎ",
   "block.ltextras.yellow_terracotta_wall": "ןןɐM ɐʇʇoɔɐɹɹǝ⟘ ʍoןןǝʎ",
+  "block.ltextras.zipline_pole": "ǝןoԀ ǝuıןdıZ",
   "commands.tpa.general_error": "ʇɹodǝןǝʇ oʇ ǝןqɐu∩",
   "commands.tpa.help.back": "buıʇɹodǝןǝʇ ǝɹoɟǝq ǝɹǝʍ noʎ ǝɹǝɥʍ oʇ ʞɔɐq ʇɹodǝןǝ⟘ - ʞɔɐq\\",
   "commands.tpa.help.tpa": "ɹǝʎɐןd ɐ oʇ ʇɹodǝןǝʇ oʇ ʇsǝnbǝᴚ - <ɹǝʎɐןd> ɐdʇ\\",
@@ -508,6 +509,7 @@
   "item.ltextras.white_key": "ʎǝʞ ǝʇıɥM",
   "item.ltextras.wrench": "ɥɔuǝɹM",
   "item.ltextras.yellow_key": "ʎǝʞ ʍoןןǝʎ",
+  "item.ltextras.zipline_wrench": "ɥɔuǝɹM ǝuıןdıZ",
   "itemGroup.ltextras.ltextras": "sɐɹʇxƎ⟘Ꞁ",
   "key.category.ltextras.forklift": "sןoɹʇuoƆ ʇɟıןʞɹoℲ",
   "key.ltextras.eject_fork_riders": "sɹǝpıᴚ ʇɔǝظƎ",
@@ -529,5 +531,13 @@
   "spawnitems.set_not_restorable": "¡pǝɹoʇsǝɹ ǝq ʇouuɐɔ %1$s ʇǝs ɯǝʇı uʍɐds ǝɥ⟘",
   "spawnitems.unknown_set": "%1$s :ʇǝs ɯǝʇı uʍɐds uʍouʞu∩",
   "toast.collectible.item": "%1$s + ",
-  "toast.collectible.title": "¡ǝןqıʇɔǝןןoƆ ʍǝN"
+  "toast.collectible.title": "¡ǝןqıʇɔǝןןoƆ ʍǝN",
+  "zipline.ltextras.connected": "˙pǝʇɔǝuuoɔ sǝןoԀ",
+  "zipline.ltextras.disconnected": "˙pǝʇɔǝuuoɔsıp sǝןoԀ",
+  "zipline.ltextras.pole_full": "˙sǝuıןdız oʍʇ ǝʌɐɥ ʎןuo uɐɔ ǝןod Ɐ",
+  "zipline.ltextras.pole_selected": "˙ɯǝɥʇ ʇɔǝuuoɔ oʇ ǝןod ɹǝɥʇouɐ uo ɥɔuǝɹʍ ǝɥʇ ǝs∩ ˙pǝʇɔǝןǝs ǝןoԀ",
+  "zipline.ltextras.selected_pole_missing": "˙sʇsıxǝ ɹǝbuoן ou ǝןod pǝʇɔǝןǝs ǝɥ⟘",
+  "zipline.ltextras.selection_cleared": "˙pǝɹɐǝןɔ uoıʇɔǝןǝs ǝןoԀ",
+  "zipline.ltextras.slack": "%2$s\\%1$s :ʞɔɐןS",
+  "zipline.ltextras.too_far": "˙(sʞɔoןq %1$s xɐɯ) ʇɹɐdɐ ɹɐɟ ooʇ ǝɹɐ sǝןoԀ"
 }

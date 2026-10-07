@@ -4,6 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraBlocks;
 import com.lovetropics.extras.client.block.DisplayBlockRender;
 import com.lovetropics.extras.client.block.WordBoxBlockEntityRenderer;
+import com.lovetropics.extras.client.block.ZiplinePoleRenderer;
 import com.lovetropics.extras.client.entity.model.AmazonRiverDolphinModel;
 import com.lovetropics.extras.client.entity.model.ForkliftModel;
 import com.lovetropics.extras.client.entity.model.GlassFrogModel;
@@ -40,6 +41,7 @@ public class ClientRegisterEvents {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ExtraBlocks.DISPLAY_BLOCK_ENTITY.get(), DisplayBlockRender::new);
         event.registerBlockEntityRenderer(ExtraBlocks.WORD_BOX_BLOCK_ENTITY.get(), WordBoxBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(ExtraBlocks.ZIPLINE_POLE_ENTITY.get(), ZiplinePoleRenderer::new);
     }
 
     @SubscribeEvent

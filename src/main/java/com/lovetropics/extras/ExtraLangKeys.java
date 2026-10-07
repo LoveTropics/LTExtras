@@ -33,7 +33,16 @@ public enum ExtraLangKeys {
     FORKLIFT_CERTIFICATION_MISSING("forklift", "certification.missing", "You must have a Forklift Certification to drive this forklift"),
 
     WATER_COOLER_POTION_NAME("item", "water_cooler_potion.name", "Suspicious Water"),
-    WATER_COOLER_POTION_LORE("item", "water_cooler_potion.lore", "It's lukewarm and smells like .. battery acid?")
+    WATER_COOLER_POTION_LORE("item", "water_cooler_potion.lore", "It's lukewarm and smells like .. battery acid?"),
+
+    ZIPLINE_POLE_SELECTED("zipline", "pole_selected", "Pole selected. Use the wrench on another pole to connect them."),
+    ZIPLINE_SELECTION_CLEARED("zipline", "selection_cleared", "Pole selection cleared."),
+    ZIPLINE_SELECTED_POLE_MISSING("zipline", "selected_pole_missing", "The selected pole no longer exists."),
+    ZIPLINE_CONNECTED("zipline", "connected", "Poles connected."),
+    ZIPLINE_DISCONNECTED("zipline", "disconnected", "Poles disconnected."),
+    ZIPLINE_POLE_FULL("zipline", "pole_full", "A pole can only have two ziplines."),
+    ZIPLINE_TOO_FAR("zipline", "too_far", "Poles are too far apart (max %s blocks)."),
+    ZIPLINE_SLACK("zipline", "slack", "Slack: %s/%s")
     ;
 
     private final String key;

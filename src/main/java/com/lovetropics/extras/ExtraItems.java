@@ -19,6 +19,7 @@ import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.lovetropics.extras.sounds.ExtraSounds;
+import com.lovetropics.extras.zipline.ZiplineWrenchItem;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -85,6 +86,10 @@ public class ExtraItems {
 
     public static final ItemEntry<Item> BLUE_KEY = REGISTRATE.item("blue_key", Item::new).register();
     public static final ItemEntry<Item> RED_KEY = REGISTRATE.item("red_key", Item::new).register();
+
+    public static final ItemEntry<ZiplineWrenchItem> ZIPLINE_WRENCH = REGISTRATE.item("zipline_wrench", ZiplineWrenchItem::new)
+            .properties(p -> p.stacksTo(1))
+            .register();
     public static final ItemEntry<Item> WHITE_KEY = REGISTRATE.item("white_key", Item::new).register();
     public static final ItemEntry<Item> YELLOW_KEY = REGISTRATE.item("yellow_key", Item::new).register();
     public static final ItemEntry<Item> DENTED_CAN = REGISTRATE.item("dented_can", Item::new).register();

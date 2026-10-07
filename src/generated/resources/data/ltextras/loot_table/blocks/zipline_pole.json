@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "ltextras:zipline_pole",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "half": "lower"
+              }
+            }
+          ],
+          "name": "ltextras:zipline_pole"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "ltextras:blocks/zipline_pole"
+}

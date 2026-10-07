@@ -23,6 +23,7 @@
     "LecternBlockMixin",
     "LivingEntityMixin",
     "MinecraftServerAccessor",
+    "PlayerMixin",
     "ResourceKeyArgumentAccessor",
     "RideCommandMixin",
     "ScaffoldingBlockMixin",

@@ -58,6 +58,8 @@ import com.lovetropics.extras.data.ImposterBlockTemplate;
 import com.lovetropics.extras.item.FireExtinguisher;
 import com.lovetropics.extras.item.FireExtinguisherItem;
 import com.lovetropics.extras.mixin.BlockPropertiesMixin;
+import com.lovetropics.extras.zipline.ZiplinePoleBlock;
+import com.lovetropics.extras.zipline.ZiplinePoleBlockEntity;
 import com.lovetropics.lib.block.CustomShapeBlock;
 import com.mojang.math.Quadrant;
 import com.tterrag.registrate.Registrate;
@@ -75,6 +77,7 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import net.minecraft.advancements.predicates.StatePropertiesPredicate;
 import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.color.item.Constant;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -151,14 +154,17 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -1454,6 +1460,29 @@ public class ExtraBlocks {
                     .simpleItem()
                     .register()
             );
+
+    public static final BlockEntry<ZiplinePoleBlock> ZIPLINE_POLE = REGISTRATE.block("zipline_pole", ZiplinePoleBlock::new)
+            .properties(p -> p.mapColor(MapColor.METAL).strength(2.0f).sound(SoundType.METAL).noCollision().noOcclusion().pushReaction(PushReaction.BLOCK))
+            .blockstate(() -> (ctx, prov) -> prov.createDoubleBlock(ctx.get(),
+                    plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_top")),
+                    plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_bottom"))
+            ))
+            .loot((lootTables, block) -> lootTables.add(block,
+                    lootTable().withPool(lootTables.applyExplosionCondition(block, LootPool.lootPool()
+                            .setRolls(exactly(1))
+                            .add(lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                    .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(ZiplinePoleBlock.HALF, DoubleBlockHalf.LOWER))
+                            ))
+                    ))
+            ))
+            .blockEntity(ZiplinePoleBlockEntity::new)
+            .build()
+            .item()
+            .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get().getBlock(), "_bottom")))
+            .build()
+            .register();
+
+    public static final BlockEntityEntry<ZiplinePoleBlockEntity> ZIPLINE_POLE_ENTITY = BlockEntityEntry.cast(ZIPLINE_POLE.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
     public static void init() {
     }

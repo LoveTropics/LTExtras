@@ -19,6 +19,7 @@ import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
@@ -65,6 +66,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<UUID>> TARGETED_ENTITY = REGISTER.registerComponentType(
             "targeted_entity",
             builder -> builder.persistent(UUIDUtil.CODEC)
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<GlobalPos>> ZIPLINE_SELECTED_POLE = REGISTER.registerComponentType(
+            "zipline_selected_pole",
+            builder -> builder.persistent(GlobalPos.CODEC).networkSynchronized(GlobalPos.STREAM_CODEC)
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> JUMP_PAD = REGISTER.registerComponentType(
             "jump_pad",

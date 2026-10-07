@@ -409,6 +409,7 @@
   "block.ltextras.yellow_terracotta_slab": "Yellow Terracotta Slab",
   "block.ltextras.yellow_terracotta_stairs": "Yellow Terracotta Stairs",
   "block.ltextras.yellow_terracotta_wall": "Yellow Terracotta Wall",
+  "block.ltextras.zipline_pole": "Zipline Pole",
   "commands.tpa.general_error": "Unable to teleport",
   "commands.tpa.help.back": "/back - Teleport back to where you were before teleporting",
   "commands.tpa.help.tpa": "/tpa <player> - Request to teleport to a player",
@@ -508,6 +509,7 @@
   "item.ltextras.white_key": "White Key",
   "item.ltextras.wrench": "Wrench",
   "item.ltextras.yellow_key": "Yellow Key",
+  "item.ltextras.zipline_wrench": "Zipline Wrench",
   "itemGroup.ltextras.ltextras": "LTExtras",
   "key.category.ltextras.forklift": "Forklift Controls",
   "key.ltextras.eject_fork_riders": "Eject Riders",
@@ -529,5 +531,13 @@
   "spawnitems.set_not_restorable": "The spawn item set %s cannot be restored!",
   "spawnitems.unknown_set": "Unknown spawn item set: %s",
   "toast.collectible.item": " + %s",
-  "toast.collectible.title": "New Collectible!"
+  "toast.collectible.title": "New Collectible!",
+  "zipline.ltextras.connected": "Poles connected.",
+  "zipline.ltextras.disconnected": "Poles disconnected.",
+  "zipline.ltextras.pole_full": "A pole can only have two ziplines.",
+  "zipline.ltextras.pole_selected": "Pole selected. Use the wrench on another pole to connect them.",
+  "zipline.ltextras.selected_pole_missing": "The selected pole no longer exists.",
+  "zipline.ltextras.selection_cleared": "Pole selection cleared.",
+  "zipline.ltextras.slack": "Slack: %s/%s",
+  "zipline.ltextras.too_far": "Poles are too far apart (max %s blocks)."
 }

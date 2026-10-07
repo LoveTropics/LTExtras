@@ -1,9 +1,12 @@
 package com.lovetropics.extras.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.lovetropics.extras.ExtraTags;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.gamerules.ExtraGamerules;
+import com.lovetropics.extras.zipline.ZiplineRider;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,6 +38,9 @@ public abstract class LivingEntityMixin extends Entity {
     private LivingEntityMixin(EntityType<?> type, Level level) {
         super(type, level);
     }
+
+    @Shadow
+    protected boolean jumping;
 
     @Shadow
     public abstract boolean hasEffect(Holder<MobEffect> effect);
@@ -64,6 +71,23 @@ public abstract class LivingEntityMixin extends Entity {
     private void isPushable(CallbackInfoReturnable<Boolean> cir) {
         if(this.entityTags().contains(ExtraTags.NO_PUSH)) {
             cir.setReturnValue(false);
+        }
+        if (ZiplineRider.isRiding(this)) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "pushEntities", at = @At("HEAD"), cancellable = true)
+    private void pushEntities(CallbackInfo ci) {
+        if (ZiplineRider.isRiding(this)) {
+            ci.cancel();
+        }
+    }
+
+    @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;travel(Lnet/minecraft/world/phys/Vec3;)V"))
+    private void travelOnZipline(LivingEntity entity, Vec3 input, Operation<Void> original) {
+        if (!ZiplineRider.travel(entity, input, jumping)) {
+            original.call(entity, input);
         }
     }
 

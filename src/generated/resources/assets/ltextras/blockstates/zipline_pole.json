@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "ltextras:block/zipline_pole_bottom"
+    },
+    "half=upper": {
+      "model": "ltextras:block/zipline_pole_top"
+    }
+  }
+}

@@ -9,6 +9,8 @@ import com.lovetropics.extras.extension.CustomTradeExtension;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.mounts.MountStore;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
+import com.lovetropics.extras.zipline.ZiplineIndex;
+import com.lovetropics.extras.zipline.ZiplineRider;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -43,6 +45,14 @@ public class ExtraAttachments {
             "spawn_items_store", () -> AttachmentType.builder(SpawnItemsStore::new)
                     .serialize(SpawnItemsStore.MAP_CODEC)
                     .build()
+    );
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<ZiplineRider>> ZIPLINE_RIDER = REGISTER.register(
+            "zipline_rider", () -> AttachmentType.builder(ZiplineRider::new).build()
+    );
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<ZiplineIndex>> ZIPLINE_INDEX = REGISTER.register(
+            "zipline_index", () -> AttachmentType.builder(ZiplineIndex::new).build()
     );
 
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<ModelModifierStore>> MODEL_MODIFIERS = REGISTER.register(
