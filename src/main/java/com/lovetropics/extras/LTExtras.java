@@ -102,6 +102,7 @@ public class LTExtras {
         ExtraEnvironmentAttributes.REGISTER.register(modBus);
         ExtraFunctions.REGISTRY.register(modBus);
         ExtraGamerules.REGISTER.register(modBus);
+        ExtraStats.REGISTER.register(modBus);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
@@ -132,6 +133,7 @@ public class LTExtras {
                     TpCommand.addTranslations(p);
                     WarpCommand.addTranslations(p);
                     ShieldCommand.addTranslations(p);
+                    ExtraStats.addTranslations(p);
                     
                     p.add(ExtraEffects.FABULOUS.get(), "Fabulous Walk");
                     p.add(ExtraEffects.FLAIL.get(), "Flail Walk");

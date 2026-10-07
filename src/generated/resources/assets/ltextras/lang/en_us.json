@@ -557,6 +557,7 @@
   "spawnitems.restored_successfully": "Items restored!",
   "spawnitems.set_not_restorable": "The spawn item set %s cannot be restored!",
   "spawnitems.unknown_set": "Unknown spawn item set: %s",
+  "stat.ltextras.zipline_one_cm": "Distance by Zipline",
   "toast.collectible.item": " + %s",
   "toast.collectible.title": "New Collectible!",
   "zipline.ltextras.connected": "Poles connected.",
