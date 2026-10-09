@@ -11,9 +11,13 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Map;
+import java.util.UUID;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -27,6 +31,7 @@ public class ShieldCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         // @formatter:off
         dispatcher.register(literal("shield").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .then(literal("list").executes(ShieldCommand::listShields))
                 .then(argument(ARGUMENT_TARGET, EntityArgument.entity())
                         .executes(ctx -> toggleShield(ctx, null))
                         .then(argument(ARGUMENT_DISTANCE, DoubleArgumentType.doubleArg(1.0, 32.0))
@@ -35,6 +40,24 @@ public class ShieldCommand {
                 )
         );
         // @formatter:on
+    }
+
+    private static int listShields(CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack source = ctx.getSource();
+        Map<UUID, Double> shields = Shields.getShields();
+        if (shields.isEmpty()) {
+            source.sendSuccess(() -> Component.translatable("commands.shield.list.empty"), false);
+            return 0;
+        }
+
+        MinecraftServer server = source.getServer();
+        source.sendSuccess(() -> Component.translatable("commands.shield.list.header", shields.size()), false);
+        shields.forEach((id, radius) -> {
+            Entity entity = Shields.findEntity(server, id);
+            Component name = entity != null ? entity.getDisplayName() : Component.literal(id.toString());
+            source.sendSuccess(() -> Component.translatable("commands.shield.list.entry", name, radius), false);
+        });
+        return shields.size();
     }
 
     private static int toggleShield(CommandContext<CommandSourceStack> ctx, @Nullable Double distance) throws CommandSyntaxException {
@@ -65,5 +88,9 @@ public class ShieldCommand {
         provider.add("commands.shield.disabled", "Disabled shields on %s");
         provider.add("commands.shield.self.enabled", "You feel a force field surrounding you");
         provider.add("commands.shield.self.disabled", "The force field dissipates");
+
+        provider.add("commands.shield.list.empty", "No active shields");
+        provider.add("commands.shield.list.header", "%s active shield(s):");
+        provider.add("commands.shield.list.entry", " - %s: %s radius");
     }
 }

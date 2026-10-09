@@ -16,7 +16,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import org.jspecify.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -76,15 +79,28 @@ public final class Shields {
         if (SHIELDS.isEmpty() || server.getTickCount() % PUSH_INTERVAL_TICKS != 0) {
             return;
         }
+
         for (Map.Entry<UUID, Double> entry : SHIELDS.entrySet()) {
-            for (ServerLevel level : server.getAllLevels()) {
-                Entity shielded = level.getEntity(entry.getKey());
-                if (shielded != null) {
-                    tickShield(level, shielded, entry.getValue());
-                    break;
-                }
+            Entity shielded = findEntity(server, entry.getKey());
+            if (shielded != null && shielded.level() instanceof ServerLevel level) {
+                tickShield(level, shielded, entry.getValue());
             }
         }
+    }
+
+    public static Map<UUID, Double> getShields() {
+        return Collections.unmodifiableMap(SHIELDS);
+    }
+
+    @Nullable
+    public static Entity findEntity(MinecraftServer server, UUID id) {
+        for (ServerLevel level : server.getAllLevels()) {
+            Entity entity = level.getEntity(id);
+            if (entity != null) {
+                return entity;
+            }
+        }
+        return null;
     }
 
     private static void tickShield(ServerLevel level, Entity shielded, double radius) {
