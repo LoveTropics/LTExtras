@@ -10,6 +10,7 @@ import com.lovetropics.extras.command.HandCommand;
 import com.lovetropics.extras.command.ListScoreboardCommand;
 import com.lovetropics.extras.command.PoiCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
+import com.lovetropics.extras.command.ShieldCommand;
 import com.lovetropics.extras.command.TpCommand;
 import com.lovetropics.extras.command.WarpCommand;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
@@ -26,6 +27,7 @@ import com.lovetropics.extras.functions.ExtraFunctions;
 import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.placeholder.ExtraPlaceholders;
+import com.lovetropics.extras.shield.Shields;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.techstack.VideoImporter;
 import com.mojang.brigadier.CommandDispatcher;
@@ -86,6 +88,7 @@ public class LTExtras {
         ExtraItems.init();
         ExtraEntities.init();
         ExtraPlaceholders.init();
+        Shields.init();
 
         ExtraParticles.REGISTER.register(modBus);
         ExtraEffects.REGISTER.register(modBus);
@@ -128,6 +131,7 @@ public class LTExtras {
 
                     TpCommand.addTranslations(p);
                     WarpCommand.addTranslations(p);
+                    ShieldCommand.addTranslations(p);
                     
                     p.add(ExtraEffects.FABULOUS.get(), "Fabulous Walk");
                     p.add(ExtraEffects.FLAIL.get(), "Flail Walk");
@@ -188,6 +192,7 @@ public class LTExtras {
         ModelModifierCommand.register(dispatcher, buildContext);
         MountCommand.register(dispatcher, buildContext);
         HandCommand.register(dispatcher);
+        ShieldCommand.register(dispatcher);
     }
 
     private void onRegisterClientCommands(RegisterClientCommandsEvent event) {
