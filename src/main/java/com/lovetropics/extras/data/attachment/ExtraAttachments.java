@@ -9,6 +9,7 @@ import com.lovetropics.extras.extension.CustomTradeExtension;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.mounts.MountStore;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
+import com.lovetropics.extras.shield.Shields;
 import com.lovetropics.extras.zipline.ZiplineIndex;
 import com.lovetropics.extras.zipline.ZiplineRider;
 import com.mojang.serialization.Codec;
@@ -84,6 +85,13 @@ public class ExtraAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<CustomTradeExtension>> TRADE_OVERRIDE = REGISTER.register(
             "trade_override", () -> AttachmentType.builder(() -> CustomTradeExtension.EMPTY)
                     .serialize(CustomTradeExtension.TRADE_CODEC)
+                    .build()
+    );
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Double>> SHIELD_RADIUS = REGISTER.register(
+            "shield_radius", () -> AttachmentType.builder(() -> Shields.DEFAULT_RADIUS)
+                    .serialize(Codec.DOUBLE.fieldOf("radius"))
+                    .copyOnDeath()
                     .build()
     );
 }

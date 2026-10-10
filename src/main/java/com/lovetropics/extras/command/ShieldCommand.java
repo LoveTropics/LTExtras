@@ -11,20 +11,16 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.List;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
 public class ShieldCommand {
 
-    public static final double DEFAULT_RADIUS = 4.0;
     private static final String ARGUMENT_TARGET = "target";
     private static final String ARGUMENT_DISTANCE = "distance";
 
@@ -32,7 +28,7 @@ public class ShieldCommand {
         // @formatter:off
         dispatcher.register(literal("shield").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(literal("list").executes(ShieldCommand::listShields))
-                .then(argument(ARGUMENT_TARGET, EntityArgument.entity())
+                .then(argument(ARGUMENT_TARGET, EntityArgument.player())
                         .executes(ctx -> toggleShield(ctx, null))
                         .then(argument(ARGUMENT_DISTANCE, DoubleArgumentType.doubleArg(1.0, 32.0))
                                 .executes(ctx -> toggleShield(ctx, DoubleArgumentType.getDouble(ctx, ARGUMENT_DISTANCE)))
@@ -44,38 +40,31 @@ public class ShieldCommand {
 
     private static int listShields(CommandContext<CommandSourceStack> ctx) {
         CommandSourceStack source = ctx.getSource();
-        Map<UUID, Double> shields = Shields.getShields();
-        if (shields.isEmpty()) {
+        List<ServerPlayer> shielded = Shields.getShieldedPlayers(source.getServer());
+        if (shielded.isEmpty()) {
             source.sendSuccess(() -> Component.translatable("commands.shield.list.empty"), false);
             return 0;
         }
 
-        MinecraftServer server = source.getServer();
-        source.sendSuccess(() -> Component.translatable("commands.shield.list.header", shields.size()), false);
-        shields.forEach((id, radius) -> {
-            Entity entity = Shields.findEntity(server, id);
-            Component name = entity != null ? entity.getDisplayName() : Component.literal(id.toString());
-            source.sendSuccess(() -> Component.translatable("commands.shield.list.entry", name, radius), false);
-        });
-        return shields.size();
+        source.sendSuccess(() -> Component.translatable("commands.shield.list.header", shielded.size()), false);
+        for (ServerPlayer player : shielded) {
+            source.sendSuccess(() -> Component.translatable("commands.shield.list.entry", player.getDisplayName(), Shields.getRadius(player)), false);
+        }
+        return shielded.size();
     }
 
     private static int toggleShield(CommandContext<CommandSourceStack> ctx, @Nullable Double distance) throws CommandSyntaxException {
-        Entity target = EntityArgument.getEntity(ctx, ARGUMENT_TARGET);
+        ServerPlayer target = EntityArgument.getPlayer(ctx, ARGUMENT_TARGET);
         CommandSourceStack source = ctx.getSource();
 
         if (distance == null && Shields.isShielded(target)) {
             Shields.removeShield(target);
-            if (target instanceof ServerPlayer serverPlayer) {
-                serverPlayer.sendSystemMessage(Component.translatable("commands.shield.self.disabled"));
-            }
+            target.sendSystemMessage(Component.translatable("commands.shield.self.disabled"));
             source.sendSuccess(() -> Component.translatable("commands.shield.disabled", target.getDisplayName()), true);
         } else {
-            double radius = distance != null ? distance : DEFAULT_RADIUS;
+            double radius = distance != null ? distance : Shields.DEFAULT_RADIUS;
             Shields.setShield(target, radius);
-            if (target instanceof ServerPlayer serverPlayer) {
-                serverPlayer.sendSystemMessage(Component.translatable("commands.shield.self.enabled"));
-            }
+            target.sendSystemMessage(Component.translatable("commands.shield.self.enabled"));
 
             source.sendSuccess(() -> Component.translatable("commands.shield.enabled", target.getDisplayName(), radius), true);
         }
