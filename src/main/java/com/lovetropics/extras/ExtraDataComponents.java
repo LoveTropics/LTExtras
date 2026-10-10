@@ -35,6 +35,7 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.RegisterTooltipAppendersEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -153,14 +154,28 @@ public class ExtraDataComponents {
     private static final AtlasSprite LOCK_SPRITE = new AtlasSprite(AtlasIds.GUI, LTExtras.id("lock"));
 
     @SubscribeEvent
+    public static void registerTooltipAppenders(RegisterTooltipAppendersEvent event) {
+        event.registerComponentAppenderBeforeAll(ExtraDataComponents.MAP, (stack, _, _, _, _, builder) -> {
+            Holder<MapConfig> map = stack.get(ExtraDataComponents.MAP);
+            if (map != null) {
+                builder.accept(ComponentUtils.mergeStyles(map.value().description().copy(), Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            }
+        });
+
+        event.registerComponentAppenderBeforeAll(ExtraDataComponents.COLLECTIBLE_LORE, (stack, _, _, _, _, builder) -> {
+            CollectibleDisplayInfo collectibleLore = stack.get(ExtraDataComponents.COLLECTIBLE_LORE);
+            if (collectibleLore != null) {
+                for (Component line : collectibleLore.getLore()) {
+                    builder.accept(line);
+                }
+            }
+        });
+    }
+
+    @SubscribeEvent
     public static void addToTooltip(ItemTooltipEvent event) {
         ItemStack itemStack = event.getItemStack();
         List<Component> tooltip = event.getToolTip();
-
-        Holder<MapConfig> map = itemStack.get(ExtraDataComponents.MAP);
-        if (map != null) {
-            tooltip.add(ComponentUtils.mergeStyles(map.value().description().copy(), Style.EMPTY.withColor(ChatFormatting.GRAY)));
-        }
 
         CollectibleLock collectibleLock = itemStack.get(ExtraDataComponents.COLLECTIBLE_LOCK);
         if (collectibleLock != null) {
@@ -170,11 +185,6 @@ public class ExtraDataComponents {
             } else {
                 tooltip.addAll(collectibleLock.tooltip());
             }
-        }
-
-        CollectibleDisplayInfo collectibleLore = itemStack.get(ExtraDataComponents.COLLECTIBLE_LORE);
-        if (collectibleLore != null) {
-            tooltip.addAll(collectibleLore.getLore());
         }
     }
 }
