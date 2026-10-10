@@ -113,6 +113,11 @@ public class ExtraItems {
     public static final ItemEntry<Item> BLUE_GLASSES = sunglasses("blue_glasses").register();
     public static final ItemEntry<Item> GREEN_GLASSES = sunglasses("green_glasses").register();
 
+    public static final ItemEntry<Item> HUGE_GLASSES = REGISTRATE.item("huge_glasses", Item::new)
+            .properties(p -> p.stacksTo(1).equippable(EquipmentSlot.HEAD))
+            .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.id("item/huge_glasses")))
+            .register();
+
     public static final ItemEntry<Item> WRENCH = REGISTRATE.item("wrench", Item::new).lang("Wrench").register();
     public static final ItemEntry<Item> STEERING_WHEEL = REGISTRATE.item("steering_wheel", Item::new).lang("Steering Wheel").register();
     public static final ItemEntry<Item> PUMP = REGISTRATE.item("pump", Item::new).lang("Pump").register();
