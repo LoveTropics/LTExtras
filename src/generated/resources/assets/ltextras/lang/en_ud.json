@@ -409,6 +409,7 @@
   "block.ltextras.yellow_terracotta_slab": "qɐןS ɐʇʇoɔɐɹɹǝ⟘ ʍoןןǝʎ",
   "block.ltextras.yellow_terracotta_stairs": "sɹıɐʇS ɐʇʇoɔɐɹɹǝ⟘ ʍoןןǝʎ",
   "block.ltextras.yellow_terracotta_wall": "ןןɐM ɐʇʇoɔɐɹɹǝ⟘ ʍoןןǝʎ",
+  "block.ltextras.zipline_anchor": "ɹoɥɔuⱯ ǝuıןdıZ",
   "commands.tpa.general_error": "ʇɹodǝןǝʇ oʇ ǝןqɐu∩",
   "commands.tpa.help.back": "buıʇɹodǝןǝʇ ǝɹoɟǝq ǝɹǝʍ noʎ ǝɹǝɥʍ oʇ ʞɔɐq ʇɹodǝןǝ⟘ - ʞɔɐq\\",
   "commands.tpa.help.tpa": "ɹǝʎɐןd ɐ oʇ ʇɹodǝןǝʇ oʇ ʇsǝnbǝᴚ - <ɹǝʎɐןd> ɐdʇ\\",
@@ -452,6 +453,8 @@
   "entity.ltextras.seat": "ʇɐǝS",
   "entity.ltextras.spinning_sign": "ubıS buıuuıdS",
   "entity.ltextras.water_cooler": "ɹǝןooƆ ɹǝʇɐM",
+  "entity.ltextras.zipline": "ǝuıןdıZ",
+  "entity.ltextras.zipline_ride": "ǝpıᴚ ǝuıןdıZ",
   "forklift.ltextras.certification.missing": "ʇɟıןʞɹoɟ sıɥʇ ǝʌıɹp oʇ uoıʇɐɔıɟıʇɹǝƆ ʇɟıןʞɹoℲ ɐ ǝʌɐɥ ʇsnɯ noʎ",
   "invite.ltextras.club_1.bottom": "¿ɟooɹdǝɹıɟ ǝɹɐ sǝsınbsıp ʍouʞ noʎ pıᗡ",
   "invite.ltextras.club_1.top": "˙buıɥɔʇɐʍ ǝɹɐ ʎǝɥ⟘\n˙ǝsınbsıp ɐ ɹɐǝM\n˙noʎ pǝǝu ǝM",
@@ -530,5 +533,13 @@
   "spawnitems.set_not_restorable": "¡pǝɹoʇsǝɹ ǝq ʇouuɐɔ %1$s ʇǝs ɯǝʇı uʍɐds ǝɥ⟘",
   "spawnitems.unknown_set": "%1$s :ʇǝs ɯǝʇı uʍɐds uʍouʞu∩",
   "toast.collectible.item": "%1$s + ",
-  "toast.collectible.title": "¡ǝןqıʇɔǝןןoƆ ʍǝN"
+  "toast.collectible.title": "¡ǝןqıʇɔǝןןoƆ ʍǝN",
+  "zipline.ltextras.already_linked": "˙ʇı ʇɔǝuuoɔsıp oʇ ɹoɥɔuɐ uɐ ʞɐǝɹᗺ ˙ǝןqɐɔ ɐ sɐɥ ʎpɐǝɹןɐ ɹoɥɔuɐ sıɥ⟘",
+  "zipline.ltextras.blocked": "˙ǝןqɐɔ ǝɥʇ ɟo ʇɹɐd ɹǝɥʇouɐ ʎɹ⟘ ˙ʇuıod sıɥʇ ɟo sʞɔoןq ᄅ uıɥʇıʍ pɹɐoq oʇ ɯooɹ oN",
+  "zipline.ltextras.invalid_span": "˙ʇɹɐdɐ sʞɔoןq ㄣ9 ʇsoɯ ʇɐ ǝq ʎɐɯ puɐ uoıʇɐɹɐdǝs ןɐʇuozıɹoɥ ɟo sʞɔoןq Ɛ ʇsɐǝן ʇɐ pǝǝu sɹoɥɔuⱯ",
+  "zipline.ltextras.linked": "˙ǝpıɹ oʇ ǝןqɐɔ ǝɥʇ ɹo ɹoɥɔuɐ uɐ ʞɔıןɔ-ʇɥbıᴚ ¡pǝʇɔǝuuoɔ ǝuıןdıZ",
+  "zipline.ltextras.selected": "˙ןǝɔuɐɔ oʇ uıɐbɐ ǝuo sıɥʇ ʞɔıןɔ ؛ɹoɥɔuɐ puoɔǝs ǝɥʇ uo buıɹʇs sıɥʇ ǝs∩ ˙pǝʇɔǝןǝs ɹoɥɔuɐ ʇsɹıℲ",
+  "zipline.ltextras.selection_cleared": "˙ɹoɥɔuɐ ʇsɹıɟ ʍǝu ɐ ʇɔǝןǝS ˙pǝɹɐǝןɔ uoıʇɔǝןǝs ǝuıןdıZ",
+  "zipline.ltextras.unavailable": "˙uoıʇɔǝuuoɔ ǝɥʇ puɐ sɹoɥɔuɐ ɥʇoq ʞɔǝɥƆ ˙ǝןqɐןıɐʌɐun sı ǝuıןdız sıɥ⟘",
+  "zipline.ltextras.unlinked": "˙ǝuıןdız ɐ ʇɔǝuuoɔ oʇ 'ɹoɥɔuɐ ɹǝɥʇouɐ uǝɥʇ 'ɹoɥɔuɐ sıɥʇ uo buıɹʇs ǝs∩"
 }

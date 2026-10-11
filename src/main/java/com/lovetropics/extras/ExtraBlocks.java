@@ -46,6 +46,7 @@ import com.lovetropics.extras.block.WaterBarrierBlock;
 import com.lovetropics.extras.block.WaterLoggableCarpet;
 import com.lovetropics.extras.block.WaterloggableButtonBlock;
 import com.lovetropics.extras.block.WordBoxBlock;
+import com.lovetropics.extras.block.ZiplineAnchorBlock;
 import com.lovetropics.extras.block.entity.DisplayBlockEntity;
 import com.lovetropics.extras.block.entity.JumpPadBlockEntity;
 import com.lovetropics.extras.block.entity.MobControllerBlockEntity;
@@ -192,6 +193,14 @@ import static net.minecraft.world.level.storage.loot.providers.number.ConstantVa
 public class ExtraBlocks {
 
     public static final Registrate REGISTRATE = LTExtras.registrate();
+
+    public static final BlockEntry<ZiplineAnchorBlock> ZIPLINE_ANCHOR = REGISTRATE.block("zipline_anchor", ZiplineAnchorBlock::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .properties(p -> p.strength(2.0F).noOcclusion())
+            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .blockstate(() -> (ctx, prov) -> prov.blockStateOutput.accept(dispatch(ctx.get(), plainVariant(prov.modLoc("block/zipline_anchor")))))
+            .simpleItem()
+            .register();
 
     // One-off custom blocks
 

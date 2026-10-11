@@ -7,6 +7,15 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Util;
 
 public enum ExtraLangKeys {
+    ZIPLINE_SELECTED("zipline", "selected", "First anchor selected. Use this string on the second anchor; click this one again to cancel."),
+    ZIPLINE_SELECTION_CLEARED("zipline", "selection_cleared", "Zipline selection cleared. Select a new first anchor."),
+    ZIPLINE_LINKED("zipline", "linked", "Zipline connected! Right-click an anchor or the cable to ride."),
+    ZIPLINE_ALREADY_LINKED("zipline", "already_linked", "This anchor already has a cable. Break an anchor to disconnect it."),
+    ZIPLINE_INVALID_SPAN("zipline", "invalid_span", "Anchors need at least 3 blocks of horizontal separation and may be at most 64 blocks apart."),
+    ZIPLINE_UNLINKED("zipline", "unlinked", "Use string on this anchor, then another anchor, to connect a zipline."),
+    ZIPLINE_UNAVAILABLE("zipline", "unavailable", "This zipline is unavailable. Check both anchors and the connection."),
+    ZIPLINE_BLOCKED("zipline", "blocked", "No room to board within 2 blocks of this point. Try another part of the cable."),
+
     COLLECTIBLE_COMPASS_ALREADY_USED("item", "collectible_compass.already_used", "This Compass already points to a Collectible. If you want to find something else, you will need to find a new one!"),
     COLLECTIBLE_COMPASS_SUCCESS("item", "collectible_compass.success", "\uD83D\uDC40 The Compass has found a Collectible that you don't have yet, and now points towards it."),
     COLLECTIBLE_COMPASS_FAIL("item", "collectible_compass.fail", "The Compass was not able to find any Collectibles that you don't have nearby. Maybe try somewhere else?"),

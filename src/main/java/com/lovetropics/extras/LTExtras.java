@@ -25,6 +25,7 @@ import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.placeholder.ExtraPlaceholders;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.techstack.VideoImporter;
+import com.lovetropics.extras.zipline.ZiplineChunkTickets;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
@@ -82,6 +83,7 @@ public class LTExtras {
         ExtraBlocks.init();
         ExtraItems.init();
         ExtraEntities.init();
+        ZiplineChunkTickets.init();
         ExtraPlaceholders.init();
 
         ExtraParticles.REGISTER.register(modBus);

@@ -14,6 +14,7 @@ import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
@@ -66,6 +67,11 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<MapConfig>>> MAP = REGISTER.registerComponentType(
             "map",
             builder -> builder.persistent(MapConfig.CODEC).networkSynchronized(MapConfig.STREAM_CODEC).cacheEncoding()
+    );
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<GlobalPos>> ZIPLINE_ANCHOR = REGISTER.registerComponentType(
+            "zipline_anchor",
+            builder -> builder.persistent(GlobalPos.CODEC).networkSynchronized(GlobalPos.STREAM_CODEC).cacheEncoding()
     );
 
     // General extensions

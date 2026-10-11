@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "minecraft:block/bamboo_block",
+    "post": "minecraft:block/stripped_bamboo_block",
+    "band": "minecraft:block/bamboo_block"
+  },
+  "elements": [
+    {
+      "from": [5, 0, 5], "to": [11, 16, 11],
+      "faces": {
+        "down": {"texture": "#post"}, "up": {"texture": "#post"},
+        "north": {"texture": "#post"}, "south": {"texture": "#post"},
+        "east": {"texture": "#post"}, "west": {"texture": "#post"}
+      }
+    },
+    {
+      "from": [4, 12, 4], "to": [12, 15, 12],
+      "faces": {
+        "down": {"texture": "#band"}, "up": {"texture": "#band"},
+        "north": {"texture": "#band"}, "south": {"texture": "#band"},
+        "east": {"texture": "#band"}, "west": {"texture": "#band"}
+      }
+    },
+    {
+      "from": [4, 1, 4], "to": [12, 3, 12],
+      "faces": {
+        "down": {"texture": "#band"}, "up": {"texture": "#band"},
+        "north": {"texture": "#band"}, "south": {"texture": "#band"},
+        "east": {"texture": "#band"}, "west": {"texture": "#band"}
+      }
+    }
+  ]
+}

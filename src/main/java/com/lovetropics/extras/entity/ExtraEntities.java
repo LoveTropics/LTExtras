@@ -13,6 +13,10 @@ import com.lovetropics.extras.client.entity.RaveKoaRenderer;
 import com.lovetropics.extras.client.entity.SeatRenderer;
 import com.lovetropics.extras.client.entity.SpinningSignRenderer;
 import com.lovetropics.extras.client.entity.WaterCoolerRenderer;
+import com.lovetropics.extras.client.entity.ZiplineRenderer;
+import com.lovetropics.extras.client.entity.ZiplineRideRenderer;
+import com.lovetropics.extras.zipline.ZiplineEntity;
+import com.lovetropics.extras.zipline.ZiplineRideEntity;
 import com.lovetropics.extras.entity.glass_frog.GlassFrog;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntity;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDJ;
@@ -33,6 +37,16 @@ import net.minecraft.world.phys.Vec3;
 
 public class ExtraEntities {
     public static final Registrate REGISTRATE = LTExtras.registrate();
+
+    public static final EntityEntry<ZiplineEntity> ZIPLINE = REGISTRATE.entity("zipline", ZiplineEntity::new, MobCategory.MISC)
+            .properties(builder -> builder.sized(0.1F, 0.1F).clientTrackingRange(16).updateInterval(Integer.MAX_VALUE).noLootTable().fireImmune())
+            .renderer(() -> ZiplineRenderer::new)
+            .register();
+
+    public static final EntityEntry<ZiplineRideEntity> ZIPLINE_RIDE = REGISTRATE.entity("zipline_ride", ZiplineRideEntity::new, MobCategory.MISC)
+            .properties(builder -> builder.sized(0.1F, 0.1F).clientTrackingRange(8).updateInterval(1).noLootTable().fireImmune())
+            .renderer(() -> ZiplineRideRenderer::new)
+            .register();
 
     private static <T extends Entity> NonNullBiConsumer<RegistrateEntityLootTables, EntityType<T>> noDrops() {
         return (lootTables, type) -> lootTables.add(type, LootTable.lootTable());

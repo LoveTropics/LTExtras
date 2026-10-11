@@ -2,6 +2,7 @@ package com.lovetropics.extras.mixin;
 
 import com.lovetropics.extras.ExtraTags;
 import com.lovetropics.extras.effect.ExtraEffects;
+import com.lovetropics.extras.zipline.ZiplineRideEntity;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
@@ -50,7 +51,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "isPushable", at= @At("HEAD"), cancellable = true)
     private void isPushable(CallbackInfoReturnable<Boolean> cir) {
-        if(this.entityTags().contains(ExtraTags.NO_PUSH)) {
+        if(this.entityTags().contains(ExtraTags.NO_PUSH) || getVehicle() instanceof ZiplineRideEntity) {
             cir.setReturnValue(false);
         }
     }

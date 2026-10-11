@@ -17,6 +17,7 @@ import com.lovetropics.extras.network.message.ServerboundLiftForkliftPacket;
 import com.lovetropics.extras.network.message.ServerboundPickCollectibleItemPacket;
 import com.lovetropics.extras.network.message.ServerboundReturnCollectibleItemPacket;
 import com.lovetropics.extras.network.message.ServerboundSetTimeZonePacket;
+import com.lovetropics.extras.network.message.ServerboundRideZiplinePacket;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -27,6 +28,8 @@ public class LTExtrasNetwork {
     @SubscribeEvent
     public static void registerPackets(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(LTExtras.getCompatVersion());
+
+        registrar.playToServer(ServerboundRideZiplinePacket.TYPE, ServerboundRideZiplinePacket.STREAM_CODEC, ServerboundRideZiplinePacket::handle);
 
         registrar.playToClient(ClientboundCollectiblesListPacket.TYPE, ClientboundCollectiblesListPacket.STREAM_CODEC, ClientboundCollectiblesListPacket::handle);
         registrar.playToServer(ServerboundPickCollectibleItemPacket.TYPE, ServerboundPickCollectibleItemPacket.STREAM_CODEC, ServerboundPickCollectibleItemPacket::handle);

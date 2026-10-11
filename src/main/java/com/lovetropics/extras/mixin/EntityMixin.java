@@ -3,6 +3,7 @@ package com.lovetropics.extras.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.ExtraTags;
+import com.lovetropics.extras.zipline.ZiplineRideEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -100,6 +101,15 @@ public class EntityMixin {
     private void isPushable(CallbackInfoReturnable<Boolean> cir) {
         if(this.tags.contains(ExtraTags.NO_PUSH)) {
             cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "push(Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
+    private void skipZiplineRiderPush(Entity other, CallbackInfo ci) {
+        // isPushable alone stops impulses to the rider, but still lets the rider shove others.
+        Entity self = (Entity) (Object) this;
+        if (self.getVehicle() instanceof ZiplineRideEntity || other.getVehicle() instanceof ZiplineRideEntity) {
+            ci.cancel();
         }
     }
 }

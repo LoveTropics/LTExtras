@@ -409,6 +409,7 @@
   "block.ltextras.yellow_terracotta_slab": "Yellow Terracotta Slab",
   "block.ltextras.yellow_terracotta_stairs": "Yellow Terracotta Stairs",
   "block.ltextras.yellow_terracotta_wall": "Yellow Terracotta Wall",
+  "block.ltextras.zipline_anchor": "Zipline Anchor",
   "commands.tpa.general_error": "Unable to teleport",
   "commands.tpa.help.back": "/back - Teleport back to where you were before teleporting",
   "commands.tpa.help.tpa": "/tpa <player> - Request to teleport to a player",
@@ -452,6 +453,8 @@
   "entity.ltextras.seat": "Seat",
   "entity.ltextras.spinning_sign": "Spinning Sign",
   "entity.ltextras.water_cooler": "Water Cooler",
+  "entity.ltextras.zipline": "Zipline",
+  "entity.ltextras.zipline_ride": "Zipline Ride",
   "forklift.ltextras.certification.missing": "You must have a Forklift Certification to drive this forklift",
   "invite.ltextras.club_1.bottom": "Did you know disguises are fireproof?",
   "invite.ltextras.club_1.top": "We need you.\nWear a disguise.\nThey are watching.",
@@ -530,5 +533,13 @@
   "spawnitems.set_not_restorable": "The spawn item set %s cannot be restored!",
   "spawnitems.unknown_set": "Unknown spawn item set: %s",
   "toast.collectible.item": " + %s",
-  "toast.collectible.title": "New Collectible!"
+  "toast.collectible.title": "New Collectible!",
+  "zipline.ltextras.already_linked": "This anchor already has a cable. Break an anchor to disconnect it.",
+  "zipline.ltextras.blocked": "No room to board within 2 blocks of this point. Try another part of the cable.",
+  "zipline.ltextras.invalid_span": "Anchors need at least 3 blocks of horizontal separation and may be at most 64 blocks apart.",
+  "zipline.ltextras.linked": "Zipline connected! Right-click an anchor or the cable to ride.",
+  "zipline.ltextras.selected": "First anchor selected. Use this string on the second anchor; click this one again to cancel.",
+  "zipline.ltextras.selection_cleared": "Zipline selection cleared. Select a new first anchor.",
+  "zipline.ltextras.unavailable": "This zipline is unavailable. Check both anchors and the connection.",
+  "zipline.ltextras.unlinked": "Use string on this anchor, then another anchor, to connect a zipline."
 }
