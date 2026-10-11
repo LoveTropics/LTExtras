@@ -1,6 +1,7 @@
-package com.lovetropics.extras.client.datagen;
+package com.lovetropics.extras.datagen;
 
 import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.model_modifer.ModelModifier;
@@ -12,22 +13,34 @@ import com.lovetropics.extras.model_modifer.types.ScaleType;
 import com.lovetropics.extras.model_modifer.types.data.Operation;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import net.minecraft.client.model.geom.PartNames;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(Dist.CLIENT)
-public class ModelModifierDataGen {
+public class ExtraDataGen {
 
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent.Client event) {
         event.createDatapackRegistryObjects(new RegistrySetBuilder()
-                .add(ExtraRegistries.MODEL_MODIFIER, ModelModifierDataGen::generateModelModifiers));
+                .add(ExtraRegistries.MODEL_MODIFIER, ExtraDataGen::generateModelModifiers));
+        event.createProvider(AttachmentTypeTags::new);
     }
 
     private static void generateModelModifiers(BootstrapContext<ModelModifier> context) {
@@ -72,7 +85,7 @@ public class ModelModifierDataGen {
                 .build());
 
         context.register(ExtraModelModifiers.DANACE, CompositeType.Builder.builder()
-                        .add(new AnimationType(LTExtras.id("dance")))
+                .add(new AnimationType(LTExtras.id("dance")))
                 .build());
 
         context.register(ExtraModelModifiers.ZIPLINE, OperationType.Builder.builder(Operation.SET)
@@ -85,5 +98,20 @@ public class ModelModifierDataGen {
                         .yScale(1.5f)
                         .build())
                 .build());
+    }
+
+    public static class AttachmentTypeTags extends TagsProvider<AttachmentType<?>> {
+
+        public static final TagKey<AttachmentType<?>> COPY_RENDER_ATTACHMENTS = TagKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("peekaboo", "copy_render_attachments"));
+
+        protected AttachmentTypeTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+            super(output, NeoForgeRegistries.Keys.ATTACHMENT_TYPES, lookupProvider, LTExtras.MODID);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider registries) {
+            tag(COPY_RENDER_ATTACHMENTS)
+                    .add(ExtraAttachments.MODEL_MODIFIERS.getKey());
+        }
     }
 }
