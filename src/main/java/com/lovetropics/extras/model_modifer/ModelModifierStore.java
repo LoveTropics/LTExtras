@@ -25,6 +25,14 @@ public record ModelModifierStore(List<Holder<ModelModifier>> appliedModifiers) {
         return new ModelModifierStore(new ArrayList<>(modifiers));
     }
 
+    public static void addIfAbsent(Entity entity, Holder<ModelModifier> modifier) {
+        ModelModifierStore store = getOrDefault(entity);
+        if (!store.appliedModifiers.contains(modifier)) {
+            store.appliedModifiers.add(modifier);
+            entity.syncData(ExtraAttachments.MODEL_MODIFIERS);
+        }
+    }
+
     public static void addModifier(Entity entity, Holder<ModelModifier> modifier) {
         ModelModifierStore store = getOrDefault(entity);
         /*if (store.appliedModifiers.contains(modifier)) {

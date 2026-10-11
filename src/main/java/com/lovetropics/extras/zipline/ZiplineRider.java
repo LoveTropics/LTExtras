@@ -1,6 +1,8 @@
 package com.lovetropics.extras.zipline;
 
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
+import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
+import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -39,6 +41,7 @@ public final class ZiplineRider {
     public static void startRiding(Entity entity, ZiplineRide ride) {
         entity.getData(ExtraAttachments.ZIPLINE_RIDER).ride = ride;
         entity.noPhysics = true;
+        ModelModifierStore.addIfAbsent(entity, entity.registryAccess().getOrThrow(ExtraModelModifiers.ZIPLINE));
     }
 
     public static void stopRiding(Entity entity) {
@@ -48,6 +51,7 @@ public final class ZiplineRider {
             rider.detachedTime = entity.level().getGameTime();
             entity.noPhysics = entity.isSpectator();
         }
+        ModelModifierStore.removeModifier(entity, entity.registryAccess().getOrThrow(ExtraModelModifiers.ZIPLINE));
     }
 
     /**

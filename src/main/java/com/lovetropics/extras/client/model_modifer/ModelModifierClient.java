@@ -95,10 +95,6 @@ public class ModelModifierClient {
                 scratchModifiers.add(modelModifierType.value());
             }
 
-            if (ZiplineRider.isRiding(entity)) {
-                scratchModifiers.add(entity.registryAccess().getOrThrow(ExtraModelModifiers.ZIPLINE).value());
-            }
-
             if (!scratchModifiers.isEmpty()) {
                 List<ModelModifier> modifiers = List.copyOf(scratchModifiers);
                 renderState.setRenderData(MODIFIERS, modifiers);
