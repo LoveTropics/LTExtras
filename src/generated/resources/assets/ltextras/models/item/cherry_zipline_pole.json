@@ -1,0 +1,7 @@
+{
+  "parent": "ltextras:item/zipline_pole",
+  "textures": {
+    "log": "minecraft:block/cherry_log",
+    "planks": "minecraft:block/cherry_planks"
+  }
+}

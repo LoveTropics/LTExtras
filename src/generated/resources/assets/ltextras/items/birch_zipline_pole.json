@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "ltextras:block/birch_zipline_pole_bottom"
+    "model": "ltextras:item/birch_zipline_pole"
   }
 }

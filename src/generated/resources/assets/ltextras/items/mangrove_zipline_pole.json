@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "ltextras:block/mangrove_zipline_pole_bottom"
+    "model": "ltextras:item/mangrove_zipline_pole"
   }
 }

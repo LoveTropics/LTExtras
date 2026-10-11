@@ -103,7 +103,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
@@ -1516,9 +1515,7 @@ public class ExtraBlocks {
                 .properties(p -> p.noCollision().noOcclusion().pushReaction(PushReaction.BLOCK))
                 .tag(BlockTags.MINEABLE_WITH_AXE)
                 .blockstate(() -> (ctx, prov) -> {
-                    TextureMapping textures = new TextureMapping()
-                            .put(Models.ZIPLINE_POLE_LOG, prov.mcBlockTexture(wood.logTexture()))
-                            .put(Models.ZIPLINE_POLE_PLANKS, prov.mcBlockTexture(BuiltInRegistries.BLOCK.getKey(wood.planks()).getPath()));
+                    TextureMapping textures = wood.textures();
                     MultiVariant bottom = plainVariant(Models.ZIPLINE_POLE_BOTTOM.create(ctx.get(), textures, prov.modelOutput));
                     MultiVariant top = plainVariant(Models.ZIPLINE_POLE_TOP.create(ctx.get(), textures, prov.modelOutput));
                     MultiVariant wall = plainVariant(Models.ZIPLINE_POLE_WALL.create(ctx.get(), textures, prov.modelOutput));
@@ -1544,7 +1541,10 @@ public class ExtraBlocks {
                         ))
                 ))
                 .item()
-                .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get().getBlock(), "_bottom")))
+                // The whole pole, rather than only the half that the block is placed as
+                .model(() -> (ctx, prov) -> prov.itemModelOutput.accept(ctx.get(), ItemModelUtils.plainModel(
+                        Models.ZIPLINE_POLE_ITEM.create(ctx.get(), wood.textures(), prov.modelOutput)
+                )))
                 .build()
                 .register();
     }
@@ -1618,6 +1618,11 @@ public class ExtraBlocks {
      * @param logTexture the bark of the wood, which the post of the pole is made of
      */
     private record ZiplinePoleWood(WoodType type, Block planks, String logTexture) {
+        TextureMapping textures() {
+            return new TextureMapping()
+                    .put(Models.ZIPLINE_POLE_LOG, new Material(Identifier.withDefaultNamespace("block/" + logTexture)))
+                    .put(Models.ZIPLINE_POLE_PLANKS, TextureMapping.getBlockTexture(planks));
+        }
     }
 
     private static class Models {
@@ -1627,6 +1632,9 @@ public class ExtraBlocks {
         public static final ModelTemplate ZIPLINE_POLE_TOP = createZiplinePoleTemplate("_top");
         public static final ModelTemplate ZIPLINE_POLE_WALL = createZiplinePoleTemplate("_wall");
         public static final ModelTemplate ZIPLINE_POLE_CEILING = createZiplinePoleTemplate("_ceiling");
+        public static final ModelTemplate ZIPLINE_POLE_ITEM = new ModelTemplate(
+                Optional.of(LTExtras.id("item/zipline_pole")), Optional.empty(), ZIPLINE_POLE_LOG, ZIPLINE_POLE_PLANKS
+        );
         public static final TextureSlot BARS = TextureSlot.create("bars");
         public static final ModelTemplate IRON_BARS_POST = ModelTemplates.create("iron_bars_post", "_post", BARS, TextureSlot.PARTICLE);
         public static final ModelTemplate IRON_BARS_SIDE_ALT = ModelTemplates.create("iron_bars_side_alt", "_side_alt", BARS, TextureSlot.EDGE, TextureSlot.PARTICLE);

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "ltextras:block/jungle_zipline_pole_bottom"
+    "model": "ltextras:item/jungle_zipline_pole"
   }
 }
