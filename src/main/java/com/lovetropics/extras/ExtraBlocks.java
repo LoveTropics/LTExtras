@@ -905,7 +905,29 @@ public class ExtraBlocks {
             .add(Blocks.BUBBLE_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
             .add(Blocks.HORN_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
             .add(Blocks.FIRE_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
-            .add(Blocks.TUBE_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new));
+            .add(Blocks.TUBE_CORAL, ImposterBlockTemplate.cross(ImposterCoralBlock::new))
+            .add(List.of(
+                    Blocks.ACACIA_PRESSURE_PLATE,
+                    Blocks.BAMBOO_PRESSURE_PLATE,
+                    Blocks.BIRCH_PRESSURE_PLATE,
+                    Blocks.CHERRY_PRESSURE_PLATE,
+                    Blocks.CRIMSON_PRESSURE_PLATE,
+                    Blocks.DARK_OAK_PRESSURE_PLATE,
+                    Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE,
+                    Blocks.JUNGLE_PRESSURE_PLATE,
+                    Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE,
+                    Blocks.MANGROVE_PRESSURE_PLATE,
+                    Blocks.OAK_PRESSURE_PLATE,
+                    Blocks.PALE_OAK_PRESSURE_PLATE,
+                    Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE,
+                    Blocks.SPRUCE_PRESSURE_PLATE,
+                    Blocks.STONE_PRESSURE_PLATE,
+                    Blocks.WARPED_PRESSURE_PLATE
+            ), ImposterBlockTemplate.pressurePlate())
+//            .add(Identifier.fromNamespaceAndPath("tropicraft", "bamboo_pressure_plate"), ImposterBlockTemplate.pressurePlate()) // This does not work because both of them have the "id" of "bamboo_pressure_plate" and it not like we really need it anyway
+            .add(Identifier.fromNamespaceAndPath("tropicraft", "mahogany_pressure_plate"), ImposterBlockTemplate.pressurePlate())
+            .add(Identifier.fromNamespaceAndPath("tropicraft", "palm_pressure_plate"), ImposterBlockTemplate.pressurePlate())
+            .add(Identifier.fromNamespaceAndPath("tropicraft", "thatch_pressure_plate"), ImposterBlockTemplate.pressurePlate());
 
     public static final Map<Holder<Block>, BlockEntry<? extends Block>> IMPOSTER_BLOCKS = IMPOSTER_BLOCK_TEMPLATES
             .build((object, template) -> {

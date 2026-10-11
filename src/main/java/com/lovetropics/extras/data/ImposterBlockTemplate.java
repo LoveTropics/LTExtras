@@ -2,6 +2,7 @@ package com.lovetropics.extras.data;
 
 import com.lovetropics.extras.BlockFactory;
 import com.lovetropics.extras.block.PapyrusUmbelBlock;
+import com.lovetropics.lib.block.CustomShapeBlock;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -14,12 +15,16 @@ import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import static net.minecraft.client.data.models.BlockModelGenerators.createSimpleBlock;
 import static net.minecraft.client.data.models.BlockModelGenerators.plainVariant;
 import static net.minecraft.client.data.models.blockstates.MultiVariantGenerator.dispatch;
 
 public final class ImposterBlockTemplate {
+    private static final VoxelShape PRESSURE_PLATE_SHAPE = Block.column(14.0, 0.0, 1.0);
+
     public final BlockFactory<? extends Block> factory;
     public final Model model;
 
@@ -42,6 +47,10 @@ public final class ImposterBlockTemplate {
 
     public static ImposterBlockTemplate cross(BlockFactory<? extends Block> factory) {
         return new ImposterBlockTemplate(factory, Model.CROSS);
+    }
+
+    public static ImposterBlockTemplate pressurePlate() {
+        return new ImposterBlockTemplate((props) -> new CustomShapeBlock(PRESSURE_PLATE_SHAPE, props), Model.CUBE);
     }
 
     public enum Model {
