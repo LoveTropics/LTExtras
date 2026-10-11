@@ -17,10 +17,12 @@ import com.lovetropics.extras.client.model_modifer.types.ScaleApplier;
 import com.lovetropics.extras.client.model_modifer.types.ShuffleWalkApplier;
 import com.lovetropics.extras.client.model_modifer.types.UpsidedownApplier;
 import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
+import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.model_modifer.types.OffsetType;
+import com.lovetropics.extras.zipline.ZiplineRider;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.model.EntityModel;
@@ -91,6 +93,10 @@ public class ModelModifierClient {
 
             for (Holder<ModelModifier> modelModifierType : ModelModifierStore.getOrDefault(entity).appliedModifiers()) {
                 scratchModifiers.add(modelModifierType.value());
+            }
+
+            if (ZiplineRider.isRiding(entity)) {
+                scratchModifiers.add(entity.registryAccess().getOrThrow(ExtraModelModifiers.ZIPLINE).value());
             }
 
             if (!scratchModifiers.isEmpty()) {

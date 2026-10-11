@@ -1,0 +1,18 @@
+{
+  "type": "ltextras:operation",
+  "operation": "set",
+  "parts": {
+    "left_arm": {
+      "xRot": 0.0,
+      "yRot": 0.0,
+      "yScale": 1.5,
+      "zRot": 175.0
+    },
+    "right_arm": {
+      "xRot": 0.0,
+      "yRot": 0.0,
+      "yScale": 1.5,
+      "zRot": 185.0
+    }
+  }
+}

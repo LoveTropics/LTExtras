@@ -35,6 +35,7 @@ public class ExtraModelModifiers {
     public static final ResourceKey<ModelModifier> T_POSE = key("t_pose");
     public static final ResourceKey<ModelModifier> PANCAKE = key("pancake");
     public static final ResourceKey<ModelModifier> DANACE = key("dance");
+    public static final ResourceKey<ModelModifier> ZIPLINE = key("zipline");
 
     private static ResourceKey<ModelModifier> key(String name) {
         return ResourceKey.create(ExtraRegistries.MODEL_MODIFIER, LTExtras.id(name));

@@ -74,5 +74,16 @@ public class ModelModifierDataGen {
         context.register(ExtraModelModifiers.DANACE, CompositeType.Builder.builder()
                         .add(new AnimationType(LTExtras.id("dance")))
                 .build());
+
+        context.register(ExtraModelModifiers.ZIPLINE, OperationType.Builder.builder(Operation.SET)
+                .part(PartNames.LEFT_ARM, builder -> builder
+                        .rotation(0, 0, 175)
+                        .yScale(1.5f)
+                        .build())
+                .part(PartNames.RIGHT_ARM, builder -> builder
+                        .rotation(0, 0, 185)
+                        .yScale(1.5f)
+                        .build())
+                .build());
     }
 }
