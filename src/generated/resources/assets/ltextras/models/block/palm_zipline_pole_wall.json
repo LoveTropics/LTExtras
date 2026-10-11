@@ -1,0 +1,7 @@
+{
+  "parent": "ltextras:block/zipline_pole_wall",
+  "textures": {
+    "log": "tropicraft:block/palm_log",
+    "planks": "tropicraft:block/palm_planks"
+  }
+}

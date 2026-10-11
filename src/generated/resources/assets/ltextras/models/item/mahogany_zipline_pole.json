@@ -1,0 +1,7 @@
+{
+  "parent": "ltextras:item/zipline_pole",
+  "textures": {
+    "log": "tropicraft:block/mahogany_log",
+    "planks": "tropicraft:block/mahogany_planks"
+  }
+}

@@ -158,7 +158,6 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -178,7 +177,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -1486,36 +1484,38 @@ public class ExtraBlocks {
                     .register()
             );
 
-    private static final List<ZiplinePoleWood> ZIPLINE_POLE_WOODS = List.of(
-            new ZiplinePoleWood(WoodType.OAK, Blocks.OAK_PLANKS, "oak_log"),
-            new ZiplinePoleWood(WoodType.SPRUCE, Blocks.SPRUCE_PLANKS, "spruce_log"),
-            new ZiplinePoleWood(WoodType.BIRCH, Blocks.BIRCH_PLANKS, "birch_log"),
-            new ZiplinePoleWood(WoodType.JUNGLE, Blocks.JUNGLE_PLANKS, "jungle_log"),
-            new ZiplinePoleWood(WoodType.ACACIA, Blocks.ACACIA_PLANKS, "acacia_log"),
-            new ZiplinePoleWood(WoodType.DARK_OAK, Blocks.DARK_OAK_PLANKS, "dark_oak_log"),
-            new ZiplinePoleWood(WoodType.MANGROVE, Blocks.MANGROVE_PLANKS, "mangrove_log"),
-            new ZiplinePoleWood(WoodType.CHERRY, Blocks.CHERRY_PLANKS, "cherry_log"),
-            new ZiplinePoleWood(WoodType.PALE_OAK, Blocks.PALE_OAK_PLANKS, "pale_oak_log"),
-            new ZiplinePoleWood(WoodType.BAMBOO, Blocks.BAMBOO_PLANKS, "bamboo_block"),
-            new ZiplinePoleWood(WoodType.CRIMSON, Blocks.CRIMSON_PLANKS, "crimson_stem"),
-            new ZiplinePoleWood(WoodType.WARPED, Blocks.WARPED_PLANKS, "warped_stem")
-    );
-
-    public static final Map<WoodType, BlockEntry<ZiplinePoleBlock>> ZIPLINE_POLES = ZIPLINE_POLE_WOODS.stream()
-            .collect(Collectors.toMap(ZiplinePoleWood::type, ExtraBlocks::registerZiplinePole, (a, b) -> a, LinkedHashMap::new));
+    // Keyed by the planks of each wood
+    public static final Map<Holder<Block>, BlockEntry<? extends ZiplinePoleBlock>> ZIPLINE_POLES = new TemplateBuilder<ZiplinePoleBlock, ZiplinePoleWood>()
+            .add(Blocks.OAK_PLANKS, ZiplinePoleWood.vanilla("oak", "oak_log"))
+            .add(Blocks.SPRUCE_PLANKS, ZiplinePoleWood.vanilla("spruce", "spruce_log"))
+            .add(Blocks.BIRCH_PLANKS, ZiplinePoleWood.vanilla("birch", "birch_log"))
+            .add(Blocks.JUNGLE_PLANKS, ZiplinePoleWood.vanilla("jungle", "jungle_log"))
+            .add(Blocks.ACACIA_PLANKS, ZiplinePoleWood.vanilla("acacia", "acacia_log"))
+            .add(Blocks.DARK_OAK_PLANKS, ZiplinePoleWood.vanilla("dark_oak", "dark_oak_log"))
+            .add(Blocks.MANGROVE_PLANKS, ZiplinePoleWood.vanilla("mangrove", "mangrove_log"))
+            .add(Blocks.CHERRY_PLANKS, ZiplinePoleWood.vanilla("cherry", "cherry_log"))
+            .add(Blocks.PALE_OAK_PLANKS, ZiplinePoleWood.vanilla("pale_oak", "pale_oak_log"))
+            .add(Blocks.BAMBOO_PLANKS, ZiplinePoleWood.vanilla("bamboo", "bamboo_block"))
+            .add(Blocks.CRIMSON_PLANKS, ZiplinePoleWood.vanilla("crimson", "crimson_stem"))
+            .add(Blocks.WARPED_PLANKS, ZiplinePoleWood.vanilla("warped", "warped_stem"))
+            .add(Identifier.fromNamespaceAndPath("tropicraft", "palm_planks"), ZiplinePoleWood.tropicraft("palm", "palm_log"))
+            .add(Identifier.fromNamespaceAndPath("tropicraft", "mahogany_planks"), ZiplinePoleWood.tropicraft("mahogany", "mahogany_log"))
+            // Named after its log, as the mangrove pole is already taken by vanilla's mangrove
+            .add(Identifier.fromNamespaceAndPath("tropicraft", "mangrove_planks"), ZiplinePoleWood.tropicraft("red_mangrove", "red_mangrove_log"))
+            .build(ExtraBlocks::registerZiplinePole);
 
     public static final BlockEntityEntry<ZiplinePoleBlockEntity> ZIPLINE_POLE_ENTITY = Util.make(
             REGISTRATE.blockEntity("zipline_pole", ZiplinePoleBlockEntity::new),
             builder -> ZIPLINE_POLES.values().forEach(builder::validBlock)
     ).register();
 
-    private static BlockEntry<ZiplinePoleBlock> registerZiplinePole(ZiplinePoleWood wood) {
-        return REGISTRATE.block(wood.type().name() + "_zipline_pole", ZiplinePoleBlock::new)
-                .initialProperties(wood::planks)
+    private static BlockEntry<ZiplinePoleBlock> registerZiplinePole(Holder<Block> planks, ZiplinePoleWood wood) {
+        return REGISTRATE.block(wood.name() + "_zipline_pole", ZiplinePoleBlock::new)
+                .initialProperties(planks::value)
                 .properties(p -> p.noCollision().noOcclusion().pushReaction(PushReaction.BLOCK))
                 .tag(BlockTags.MINEABLE_WITH_AXE)
                 .blockstate(() -> (ctx, prov) -> {
-                    TextureMapping textures = wood.textures();
+                    TextureMapping textures = wood.textures(planks.value());
                     MultiVariant bottom = plainVariant(Models.ZIPLINE_POLE_BOTTOM.create(ctx.get(), textures, prov.modelOutput));
                     MultiVariant top = plainVariant(Models.ZIPLINE_POLE_TOP.create(ctx.get(), textures, prov.modelOutput));
                     MultiVariant wall = plainVariant(Models.ZIPLINE_POLE_WALL.create(ctx.get(), textures, prov.modelOutput));
@@ -1543,7 +1543,7 @@ public class ExtraBlocks {
                 .item()
                 // The whole pole, rather than only the half that the block is placed as
                 .model(() -> (ctx, prov) -> prov.itemModelOutput.accept(ctx.get(), ItemModelUtils.plainModel(
-                        Models.ZIPLINE_POLE_ITEM.create(ctx.get(), wood.textures(), prov.modelOutput)
+                        Models.ZIPLINE_POLE_ITEM.create(ctx.get(), wood.textures(planks.value()), prov.modelOutput)
                 )))
                 .build()
                 .register();
@@ -1554,7 +1554,7 @@ public class ExtraBlocks {
      */
     public static void addAliases(RegisterEvent event) {
         Identifier oldPole = LTExtras.id("zipline_pole");
-        Identifier oakPole = ZIPLINE_POLES.get(WoodType.OAK).getId();
+        Identifier oakPole = ZIPLINE_POLES.get(Blocks.OAK_PLANKS.builtInRegistryHolder()).getId();
         if (event.getRegistryKey().equals(Registries.BLOCK)) {
             event.getRegistry(Registries.BLOCK).addAlias(oldPole, oakPole);
         } else if (event.getRegistryKey().equals(Registries.ITEM)) {
@@ -1617,10 +1617,18 @@ public class ExtraBlocks {
     /**
      * @param logTexture the bark of the wood, which the post of the pole is made of
      */
-    private record ZiplinePoleWood(WoodType type, Block planks, String logTexture) {
-        TextureMapping textures() {
+    private record ZiplinePoleWood(String name, Identifier logTexture) {
+        static ZiplinePoleWood vanilla(String name, String log) {
+            return new ZiplinePoleWood(name, Identifier.withDefaultNamespace("block/" + log));
+        }
+
+        static ZiplinePoleWood tropicraft(String name, String log) {
+            return new ZiplinePoleWood(name, Identifier.fromNamespaceAndPath("tropicraft", "block/" + log));
+        }
+
+        TextureMapping textures(Block planks) {
             return new TextureMapping()
-                    .put(Models.ZIPLINE_POLE_LOG, new Material(Identifier.withDefaultNamespace("block/" + logTexture)))
+                    .put(Models.ZIPLINE_POLE_LOG, new Material(logTexture))
                     .put(Models.ZIPLINE_POLE_PLANKS, TextureMapping.getBlockTexture(planks));
         }
     }

@@ -1,0 +1,7 @@
+{
+  "parent": "ltextras:item/zipline_pole",
+  "textures": {
+    "log": "tropicraft:block/red_mangrove_log",
+    "planks": "tropicraft:block/mangrove_planks"
+  }
+}
