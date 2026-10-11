@@ -16,7 +16,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jspecify.annotations.Nullable;
-import com.lovetropics.extras.zipline.ZiplineIndex;
+import com.lovetropics.extras.zipline.ZiplineNetwork;
 import com.lovetropics.extras.zipline.ZiplinePoleBlock;
 import com.lovetropics.extras.zipline.ZiplineRide;
 import com.lovetropics.extras.zipline.ZiplineRider;
@@ -46,7 +46,7 @@ public final class ClientZiplineHandler {
         }
 
         boolean holdingWrench = player.isHolding(ExtraItems.ZIPLINE_WRENCH.get());
-        ZiplineIndex index = ZiplineIndex.get(player.level());
+        ZiplineNetwork network = ZiplineNetwork.get(player.level());
         Vec3 lookVector = player.getViewVector(1.0f);
         HitResult hitResult = minecraft.hitResult;
 
@@ -55,7 +55,7 @@ public final class ClientZiplineHandler {
             BlockState state = player.level().getBlockState(blockHit.getBlockPos());
             if (state.getBlock() instanceof ZiplinePoleBlock) {
                 if (!holdingWrench && canAttach(player)) {
-                    ZiplineSegment segment = index.pickSegmentFrom(ZiplinePoleBlock.getBasePos(blockHit.getBlockPos(), state), lookVector);
+                    ZiplineSegment segment = network.pickSegmentFrom(ZiplinePoleBlock.getBasePos(blockHit.getBlockPos(), state), lookVector);
                     if (segment != null) {
                         attach(player, new ZiplineRide(segment, 0.0, player.getDeltaMovement().dot(segment.tangent(0.0)), 1));
                         consume(event);
@@ -70,7 +70,7 @@ public final class ClientZiplineHandler {
         if (hitResult != null && hitResult.getType() != HitResult.Type.MISS) {
             reach = Math.min(reach, eyePosition.distanceTo(hitResult.getLocation()));
         }
-        ZiplineSegment.@Nullable Hit ropeHit = index.raycast(eyePosition, eyePosition.add(lookVector.scale(reach)), ROPE_PICK_RADIUS);
+        ZiplineSegment.@Nullable Hit ropeHit = network.raycast(eyePosition, eyePosition.add(lookVector.scale(reach)), ROPE_PICK_RADIUS);
         if (ropeHit == null) {
             return;
         }

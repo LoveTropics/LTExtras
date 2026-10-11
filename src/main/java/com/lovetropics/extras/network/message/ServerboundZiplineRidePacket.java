@@ -1,7 +1,7 @@
 package com.lovetropics.extras.network.message;
 
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.zipline.ZiplineIndex;
+import com.lovetropics.extras.zipline.ZiplineNetwork;
 import com.lovetropics.extras.zipline.ZiplineRide;
 import com.lovetropics.extras.zipline.ZiplineRider;
 import com.lovetropics.extras.zipline.ZiplineSegment;
@@ -26,7 +26,7 @@ public record ServerboundZiplineRidePacket(Optional<Segment> segment) implements
     public static void handle(ServerboundZiplineRidePacket packet, IPayloadContext context) {
         ServerPlayer player = (ServerPlayer) context.player();
         ZiplineSegment segment = packet.segment
-                .map(s -> ZiplineIndex.get(player.level()).getSegment(s.from(), s.to()))
+                .map(s -> ZiplineNetwork.get(player.level()).getSegment(s.from(), s.to()))
                 .orElse(null);
         if (segment == null || !ZiplineRider.isNearRope(player, segment)) {
             ZiplineRider.stopRiding(player);

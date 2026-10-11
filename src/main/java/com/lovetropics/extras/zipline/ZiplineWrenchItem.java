@@ -66,14 +66,15 @@ public class ZiplineWrenchItem extends Item {
                 || !(level.getBlockEntity(pos) instanceof ZiplinePoleBlockEntity to)) {
             return ExtraLangKeys.ZIPLINE_SELECTED_POLE_MISSING.get().withStyle(ChatFormatting.RED);
         }
-        if (from.getConnection(pos) != null) {
-            ZiplinePoleBlockEntity.disconnect(level, selectedPos, pos);
+        ZiplineNetwork network = ZiplineNetwork.get(level);
+        if (network.isConnected(selectedPos, pos)) {
+            network.disconnect(selectedPos, pos);
             return ExtraLangKeys.ZIPLINE_DISCONNECTED.get().withStyle(ChatFormatting.YELLOW);
         }
-        if (from.isFull() || to.isFull()) {
+        if (network.isFull(selectedPos) || network.isFull(pos)) {
             return ExtraLangKeys.ZIPLINE_POLE_FULL.get().withStyle(ChatFormatting.RED);
         }
-        ZiplinePoleBlockEntity.connect(level, selectedPos, pos, ZiplineSettings.DEFAULT);
+        network.connect(selectedPos, from.getAnchorOffset(), pos, to.getAnchorOffset(), ZiplineSettings.DEFAULT);
         return ExtraLangKeys.ZIPLINE_CONNECTED.get().withStyle(ChatFormatting.GREEN);
     }
 

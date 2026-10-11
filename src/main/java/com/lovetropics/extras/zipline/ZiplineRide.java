@@ -1,10 +1,15 @@
 package com.lovetropics.extras.zipline;
 
 import net.minecraft.SharedConstants;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * An entity sliding along a line of ropes, simulated by whichever side controls the entity's movement.
@@ -45,6 +50,31 @@ public final class ZiplineRide {
         return segment;
     }
 
+    public void save(ValueOutput output) {
+        output.store("from", BlockPos.CODEC, segment.from());
+        output.store("to", BlockPos.CODEC, segment.to());
+        output.putDouble("t", t);
+        output.putDouble("velocity", velocity);
+        output.putInt("direction", direction);
+        output.putBoolean("turning", turning);
+    }
+
+    /**
+     * @return the ride that was saved, or null if the rope it was on has been taken down since
+     */
+    public static @Nullable ZiplineRide load(ZiplineNetwork network, ValueInput input) {
+        Optional<BlockPos> from = input.read("from", BlockPos.CODEC);
+        Optional<BlockPos> to = input.read("to", BlockPos.CODEC);
+        ZiplineSegment segment = from.isPresent() && to.isPresent() ? network.getSegment(from.get(), to.get()) : null;
+        if (segment == null) {
+            return null;
+        }
+        int direction = input.getIntOr("direction", 1) >= 0 ? 1 : -1;
+        ZiplineRide ride = new ZiplineRide(segment, input.getDoubleOr("t", 0.0), input.getDoubleOr("velocity", 0.0), direction);
+        ride.turning = input.getBooleanOr("turning", ride.turning);
+        return ride;
+    }
+
     public static double hangDistance(Entity entity) {
         return entity.getBbHeight() + HAND_REACH;
     }
@@ -71,8 +101,8 @@ public final class ZiplineRide {
      * @param moveInput horizontal direction that the rider is pressing towards, in world space
      * @return false once the rider has reached the end of the line, or the rope has been removed
      */
-    public boolean tick(ZiplineIndex index, Vec3 moveInput) {
-        ZiplineSegment current = index.getSegment(segment.from(), segment.to());
+    public boolean tick(ZiplineNetwork network, Vec3 moveInput) {
+        ZiplineSegment current = network.getSegment(segment.from(), segment.to());
         if (current == null) {
             return false;
         }
@@ -97,7 +127,7 @@ public final class ZiplineRide {
         }
         velocity = Mth.clamp(velocity, -MAX_SPEED, MAX_SPEED);
 
-        return advance(index);
+        return advance(network);
     }
 
     /**
@@ -123,7 +153,7 @@ public final class ZiplineRide {
         }
     }
 
-    private boolean advance(ZiplineIndex index) {
+    private boolean advance(ZiplineNetwork network) {
         double remaining = Math.abs(velocity);
         int sign = velocity >= 0.0 ? 1 : -1;
         while (remaining > 1.0e-6) {
@@ -139,7 +169,7 @@ public final class ZiplineRide {
             boolean forwards = nextT > 1.0;
             remaining -= Math.abs((forwards ? 1.0 : 0.0) - t) * rate;
             if (forwards) {
-                ZiplineSegment next = index.getContinuation(segment.to(), segment.from());
+                ZiplineSegment next = network.getContinuation(segment.to(), segment.from());
                 if (next == null) {
                     t = 1.0;
                     return false;
@@ -147,7 +177,7 @@ public final class ZiplineRide {
                 segment = next;
                 t = 0.0;
             } else {
-                ZiplineSegment next = index.getContinuation(segment.from(), segment.to());
+                ZiplineSegment next = network.getContinuation(segment.from(), segment.to());
                 if (next == null) {
                     t = 0.0;
                     return false;

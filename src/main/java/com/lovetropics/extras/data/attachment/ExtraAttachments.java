@@ -10,7 +10,7 @@ import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.mounts.MountStore;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
 import com.lovetropics.extras.shield.Shields;
-import com.lovetropics.extras.zipline.ZiplineIndex;
+import com.lovetropics.extras.zipline.ZiplineNetwork;
 import com.lovetropics.extras.zipline.ZiplineRider;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -49,11 +49,14 @@ public class ExtraAttachments {
     );
 
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<ZiplineRider>> ZIPLINE_RIDER = REGISTER.register(
-            "zipline_rider", () -> AttachmentType.builder(ZiplineRider::new).build()
+            "zipline_rider", () -> AttachmentType.builder(ZiplineRider::new).serialize(ZiplineRider.SERIALIZER).build()
     );
 
-    public static final DeferredHolder<AttachmentType<?>, AttachmentType<ZiplineIndex>> ZIPLINE_INDEX = REGISTER.register(
-            "zipline_index", () -> AttachmentType.builder(ZiplineIndex::new).build()
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<ZiplineNetwork>> ZIPLINE_NETWORK = REGISTER.register(
+            "zipline_network", () -> AttachmentType.builder(ZiplineNetwork::new)
+                    .serialize(ZiplineNetwork.SERIALIZER)
+                    .sync(ZiplineNetwork.SYNC_HANDLER)
+                    .build()
     );
 
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<ModelModifierStore>> MODEL_MODIFIERS = REGISTER.register(

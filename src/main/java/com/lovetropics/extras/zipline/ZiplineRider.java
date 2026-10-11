@@ -9,16 +9,21 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
+import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Attached to entities riding a zipline. Players simulate their own ride on their client, and the server only uses
- * this to stop punishing them for hanging in the air. Other entities are moved along the rope by the server.
+ * this to stop punishing them for hanging in the air. Other entities are moved along the rope by the server, and keep
+ * their ride when they are saved with their chunk, so that they carry on where they were once it is loaded again.
  */
 @EventBusSubscriber
 public final class ZiplineRider {
@@ -26,8 +31,38 @@ public final class ZiplineRider {
     private static final int AUTO_ATTACH_COOLDOWN = 20;
     private static final double MAX_ROPE_DISTANCE = 8.0;
 
+    public static final IAttachmentSerializer<ZiplineRider> SERIALIZER = new IAttachmentSerializer<>() {
+        @Override
+        public ZiplineRider read(IAttachmentHolder holder, ValueInput input) {
+            ZiplineRider rider = new ZiplineRider(holder);
+            if (holder instanceof Entity entity) {
+                rider.ride = ZiplineRide.load(ZiplineNetwork.get(entity.level()), input);
+                if (rider.ride != null) {
+                    // Before the first tick, so that it doesn't suffocate in blocks that the rope runs through
+                    entity.noPhysics = true;
+                }
+            }
+            return rider;
+        }
+
+        @Override
+        public boolean write(ZiplineRider rider, ValueOutput output) {
+            // Players would no longer be holding on by the time they're back, as their client simulates the ride
+            if (rider.ride == null || rider.isPlayer) {
+                return false;
+            }
+            rider.ride.save(output);
+            return true;
+        }
+    };
+
+    private final boolean isPlayer;
     private @Nullable ZiplineRide ride;
     private long detachedTime = -AUTO_ATTACH_COOLDOWN;
+
+    public ZiplineRider(IAttachmentHolder holder) {
+        isPlayer = holder instanceof Player;
+    }
 
     public static @Nullable ZiplineRide getRide(Entity entity) {
         ZiplineRider rider = entity.getExistingDataOrNull(ExtraAttachments.ZIPLINE_RIDER);
@@ -95,7 +130,7 @@ public final class ZiplineRider {
         boolean jumpedOff = canLetGo && jumping;
         boolean leaving = (isPlayer && entity.isSpectator()) || (canLetGo && (entity.isShiftKeyDown() || jumping));
         Vec3 moveInput = isPlayer ? getMoveInput(entity, input) : Vec3.ZERO;
-        if (leaving || !ride.tick(ZiplineIndex.get(entity.level()), moveInput)) {
+        if (leaving || !ride.tick(ZiplineNetwork.get(entity.level()), moveInput)) {
             stopRiding(entity);
             Vec3 motion = ride.motion();
             entity.setDeltaMovement(jumpedOff ? motion.add(0.0, JUMP_OFF_BOOST, 0.0) : motion);
@@ -124,7 +159,7 @@ public final class ZiplineRider {
         if (ride == null) {
             return;
         }
-        ZiplineSegment segment = ZiplineIndex.get(player.level()).getSegment(ride.segment().from(), ride.segment().to());
+        ZiplineSegment segment = ZiplineNetwork.get(player.level()).getSegment(ride.segment().from(), ride.segment().to());
         if (segment == null || !isNearRope(player, segment)) {
             stopRiding(player);
             return;

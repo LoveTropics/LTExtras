@@ -103,7 +103,7 @@ public class ZiplinePoleBlock extends Block implements EntityBlock {
         // Head along the rope that the mob is walking or facing towards
         Vec3 motion = entity.getDeltaMovement();
         Vec3 heading = motion.horizontalDistanceSqr() > 1.0e-4 ? motion : entity.getLookAngle();
-        ZiplineSegment segment = ZiplineIndex.get(level).pickSegmentFrom(getBasePos(pos, state), heading);
+        ZiplineSegment segment = ZiplineNetwork.get(level).pickSegmentFrom(getBasePos(pos, state), heading);
         if (segment != null) {
             ZiplineRider.startRiding(entity, new ZiplineRide(segment, 0.0, motion.dot(segment.tangent(0.0)), 1));
         }

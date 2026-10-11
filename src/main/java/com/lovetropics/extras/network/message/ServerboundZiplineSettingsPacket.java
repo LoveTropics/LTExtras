@@ -3,8 +3,7 @@ package com.lovetropics.extras.network.message;
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.zipline.ZiplineIndex;
-import com.lovetropics.extras.zipline.ZiplinePoleBlockEntity;
+import com.lovetropics.extras.zipline.ZiplineNetwork;
 import com.lovetropics.extras.zipline.ZiplineSegment;
 import com.lovetropics.extras.zipline.ZiplineSettings;
 import io.netty.buffer.ByteBuf;
@@ -33,12 +32,13 @@ public record ServerboundZiplineSettingsPacket(BlockPos from, BlockPos to, Zipli
         if (!player.mayBuild() || !player.isHolding(ExtraItems.ZIPLINE_WRENCH.get())) {
             return;
         }
-        ZiplineSegment segment = ZiplineIndex.get(player.level()).getSegment(packet.from, packet.to);
+        ZiplineNetwork network = ZiplineNetwork.get(player.level());
+        ZiplineSegment segment = network.getSegment(packet.from, packet.to);
         double reach = player.blockInteractionRange() + REACH_BUFFER;
         if (segment == null || segment.distanceToSqr(player.getEyePosition()) > reach * reach) {
             return;
         }
-        ZiplinePoleBlockEntity.setSettings(player.level(), packet.from, packet.to, packet.settings.validated());
+        network.setSettings(packet.from, packet.to, packet.settings.validated());
         player.sendOverlayMessage(ExtraLangKeys.ZIPLINE_SETTINGS_SAVED.get());
     }
 

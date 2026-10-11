@@ -1,66 +1,69 @@
-package com.lovetropics.extras.client.block;
+package com.lovetropics.extras.client;
 
+import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.zipline.ZiplineNetwork;
+import com.lovetropics.extras.zipline.ZiplineSegment;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ExtractLevelRenderStateEvent;
+import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 import org.joml.Vector3f;
-import org.jspecify.annotations.Nullable;
-import com.lovetropics.extras.client.block.state.ZiplinePoleRenderState;
-import com.lovetropics.extras.zipline.ZiplineConnection;
-import com.lovetropics.extras.zipline.ZiplineIndex;
-import com.lovetropics.extras.zipline.ZiplinePoleBlockEntity;
-import com.lovetropics.extras.zipline.ZiplineSegment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Draws the ropes leaving a pole as a thin square tube.
+ * Draws every rope in view as a thin square tube. Ropes are drawn from the {@link ZiplineNetwork} rather than from their
+ * poles, so that they are still there when neither of their poles is within render distance.
  */
-public class ZiplinePoleRenderer implements BlockEntityRenderer<ZiplinePoleBlockEntity, ZiplinePoleRenderState> {
+@EventBusSubscriber(Dist.CLIENT)
+public final class ZiplineRopeRenderer {
+    private static final ContextKey<List<Rope>> ROPES = new ContextKey<>(LTExtras.id("zipline_ropes"));
+
     // Placeholder: a flat vanilla texture, tinted by the vertex color
     private static final Identifier TEXTURE = Identifier.withDefaultNamespace("textures/block/white_concrete.png");
     private static final float HALF_WIDTH = 0.04f;
     private static final int COLOR = 0xFF4A4A4A;
     private static final Vector3f UP = new Vector3f(0.0f, 1.0f, 0.0f);
 
-    public ZiplinePoleRenderer(BlockEntityRendererProvider.Context context) {
-    }
-
-    @Override
-    public ZiplinePoleRenderState createRenderState() {
-        return new ZiplinePoleRenderState();
-    }
-
-    @Override
-    public void extractRenderState(ZiplinePoleBlockEntity pole, ZiplinePoleRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
-        BlockEntityRenderState.extractBase(pole, state, breakProgress);
-        state.ropes.clear();
-        Level level = pole.getLevel();
-        if (level == null) {
+    @SubscribeEvent
+    public static void onExtractLevelRenderState(ExtractLevelRenderStateEvent event) {
+        ClientLevel level = event.getLevel();
+        List<ZiplineSegment> segments = ZiplineNetwork.get(level).getRopes();
+        if (segments.isEmpty()) {
             return;
         }
-        ZiplineIndex index = ZiplineIndex.get(level);
-        BlockPos pos = pole.getBlockPos();
-        for (ZiplineConnection connection : pole.getConnections()) {
-            if (index.ownsSegment(pos, connection.target())) {
-                state.ropes.add(extractRope(level, pole.getSegment(connection)));
+        Vec3 cameraPosition = event.getCamera().position();
+        Frustum frustum = event.getFrustum();
+        double maxDistance = Minecraft.getInstance().options.getEffectiveRenderDistance() * SectionPos.SECTION_SIZE;
+        List<Rope> ropes = new ArrayList<>();
+        for (ZiplineSegment segment : segments) {
+            AABB bounds = segment.bounds().inflate(HALF_WIDTH);
+            if (bounds.distanceToSqr(cameraPosition) <= maxDistance * maxDistance && frustum.isVisible(bounds)) {
+                ropes.add(extractRope(level, segment));
             }
         }
+        event.getRenderState().setRenderData(ROPES, ropes);
     }
 
-    private static ZiplinePoleRenderState.Rope extractRope(Level level, ZiplineSegment segment) {
+    private static Rope extractRope(Level level, ZiplineSegment segment) {
         BlockPos origin = segment.from();
         int samples = segment.sampleCount();
         float[] points = new float[(samples + 1) * 3];
@@ -73,17 +76,26 @@ public class ZiplinePoleRenderer implements BlockEntityRenderer<ZiplinePoleBlock
             BlockPos lightPos = BlockPos.containing(point);
             light[i] = LightCoordsUtil.pack(level.getBrightness(LightLayer.BLOCK, lightPos), level.getBrightness(LightLayer.SKY, lightPos));
         }
-        return new ZiplinePoleRenderState.Rope(points, light);
+        return new Rope(origin, points, light);
     }
 
-    @Override
-    public void submit(ZiplinePoleRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
-        for (ZiplinePoleRenderState.Rope rope : state.ropes) {
-            submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.entitySolid(TEXTURE), (pose, buffer) -> renderRope(pose, buffer, rope));
+    @SubscribeEvent
+    public static void onSubmitCustomGeometry(SubmitCustomGeometryEvent event) {
+        List<Rope> ropes = event.getLevelRenderState().getRenderData(ROPES);
+        if (ropes == null) {
+            return;
+        }
+        Vec3 cameraPosition = event.getLevelRenderState().cameraRenderState.pos;
+        PoseStack poseStack = event.getPoseStack();
+        for (Rope rope : ropes) {
+            poseStack.pushPose();
+            poseStack.translate(rope.origin().getX() - cameraPosition.x, rope.origin().getY() - cameraPosition.y, rope.origin().getZ() - cameraPosition.z);
+            event.getSubmitNodeCollector().submitCustomGeometry(poseStack, RenderTypes.entitySolid(TEXTURE), (pose, buffer) -> renderRope(pose, buffer, rope));
+            poseStack.popPose();
         }
     }
 
-    private static void renderRope(PoseStack.Pose pose, VertexConsumer buffer, ZiplinePoleRenderState.Rope rope) {
+    private static void renderRope(PoseStack.Pose pose, VertexConsumer buffer, Rope rope) {
         float[] points = rope.points();
         int[] light = rope.light();
         Vector3f[] corners = {new Vector3f(), new Vector3f(), new Vector3f(), new Vector3f()};
@@ -128,18 +140,11 @@ public class ZiplinePoleRenderer implements BlockEntityRenderer<ZiplinePoleBlock
                 .setNormal(pose, normal.x, normal.y, normal.z);
     }
 
-    @Override
-    public boolean shouldRenderOffScreen() {
-        return true;
-    }
-
-    @Override
-    public int getViewDistance() {
-        return ZiplineSegment.MAX_SPAN * 2;
-    }
-
-    @Override
-    public AABB getRenderBoundingBox(ZiplinePoleBlockEntity pole) {
-        return pole.getRenderBounds();
+    /**
+     * @param origin where the points are relative to, so that they stay precise far from the world origin
+     * @param points xyz of each point along the rope
+     * @param light  packed light at each point
+     */
+    private record Rope(BlockPos origin, float[] points, int[] light) {
     }
 }
