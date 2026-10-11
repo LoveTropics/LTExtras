@@ -12,18 +12,18 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "block": "ltextras:zipline_pole",
+              "block": "ltextras:pale_oak_zipline_pole",
               "condition": "minecraft:block_state_property",
               "properties": {
                 "half": "lower"
               }
             }
           ],
-          "name": "ltextras:zipline_pole"
+          "name": "ltextras:pale_oak_zipline_pole"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "ltextras:blocks/zipline_pole"
+  "random_sequence": "ltextras:blocks/pale_oak_zipline_pole"
 }

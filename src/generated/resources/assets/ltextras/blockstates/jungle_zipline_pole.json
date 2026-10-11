@@ -1,0 +1,82 @@
+{
+  "variants": {
+    "face=ceiling,facing=east,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_ceiling"
+    },
+    "face=ceiling,facing=east,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_ceiling"
+    },
+    "face=ceiling,facing=north,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_ceiling"
+    },
+    "face=ceiling,facing=north,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_ceiling"
+    },
+    "face=ceiling,facing=south,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_ceiling"
+    },
+    "face=ceiling,facing=south,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_ceiling"
+    },
+    "face=ceiling,facing=west,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_ceiling"
+    },
+    "face=ceiling,facing=west,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_ceiling"
+    },
+    "face=floor,facing=east,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_bottom"
+    },
+    "face=floor,facing=east,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_top"
+    },
+    "face=floor,facing=north,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_bottom"
+    },
+    "face=floor,facing=north,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_top"
+    },
+    "face=floor,facing=south,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_bottom"
+    },
+    "face=floor,facing=south,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_top"
+    },
+    "face=floor,facing=west,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_bottom"
+    },
+    "face=floor,facing=west,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_top"
+    },
+    "face=wall,facing=east,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_wall",
+      "y": 90
+    },
+    "face=wall,facing=east,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_wall",
+      "y": 90
+    },
+    "face=wall,facing=north,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_wall"
+    },
+    "face=wall,facing=north,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_wall"
+    },
+    "face=wall,facing=south,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_wall",
+      "y": 180
+    },
+    "face=wall,facing=south,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_wall",
+      "y": 180
+    },
+    "face=wall,facing=west,half=lower": {
+      "model": "ltextras:block/jungle_zipline_pole_wall",
+      "y": 270
+    },
+    "face=wall,facing=west,half=upper": {
+      "model": "ltextras:block/jungle_zipline_pole_wall",
+      "y": 270
+    }
+  }
+}

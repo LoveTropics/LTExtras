@@ -52,8 +52,8 @@ public class ZiplinePoleBlock extends Block implements EntityBlock {
     public static final Vec3 MOUNTED_ANCHOR = new Vec3(0.5, 0.5, 0.5);
 
     private static final VoxelShape FLOOR_SHAPE = Block.box(6.0, 0.0, 6.0, 10.0, 16.0, 10.0);
-    private static final Map<Direction, VoxelShape> WALL_SHAPES = Shapes.rotateHorizontal(Block.box(5.0, 4.0, 6.5, 11.0, 12.0, 16.0));
-    private static final VoxelShape CEILING_SHAPE = Block.box(5.0, 6.5, 5.0, 11.0, 16.0, 11.0);
+    private static final Map<Direction, VoxelShape> WALL_SHAPES = Shapes.rotateHorizontal(Block.box(5.0, 3.0, 6.0, 11.0, 13.0, 16.0));
+    private static final VoxelShape CEILING_SHAPE = Block.box(5.0, 6.0, 5.0, 11.0, 16.0, 11.0);
 
     public ZiplinePoleBlock(Properties properties) {
         super(properties);

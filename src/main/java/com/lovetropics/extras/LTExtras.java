@@ -108,6 +108,7 @@ public class LTExtras {
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
         NeoForge.EVENT_BUS.addListener(VideoImporter.get()::onServerStarted);
         modBus.addListener(this::onModifyAttributes);
+        modBus.addListener(ExtraBlocks::addAliases);
 
         ExtraLangKeys.init(registrate());
         registrate()

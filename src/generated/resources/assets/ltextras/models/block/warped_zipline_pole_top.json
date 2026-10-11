@@ -1,0 +1,7 @@
+{
+  "parent": "ltextras:block/zipline_pole_top",
+  "textures": {
+    "log": "minecraft:block/warped_stem",
+    "planks": "minecraft:block/warped_planks"
+  }
+}

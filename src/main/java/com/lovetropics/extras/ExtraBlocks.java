@@ -103,6 +103,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
@@ -158,6 +159,7 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -171,11 +173,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -1483,41 +1487,80 @@ public class ExtraBlocks {
                     .register()
             );
 
-    public static final BlockEntry<ZiplinePoleBlock> ZIPLINE_POLE = REGISTRATE.block("zipline_pole", ZiplinePoleBlock::new)
-            .properties(p -> p.mapColor(MapColor.METAL).strength(2.0f).sound(SoundType.METAL).noCollision().noOcclusion().pushReaction(PushReaction.BLOCK))
-            .blockstate(() -> (ctx, prov) -> {
-                MultiVariant bottom = plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_bottom"));
-                MultiVariant top = plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_top"));
-                MultiVariant wall = plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_wall"));
-                MultiVariant ceiling = plainVariant(ModelLocationUtils.getModelLocation(ctx.get(), "_ceiling"));
-                prov.blockStateOutput.accept(dispatch(ctx.get())
-                        .with(PropertyDispatch.initial(ZiplinePoleBlock.FACE, ZiplinePoleBlock.FACING, ZiplinePoleBlock.HALF).generate((face, facing, half) -> switch (face) {
-                            case FLOOR -> half == DoubleBlockHalf.UPPER ? top : bottom;
-                            case WALL -> wall.with(switch (facing) {
-                                case Direction.EAST -> Y_ROT_90;
-                                case Direction.SOUTH -> Y_ROT_180;
-                                case Direction.WEST -> Y_ROT_270;
-                                default -> NOP;
-                            });
-                            case CEILING -> ceiling;
-                        })));
-            })
-            .loot((lootTables, block) -> lootTables.add(block,
-                    lootTable().withPool(lootTables.applyExplosionCondition(block, LootPool.lootPool()
-                            .setRolls(exactly(1))
-                            .add(lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
-                                    .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(ZiplinePoleBlock.HALF, DoubleBlockHalf.LOWER))
-                            ))
-                    ))
-            ))
-            .blockEntity(ZiplinePoleBlockEntity::new)
-            .build()
-            .item()
-            .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get().getBlock(), "_bottom")))
-            .build()
-            .register();
+    private static final List<ZiplinePoleWood> ZIPLINE_POLE_WOODS = List.of(
+            new ZiplinePoleWood(WoodType.OAK, Blocks.OAK_PLANKS, "oak_log"),
+            new ZiplinePoleWood(WoodType.SPRUCE, Blocks.SPRUCE_PLANKS, "spruce_log"),
+            new ZiplinePoleWood(WoodType.BIRCH, Blocks.BIRCH_PLANKS, "birch_log"),
+            new ZiplinePoleWood(WoodType.JUNGLE, Blocks.JUNGLE_PLANKS, "jungle_log"),
+            new ZiplinePoleWood(WoodType.ACACIA, Blocks.ACACIA_PLANKS, "acacia_log"),
+            new ZiplinePoleWood(WoodType.DARK_OAK, Blocks.DARK_OAK_PLANKS, "dark_oak_log"),
+            new ZiplinePoleWood(WoodType.MANGROVE, Blocks.MANGROVE_PLANKS, "mangrove_log"),
+            new ZiplinePoleWood(WoodType.CHERRY, Blocks.CHERRY_PLANKS, "cherry_log"),
+            new ZiplinePoleWood(WoodType.PALE_OAK, Blocks.PALE_OAK_PLANKS, "pale_oak_log"),
+            new ZiplinePoleWood(WoodType.BAMBOO, Blocks.BAMBOO_PLANKS, "bamboo_block"),
+            new ZiplinePoleWood(WoodType.CRIMSON, Blocks.CRIMSON_PLANKS, "crimson_stem"),
+            new ZiplinePoleWood(WoodType.WARPED, Blocks.WARPED_PLANKS, "warped_stem")
+    );
 
-    public static final BlockEntityEntry<ZiplinePoleBlockEntity> ZIPLINE_POLE_ENTITY = BlockEntityEntry.cast(ZIPLINE_POLE.getSibling(Registries.BLOCK_ENTITY_TYPE));
+    public static final Map<WoodType, BlockEntry<ZiplinePoleBlock>> ZIPLINE_POLES = ZIPLINE_POLE_WOODS.stream()
+            .collect(Collectors.toMap(ZiplinePoleWood::type, ExtraBlocks::registerZiplinePole, (a, b) -> a, LinkedHashMap::new));
+
+    public static final BlockEntityEntry<ZiplinePoleBlockEntity> ZIPLINE_POLE_ENTITY = Util.make(
+            REGISTRATE.blockEntity("zipline_pole", ZiplinePoleBlockEntity::new),
+            builder -> ZIPLINE_POLES.values().forEach(builder::validBlock)
+    ).register();
+
+    private static BlockEntry<ZiplinePoleBlock> registerZiplinePole(ZiplinePoleWood wood) {
+        return REGISTRATE.block(wood.type().name() + "_zipline_pole", ZiplinePoleBlock::new)
+                .initialProperties(wood::planks)
+                .properties(p -> p.noCollision().noOcclusion().pushReaction(PushReaction.BLOCK))
+                .tag(BlockTags.MINEABLE_WITH_AXE)
+                .blockstate(() -> (ctx, prov) -> {
+                    TextureMapping textures = new TextureMapping()
+                            .put(Models.ZIPLINE_POLE_LOG, prov.mcBlockTexture(wood.logTexture()))
+                            .put(Models.ZIPLINE_POLE_PLANKS, prov.mcBlockTexture(BuiltInRegistries.BLOCK.getKey(wood.planks()).getPath()));
+                    MultiVariant bottom = plainVariant(Models.ZIPLINE_POLE_BOTTOM.create(ctx.get(), textures, prov.modelOutput));
+                    MultiVariant top = plainVariant(Models.ZIPLINE_POLE_TOP.create(ctx.get(), textures, prov.modelOutput));
+                    MultiVariant wall = plainVariant(Models.ZIPLINE_POLE_WALL.create(ctx.get(), textures, prov.modelOutput));
+                    MultiVariant ceiling = plainVariant(Models.ZIPLINE_POLE_CEILING.create(ctx.get(), textures, prov.modelOutput));
+                    prov.blockStateOutput.accept(dispatch(ctx.get())
+                            .with(PropertyDispatch.initial(ZiplinePoleBlock.FACE, ZiplinePoleBlock.FACING, ZiplinePoleBlock.HALF).generate((face, facing, half) -> switch (face) {
+                                case FLOOR -> half == DoubleBlockHalf.UPPER ? top : bottom;
+                                case WALL -> wall.with(switch (facing) {
+                                    case Direction.EAST -> Y_ROT_90;
+                                    case Direction.SOUTH -> Y_ROT_180;
+                                    case Direction.WEST -> Y_ROT_270;
+                                    default -> NOP;
+                                });
+                                case CEILING -> ceiling;
+                            })));
+                })
+                .loot((lootTables, block) -> lootTables.add(block,
+                        lootTable().withPool(lootTables.applyExplosionCondition(block, LootPool.lootPool()
+                                .setRolls(exactly(1))
+                                .add(lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(ZiplinePoleBlock.HALF, DoubleBlockHalf.LOWER))
+                                ))
+                        ))
+                ))
+                .item()
+                .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), ModelLocationUtils.getModelLocation(ctx.get().getBlock(), "_bottom")))
+                .build()
+                .register();
+    }
+
+    /**
+     * Zipline poles used to only come in one kind, which became the oak pole.
+     */
+    public static void addAliases(RegisterEvent event) {
+        Identifier oldPole = LTExtras.id("zipline_pole");
+        Identifier oakPole = ZIPLINE_POLES.get(WoodType.OAK).getId();
+        if (event.getRegistryKey().equals(Registries.BLOCK)) {
+            event.getRegistry(Registries.BLOCK).addAlias(oldPole, oakPole);
+        } else if (event.getRegistryKey().equals(Registries.ITEM)) {
+            event.getRegistry(Registries.ITEM).addAlias(oldPole, oakPole);
+        }
+    }
 
     public static void init() {
     }
@@ -1571,7 +1614,19 @@ public class ExtraBlocks {
         }
     }
 
+    /**
+     * @param logTexture the bark of the wood, which the post of the pole is made of
+     */
+    private record ZiplinePoleWood(WoodType type, Block planks, String logTexture) {
+    }
+
     private static class Models {
+        public static final TextureSlot ZIPLINE_POLE_LOG = TextureSlot.create("log");
+        public static final TextureSlot ZIPLINE_POLE_PLANKS = TextureSlot.create("planks");
+        public static final ModelTemplate ZIPLINE_POLE_BOTTOM = createZiplinePoleTemplate("_bottom");
+        public static final ModelTemplate ZIPLINE_POLE_TOP = createZiplinePoleTemplate("_top");
+        public static final ModelTemplate ZIPLINE_POLE_WALL = createZiplinePoleTemplate("_wall");
+        public static final ModelTemplate ZIPLINE_POLE_CEILING = createZiplinePoleTemplate("_ceiling");
         public static final TextureSlot BARS = TextureSlot.create("bars");
         public static final ModelTemplate IRON_BARS_POST = ModelTemplates.create("iron_bars_post", "_post", BARS, TextureSlot.PARTICLE);
         public static final ModelTemplate IRON_BARS_SIDE_ALT = ModelTemplates.create("iron_bars_side_alt", "_side_alt", BARS, TextureSlot.EDGE, TextureSlot.PARTICLE);
@@ -1590,6 +1645,13 @@ public class ExtraBlocks {
         public static final ModelTemplate PAPYRUS_STEM = new ModelTemplate(Optional.of(
                 ModelLocationUtils.decorateBlockModelLocation("ltextras:papyrus_stem")
         ), Optional.empty(), TextureSlot.ALL);
+
+        private static ModelTemplate createZiplinePoleTemplate(String suffix) {
+            return new ModelTemplate(
+                    Optional.of(ModelLocationUtils.decorateBlockModelLocation("ltextras:zipline_pole" + suffix)),
+                    Optional.of(suffix), ZIPLINE_POLE_LOG, ZIPLINE_POLE_PLANKS
+            );
+        }
 
         private static Identifier createSuffixedVariant(Block block, String suffix, ModelTemplate modelTemplate, Function<Material, TextureMapping> textureMappingGetter, BiConsumer<Identifier, ModelInstance> modelOutput) {
             return modelTemplate.createWithSuffix(block, suffix, textureMappingGetter.apply(TextureMapping.getBlockTexture(block, suffix)), modelOutput);

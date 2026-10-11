@@ -1,42 +1,41 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "particle": "minecraft:block/iron_block",
-    "pole": "minecraft:block/iron_block"
+    "particle": "#planks"
   },
   "elements": [
     {
-      "from": [5, 4, 15],
-      "to": [11, 12, 16],
+      "from": [5, 3, 14],
+      "to": [11, 13, 16],
       "faces": {
-        "north": {"texture": "#pole"},
-        "east": {"texture": "#pole"},
-        "south": {"texture": "#pole", "cullface": "south"},
-        "west": {"texture": "#pole"},
-        "up": {"texture": "#pole"},
-        "down": {"texture": "#pole"}
+        "north": {"texture": "#planks"},
+        "east": {"texture": "#planks"},
+        "south": {"texture": "#planks", "cullface": "south"},
+        "west": {"texture": "#planks"},
+        "up": {"texture": "#planks"},
+        "down": {"texture": "#planks"}
       }
     },
     {
-      "from": [7, 7, 9.5],
-      "to": [9, 9, 15],
+      "from": [7, 7, 10],
+      "to": [9, 9, 14],
       "faces": {
-        "east": {"texture": "#pole"},
-        "west": {"texture": "#pole"},
-        "up": {"texture": "#pole"},
-        "down": {"texture": "#pole"}
+        "east": {"texture": "#log"},
+        "west": {"texture": "#log"},
+        "up": {"texture": "#log"},
+        "down": {"texture": "#log"}
       }
     },
     {
-      "from": [6.5, 6.5, 6.5],
-      "to": [9.5, 9.5, 9.5],
+      "from": [6, 6, 6],
+      "to": [10, 10, 10],
       "faces": {
-        "north": {"texture": "#pole"},
-        "east": {"texture": "#pole"},
-        "south": {"texture": "#pole"},
-        "west": {"texture": "#pole"},
-        "up": {"texture": "#pole"},
-        "down": {"texture": "#pole"}
+        "north": {"texture": "#planks"},
+        "east": {"texture": "#planks"},
+        "south": {"texture": "#planks"},
+        "west": {"texture": "#planks"},
+        "up": {"texture": "#planks"},
+        "down": {"texture": "#planks"}
       }
     }
   ]
