@@ -34,7 +34,7 @@ public class ExtraEffects {
     public static final DeferredHolder<MobEffect, ModelModifierEffect> HOVERING = modelEffect(ExtraModelModifiers.HOVERING);
     public static final DeferredHolder<MobEffect, ModelModifierEffect> SHUFFLE = modelEffect(ExtraModelModifiers.SHUFFLE);
     public static final DeferredHolder<MobEffect, ModelModifierEffect> UPSIDEDOWN = modelEffect(ExtraModelModifiers.UPSIDEDOWN);
-    public static final DeferredHolder<MobEffect, ModelModifierEffect> SHRUNK = modelEffect(ExtraModelModifiers.ENLARGED);
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> SHRUNK = modelEffect(ExtraModelModifiers.SHRUNK);
     public static final DeferredHolder<MobEffect, ModelModifierEffect> SHRUGGY_ARMS = modelEffect(ExtraModelModifiers.SHRUGGY_ARMS, effect -> {
         effect.addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, LTExtras.id("small_arms_block_range"), -3, AttributeModifier.Operation.ADD_VALUE);
         effect.addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, LTExtras.id("small_arms_entity_range"), -3, AttributeModifier.Operation.ADD_VALUE);
