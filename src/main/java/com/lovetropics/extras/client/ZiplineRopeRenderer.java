@@ -30,17 +30,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Draws every rope in view as a thin square tube. Ropes are drawn from the {@link ZiplineNetwork} rather than from their
+ * Draws every rope in view as a stalk of bamboo. Ropes are drawn from the {@link ZiplineNetwork} rather than from their
  * poles, so that they are still there when neither of their poles is within render distance.
  */
 @EventBusSubscriber(Dist.CLIENT)
 public final class ZiplineRopeRenderer {
     private static final ContextKey<List<Rope>> ROPES = new ContextKey<>(LTExtras.id("zipline_ropes"));
 
-    // Placeholder: a flat vanilla texture, tinted by the vertex color
-    private static final Identifier TEXTURE = Identifier.withDefaultNamespace("textures/block/white_concrete.png");
-    private static final float HALF_WIDTH = 0.04f;
-    private static final int COLOR = 0xFF4A4A4A;
+    private static final Identifier TEXTURE = Identifier.withDefaultNamespace("textures/block/bamboo_stalk.png");
+    // As thick as a grown bamboo plant, using the same part of the texture for its sides
+    private static final float HALF_WIDTH = 1.5f / 16.0f;
+    private static final float SIDE_MIN_U = 0.0f;
+    private static final float SIDE_MAX_U = 3.0f / 16.0f;
+    private static final int COLOR = 0xFFFFFFFF;
     private static final Vector3f UP = new Vector3f(0.0f, 1.0f, 0.0f);
 
     @SubscribeEvent
@@ -102,9 +104,12 @@ public final class ZiplineRopeRenderer {
         Vector3f side = new Vector3f();
         Vector3f up = new Vector3f();
         Vector3f normal = new Vector3f();
+        // The texture repeats every block along the rope, like it does up a bamboo plant
+        float startV = 0.0f;
         for (int i = 0; i + 1 < light.length; i++) {
             Vector3f start = new Vector3f(points[i * 3], points[i * 3 + 1], points[i * 3 + 2]);
             Vector3f end = new Vector3f(points[i * 3 + 3], points[i * 3 + 4], points[i * 3 + 5]);
+            float endV = startV + start.distance(end);
             Vector3f direction = end.sub(start, new Vector3f()).normalize();
             direction.cross(UP, side);
             if (side.lengthSquared() < 1.0e-6f) {
@@ -123,18 +128,19 @@ public final class ZiplineRopeRenderer {
                 Vector3f a = corners[face];
                 Vector3f b = corners[(face + 1) % 4];
                 a.add(b, normal).normalize();
-                vertex(buffer, pose, start, a, light[i], normal);
-                vertex(buffer, pose, end, a, light[i + 1], normal);
-                vertex(buffer, pose, end, b, light[i + 1], normal);
-                vertex(buffer, pose, start, b, light[i], normal);
+                vertex(buffer, pose, start, a, SIDE_MIN_U, startV, light[i], normal);
+                vertex(buffer, pose, end, a, SIDE_MIN_U, endV, light[i + 1], normal);
+                vertex(buffer, pose, end, b, SIDE_MAX_U, endV, light[i + 1], normal);
+                vertex(buffer, pose, start, b, SIDE_MAX_U, startV, light[i], normal);
             }
+            startV = endV;
         }
     }
 
-    private static void vertex(VertexConsumer buffer, PoseStack.Pose pose, Vector3f point, Vector3f offset, int light, Vector3f normal) {
+    private static void vertex(VertexConsumer buffer, PoseStack.Pose pose, Vector3f point, Vector3f offset, float u, float v, int light, Vector3f normal) {
         buffer.addVertex(pose, point.x + offset.x, point.y + offset.y, point.z + offset.z)
                 .setColor(COLOR)
-                .setUv(0.0f, 0.0f)
+                .setUv(u, v)
                 .setOverlay(OverlayTexture.NO_OVERLAY)
                 .setLight(light)
                 .setNormal(pose, normal.x, normal.y, normal.z);
