@@ -10,7 +10,7 @@ displayName = "LTExtras"
 displayURL = "https://lovetropics.org"
 authors = "The Love Tropics Team"
 description = '''
-Extra content for the LoveTropics map build.
+Extra content for the Love Tropics map build.
 '''
 enumExtensions="META-INF/enumextensions.json"
 
