@@ -16,7 +16,7 @@ import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 public class TemplateConfigs {
     public static final CodecRegistry<Identifier, Named<ItemStackTemplate>> ITEM_TEMPLATE = CodecRegistry.idKeys();
 
-    private static final SimpleDataPackLister<ItemStackTemplate> ITEM_TEMPLATE_LISTENER = new SimpleDataPackLister<>("ltextras/item_templates", ExtraRegistries.ITEM_TEMPLATES, ItemStackTemplate.CODEC);
+    private static final SimpleDataPackLister<ItemStackTemplate> ITEM_TEMPLATE_LISTENER = new SimpleDataPackLister<>("ltextras/item_templates", ExtraRegistries.ITEM_TEMPLATE, ItemStackTemplate.CODEC);
 
     @SubscribeEvent
     public static void addReloadListener(AddServerReloadListenersEvent event) {

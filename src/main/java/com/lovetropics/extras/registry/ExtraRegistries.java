@@ -36,7 +36,7 @@ public class ExtraRegistries {
     public static final ResourceKey<Registry<EnvironmentAttributeMap>> ENVIRONMENT_ATTRIBUTE_BUNDLE = createKey("environment_attribute_bundle");
     public static final ResourceKey<Registry<PoiConfig>> POI = createKey("poi");
     public static final ResourceKey<Registry<Mount>> MOUNT = createKey("mount");
-    public static final ResourceKey<Registry<ItemStackTemplate>> ITEM_TEMPLATES = createKey("item_template");
+    public static final ResourceKey<Registry<ItemStackTemplate>> ITEM_TEMPLATE = createKey("item_template");
 
 
     @SubscribeEvent
