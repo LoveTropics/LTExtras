@@ -2,15 +2,20 @@ package com.lovetropics.extras.registry;
 
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.collectible.Collectible;
+import com.lovetropics.extras.collectible.CollectibleStore;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.data.poi.PoiConfig;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
+import com.lovetropics.extras.loot.LootItem;
 import com.lovetropics.extras.mounts.Mount;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -30,14 +35,18 @@ public class ExtraRegistries {
             .sync(true)
             .create();
 
+    public static final ResourceKey<Registry<LootItem>> LOOT_ITEM = createKey("loot_item");
+
     // Fake registries
     public static final ResourceKey<Registry<EnvironmentAttributeMap>> ENVIRONMENT_ATTRIBUTE_BUNDLE = createKey("environment_attribute_bundle");
     public static final ResourceKey<Registry<PoiConfig>> POI = createKey("poi");
     public static final ResourceKey<Registry<Mount>> MOUNT = createKey("mount");
 
+
     @SubscribeEvent
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(COLLECTIBLE, Collectible.DIRECT_CODEC, Collectible.DIRECT_CODEC);
+        event.dataPackRegistry(LOOT_ITEM, LootItem.DIRECT_CODEC, LootItem.DIRECT_CODEC);
         event.dataPackRegistry(MAP, MapConfig.DIRECT_CODEC, MapConfig.DIRECT_CODEC);
         event.dataPackRegistry(MODEL_MODIFIER, ExtraModelModifiers.CODEC, ExtraModelModifiers.CODEC);
         event.dataPackRegistry(PLAYER_SENSOR, PlayerSensor.DIRECT_CODEC, PlayerSensor.DIRECT_CODEC);

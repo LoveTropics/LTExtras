@@ -14,6 +14,7 @@ import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.PaintingOverlay;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
+import com.lovetropics.extras.loot.LootItemMarker;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.mojang.serialization.Codec;
@@ -51,6 +52,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleMarker>> COLLECTIBLE = REGISTER.registerComponentType(
             "collectible",
             builder -> builder.persistent(CollectibleMarker.CODEC).networkSynchronized(CollectibleMarker.STREAM_CODEC).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<LootItemMarker>> LOOT_ITEM = REGISTER.registerComponentType(
+            "loot_item",
+            builder -> builder.persistent(LootItemMarker.CODEC).networkSynchronized(LootItemMarker.STREAM_CODEC).cacheEncoding()
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CollectibleCompassItem.Target>> COLLECTIBLE_TARGET = REGISTER.registerComponentType(
             "collectible_target",
