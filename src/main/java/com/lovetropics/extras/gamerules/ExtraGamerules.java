@@ -18,6 +18,7 @@ public class ExtraGamerules {
     public static final DeferredRegister<GameRule<?>> REGISTER = DeferredRegister.create(Registries.GAME_RULE, LTExtras.MODID);
 
     public static final DeferredHolder<GameRule<?>, GameRule<Boolean>> DISABLE_GLOBAL_EQUIP_SOUND = registerBoolean("disable_global_equip_sound", GameRuleCategory.PLAYER, false);
+    public static final DeferredHolder<GameRule<?>, GameRule<Boolean>> NAMED_DEATH_MESSAGES = registerBoolean("named_death_log_messages", GameRuleCategory.MOBS, true);
 
     private static DeferredHolder<GameRule<?>, GameRule<Boolean>> registerBoolean(String id, GameRuleCategory category, boolean defaultValue) {
         return REGISTER.register(id, () -> new GameRule<>(category, GameRuleType.BOOL, BoolArgumentType.bool(), GameRuleTypeVisitor::visitBoolean, Codec.BOOL, b -> b ? 1 : 0, defaultValue, FeatureFlagSet.of()));
