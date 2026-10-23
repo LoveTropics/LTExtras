@@ -5,14 +5,17 @@ import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.data.poi.PoiConfig;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
+import com.lovetropics.extras.templates.ItemTemplate;
+import com.lovetropics.extras.templates.ItemTemplateModifier;
 import com.lovetropics.extras.mounts.Mount;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
+import com.lovetropics.extras.templates.modifiers.loot.LootCategory;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
@@ -32,17 +35,21 @@ public class ExtraRegistries {
             .create();
 
 
+    // Item Template & Item Template Modifier Registries.
+    public static final ResourceKey<Registry<MapCodec<? extends ItemTemplateModifier>>> ITEM_TEMPLATE_MODIFIER_TYPES_KEY = createKey("item_template_modifier");
+    public static final Registry<MapCodec<? extends ItemTemplateModifier>> ITEM_TEMPLATE_MODIFIER_TYPES = new RegistryBuilder<>(ITEM_TEMPLATE_MODIFIER_TYPES_KEY).create();
+    public static final ResourceKey<Registry<ItemTemplate>> ITEM_TEMPLATE = createKey("item_template");
+
     // Fake registries
     public static final ResourceKey<Registry<EnvironmentAttributeMap>> ENVIRONMENT_ATTRIBUTE_BUNDLE = createKey("environment_attribute_bundle");
     public static final ResourceKey<Registry<PoiConfig>> POI = createKey("poi");
     public static final ResourceKey<Registry<Mount>> MOUNT = createKey("mount");
-    public static final ResourceKey<Registry<ItemStackTemplate>> ITEM_TEMPLATE = createKey("item_template");
-
 
     @SubscribeEvent
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(COLLECTIBLE, Collectible.DIRECT_CODEC, Collectible.DIRECT_CODEC);
         event.dataPackRegistry(MAP, MapConfig.DIRECT_CODEC, MapConfig.DIRECT_CODEC);
+        event.dataPackRegistry(ITEM_TEMPLATE, ItemTemplate.CODEC, ItemTemplate.CODEC);
         event.dataPackRegistry(MODEL_MODIFIER, ExtraModelModifiers.CODEC, ExtraModelModifiers.CODEC);
         event.dataPackRegistry(PLAYER_SENSOR, PlayerSensor.DIRECT_CODEC, PlayerSensor.DIRECT_CODEC);
     }
@@ -50,6 +57,7 @@ public class ExtraRegistries {
     @SubscribeEvent
     public static void registerRegistries(NewRegistryEvent event) {
         event.register(MODIFIER_TYPES);
+        event.register(ITEM_TEMPLATE_MODIFIER_TYPES);
     }
 
     private static <T> ResourceKey<Registry<T>> createKey(String name) {

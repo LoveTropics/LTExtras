@@ -1,6 +1,6 @@
-package com.lovetropics.extras.loot;
+package com.lovetropics.extras;
 
-import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.templates.ItemTemplateLootEntry;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
@@ -11,6 +11,6 @@ public class ExtraLoot {
 
     public static final DeferredRegister<MapCodec<? extends LootPoolEntryContainer>> REGISTER = DeferredRegister.create(Registries.LOOT_POOL_ENTRY_TYPE, LTExtras.MODID);
 
-    public static final DeferredHolder<MapCodec<? extends LootPoolEntryContainer>, MapCodec<LootItemTemplateEntry>> LOOT_TEMPLATE =
-            REGISTER.register("loot_template", () -> LootItemTemplateEntry.CODEC);
+    public static final DeferredHolder<MapCodec<? extends LootPoolEntryContainer>, MapCodec<ItemTemplateLootEntry>> ITEM_TEMPLATE =
+            REGISTER.register("item_template", () -> ItemTemplateLootEntry.CODEC);
 }
