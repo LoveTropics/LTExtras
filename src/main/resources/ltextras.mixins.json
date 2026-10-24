@@ -41,6 +41,7 @@
     "no_vanilla.AdvancementTreeMixin",
     "no_vanilla.DropVanillaAdvancementsMixin",
     "placeholder.TextDisplayAccessor",
+    "placeholder.TextDisplayMixin",
     "placeholder.TransformationMixin",
     "rejoiner.StopCommandMixin"
   ],
