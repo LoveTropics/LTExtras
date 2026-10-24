@@ -45,8 +45,7 @@ public abstract class VillagerMixin extends AbstractVillager {
                             .withParameter(LootContextParams.THIS_ENTITY, this)
                             .withParameter(LootContextParams.ADDITIONAL_COST_COMPONENT_ALLOWED, Unit.INSTANCE)
                             .create(LootContextParamSets.VILLAGER_TRADE)
-            )
-                    .create(Optional.empty());
+            ).create(Optional.empty());
 
             for (Holder<VillagerTrade> villagerTradeHolder : trade) {
                 VillagerTrade value = villagerTradeHolder.value();
