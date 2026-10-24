@@ -533,7 +533,7 @@ public class ExtraBlocks {
             })
             .tag(BlockTags.CLIMBABLE)
             .blockstate(() -> Models::generateInfertileVine)
-            .color(() -> () ->  List.of(BlockTintSources.foliage()))
+            .color(() -> () -> List.of(BlockTintSources.foliage()))
             .item()
             .model(() -> Models::generateInfertileVineItem)
             .build()
@@ -896,7 +896,7 @@ public class ExtraBlocks {
 
     private static final List<Block> CONCRETE_POWDERS = Blocks.CONCRETE_POWDER.asList();
     private static final List<Block> CONCRETES = Blocks.CONCRETE.asList();
-    private static final List<Block> TERRACOTTA_BLOCKS = Stream.of(Collections.singleton(Blocks.TERRACOTTA),Blocks.DYED_TERRACOTTA.asList(), Blocks.GLAZED_TERRACOTTA.asList())
+    private static final List<Block> TERRACOTTA_BLOCKS = Stream.of(Collections.singleton(Blocks.TERRACOTTA), Blocks.DYED_TERRACOTTA.asList(), Blocks.GLAZED_TERRACOTTA.asList())
             .flatMap(Collection::stream)
             .toList();
 
@@ -1576,25 +1576,7 @@ public class ExtraBlocks {
             .initialProperties(() -> Blocks.DAYLIGHT_DETECTOR)
             .properties(p -> p)
             .blockstate(() -> (ctx, prov) -> {
-                Material sideTexture = TextureMapping.getBlockTexture(ctx.get(), "_side");
-                TextureMapping normalTextures = new TextureMapping()
-                        .put(TextureSlot.TOP, TextureMapping.getBlockTexture(ctx.get(), "_top"))
-                        .put(TextureSlot.SIDE, sideTexture);
-                prov.blockStateOutput
-                        .accept(
-                                MultiVariantGenerator.dispatch(ctx.get())
-                                        .with(
-                                                PropertyDispatch.initial(BlockStateProperties.INVERTED)
-                                                        .select(false, plainVariant(ModelTemplates.DAYLIGHT_DETECTOR.create(ctx.get(), normalTextures, prov.modelOutput)))
-                                                        .select(
-                                                                true,
-                                                                plainVariant(
-                                                                        ModelTemplates.DAYLIGHT_DETECTOR
-                                                                                .create(ModelLocationUtils.getModelLocation(ctx.get(), "_inverted"), normalTextures, prov.modelOutput)
-                                                                )
-                                                        )
-                                        )
-                        );
+                Models.generateSolarPanel(ctx, prov);
             })
             .simpleItem()
             .register();
@@ -1727,7 +1709,7 @@ public class ExtraBlocks {
         private static void generateSugarCane(DataGenContext<Block, CustomSugarCaneBlock> ctx, RegistrateBlockModelGenerator prov) {
             prov.blockStateOutput.accept(MultiVariantGenerator.dispatch(ctx.get()).with(PropertyDispatch.initial(CustomSugarCaneBlock.TYPE)
                     .generate(type -> {
-                        Material location = prov.modBlockTexture( ctx.getName() + "_" + type.getSerializedName());
+                        Material location = prov.modBlockTexture(ctx.getName() + "_" + type.getSerializedName());
                         return plainVariant(ModelTemplates.CROP.create(location.sprite(), TextureMapping.singleSlot(TextureSlot.CROP, location), prov.modelOutput));
                     })
             ));
@@ -2053,6 +2035,28 @@ public class ExtraBlocks {
                     ItemModelUtils.plainModel(blockModel),
                     ItemModelUtils.specialModel(blockModel, new WordBoxSpecialRenderer.Unbaked())
             ));
+        }
+
+        private static void generateSolarPanel(DataGenContext<Block, DaylightDetectorBlock> ctx, RegistrateBlockModelGenerator prov) {
+            Material sideTexture = TextureMapping.getBlockTexture(ctx.get(), "_side");
+            TextureMapping normalTextures = new TextureMapping()
+                    .put(TextureSlot.TOP, TextureMapping.getBlockTexture(ctx.get(), "_top"))
+                    .put(TextureSlot.SIDE, sideTexture);
+            prov.blockStateOutput
+                    .accept(
+                            MultiVariantGenerator.dispatch(ctx.get())
+                                    .with(
+                                            PropertyDispatch.initial(BlockStateProperties.INVERTED)
+                                                    .select(false, plainVariant(ModelTemplates.DAYLIGHT_DETECTOR.create(ctx.get(), normalTextures, prov.modelOutput)))
+                                                    .select(
+                                                            true,
+                                                            plainVariant(
+                                                                    ModelTemplates.DAYLIGHT_DETECTOR
+                                                                            .create(ModelLocationUtils.getModelLocation(ctx.get(), "_inverted"), normalTextures, prov.modelOutput)
+                                                            )
+                                                    )
+                                    )
+                    );
         }
 
         public interface TextureType {
