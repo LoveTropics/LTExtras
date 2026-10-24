@@ -3,8 +3,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-    "0": "lt:item/huge_glasses",
-    "particle": "lt:item/huge_glasses"
+    "0": "ltextras:item/huge_glasses",
+    "particle": "ltextras:item/huge_glasses"
 	},
 	"elements": [
 		{
