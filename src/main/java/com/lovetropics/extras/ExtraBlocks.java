@@ -106,6 +106,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
@@ -133,6 +134,7 @@ import net.minecraft.world.level.block.BaseCoralFanBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarpetBlock;
+import net.minecraft.world.level.block.DaylightDetectorBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
@@ -150,6 +152,8 @@ import net.minecraft.world.level.block.TallSeagrassBlock;
 import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
 import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -170,10 +174,12 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.data.loading.DatagenModLoader;
+import net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -1561,6 +1567,37 @@ public class ExtraBlocks {
             event.getRegistry(Registries.ITEM).addAlias(oldPole, oakPole);
         }
     }
+
+    public static void addBlockEntityAllowedBlocks(BlockEntityTypeAddBlocksEvent event) {
+        event.modify(BlockEntityTypes.DAYLIGHT_DETECTOR, SOLAR_PANEL.get());
+    }
+
+    public static final BlockEntry<DaylightDetectorBlock> SOLAR_PANEL = REGISTRATE.block("solar_panel", DaylightDetectorBlock::new)
+            .initialProperties(() -> Blocks.DAYLIGHT_DETECTOR)
+            .properties(p -> p)
+            .blockstate(() -> (ctx, prov) -> {
+                Material sideTexture = TextureMapping.getBlockTexture(ctx.get(), "_side");
+                TextureMapping normalTextures = new TextureMapping()
+                        .put(TextureSlot.TOP, TextureMapping.getBlockTexture(ctx.get(), "_top"))
+                        .put(TextureSlot.SIDE, sideTexture);
+                prov.blockStateOutput
+                        .accept(
+                                MultiVariantGenerator.dispatch(ctx.get())
+                                        .with(
+                                                PropertyDispatch.initial(BlockStateProperties.INVERTED)
+                                                        .select(false, plainVariant(ModelTemplates.DAYLIGHT_DETECTOR.create(ctx.get(), normalTextures, prov.modelOutput)))
+                                                        .select(
+                                                                true,
+                                                                plainVariant(
+                                                                        ModelTemplates.DAYLIGHT_DETECTOR
+                                                                                .create(ModelLocationUtils.getModelLocation(ctx.get(), "_inverted"), normalTextures, prov.modelOutput)
+                                                                )
+                                                        )
+                                        )
+                        );
+            })
+            .simpleItem()
+            .register();
 
     public static void init() {
     }

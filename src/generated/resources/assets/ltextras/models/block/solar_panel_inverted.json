@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_daylight_detector",
+  "textures": {
+    "side": "ltextras:block/solar_panel_side",
+    "top": "ltextras:block/solar_panel_top"
+  }
+}

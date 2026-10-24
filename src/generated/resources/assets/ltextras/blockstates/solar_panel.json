@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "inverted=false": {
+      "model": "ltextras:block/solar_panel"
+    },
+    "inverted=true": {
+      "model": "ltextras:block/solar_panel_inverted"
+    }
+  }
+}
