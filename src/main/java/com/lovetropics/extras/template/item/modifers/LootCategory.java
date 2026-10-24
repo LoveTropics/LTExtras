@@ -1,4 +1,4 @@
-package com.lovetropics.extras.templates.modifiers.loot;
+package com.lovetropics.extras.template.item.modifers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;

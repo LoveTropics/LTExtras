@@ -1,4 +1,4 @@
-package com.lovetropics.extras.functions;
+package com.lovetropics.extras.loot.functions;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

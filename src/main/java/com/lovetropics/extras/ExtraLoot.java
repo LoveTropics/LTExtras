@@ -1,6 +1,6 @@
 package com.lovetropics.extras;
 
-import com.lovetropics.extras.templates.ItemTemplateLootEntry;
+import com.lovetropics.extras.template.item.ItemTemplateLootEntry;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
