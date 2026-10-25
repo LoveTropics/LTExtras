@@ -1,5 +1,6 @@
 package com.lovetropics.extras.template.item.modifers;
 
+import com.lovetropics.extras.translation.TranslationPromptScreen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -76,6 +77,11 @@ public final class STTLootItemTemplateModifier extends LootItemConditionalFuncti
     }
 
     private Component getFormattedName() {
+        // Very simple check if provided name value is that of an existing minecraft lang key.
+        if (name.contains(".minecraft.")) {
+            return lootCategory.getTranslatedIcon(tier).append(" | ").append(translatable(name).withColor(lootCategory.getColor())).withStyle(Style.EMPTY.withItalic(false));
+        }
+
         return lootCategory.getTranslatedIcon(tier).append(" | ").append(translatable("lt.loot." + name).withColor(lootCategory.getColor())).withStyle(Style.EMPTY.withItalic(false));
     }
 
