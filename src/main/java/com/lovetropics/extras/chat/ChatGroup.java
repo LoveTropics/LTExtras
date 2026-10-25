@@ -57,7 +57,9 @@ public record ChatGroup(String id, Component prefix, String command, RoleOverrid
             CommandSourceStack source = ctx.getSource();
             Component text = group.prefix().copy()
                     .append(" ")
-                    .append(Component.literal(message));
+                    .append(Component.literal(message).withStyle(ChatFormatting.WHITE))
+                    .append(" -")
+                    .append(ctx.getSource().getDisplayName());
 
             for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
                 RoleOverrideReader overrides = PermissionsApi.lookup().byPlayer(player).overrides();
