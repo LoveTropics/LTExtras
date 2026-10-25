@@ -12,6 +12,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -23,12 +25,12 @@ import java.util.List;
 import static net.minecraft.commands.Commands.literal;
 
 @EventBusSubscriber
-public record ChatGroup(String id, Component prefix, String command, RoleOverrideType<Boolean> roleOverride) {
+public record ChatGroup(String id, String prefix, TextColor color, String command, RoleOverrideType<Boolean> roleOverride) {
 
     private static final List<ChatGroup> GROUPS = new ArrayList<>();
 
-    private static final ChatGroup ORGANISER = createGroup("organiser", Component.literal("[OG]").withStyle(ChatFormatting.GOLD), "oc");
-    private static final ChatGroup MODERATOR = createGroup("moderator", Component.literal("[MOD]").withStyle(ChatFormatting.BLUE), "mc");
+    private static final ChatGroup ORGANISER = createGroup("organiser", "[OG]", TextColor.GOLD,  "oc");
+    private static final ChatGroup MODERATOR = createGroup("moderator", "[MOD]", TextColor.DARK_AQUA, "mc");
 
     @SubscribeEvent
     public static void onRegisterCommand(RegisterCommandsEvent event) {
@@ -55,11 +57,11 @@ public record ChatGroup(String id, Component prefix, String command, RoleOverrid
         private static int sendMessage(CommandContext<CommandSourceStack> ctx, ChatGroup group) {
             String message = StringArgumentType.getString(ctx, "message");
             CommandSourceStack source = ctx.getSource();
-            Component text = group.prefix().copy()
-                    .append(" ")
-                    .append(Component.literal(message).withStyle(ChatFormatting.WHITE))
-                    .append(" -")
-                    .append(ctx.getSource().getDisplayName());
+            Component text = Component.literal(group.prefix()).withColor(group.color())
+                    .append(Component.literal(" <").withStyle(ChatFormatting.WHITE))
+                    .append(ctx.getSource().getDisplayName())
+                    .append(Component.literal("> ").withStyle(ChatFormatting.WHITE))
+                    .append(Component.literal(message).withColor(group.color()));
 
             for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
                 RoleOverrideReader overrides = PermissionsApi.lookup().byPlayer(player).overrides();
@@ -71,8 +73,8 @@ public record ChatGroup(String id, Component prefix, String command, RoleOverrid
         }
     }
 
-    private static ChatGroup createGroup(String id, Component prefix, String command) {
-        ChatGroup group = new ChatGroup(id, prefix, command, RoleOverrideType.register("chat/" + id, Codec.BOOL));
+    private static ChatGroup createGroup(String id, String prefix, TextColor color, String command) {
+        ChatGroup group = new ChatGroup(id, prefix, color, command, RoleOverrideType.register("chat/" + id, Codec.BOOL));
         GROUPS.add(group);
         return group;
     }
