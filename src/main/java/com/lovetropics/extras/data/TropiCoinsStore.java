@@ -1,12 +1,14 @@
 package com.lovetropics.extras.data;
 
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
+import com.lovetropics.lib.PlayerIsolatedReloadEvent;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -32,8 +34,17 @@ public class TropiCoinsStore {
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        forceInit(event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void onReload(PlayerIsolatedReloadEvent event) {
+        forceInit(event.getEntity());
+    }
+
+    private static void forceInit(Player player) {
         // Force it initialised so that we don't synchronise on initialisation and mispredict
-        event.getEntity().getData(ExtraAttachments.TROPICOINS_STORE);
+        player.getData(ExtraAttachments.TROPICOINS_STORE);
     }
 
     public void setAmount(int amount) {

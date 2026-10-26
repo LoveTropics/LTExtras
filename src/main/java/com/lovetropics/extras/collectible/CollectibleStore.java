@@ -4,6 +4,7 @@ import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.network.message.ClientboundCollectiblesListPacket;
 import com.lovetropics.extras.registry.ExtraRegistries;
+import com.lovetropics.lib.PlayerIsolatedReloadEvent;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -46,6 +47,12 @@ public class CollectibleStore {
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        CollectibleStore collectibles = get(event.getEntity());
+        collectibles.sendToClient(true);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerReloaded(PlayerIsolatedReloadEvent event) {
         CollectibleStore collectibles = get(event.getEntity());
         collectibles.sendToClient(true);
     }
