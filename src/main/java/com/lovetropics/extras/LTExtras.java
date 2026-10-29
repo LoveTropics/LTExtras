@@ -24,13 +24,14 @@ import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.environmentattribute.EnvironmentAttributeCommand;
 import com.lovetropics.extras.environmentattribute.ExtraAttributeTypes;
 import com.lovetropics.extras.environmentattribute.ExtraEnvironmentAttributes;
-import com.lovetropics.extras.functions.ExtraFunctions;
+import com.lovetropics.extras.loot.ExtraLootFunctions;
 import com.lovetropics.extras.model_modifer.ModelModifierCommand;
 import com.lovetropics.extras.mounts.MountCommand;
 import com.lovetropics.extras.placeholder.ExtraPlaceholders;
 import com.lovetropics.extras.shield.Shields;
 import com.lovetropics.extras.sounds.ExtraSounds;
 import com.lovetropics.extras.techstack.VideoImporter;
+import com.lovetropics.extras.template.item.ItemTemplateCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
@@ -101,9 +102,10 @@ public class LTExtras {
         ExtraModelModifierTypes.REGISTER.register(modBus);
         ExtraAttributeTypes.register(modBus);
         ExtraEnvironmentAttributes.REGISTER.register(modBus);
-        ExtraFunctions.REGISTRY.register(modBus);
+        ExtraLootFunctions.REGISTRY.register(modBus);
         ExtraGamerules.REGISTER.register(modBus);
         ExtraStats.REGISTER.register(modBus);
+        ExtraLoot.REGISTER.register(modBus);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
@@ -189,6 +191,7 @@ public class LTExtras {
         GenerateCommand.register(dispatcher);
         ListScoreboardCommand.register(dispatcher);
         CollectibleCommand.register(dispatcher, buildContext);
+        ItemTemplateCommand.register(dispatcher);
         GenerateCollectibleCommand.register(dispatcher, buildContext);
         SpawnItemsCommand.register(dispatcher);
         TpCommand.register(dispatcher);

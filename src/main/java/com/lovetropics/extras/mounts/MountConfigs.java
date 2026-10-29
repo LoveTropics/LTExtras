@@ -3,6 +3,7 @@ package com.lovetropics.extras.mounts;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.data.Named;
 import com.lovetropics.extras.data.SimpleDataPackLister;
+import com.lovetropics.extras.registry.CustomRegistryReloadListener;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.lovetropics.lib.codec.CodecRegistry;
 import net.minecraft.resources.Identifier;
@@ -22,17 +23,6 @@ public class MountConfigs {
 
     @SubscribeEvent
     public static void addReloadListener(AddServerReloadListenersEvent event) {
-        event.addListener(LTExtras.id("mounts"), new ContextAwareReloadListener() {
-            @Override
-            public CompletableFuture<Void> reload(SharedState currentReload, Executor taskExecutor, PreparationBarrier barrier, Executor reloadExecutor) {
-                return MOUNT_LISTENER.load(getRegistryLookup(), currentReload.resourceManager(), taskExecutor)
-                        .thenCompose(barrier::wait)
-                        .thenAcceptAsync(mounts -> {
-                            MOUNTS.clear();
-                            mounts.forEach(holder ->
-                                    MOUNTS.register(holder.id(), holder));
-                        }, reloadExecutor);
-            }
-        });
+        event.addListener(LTExtras.id("mounts"), CustomRegistryReloadListener.of(MOUNT_LISTENER, MOUNTS));
     }
 }

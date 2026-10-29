@@ -1,4 +1,4 @@
-package com.lovetropics.extras.functions;
+package com.lovetropics.extras.loot.functions;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -15,7 +15,7 @@ public class SelectRandomFunction extends LootItemConditionalFunction {
 
     public static final MapCodec<SelectRandomFunction> MAP_CODEC = RecordCodecBuilder.mapCodec(i ->
             commonFields(i).and(
-                    LootItemFunctions.TYPED_CODEC.listOf().fieldOf("functions").forGetter(f -> f.functions)
+                    LootItemFunctions.TYPED_CODEC.listOf(1, Integer.MAX_VALUE).fieldOf("functions").forGetter(f -> f.functions)
             ).apply(i, SelectRandomFunction::new)
     );
 

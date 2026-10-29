@@ -29,6 +29,11 @@ public class ExtraEffects {
 
     public static final DeferredHolder<MobEffect, PropaguledEffect> PROPAGULED = REGISTER.register("propaguled", () -> new PropaguledEffect(MobEffectCategory.HARMFUL, 0x00ddcc).addAttributeModifier(Attributes.MOVEMENT_SPEED, LTExtras.id("effects.propaguled"), -0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
+    public static final DeferredHolder<MobEffect, TransientExistenceEffect> TRANSIENT_EXISTENCE = REGISTER.register("transient_existence", () -> new TransientExistenceEffect(MobEffectCategory.HARMFUL, 0x000000));
+
+    public static final DeferredHolder<MobEffect, MobEffect> SWOLL = REGISTER.register("swoll", () -> new SwollEffect(MobEffectCategory.NEUTRAL, 0x488920).addAttributeModifier(Attributes.SCALE, LTExtras.id("effects.swoll"), 0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+
+
     public static final DeferredHolder<MobEffect, ModelModifierEffect> FABULOUS = modelEffect(ExtraModelModifiers.FABULOUS);
     public static final DeferredHolder<MobEffect, ModelModifierEffect> FLAIL = modelEffect(ExtraModelModifiers.FLAIL);
     public static final DeferredHolder<MobEffect, ModelModifierEffect> HOVERING = modelEffect(ExtraModelModifiers.HOVERING);

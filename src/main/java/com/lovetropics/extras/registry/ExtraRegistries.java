@@ -5,10 +5,12 @@ import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.data.poi.PoiConfig;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
+import com.lovetropics.extras.template.item.ItemTemplate;
 import com.lovetropics.extras.mounts.Mount;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.model_modifer.ModelModifierType;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
@@ -30,10 +32,12 @@ public class ExtraRegistries {
             .sync(true)
             .create();
 
+
     // Fake registries
     public static final ResourceKey<Registry<EnvironmentAttributeMap>> ENVIRONMENT_ATTRIBUTE_BUNDLE = createKey("environment_attribute_bundle");
     public static final ResourceKey<Registry<PoiConfig>> POI = createKey("poi");
     public static final ResourceKey<Registry<Mount>> MOUNT = createKey("mount");
+    public static final ResourceKey<Registry<ItemTemplate>> ITEM_TEMPLATE = createKey("item_template");
 
     @SubscribeEvent
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
