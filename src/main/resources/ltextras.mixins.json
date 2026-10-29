@@ -53,6 +53,7 @@
     "client.ClientLevelMixin",
     "client.ClientPacketListenerMixin",
     "client.CustomHeadLayerMixin",
+    "client.EntityRendererMixin",
     "client.FallingBlockRendererMixin",
     "client.GameRendererMixin",
     "client.IconSetMixin",
