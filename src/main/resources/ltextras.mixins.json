@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "com.lovetropics.extras.mixin.LTExtrasMixinPlugin",
   "mixins": [
+    "AbstractArrowMixin",
     "AbstractContainerMenuAccess",
     "AreaEffectCloudMixin",
     "BlockBehaviourMixin",
@@ -12,6 +13,7 @@
     "BlockStateExtensionMixin",
     "ConsumableMixin",
     "CreatureEntityMixin",
+    "CrossbowItemMixin",
     "DedicatedServerMixin",
     "EntityFluidInteractionMixin",
     "EntityMixin",

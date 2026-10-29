@@ -13,6 +13,7 @@ import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.PaintingOverlay;
 import com.lovetropics.extras.item.WalkSound;
+import com.lovetropics.extras.item.loot.ArrowItemProjectileOverrideData;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.model_modifer.ModelModifier;
@@ -149,6 +150,14 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<LingeringPotionExtension>> LINGERING_POTION_EXTENSION = REGISTER.registerComponentType(
             "lingering_potion",
             builder -> builder.persistent(LingeringPotionExtension.CODEC).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ArrowItemProjectileOverrideData>> ARROW_PROJECTILE_OVERRIDE = REGISTER.registerComponentType(
+            "arrow_projectile_override",
+            builder -> builder.persistent(ArrowItemProjectileOverrideData.CODEC).networkSynchronized(ArrowItemProjectileOverrideData.STREAM_CODEC).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> CROSSBOW_CHARGE_TIME = REGISTER.registerComponentType(
+            "crossbow_charge_time",
+            builder -> builder.persistent(ExtraCodecs.POSITIVE_FLOAT).networkSynchronized(ByteBufCodecs.FLOAT)
     );
 
     private static final AtlasSprite LOCK_SPRITE = new AtlasSprite(AtlasIds.GUI, LTExtras.id("lock"));

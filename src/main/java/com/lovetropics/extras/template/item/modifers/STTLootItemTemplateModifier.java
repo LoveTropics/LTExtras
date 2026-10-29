@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -32,7 +33,8 @@ public final class STTLootItemTemplateModifier extends LootItemConditionalFuncti
                             LootCategory.CODEC.fieldOf("category").forGetter(modifier -> modifier.lootCategory),
                             Codec.INT.optionalFieldOf("tier", 0).forGetter(modifier -> modifier.tier),
                             Codec.INT.optionalFieldOf("description_lines", 0).forGetter(modifier -> modifier.descriptionLines),
-                            Codec.STRING.listOf().optionalFieldOf("modifier_tooltips", List.of()).forGetter(modifier -> modifier.modifierTooltips)
+                            Codec.STRING.listOf().optionalFieldOf("modifier_tooltips", List.of()).forGetter(modifier -> modifier.modifierTooltips),
+                            Codec.BOOL.optionalFieldOf("show_divider", true).forGetter(modifier -> modifier.showDivider)
                     )
             ).apply(i, STTLootItemTemplateModifier::new)
     );
@@ -42,14 +44,16 @@ public final class STTLootItemTemplateModifier extends LootItemConditionalFuncti
     private final int tier;
     private final int descriptionLines;
     private final List<String> modifierTooltips;
+    private final boolean showDivider;
 
-    public STTLootItemTemplateModifier(List<LootItemCondition> predicates, String name, LootCategory lootCategory, int tier, int descriptionLines, List<String> modifierTooltips) {
+    public STTLootItemTemplateModifier(List<LootItemCondition> predicates, String name, LootCategory lootCategory, int tier, int descriptionLines, List<String> modifierTooltips, boolean showDivider) {
         super(predicates);
         this.name = name;
         this.lootCategory = lootCategory;
         this.tier = tier;
         this.descriptionLines = descriptionLines;
         this.modifierTooltips = modifierTooltips;
+        this.showDivider = showDivider;
     }
 
     @Override
@@ -64,14 +68,24 @@ public final class STTLootItemTemplateModifier extends LootItemConditionalFuncti
         List<Component> loreText = getDescriptionLines();
         loreText.add(Component.literal(""));
         loreText.add(lootCategory.getTranslatedLozenge().withStyle(Style.EMPTY.withItalic(false)));
-        loreText.add(Component.literal("\uE060").withColor(TextColor.WHITE).withStyle(Style.EMPTY.withItalic(false)));
+        if (showDivider) {
+            loreText.add(Component.literal("\uE060").withColor(TextColor.WHITE).withStyle(Style.EMPTY.withItalic(false)));
+        }
         modifierTooltips.forEach(tooltip -> loreText.add(getModifierTooltip(tooltip)));
         itemStack.set(DataComponents.LORE, new ItemLore(loreText));
         itemStack.set(DataComponents.TOOLTIP_STYLE, TOOLTIP_STYLE);
-        itemStack.set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT
+
+        TooltipDisplay tooltipDisplay = itemStack.has(DataComponents.TOOLTIP_DISPLAY) ? itemStack.get(DataComponents.TOOLTIP_DISPLAY) : TooltipDisplay.DEFAULT;
+        itemStack.set(DataComponents.TOOLTIP_DISPLAY, tooltipDisplay
                 .withHidden(DataComponents.POTION_CONTENTS, true)
                 .withHidden(DataComponents.UNBREAKABLE, true)
         );
+
+        // Specific override for potions so they don't give a bottle when consumed.
+        // Truly there must be a better way to check if item of this stack is some other item, like am I crazy for that??
+        if (itemStack.getItem().equals(Items.POTION)) {
+            itemStack.remove(DataComponents.USE_REMAINDER);
+        }
 
         return itemStack;
     }

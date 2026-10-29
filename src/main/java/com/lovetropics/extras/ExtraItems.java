@@ -15,6 +15,7 @@ import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
 import com.lovetropics.extras.item.TropicMapItem;
 import com.lovetropics.extras.item.WalkSound;
+import com.lovetropics.extras.item.loot.ConfigurableCrossbowItem;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.registry.ExtraRegistries;
@@ -25,6 +26,9 @@ import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.generators.RegistrateItemModelGenerator;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
@@ -39,6 +43,7 @@ import net.minecraft.client.renderer.item.properties.select.DisplayContext;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentInitializers;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -51,18 +56,27 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Consumables;
+import net.minecraft.world.item.component.FireworkExplosion;
+import net.minecraft.world.item.component.Fireworks;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.component.Weapon;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.item.equipment.EquipmentAssets;
 import net.minecraft.world.item.equipment.Equippable;
 
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static net.minecraft.client.data.models.model.ItemModelUtils.*;
 
@@ -112,6 +126,7 @@ public class ExtraItems {
     public static final ItemEntry<Item> ORANGE_GLASSES = sunglasses("orange_glasses").register();
     public static final ItemEntry<Item> BLUE_GLASSES = sunglasses("blue_glasses").register();
     public static final ItemEntry<Item> GREEN_GLASSES = sunglasses("green_glasses").register();
+    public static final ItemEntry<Item> WALLHACK_GLASSES = sunglasses("wallhack_glasses").register();
 
     public static final ItemEntry<Item> HUGE_GLASSES = REGISTRATE.item("huge_glasses", Item::new)
             .properties(p -> p.stacksTo(1).equippable(EquipmentSlot.HEAD))
@@ -249,6 +264,37 @@ public class ExtraItems {
 
     public static final ItemEntry<Item> GUAYUSA_LEAF = REGISTRATE.item("guayusa_leaf", Item::new).register();
     public static final ItemEntry<Item> GUAYUSA_TEA = REGISTRATE.item("guayusa_tea", Item::new).register();
+
+    public static final ItemEntry<ConfigurableCrossbowItem> ROCKET_CROSSBOW = REGISTRATE.item("rocket_crossbow", (properties) -> new ConfigurableCrossbowItem(properties, new ConfigurableCrossbowItem.Settings(
+            false, Optional.empty(), Optional.empty(), ConfigurableCrossbowItem.FIREWORK_ONLY, ConfigurableCrossbowItem.FIREWORK_ONLY
+            )))
+            .properties(properties -> properties
+                    .stacksTo(1)
+                    .durability(9)
+                    .useCooldown(4.0f)
+                    .component(DataComponents.CHARGED_PROJECTILES, new ChargedProjectiles(
+                            List.of( new ItemStackTemplate(Items.FIREWORK_ROCKET, 1, DataComponentPatch.builder().set(DataComponents.FIREWORKS, new Fireworks(2, List.of(
+                                    new FireworkExplosion(FireworkExplosion.Shape.SMALL_BALL, IntList.of(16753964), IntList.of(5748024), true, true),
+                                    new FireworkExplosion(FireworkExplosion.Shape.SMALL_BALL, IntList.of(16753964), IntList.of(5748024), true, true),
+                                    new FireworkExplosion(FireworkExplosion.Shape.SMALL_BALL, IntList.of(16753964), IntList.of(5748024), true, true),
+                                    new FireworkExplosion(FireworkExplosion.Shape.SMALL_BALL, IntList.of(16753964), IntList.of(5748024), true, true)
+                            ))).build()))
+                    ))
+                    .component(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT.withHidden(DataComponents.CHARGED_PROJECTILES, true).withHidden(DataComponents.MAX_DAMAGE, true).withHidden(DataComponents.DAMAGE, true))
+                    .component(DataComponents.WEAPON, new Weapon(1, 0))
+            )
+            .register();
+
+    public static final ItemEntry<ConfigurableCrossbowItem> RAPID_FIRE_CROSSBOW = REGISTRATE.item("rapid_fire_crossbow", (properties) -> new ConfigurableCrossbowItem(properties, new ConfigurableCrossbowItem.Settings(
+                    true, Optional.of(3.0), Optional.of(0.01), ProjectileWeaponItem.ARROW_ONLY, ProjectileWeaponItem.ARROW_ONLY
+            )))
+            .initialProperties(() -> new Item.Properties())
+            .properties(properties -> properties
+                    .stacksTo(1)
+                    .component(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT.withHidden(DataComponents.CHARGED_PROJECTILES, true))
+                    .component(ExtraDataComponents.CROSSBOW_CHARGE_TIME, 0.2f)
+            )
+            .register();
 
     public static void init() {
     }

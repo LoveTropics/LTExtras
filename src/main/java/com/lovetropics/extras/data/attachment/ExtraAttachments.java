@@ -14,6 +14,7 @@ import com.lovetropics.extras.zipline.ZiplineNetwork;
 import com.lovetropics.extras.zipline.ZiplineRider;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -95,6 +96,12 @@ public class ExtraAttachments {
             "shield_radius", () -> AttachmentType.builder(() -> Shields.DEFAULT_RADIUS)
                     .serialize(Codec.DOUBLE.fieldOf("radius"))
                     .copyOnDeath()
+                    .build()
+    );
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Double>> ARROW_GRAVITY_OVERRIDE = REGISTER.register(
+            "arrow_gravity_override", () -> AttachmentType.builder(() -> Double.NaN)
+                    .sync(ByteBufCodecs.DOUBLE)
                     .build()
     );
 }

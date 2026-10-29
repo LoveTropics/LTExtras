@@ -2,9 +2,7 @@ package com.lovetropics.extras;
 
 import com.lovetropics.extras.collectible.Collectible;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
-import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.registry.ExtraRegistries;
-import com.lovetropics.extras.templates.ItemTemplate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
