@@ -1,0 +1,6 @@
+{
+  "parent": "ltextras:item/template_top_hat",
+  "textures": {
+    "hat": "ltextras:item/bronze_top_hat"
+  }
+}

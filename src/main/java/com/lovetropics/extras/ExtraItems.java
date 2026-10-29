@@ -198,6 +198,23 @@ public class ExtraItems {
             .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.id("item/hard_hat")))
             .register();
 
+    public static final ItemEntry<Item> TOP_HAT = createTopHat("top_hat").register();
+    public static final ItemEntry<Item> BRONZE_TOP_HAT = createTopHat("bronze_top_hat").register();
+    public static final ItemEntry<Item> SILVER_TOP_HAT = createTopHat("silver_top_hat").register();
+    public static final ItemEntry<Item> GOLD_TOP_HAT = createTopHat("gold_top_hat").register();
+
+    private static ItemBuilder<Item, Registrate> createTopHat(String id) {
+        return REGISTRATE.item(id, Item::new)
+                .properties(properties -> properties
+                        .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                                .setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER)
+                                .setDamageOnHurt(false)
+                                .build())
+                        .stacksTo(1)
+                )
+                .model(() -> Models::generateTopHat);
+    }
+
     public static final ItemEntry<Item> REFLECTIVE_VEST = REGISTRATE.item("reflective_vest", Item::new)
             .properties(p -> p.stacksTo(1)
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.CHEST)
@@ -263,7 +280,10 @@ public class ExtraItems {
     }
 
     private static class Models {
+        private static final TextureSlot SLOT_HAT = TextureSlot.create("hat");
+
         public static final ModelTemplate GLASSES_EQUIPPED_TEMPLATE = ModelTemplates.createItem(LTExtras.id("template_glasses_equipped").toString(), "_equipped", TextureSlot.LAYER0);
+        public static final ModelTemplate TOP_HAT_TEMPLATE = ModelTemplates.createItem(LTExtras.id("template_top_hat").toString(), SLOT_HAT);
 
         private static void generateForkliftCertification(DataGenContext<Item, CollectibleBasketItem> ctx, RegistrateItemModelGenerator prov) {
             prov.itemModelOutput.accept(ctx.get(), conditional(new HasUnseenCollectible(),
@@ -318,6 +338,11 @@ public class ExtraItems {
 
         private static void generateCollectibleCompass(DataGenContext<Item, CollectibleCompassItem> ctx, RegistrateItemModelGenerator prov) {
             generateCustomCompass(ctx, prov, new CollectibleCompassAngle());
+        }
+
+        private static void generateTopHat(DataGenContext<Item, Item> ctx, RegistrateItemModelGenerator prov) {
+            Identifier model = TOP_HAT_TEMPLATE.create(ctx.get(), TextureMapping.singleSlot(SLOT_HAT, TextureMapping.getItemTexture(ctx.get())), prov.modelOutput);
+            prov.itemModelOutput.accept(ctx.get(), plainModel(model));
         }
     }
 
