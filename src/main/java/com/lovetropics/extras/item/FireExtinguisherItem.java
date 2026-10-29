@@ -58,24 +58,24 @@ public class FireExtinguisherItem extends BlockItem {
 
         Vec3 pos = livingEntity.getEyePosition();
         Vec3 lookVec = livingEntity.getLookAngle();
-        Vec3 startPos = livingEntity.getLookAngle().scale(HOW_FAR_IN_FRONT_TO_SHOOT_FROM);
+        Vec3 startPos = lookVec.scale(HOW_FAR_IN_FRONT_TO_SHOOT_FROM);
+        Vec3 right = Vec3.directionFromRotation(0.0f, livingEntity.getYRot() + 90.0f);
         boolean hit = false;
 
-        for (int i = -5; i < 5; i++) {
-            final double xSpeed = lookVec.x + (i / SPRAY);
-            final double zSpeed = lookVec.z + (i / SPRAY);
+        for (int i = -5; i <= 5; i++) {
+            final Vec3 sprayDir = lookVec.add(right.scale(i / SPRAY));
 
             final double xLoc = pos.x + startPos.x + level.getRandom().triangle(0, 1f);
+            final double yLoc = pos.y + startPos.y;
             final double zLoc = pos.z + startPos.z + level.getRandom().triangle(0, 1f);
             if (level.isClientSide()) {
-                level.addParticle(ParticleTypes.CLOUD, true, true, xLoc, pos.y, zLoc, xSpeed, lookVec.y, zSpeed);
+                level.addParticle(ParticleTypes.CLOUD, true, true, xLoc, yLoc, zLoc, sprayDir.x, sprayDir.y, sprayDir.z);
                 if (i % 3 == 0) {
-                    level.addParticle(ParticleTypes.SMOKE, true, true, xLoc, pos.y, zLoc, xSpeed, lookVec.y, zSpeed);
+                    level.addParticle(ParticleTypes.SMOKE, true, true, xLoc, yLoc, zLoc, sprayDir.x, sprayDir.y, sprayDir.z);
                 }
             }
 
-            Vec3 to = livingEntity.getViewVector(0.0F).scale(extinguisherComponent.shootDist());
-            to = to.add(xSpeed, 0, zSpeed);
+            Vec3 to = sprayDir.normalize().scale(extinguisherComponent.shootDist());
 
             // Put out fires
             HitResult result = getHitResultOnViewVector(livingEntity, to, Entity::isPickable);
