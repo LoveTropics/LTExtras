@@ -3,7 +3,7 @@ package com.lovetropics.extras.client;
 import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.item.StackedHat;
+import com.lovetropics.lib.item.StackedHat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;

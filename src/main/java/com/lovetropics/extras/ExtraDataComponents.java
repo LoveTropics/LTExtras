@@ -12,11 +12,11 @@ import com.lovetropics.extras.item.FireExtinguisher;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.PaintingOverlay;
-import com.lovetropics.extras.item.StackedHat;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.model_modifer.ModelModifier;
+import com.lovetropics.lib.item.StackedHat;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -157,6 +157,27 @@ public class ExtraDataComponents {
     );
 
     private static final AtlasSprite LOCK_SPRITE = new AtlasSprite(AtlasIds.GUI, LTExtras.id("lock"));
+
+    static {
+        StackedHat.bindAccess(new StackedHat.Access() {
+            @Override
+            public ItemStack create(List<StackedHat> hats) {
+                ItemStack item = new ItemStack(ExtraItems.STACK_OF_HATS.get());
+                item.set(HAT_STACK, List.copyOf(hats));
+                return item;
+            }
+
+            @Override
+            public void set(ItemStack item, List<StackedHat> hats) {
+                item.set(HAT_STACK, List.copyOf(hats));
+            }
+
+            @Override
+            public List<StackedHat> get(ItemStack item) {
+                return item.getOrDefault(HAT_STACK, List.of());
+            }
+        });
+    }
 
     @SubscribeEvent
     public static void registerTooltipAppenders(RegisterTooltipAppendersEvent event) {
