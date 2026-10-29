@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -41,6 +42,11 @@ public class FireExtinguisherItem extends BlockItem {
 
     public static final float SPRAY = 6.0f;
     public static final int HOW_FAR_IN_FRONT_TO_SHOOT_FROM = 2;
+
+    public static final float THRUST_ACCEL_FACTOR = 0.6f;
+    public static final float THRUST_TOP_SPEED_FACTOR = 4.0f;
+    public static final float THRUST_WOBBLE = 0.08f;
+    public static final int THRUST_SPIN_UP_TICKS = 10;
 
     public FireExtinguisherItem(Block block, Properties properties) {
         super(block, properties);
@@ -113,23 +119,43 @@ public class FireExtinguisherItem extends BlockItem {
         }
 
         final float scale = hit ? extinguisherComponent.impulseOnHit() : extinguisherComponent.impulseOnMiss();
+        final int usedTicks = getUseDuration(stack, livingEntity) - remainingUseDuration;
+        final float spinUp = Math.min(1.0f, (usedTicks + 1) / (float) THRUST_SPIN_UP_TICKS);
+        final Vec3 thrustDir = lookVec.reverse();
+
         if(livingEntity.getVehicle() != null && !level.isClientSide()){
-            livingEntity.getVehicle().needsSync = true;
-            livingEntity.getVehicle().setDeltaMovement(lookVec.reverse().scale(scale));
+            Entity vehicle = livingEntity.getVehicle();
+            vehicle.needsSync = true;
+            applyThrust(vehicle, thrustDir, scale, spinUp, level.getRandom());
         } else {
             if (level.isClientSide()) {
                 livingEntity.needsSync = true;
-                livingEntity.setDeltaMovement(lookVec.reverse().scale(scale));
+                applyThrust(livingEntity, thrustDir, scale, spinUp, level.getRandom());
             } else {
                 EquipmentSlot slot = stack.equals(livingEntity.getItemBySlot(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
                 stack.hurtAndBreak(extinguisherComponent.durabilityLossPerTick(), livingEntity, slot);
             }
         }
 
+        // prevent fall damage if used downwords
+        if (thrustDir.y > 0.0) {
+            livingEntity.resetFallDistance();
+        }
 
         if (livingEntity.tickCount % 2 == 0) {
-            level.playSound(livingEntity, pos.x, pos.y, pos.z, SoundEvents.CANDLE_EXTINGUISH, SoundSource.PLAYERS, 1f, 1f);
+            level.playSound(livingEntity, pos.x, pos.y, pos.z, SoundEvents.CANDLE_EXTINGUISH, SoundSource.PLAYERS, 1f, 0.8f + 0.4f * spinUp);
         }
+    }
+
+    private static void applyThrust(Entity entity, Vec3 thrustDir, float scale, float spinUp, RandomSource random) {
+        final Vec3 velocity = entity.getDeltaMovement();
+        final double topSpeed = scale * THRUST_TOP_SPEED_FACTOR;
+        final double speed = velocity.dot(thrustDir);
+        final double accel = Math.min(scale * THRUST_ACCEL_FACTOR * spinUp, Math.max(0.0, topSpeed - speed));
+
+        // the fun value
+        final Vec3 wobble = new Vec3(random.triangle(0, 1), random.triangle(0, 1), random.triangle(0, 1)).scale(THRUST_WOBBLE * scale);
+        entity.setDeltaMovement(velocity.add(thrustDir.scale(accel)).add(wobble));
     }
 
     @Override
