@@ -15,6 +15,7 @@ import com.lovetropics.extras.command.TpCommand;
 import com.lovetropics.extras.command.WarpCommand;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
+import com.lovetropics.extras.datagen.ExtraDataGen;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
@@ -112,6 +113,7 @@ public class LTExtras {
         modBus.addListener(ExtraBlocks::addBlockEntityAllowedBlocks);
 
         ExtraLangKeys.init(registrate());
+        ExtraDataGen.init(registrate());
         registrate()
                 .addDataGenerator(ProviderType.LANG, p -> {
                     p.add(ExtraEffects.FISH_EYE.get(), "Fish Eye");

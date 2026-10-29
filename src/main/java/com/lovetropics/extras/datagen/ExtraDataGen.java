@@ -12,16 +12,13 @@ import com.lovetropics.extras.model_modifer.types.OperationType;
 import com.lovetropics.extras.model_modifer.types.ScaleType;
 import com.lovetropics.extras.model_modifer.types.data.Operation;
 import com.lovetropics.extras.registry.ExtraRegistries;
+import com.tterrag.registrate.Registrate;
 import net.minecraft.client.model.geom.PartNames;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -36,10 +33,12 @@ import java.util.concurrent.CompletableFuture;
 @EventBusSubscriber(Dist.CLIENT)
 public class ExtraDataGen {
 
+    public static void init(Registrate registrate) {
+        registrate.getDataGenInitializer().add(ExtraRegistries.MODEL_MODIFIER, ExtraDataGen::generateModelModifiers);
+    }
+
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent.Client event) {
-        event.createDatapackRegistryObjects(new RegistrySetBuilder()
-                .add(ExtraRegistries.MODEL_MODIFIER, ExtraDataGen::generateModelModifiers));
         event.createProvider(AttachmentTypeTags::new);
     }
 
