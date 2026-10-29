@@ -23,7 +23,7 @@ import java.util.List;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class InviteOverlay {
-    private static final int PADDING = 10;
+    private static final int PADDING = 26;
 
     @SubscribeEvent
     public static void onRegisterOverlays(RegisterGuiLayersEvent event) {
@@ -35,7 +35,7 @@ public class InviteOverlay {
             }
             ItemStack item = player.getMainHandItem();
             ImageData image = item.get(ExtraDataComponents.IMAGE);
-            if ((item.is(ExtraItems.INVITE) || item.is(ExtraItems.QUEST)) && image != null) {
+            if ((item.is(ExtraItems.INVITE) || item.is(ExtraItems.QUEST) || item.is(ExtraItems.TRADING_CARD)) && image != null) {
                 drawImage(graphics, image);
             }
         });

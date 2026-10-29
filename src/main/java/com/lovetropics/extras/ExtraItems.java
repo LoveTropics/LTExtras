@@ -13,6 +13,7 @@ import com.lovetropics.extras.item.HighHeelsItem;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.ImageItem;
 import com.lovetropics.extras.item.InviteItem;
+import com.lovetropics.extras.item.TradingCards;
 import com.lovetropics.extras.item.TropicMapItem;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
@@ -161,6 +162,14 @@ public class ExtraItems {
                     ItemStack stack = new ItemStack(ctx.get());
                     stack.set(ExtraDataComponents.IMAGE, preset);
                     modifier.accept(stack);
+                }
+            })
+            .register();
+
+    public static final ItemEntry<Item> TRADING_CARD = REGISTRATE.item("trading_card", Item::new)
+            .tab(LTExtras.TAB_KEY, (ctx, modifier) -> {
+                for (TradingCards.Preset preset : TradingCards.PRESETS) {
+                    modifier.accept(preset.create(ctx.get()));
                 }
             })
             .register();
