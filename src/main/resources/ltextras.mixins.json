@@ -50,6 +50,7 @@
     "client.CapeLayerMixin",
     "client.ClientLevelMixin",
     "client.ClientPacketListenerMixin",
+    "client.CustomHeadLayerMixin",
     "client.FallingBlockRendererMixin",
     "client.GameRendererMixin",
     "client.IconSetMixin",

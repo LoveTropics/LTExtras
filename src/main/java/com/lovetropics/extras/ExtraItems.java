@@ -37,6 +37,7 @@ import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.RangeSelectItemModel;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
 import net.minecraft.client.renderer.item.properties.select.DisplayContext;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentInitializers;
@@ -215,6 +216,15 @@ public class ExtraItems {
                 .model(() -> Models::generateTopHat);
     }
 
+    public static final ItemEntry<Item> STACK_OF_HATS = REGISTRATE.item("stack_of_hats", Item::new)
+            .properties(p -> p.stacksTo(1)
+                    .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                            .setEquipSound(SoundEvents.ARMOR_EQUIP_GENERIC)
+                            .build())
+            )
+            .model(() -> (ctx, prov) -> Models.generateTopHat(ctx, prov, TextureMapping.getItemTexture(TOP_HAT.get())))
+            .register();
+
     public static final ItemEntry<Item> REFLECTIVE_VEST = REGISTRATE.item("reflective_vest", Item::new)
             .properties(p -> p.stacksTo(1)
                     .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.CHEST)
@@ -341,7 +351,11 @@ public class ExtraItems {
         }
 
         private static void generateTopHat(DataGenContext<Item, Item> ctx, RegistrateItemModelGenerator prov) {
-            Identifier model = TOP_HAT_TEMPLATE.create(ctx.get(), TextureMapping.singleSlot(SLOT_HAT, TextureMapping.getItemTexture(ctx.get())), prov.modelOutput);
+            generateTopHat(ctx, prov, TextureMapping.getItemTexture(ctx.get()));
+        }
+
+        private static void generateTopHat(DataGenContext<Item, Item> ctx, RegistrateItemModelGenerator prov, Material texture) {
+            Identifier model = TOP_HAT_TEMPLATE.create(ctx.get(), TextureMapping.singleSlot(SLOT_HAT, texture), prov.modelOutput);
             prov.itemModelOutput.accept(ctx.get(), plainModel(model));
         }
     }

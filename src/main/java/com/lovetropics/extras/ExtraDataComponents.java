@@ -12,6 +12,7 @@ import com.lovetropics.extras.item.FireExtinguisher;
 import com.lovetropics.extras.item.ImageData;
 import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.PaintingOverlay;
+import com.lovetropics.extras.item.StackedHat;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
@@ -83,6 +84,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<MapConfig>>> MAP = REGISTER.registerComponentType(
             "map",
             builder -> builder.persistent(MapConfig.CODEC).networkSynchronized(MapConfig.STREAM_CODEC).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<StackedHat>>> HAT_STACK = REGISTER.registerComponentType(
+            "hat_stack",
+            builder -> builder.persistent(StackedHat.CODEC.listOf()).cacheEncoding()
     );
 
     // General extensions
