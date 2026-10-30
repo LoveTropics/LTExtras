@@ -20,6 +20,7 @@ import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.entity.ExtraEntities;
 import com.lovetropics.extras.entity.ExtraSerializers;
 import com.lovetropics.extras.gamerules.ExtraGamerules;
+import com.lovetropics.extras.hats.ExtraStackedHats;
 import com.lovetropics.extras.model_modifer.ExtraModelModifierTypes;
 import com.lovetropics.extras.environmentattribute.EnvironmentAttributeCommand;
 import com.lovetropics.extras.environmentattribute.ExtraAttributeTypes;
@@ -91,6 +92,7 @@ public class LTExtras {
         ExtraEntities.init();
         ExtraPlaceholders.init();
         Shields.init();
+        ExtraStackedHats.init();
 
         ExtraParticles.REGISTER.register(modBus);
         ExtraEffects.REGISTER.register(modBus);

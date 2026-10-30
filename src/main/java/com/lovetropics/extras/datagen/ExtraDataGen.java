@@ -114,7 +114,8 @@ public class ExtraDataGen {
         @Override
         protected void addTags(HolderLookup.Provider registries) {
             tag(COPY_RENDER_ATTACHMENTS)
-                    .add(ExtraAttachments.MODEL_MODIFIERS.getKey());
+                    .add(ExtraAttachments.MODEL_MODIFIERS.getKey())
+                    .add(ExtraAttachments.HATS.getKey());
         }
     }
 }

@@ -3,6 +3,8 @@ package com.lovetropics.extras.client;
 import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
+import com.lovetropics.extras.data.attachment.ExtraAttachments;
+import com.lovetropics.extras.hats.StackedHatStore;
 import com.lovetropics.lib.item.StackedHat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -31,7 +33,7 @@ import java.util.List;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class HatStackRenderer {
-    private static final ContextKey<StackRenderState> HAT_STACK = new ContextKey<>(LTExtras.id("hat_stack"));
+    public static final ContextKey<StackRenderState> HAT_STACK = new ContextKey<>(LTExtras.id("hat_stack"));
 
     @SubscribeEvent
     public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
@@ -43,21 +45,30 @@ public class HatStackRenderer {
     private static void extract(LivingEntity entity, LivingEntityRenderState state, ItemModelResolver itemModelResolver) {
         ItemStack headItem = entity.getItemBySlot(EquipmentSlot.HEAD);
         List<StackedHat> hats = headItem.getOrDefault(ExtraDataComponents.HAT_STACK, List.of());
-        if (hats.isEmpty()) {
-            return;
-        }
-        List<HatRenderState> itemStates = new ArrayList<>(hats.size());
+        List<StackedHat> attachmentHats = StackedHatStore.getHats(entity);
+        List<HatRenderState> itemStates = new ArrayList<>(hats.size() + attachmentHats.size());
+
         for (StackedHat hat : hats) {
-            ItemStackRenderState itemState = new ItemStackRenderState();
-            itemModelResolver.updateForLiving(itemState, hat.item().create(), ItemDisplayContext.HEAD, entity);
-            itemStates.add(new HatRenderState(
-                    itemState,
-                    hat.width(),
-                    hat.height(),
-                    hat.bounciness()
-            ));
+            itemStates.add(getStateFromStackedHat(hat, entity, itemModelResolver));
         }
+
+        // Render hats from attachments on top of the hats from the head item
+        for (StackedHat hat : attachmentHats) {
+            itemStates.add(getStateFromStackedHat(hat, entity, itemModelResolver));
+        }
+
         state.setRenderData(HAT_STACK, new StackRenderState(itemStates));
+    }
+
+    private static HatRenderState getStateFromStackedHat(StackedHat hat, LivingEntity entity, ItemModelResolver itemModelResolver) {
+        ItemStackRenderState itemState = new ItemStackRenderState();
+        itemModelResolver.updateForLiving(itemState, hat.item().create(), ItemDisplayContext.HEAD, entity);
+        return new HatRenderState(
+                itemState,
+                hat.width(),
+                hat.height(),
+                hat.bounciness()
+        );
     }
 
     public static boolean submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, int outlineColor, LivingEntityRenderState state) {
@@ -97,7 +108,7 @@ public class HatStackRenderer {
         return true;
     }
 
-    private record StackRenderState(
+    public record StackRenderState(
             List<HatRenderState> stack
     ) {
     }

@@ -6,6 +6,7 @@ import com.lovetropics.extras.consume_actions.DisguiseConsumeAction;
 import com.lovetropics.extras.data.TropiCoinsStore;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsStore;
 import com.lovetropics.extras.extension.CustomTradeExtension;
+import com.lovetropics.extras.hats.StackedHatStore;
 import com.lovetropics.extras.model_modifer.EmoteStore;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.mounts.MountStore;
@@ -13,6 +14,7 @@ import com.lovetropics.extras.schedule.PlayerTimeZone;
 import com.lovetropics.extras.shield.Shields;
 import com.lovetropics.extras.zipline.ZiplineNetwork;
 import com.lovetropics.extras.zipline.ZiplineRider;
+import com.lovetropics.lib.item.StackedHat;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -21,6 +23,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.Collections;
+import java.util.List;
 
 public class ExtraAttachments {
     public static final DeferredRegister<AttachmentType<?>> REGISTER = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, LTExtras.MODID);
@@ -108,6 +111,13 @@ public class ExtraAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Double>> ARROW_GRAVITY_OVERRIDE = REGISTER.register(
             "arrow_gravity_override", () -> AttachmentType.builder(() -> Double.NaN)
                     .sync(ByteBufCodecs.DOUBLE)
+                    .build()
+    );
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<StackedHatStore>> HATS = REGISTER.register(
+            "hats", () -> AttachmentType.builder(() -> StackedHatStore.EMPTY)
+                    .serialize(StackedHatStore.MAP_CODEC)
+                    .sync(StackedHatStore.STREAM_CODEC)
                     .build()
     );
 }

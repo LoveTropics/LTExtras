@@ -173,24 +173,7 @@ public class ExtraDataComponents {
     private static final AtlasSprite LOCK_SPRITE = new AtlasSprite(AtlasIds.GUI, LTExtras.id("lock"));
 
     static {
-        StackedHat.bindAccess(new StackedHat.Access() {
-            @Override
-            public ItemStack create(List<StackedHat> hats) {
-                ItemStack item = new ItemStack(ExtraItems.STACK_OF_HATS.get());
-                item.set(HAT_STACK, List.copyOf(hats));
-                return item;
-            }
 
-            @Override
-            public void set(ItemStack item, List<StackedHat> hats) {
-                item.set(HAT_STACK, List.copyOf(hats));
-            }
-
-            @Override
-            public List<StackedHat> get(ItemStack item) {
-                return item.getOrDefault(HAT_STACK, List.of());
-            }
-        });
     }
 
     @SubscribeEvent
