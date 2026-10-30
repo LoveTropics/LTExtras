@@ -7,6 +7,7 @@ import net.minecraft.util.TriState;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.context.UseOnContext;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -91,6 +92,10 @@ public class ItemExtensions {
     public static void onItemStoppedUsing(LivingEntityUseItemEvent.Stop event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             ItemStack stack = event.getItem();
+            // Don't apply cooldown when loading projectiles into a crossbow, only on fire
+            if (!stack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).isEmpty()) {
+                return;
+            }
             applyCooldownOverride(player, stack);
         }
     }
