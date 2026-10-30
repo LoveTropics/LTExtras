@@ -14,18 +14,22 @@ import com.lovetropics.extras.model_modifer.types.data.Operation;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.client.model.geom.PartNames;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.IdMap;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.attachment.AttachmentSync;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -101,10 +105,10 @@ public class ExtraDataGen {
 
     public static class AttachmentTypeTags extends TagsProvider<AttachmentType<?>> {
 
-        public static final TagKey<AttachmentType<?>> COPY_RENDER_ATTACHMENTS = TagKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("peekaboo", "copy_render_attachments"));
+        public static final TagKey<AttachmentType<?>> COPY_RENDER_ATTACHMENTS = TagKey.create(AttachmentSync.SYNCED_ATTACHMENT_TYPES.key(), Identifier.fromNamespaceAndPath("peekaboo", "copy_render_attachments"));
 
         protected AttachmentTypeTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-            super(output, NeoForgeRegistries.Keys.ATTACHMENT_TYPES, lookupProvider, LTExtras.MODID);
+            super(output, AttachmentSync.SYNCED_ATTACHMENT_TYPES.key(), lookupProvider, LTExtras.MODID);
         }
 
         @Override
