@@ -44,14 +44,6 @@ public class ZiplinePoleBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
-        super.preRemoveSideEffects(pos, state);
-        if (level != null && !level.isClientSide()) {
-            ZiplineNetwork.get(level).removePole(pos);
-        }
-    }
-
-    @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         legacyConnections = input.read("connections", LegacyConnection.CODEC.listOf()).orElse(List.of());
