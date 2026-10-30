@@ -26,6 +26,7 @@
     "LivingEntityMixin",
     "MinecraftServerAccessor",
     "PlayerMixin",
+    "ProjectileWeaponItemMixin",
     "ResourceKeyArgumentAccessor",
     "RideCommandMixin",
     "ScaffoldingBlockMixin",
