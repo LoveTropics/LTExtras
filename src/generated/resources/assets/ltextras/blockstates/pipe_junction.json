@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "ltextras:block/pipe_junction"
+    }
+  }
+}

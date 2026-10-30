@@ -407,6 +407,22 @@ public class ExtraBlocks {
 
     public static final BlockEntityEntry<ParticleEmitterBlockEntity> PARTICLE_EMITTER_BE = BlockEntityEntry.cast(PARTICLE_EMITTER.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
+    public static final BlockEntry<Block> PIPE_STRETCH = REGISTRATE.block("pipe_stretch", Block::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .blockstate(() -> (ctx, prov) ->
+                    prov.generate(ctx.get(), TexturedModel.CUBE_TOP_BOTTOM
+                            .updateTexture(textures -> textures.put(TextureSlot.SIDE, prov.modBlockTexture("pipe_stretch"))
+                                    .put(TextureSlot.TOP, prov.modBlockTexture("pipe_stretch_top"))
+                                    .put(TextureSlot.BOTTOM, prov.modBlockTexture("pipe_stretch_bottom"))))
+            )
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<Block> PIPE_JUNCTION = REGISTRATE.block("pipe_junction", Block::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .simpleItem()
+            .register();
+
     // TODO: It's the same as the imposter block, remove and datafix
     public static final BlockEntry<Block> BLACK_CONCRETE_POWDER_FAKE = REGISTRATE.block("black_concrete_powder_fake", Block::new)
             .initialProperties(() -> Blocks.DIRT)
