@@ -6,6 +6,7 @@ import com.lovetropics.extras.consume_actions.DisguiseConsumeAction;
 import com.lovetropics.extras.data.TropiCoinsStore;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsStore;
 import com.lovetropics.extras.extension.CustomTradeExtension;
+import com.lovetropics.extras.model_modifer.EmoteStore;
 import com.lovetropics.extras.model_modifer.ModelModifierStore;
 import com.lovetropics.extras.mounts.MountStore;
 import com.lovetropics.extras.schedule.PlayerTimeZone;
@@ -14,7 +15,6 @@ import com.lovetropics.extras.zipline.ZiplineNetwork;
 import com.lovetropics.extras.zipline.ZiplineRider;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -64,6 +64,12 @@ public class ExtraAttachments {
             "model_modifiers", () -> AttachmentType.builder(() -> ModelModifierStore.of(Collections.emptyList()))
                     .serialize(ModelModifierStore.MAP_CODEC)
                     .sync(ModelModifierStore.STREAM_CODEC)
+                    .build()
+    );
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<EmoteStore>> EMOTE = REGISTER.register(
+            "emote", () -> AttachmentType.builder(EmoteStore::new)
+                    .serialize(EmoteStore.MAP_CODEC)
                     .build()
     );
 

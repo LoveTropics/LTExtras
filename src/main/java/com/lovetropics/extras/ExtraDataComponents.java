@@ -15,6 +15,7 @@ import com.lovetropics.extras.item.PaintingOverlay;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.loot.ArrowItemProjectileOverrideData;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
+import com.lovetropics.extras.model_modifer.Emote;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.lib.item.StackedHat;
@@ -89,6 +90,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<StackedHat>>> HAT_STACK = REGISTER.registerComponentType(
             "hat_stack",
             builder -> builder.persistent(StackedHat.CODEC.listOf()).cacheEncoding()
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Emote>> EMOTE = REGISTER.registerComponentType(
+            "emote",
+            builder -> builder.persistent(Emote.CODEC).networkSynchronized(Emote.STREAM_CODEC)
     );
 
     // General extensions
