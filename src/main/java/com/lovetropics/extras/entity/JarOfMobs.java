@@ -163,7 +163,7 @@ public class JarOfMobs extends ThrowableItemProjectile {
         // Filter out owner and owners teammates from valid targets
         if (this.getOwner() instanceof Player owner) {
             if (owner.getTeam() instanceof PlayerTeam ownerTeam) {
-                players.removeIf((player) -> player.getTeam().isAlliedTo(ownerTeam) || player.is(owner));
+                players.removeIf((player) -> player.isAlliedTo(ownerTeam) || player.is(owner));
             } else {
                 players.removeIf((player) -> player.is(owner));
             }
