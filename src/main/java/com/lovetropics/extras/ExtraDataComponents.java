@@ -14,6 +14,7 @@ import com.lovetropics.extras.item.InteractActionData;
 import com.lovetropics.extras.item.PaintingOverlay;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.loot.ArrowItemProjectileOverrideData;
+import com.lovetropics.extras.item.loot.JarredMobsData;
 import com.lovetropics.extras.item.sensor.PlayerSensor;
 import com.lovetropics.extras.model_modifer.Emote;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
@@ -168,6 +169,10 @@ public class ExtraDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> CROSSBOW_CHARGE_TIME = REGISTER.registerComponentType(
             "crossbow_charge_time",
             builder -> builder.persistent(ExtraCodecs.POSITIVE_FLOAT).networkSynchronized(ByteBufCodecs.FLOAT)
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<JarredMobsData>> JARRED_MOBS = REGISTER.registerComponentType(
+            "jarred_mobs",
+            builder -> builder.persistent(JarredMobsData.CODEC).cacheEncoding()
     );
 
     private static final AtlasSprite LOCK_SPRITE = new AtlasSprite(AtlasIds.GUI, LTExtras.id("lock"));

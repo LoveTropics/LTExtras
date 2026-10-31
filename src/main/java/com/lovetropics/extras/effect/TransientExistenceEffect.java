@@ -15,7 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
  * FIRE EMOJI, FIRE EMOJI, FIRE EMOJI
  */
 public class TransientExistenceEffect extends MobEffect {
-    protected TransientExistenceEffect(MobEffectCategory category, int color) {
+    public TransientExistenceEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
 

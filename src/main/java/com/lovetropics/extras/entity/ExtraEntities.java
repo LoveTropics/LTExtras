@@ -19,11 +19,13 @@ import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDJ;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDance1;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDance2;
 import com.lovetropics.extras.entity.vfx.PartyBeamEntity;
+import com.lovetropics.extras.item.loot.JarOfMobsItem;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.loot.RegistrateEntityLootTables;
 import com.tterrag.registrate.util.entry.EntityEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.SharedConstants;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.TntRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -195,6 +197,15 @@ public class ExtraEntities {
                     .updateInterval(10)
             )
             .renderer(() -> TntRenderer::new)
+            .register();
+
+    public static final EntityEntry<JarOfMobs> JAR_OF_MOBS = REGISTRATE.<JarOfMobs>entity("jar_of_mobs", JarOfMobs::new, MobCategory.MISC)
+            .lang("Jar of Mobs")
+            .properties(builder -> builder
+                    .noLootTable()
+                    .fireImmune()
+            )
+            .renderer(() -> ThrownItemRenderer::new)
             .register();
 
     public static void init() {

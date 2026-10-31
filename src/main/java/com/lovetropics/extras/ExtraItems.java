@@ -17,6 +17,8 @@ import com.lovetropics.extras.item.TradingCards;
 import com.lovetropics.extras.item.TropicMapItem;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.loot.ConfigurableCrossbowItem;
+import com.lovetropics.extras.item.loot.JarOfMobsItem;
+import com.lovetropics.extras.item.loot.JarredMobsData;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.model_modifer.ModelModifier;
 import com.lovetropics.extras.registry.ExtraRegistries;
@@ -331,6 +333,15 @@ public class ExtraItems {
                     .component(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT.withHidden(DataComponents.CHARGED_PROJECTILES, true))
                     .component(ExtraDataComponents.CROSSBOW_CHARGE_TIME, 0.2f)
             )
+            .register();
+
+    public static final ItemEntry<JarOfMobsItem> JAR_OF_MOBS = REGISTRATE.item("jar_of_mobs", JarOfMobsItem::new)
+            .properties(properties -> properties
+                    .component(ExtraDataComponents.JARRED_MOBS, JarredMobsData.getEmpty())
+                    .stacksTo(4)
+                    .useCooldown((float) 0.5)
+            )
+            .defaultModel()
             .register();
 
     public static void init() {
