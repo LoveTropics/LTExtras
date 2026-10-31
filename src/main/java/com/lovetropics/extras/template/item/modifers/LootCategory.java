@@ -5,13 +5,17 @@ import com.mojang.serialization.DataResult;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.util.ColorRGBA;
+import org.jline.utils.Colors;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public record LootCategory(
     String name,
     TextColor color,
+    int rgbaIntColor,
     int tiers
 ) {
     public static final Codec<LootCategory> CODEC = Codec.STRING.comapFlatMap(name -> DataResult.success(getCategory(name)), LootCategory::name);
@@ -19,7 +23,7 @@ public record LootCategory(
     private static final Map<String, LootCategory> REGISTRY = new HashMap<>();
 
     public static final LootCategory AMMO = register("ammo", "#C7D718", 0);
-    public static final LootCategory ARMOUR = register("armour", "#858585", 3);
+    public static final LootCategory ARMOUR = register("armour", "#5B5B5B", 3);
     public static final LootCategory FOOD = register("food", "#AD6711", 0);
     public static final LootCategory HEALING = register("healing", "#DB3455", 0);
     public static final LootCategory UNIQUE = register("unique", "#AE34DB", 0);
@@ -33,7 +37,8 @@ public record LootCategory(
     }
 
     private static LootCategory register(String name, String color, int tiers) {
-        LootCategory newCategory = new LootCategory(name, TextColor.parseColor(color).getOrThrow(), tiers);
+        TextColor textColor = TextColor.parseColor(color).getOrThrow();
+        LootCategory newCategory = new LootCategory(name, textColor, (90 << 24) | (textColor.getValue() & 0xFFFFFF), tiers);
         REGISTRY.put(name, newCategory);
         return newCategory;
     }
@@ -63,6 +68,10 @@ public record LootCategory(
 
     public TextColor getColor() {
         return color;
+    }
+
+    public int getRGBA() {
+        return rgbaIntColor;
     }
 
     private static MutableComponent getLang(String name, TextColor color) {
