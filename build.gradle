@@ -12,10 +12,10 @@ base {
 }
 
 def env = System.getenv()
-if (env.GITHUB_RUN_NUMBER) {
-    version = "$mod_version.${env.GITHUB_RUN_NUMBER}"
+if (env.RELEASE) {
+    version = mod_version
 } else {
-    version = "$mod_version.0-SNAPSHOT"
+    version = "$mod_version-SNAPSHOT"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
@@ -59,11 +59,16 @@ sourceSets.main.resources {
 
 repositories {
     maven {
-        url = 'https://maven.gegy.dev/releases'
+        url = 'https://maven.lovetropics.org/releases'
         content {
             includeGroup 'org.lovetropics'
-            includeGroup 'com.tterrag.registrate'
             includeGroup 'eu.pb4'
+        }
+    }
+    maven {
+        url = 'https://maven.gegy.dev/releases'
+        content {
+            includeGroup 'com.tterrag.registrate'
         }
     }
     maven {
