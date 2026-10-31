@@ -341,6 +341,7 @@ public class ExtraItems {
                     .stacksTo(4)
                     .useCooldown((float) 0.5)
             )
+            .tag(ExtraTags.Items.STT_NO_PRE_PVP)
             .defaultModel()
             .register();
 

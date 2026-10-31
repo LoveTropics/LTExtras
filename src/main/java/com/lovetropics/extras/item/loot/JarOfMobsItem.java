@@ -1,6 +1,5 @@
 package com.lovetropics.extras.item.loot;
 
-import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.entity.JarOfMobs;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
@@ -11,16 +10,12 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.level.Level;
-
-import java.util.List;
 
 /**
  * LTExtras
