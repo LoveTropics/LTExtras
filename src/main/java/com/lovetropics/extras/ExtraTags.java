@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.Block;
 public class ExtraTags {
     private static final String CREATE_MODID = "create";
     private static final String TROPICRAFT_ID = "tropicraft";
+    private static final String LT_MINIGAMES = "ltminigames";
     public static final String NO_PUSH = "NoPush";
 
     public static class Blocks extends ExtraTags {
@@ -33,6 +34,7 @@ public class ExtraTags {
     public static class Items extends ExtraTags {
         public static final TagKey<Item> LIME = tag(TROPICRAFT_ID, "lime");
         public static final TagKey<Item> HONIES = modTag("honies");
+        public static final TagKey<Item> STT_NO_PRE_PVP = tag("ltminigames", "stt_no_pre_pvp");
 
         static TagKey<Item> tag(String modid, String name) {
             return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(modid, name));

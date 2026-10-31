@@ -319,6 +319,7 @@ public class ExtraItems {
                     .component(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT.withHidden(DataComponents.CHARGED_PROJECTILES, true).withHidden(DataComponents.MAX_DAMAGE, true).withHidden(DataComponents.DAMAGE, true))
                     .component(DataComponents.WEAPON, new Weapon(1, 0))
             )
+            .tag(ExtraTags.Items.STT_NO_PRE_PVP)
             .register();
 
     public static final ItemEntry<ConfigurableCrossbowItem> RAPID_FIRE_CROSSBOW = REGISTRATE.item("rapid_fire_crossbow", (properties) -> new ConfigurableCrossbowItem(properties, new ConfigurableCrossbowItem.Settings(
