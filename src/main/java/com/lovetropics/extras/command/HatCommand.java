@@ -2,6 +2,7 @@ package com.lovetropics.extras.command;
 
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.ExtraItems;
+import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.hats.StackedHatStore;
 import com.lovetropics.lib.item.StackedHat;
 import com.mojang.brigadier.Command;
@@ -185,6 +186,7 @@ public class HatCommand {
                 return;
             }
             hats.remove(top ? hats.size() - 1 : 0);
+            entity.syncData(ExtraAttachments.HATS);
         });
         return entities.size();
     }
