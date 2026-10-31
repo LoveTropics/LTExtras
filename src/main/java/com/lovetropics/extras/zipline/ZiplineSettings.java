@@ -14,27 +14,30 @@ import net.minecraft.util.Mth;
  * @param slack          how much the rope sags
  * @param minUpwardSpeed blocks per second that riders are pulled at when the rope climbs
  * @param canLetGo       whether riders can let go by sneaking or jumping, rather than holding on until the end of the line
+ * @param style          what the rope looks like
  */
-public record ZiplineSettings(int slack, float minUpwardSpeed, boolean canLetGo) {
+public record ZiplineSettings(int slack, float minUpwardSpeed, boolean canLetGo, ZiplineStyle style) {
     public static final int MAX_SLACK = 10;
     public static final int DEFAULT_SLACK = 2;
     public static final float LOWEST_MIN_UPWARD_SPEED = 1.0f;
     public static final float HIGHEST_MIN_UPWARD_SPEED = 20.0f;
     public static final float DEFAULT_MIN_UPWARD_SPEED = 10.0f;
 
-    public static final ZiplineSettings DEFAULT = new ZiplineSettings(DEFAULT_SLACK, DEFAULT_MIN_UPWARD_SPEED, true);
+    public static final ZiplineSettings DEFAULT = new ZiplineSettings(DEFAULT_SLACK, DEFAULT_MIN_UPWARD_SPEED, true, ZiplineStyle.OLD_ROPE);
 
     public static final MapCodec<ZiplineSettings> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             // Not the default slack of new ropes: ropes were saved without their slack when it was 0
             Codec.INT.optionalFieldOf("slack", 0).forGetter(ZiplineSettings::slack),
             Codec.FLOAT.optionalFieldOf("min_upward_speed", DEFAULT_MIN_UPWARD_SPEED).forGetter(ZiplineSettings::minUpwardSpeed),
-            Codec.BOOL.optionalFieldOf("can_let_go", true).forGetter(ZiplineSettings::canLetGo)
+            Codec.BOOL.optionalFieldOf("can_let_go", true).forGetter(ZiplineSettings::canLetGo),
+            ZiplineStyle.CODEC.optionalFieldOf("style", ZiplineStyle.OLD_ROPE).forGetter(ZiplineSettings::style)
     ).apply(i, ZiplineSettings::new));
 
     public static final StreamCodec<ByteBuf, ZiplineSettings> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, ZiplineSettings::slack,
             ByteBufCodecs.FLOAT, ZiplineSettings::minUpwardSpeed,
             ByteBufCodecs.BOOL, ZiplineSettings::canLetGo,
+            ZiplineStyle.STREAM_CODEC, ZiplineSettings::style,
             ZiplineSettings::new
     );
 
@@ -43,6 +46,6 @@ public record ZiplineSettings(int slack, float minUpwardSpeed, boolean canLetGo)
      */
     public ZiplineSettings validated() {
         float speed = Float.isFinite(minUpwardSpeed) ? Mth.clamp(minUpwardSpeed, LOWEST_MIN_UPWARD_SPEED, HIGHEST_MIN_UPWARD_SPEED) : DEFAULT_MIN_UPWARD_SPEED;
-        return new ZiplineSettings(Mth.clamp(slack, 0, MAX_SLACK), speed, canLetGo);
+        return new ZiplineSettings(Mth.clamp(slack, 0, MAX_SLACK), speed, canLetGo, style);
     }
 }

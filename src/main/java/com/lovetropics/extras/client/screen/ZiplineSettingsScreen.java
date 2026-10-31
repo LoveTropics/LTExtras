@@ -4,6 +4,7 @@ import com.lovetropics.extras.ExtraLangKeys;
 import com.lovetropics.extras.network.message.ServerboundZiplineSettingsPacket;
 import com.lovetropics.extras.zipline.ZiplineSegment;
 import com.lovetropics.extras.zipline.ZiplineSettings;
+import com.lovetropics.extras.zipline.ZiplineStyle;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
@@ -40,6 +41,7 @@ public class ZiplineSettingsScreen extends Screen {
     private int slack;
     private float minUpwardSpeed;
     private boolean canLetGo;
+    private ZiplineStyle style;
 
     public ZiplineSettingsScreen(ZiplineSegment segment) {
         super(TITLE);
@@ -49,6 +51,7 @@ public class ZiplineSettingsScreen extends Screen {
         slack = settings.slack();
         minUpwardSpeed = settings.minUpwardSpeed();
         canLetGo = settings.canLetGo();
+        style = settings.style();
     }
 
     @Override
@@ -69,6 +72,10 @@ public class ZiplineSettingsScreen extends Screen {
         contents.addChild(CycleButton.onOffBuilder(canLetGo)
                 .create(0, 0, WIDGET_WIDTH, Button.DEFAULT_HEIGHT, ExtraLangKeys.ZIPLINE_CAN_LET_GO.get(), (button, value) -> canLetGo = value)
         ).setTooltip(Tooltip.create(ExtraLangKeys.ZIPLINE_CAN_LET_GO_TOOLTIP.get()));
+        contents.addChild(CycleButton.builder(ZiplineStyle::displayName, style)
+                .withValues(ZiplineStyle.values())
+                .create(0, 0, WIDGET_WIDTH, Button.DEFAULT_HEIGHT, ExtraLangKeys.ZIPLINE_STYLE.get(), (button, value) -> style = value)
+        );
 
         LinearLayout footer = layout.addToFooter(LinearLayout.horizontal().spacing(8));
         footer.addChild(Button.builder(CommonComponents.GUI_DONE, button -> onDone()).build());
@@ -84,7 +91,7 @@ public class ZiplineSettingsScreen extends Screen {
     }
 
     private void onDone() {
-        ClientPacketDistributor.sendToServer(new ServerboundZiplineSettingsPacket(from, to, new ZiplineSettings(slack, minUpwardSpeed, canLetGo)));
+        ClientPacketDistributor.sendToServer(new ServerboundZiplineSettingsPacket(from, to, new ZiplineSettings(slack, minUpwardSpeed, canLetGo, style)));
         onClose();
     }
 

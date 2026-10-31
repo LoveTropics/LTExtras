@@ -600,5 +600,8 @@
   "zipline.ltextras.settings_saved": "Zipline settings saved.",
   "zipline.ltextras.slack": "Slack: %s",
   "zipline.ltextras.slack.tooltip": "How much the rope sags between its poles.",
+  "zipline.ltextras.style": "Style",
+  "zipline.ltextras.style.bamboo": "Bamboo",
+  "zipline.ltextras.style.old_rope": "Old Rope",
   "zipline.ltextras.too_far": "Poles are too far apart (max %s blocks)."
 }
