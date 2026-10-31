@@ -22,6 +22,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.monster.Blaze;
@@ -119,7 +120,7 @@ public class JarOfMobs extends ThrowableItemProjectile {
                     continue;
                 }
 
-                Entity entity = entityType.spawn(serverLevel, this.blockPosition(), EntitySpawnReason.SPAWN_ITEM_USE);
+                Entity entity = entityType.create(serverLevel, null, this.blockPosition(), EntitySpawnReason.SPAWN_ITEM_USE, false, false);
                 if (entity == null) {
                     continue;
                 }
@@ -139,6 +140,11 @@ public class JarOfMobs extends ThrowableItemProjectile {
 
                 if (entity.is(EntityTypes.BEE)) {
                     this.makeBeeAngry(serverLevel, (Bee) entity);
+                }
+
+                serverLevel.addFreshEntityWithPassengers(entity);
+                if (entity instanceof Mob mob) {
+                    mob.playAmbientSound();
                 }
             }
         }
