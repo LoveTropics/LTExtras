@@ -66,6 +66,7 @@
     "client.chatfix.ChatScreenMixin",
     "client.chatfix.CommandSuggestionsMixin",
     "client.collectible.MultiPlayerGameModeMixin",
+    "client.gui.HudMixin",
     "client.gui.screens.inventory.AbstractContainerScreenMixin",
     "client.menu.LogoRendererMixin",
     "client.menu.TitleScreenMixin",

@@ -33,6 +33,11 @@ public final class LootInventoryScreenUnderlay {
     private static final int WIDTH = 16;
     private static final int HEIGHT = 16;
 
+    private static final Identifier HOTBAR_UNDERLAY = LTExtras.id("survive_the_tide_loot_hotbar_underlay");
+    private static final int HOTBAR_WIDTH = 16;
+    private static final int HOTBAR_HEIGHT = 16;
+
+
     private LootInventoryScreenUnderlay() {}
 
     public static void injectUnderlay(GuiGraphicsExtractor graphics, STTLootCategoryDisplayData displayData, Slot slot) {
@@ -43,6 +48,18 @@ public final class LootInventoryScreenUnderlay {
                 slot.y,
                 WIDTH,
                 HEIGHT,
+                displayData.color()
+        );
+    }
+
+    public static void injectHotbarUnderlay(GuiGraphicsExtractor graphics, STTLootCategoryDisplayData displayData, int x, int y) {
+        graphics.blitSprite(
+                RenderPipelines.GUI_TEXTURED,
+                HOTBAR_UNDERLAY,
+                x,
+                y,
+                HOTBAR_WIDTH,
+                HOTBAR_HEIGHT,
                 displayData.color()
         );
     }
