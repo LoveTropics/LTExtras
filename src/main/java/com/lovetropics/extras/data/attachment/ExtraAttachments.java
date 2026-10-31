@@ -115,7 +115,7 @@ public class ExtraAttachments {
     );
 
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<StackedHatStore>> HATS = REGISTER.register(
-            "hats", () -> AttachmentType.builder(() -> StackedHatStore.EMPTY)
+            "hats", () -> AttachmentType.builder(() -> new StackedHatStore())
                     .serialize(StackedHatStore.MAP_CODEC)
                     .sync(StackedHatStore.STREAM_CODEC)
                     .build()

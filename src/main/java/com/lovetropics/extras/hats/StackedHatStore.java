@@ -10,7 +10,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public record StackedHatStore(List<StackedHat> stackedHats) {
@@ -23,7 +22,9 @@ public record StackedHatStore(List<StackedHat> stackedHats) {
             StackedHat.STREAM_CODEC.apply(ByteBufCodecs.list()), StackedHatStore::stackedHats,
             StackedHatStore::of);
 
-    public static final StackedHatStore EMPTY = StackedHatStore.of(Collections.emptyList());
+    public StackedHatStore() {
+        this(new ArrayList<>());
+    }
 
     public static StackedHatStore of(List<StackedHat> stackedHats) {
         return new StackedHatStore(new ArrayList<>(stackedHats));
