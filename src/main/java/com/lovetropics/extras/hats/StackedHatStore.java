@@ -50,6 +50,7 @@ public record StackedHatStore(List<StackedHat> stackedHats) {
     public static void setHats(Entity entity, List<StackedHat> hats) {
         StackedHatStore newStore = StackedHatStore.of(hats);
         entity.setData(ExtraAttachments.HATS, newStore);
+        entity.syncData(ExtraAttachments.HATS);
     }
 
     public static List<StackedHat> getHats(Entity entity) {
