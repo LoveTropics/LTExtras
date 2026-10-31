@@ -24,7 +24,7 @@ public class CustomHeadLayerMixin<S extends LivingEntityRenderState> {
         if (stackRenderState != null && !stackRenderState.stack().isEmpty()) {
             return false; // skip the `state.headItem.isEmpty()` check if we have hats to render as they may be from attachments and not wearing a head item.
         }
-        return !instance.isEmpty();
+        return instance.isEmpty();
     }
 
 
