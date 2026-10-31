@@ -78,7 +78,7 @@ public class ExtrasConfig {
 
     public static final ModConfigSpec.ConfigValue<String> SERVER_ADDRESS = COMMON_BUILDER
             .comment("The IP address for the Love Tropics event server")
-            .define("serverAddress", "volcano.lovetropics.org");
+            .define("serverAddress", "play.lovetropics.org");
 
     public static final ModConfigSpec.ConfigValue<String> DONATE_URL = COMMON_BUILDER
             .comment("The URL that players should be directed to for donating.")
