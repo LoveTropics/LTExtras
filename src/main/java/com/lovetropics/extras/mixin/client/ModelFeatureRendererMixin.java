@@ -1,6 +1,7 @@
 package com.lovetropics.extras.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.lovetropics.extras.client.entity.SwingPlayerHelper;
 import com.lovetropics.extras.client.model_modifer.ModelModifierClient;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.Model;
@@ -19,6 +20,7 @@ public class ModelFeatureRendererMixin<S> {
         S state = submit.state();
         if (state instanceof LivingEntityRenderState renderState && model instanceof EntityModel<?> entityModel) {
             ModelModifierClient.applyToModel(renderState, entityModel);
+            SwingPlayerHelper.apply(renderState, entityModel);
         }
     }
 }

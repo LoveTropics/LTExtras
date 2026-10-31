@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.FluidType;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -115,6 +116,14 @@ public abstract class LivingEntityMixin extends Entity {
             if (serverLevel.getGameRules().get(ExtraGamerules.NAMED_DEATH_MESSAGES.get())) {
                 original.call(instance, s, o, object);
             }
+        }
+    }
+
+    @Inject(method = "dismountVehicle(Lnet/minecraft/world/entity/Entity;)V",
+            at=@At(value = "INVOKE_ASSIGN", target="Lnet/minecraft/world/entity/Entity;getDismountLocationForPassenger(Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/phys/Vec3;"), cancellable = true)
+    public void onDismountVehicle(Entity vehicle, CallbackInfo ci, @Local(name="teleportTarget") @Nullable Vec3 teleportTarget) {
+        if(teleportTarget == null){
+            ci.cancel();
         }
     }
 }

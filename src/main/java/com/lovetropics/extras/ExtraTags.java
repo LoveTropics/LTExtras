@@ -21,6 +21,7 @@ public class ExtraTags {
         public static final TagKey<Block> CLIMBABLE_FAST = modTag("climbable_fast");
         public static final TagKey<Block> CLIMBABLE_VERY_FAST = modTag("climbable_very_fast");
         public static final TagKey<Block> PLUMBERS_TNT_EXPLODES = modTag("plumbers_tnt_explodes");
+        public static final TagKey<Block> SEAT = modTag("seat");
 
         static TagKey<Block> tag(String modid, String name) {
             return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(modid, name));

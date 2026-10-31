@@ -4,12 +4,14 @@ import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraBlocks;
 import com.lovetropics.extras.client.block.DisplayBlockRender;
 import com.lovetropics.extras.client.block.WordBoxBlockEntityRenderer;
+import com.lovetropics.extras.client.entity.SwingPlayerHelper;
 import com.lovetropics.extras.client.entity.model.AmazonRiverDolphinModel;
 import com.lovetropics.extras.client.entity.model.ForkliftModel;
 import com.lovetropics.extras.client.entity.model.GlassFrogModel;
 import com.lovetropics.extras.client.entity.model.HighHeelsModel;
 import com.lovetropics.extras.client.entity.model.RaveKoaModel;
 import com.lovetropics.extras.client.entity.model.SpinningSignModel;
+import com.lovetropics.extras.client.entity.model.SwingModel;
 import com.lovetropics.extras.client.entity.model.WaterCoolerModel;
 import com.lovetropics.extras.client.entity.renderer.layers.CustomSingleBootLayer;
 import com.lovetropics.extras.client.entity.state.HoniedShulkerRenderState;
@@ -17,12 +19,15 @@ import com.lovetropics.extras.client.keybinds.ForkliftKeybinds;
 import com.lovetropics.extras.client.model_modifer.ModelModifierClient;
 import com.lovetropics.extras.effect.ExtraEffects;
 import com.lovetropics.extras.effect.PropaguledEffect;
+import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.ShulkerRenderer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -31,6 +36,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.renderstate.AvatarRenderStateModifier;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 
 @EventBusSubscriber(Dist.CLIENT)
@@ -47,6 +53,12 @@ public class ClientRegisterEvents {
         event.registerEntityModifier(FallingBlockRenderer.class, WordBoxBlockEntityRenderer::updateFallingBlockRenderState);
         event.registerEntityModifier(ShulkerRenderer.class, HoniedShulkerRenderState::updateHoniedRenderState);
         event.registerEntityModifier(new TypeToken<LivingEntityRenderer<?, ?, ?>>() {}, CustomSingleBootLayer::updateBootRenderState);
+        event.registerAvatarEntityModifier(new AvatarRenderStateModifier(){
+            @Override
+            public <T extends Avatar & ClientAvatarEntity> void accept(T avatar, AvatarRenderState renderState) {
+                SwingPlayerHelper.updateLivingEntityRenderState(avatar, renderState);
+            }
+        });
     }
 
     @SubscribeEvent
@@ -75,6 +87,7 @@ public class ClientRegisterEvents {
         event.registerLayerDefinition(AmazonRiverDolphinModel.LAYER, AmazonRiverDolphinModel::createBodyLayer);
         event.registerLayerDefinition(AmazonRiverDolphinModel.BABY_LAYER, () -> AmazonRiverDolphinModel.createBodyLayer().apply(AmazonRiverDolphinModel.BABY_TRANSFORMER));
         event.registerLayerDefinition(GlassFrogModel.LAYER, GlassFrogModel::createBodyLayer);
+        event.registerLayerDefinition(SwingModel.LAYER_LOCATION, SwingModel::createBodyLayer);
     }
 
     @SubscribeEvent

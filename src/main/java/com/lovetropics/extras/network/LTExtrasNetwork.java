@@ -17,6 +17,7 @@ import com.lovetropics.extras.network.message.ServerboundLiftForkliftPacket;
 import com.lovetropics.extras.network.message.ServerboundPickCollectibleItemPacket;
 import com.lovetropics.extras.network.message.ServerboundReturnCollectibleItemPacket;
 import com.lovetropics.extras.network.message.ServerboundSetTimeZonePacket;
+import com.lovetropics.extras.network.message.ServerboundSwingPacket;
 import com.lovetropics.extras.network.message.ServerboundZiplineRidePacket;
 import com.lovetropics.extras.network.message.ServerboundZiplineSettingsPacket;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -48,5 +49,6 @@ public class LTExtrasNetwork {
         registrar.playToServer(ServerboundExchangeTropiCoinsPacket.TYPE, ServerboundExchangeTropiCoinsPacket.STREAM_CODEC, ServerboundExchangeTropiCoinsPacket::handle);
         registrar.playToServer(ServerboundZiplineRidePacket.TYPE, ServerboundZiplineRidePacket.STREAM_CODEC, ServerboundZiplineRidePacket::handle);
         registrar.playToServer(ServerboundZiplineSettingsPacket.TYPE, ServerboundZiplineSettingsPacket.STREAM_CODEC, ServerboundZiplineSettingsPacket::handle);
+        registrar.playToServer(ServerboundSwingPacket.TYPE, ServerboundSwingPacket.STREAM_CODEC, ServerboundSwingPacket::handle);
     }
 }

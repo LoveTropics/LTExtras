@@ -34,6 +34,7 @@ import com.lovetropics.extras.block.RoleBarrierBlock;
 import com.lovetropics.extras.block.RopeBlock;
 import com.lovetropics.extras.block.ScientificNameBlock;
 import com.lovetropics.extras.block.SeatBlock;
+import com.lovetropics.extras.block.SeeSawBlock;
 import com.lovetropics.extras.block.SpeedyBlock;
 import com.lovetropics.extras.block.SpeedySlabBlock;
 import com.lovetropics.extras.block.SpeedyZone;
@@ -1376,6 +1377,7 @@ public class ExtraBlocks {
         String color = dyeColor.getName();
         return REGISTRATE.block(dyeColor.getName() + "_seat", SeatBlock::new)
                 .initialProperties(() -> Blocks.OAK_SLAB)
+                .tag(ExtraTags.Blocks.SEAT)
                 .properties(p -> p.sound(SoundType.WOOL))
                 .blockstate(() -> (ctx, prov) -> Models.generateSeat(ctx, prov, color))
                 .color(() -> () -> List.of(BlockTintSources.constant(dyeColor.getTextColor())))
@@ -1473,6 +1475,12 @@ public class ExtraBlocks {
             .lang("Honey Blossom")
             .item()
             .build()
+            .register();
+
+    public static final BlockEntry<SeeSawBlock> SEE_SAW_BLOCK = REGISTRATE.block("see_saw", SeeSawBlock::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .lang("See Saw")
+            .simpleItem()
             .register();
 
     public static final BlockEntry<WordBoxBlock> WORD_BOX = REGISTRATE.block("word_box", WordBoxBlock::new)

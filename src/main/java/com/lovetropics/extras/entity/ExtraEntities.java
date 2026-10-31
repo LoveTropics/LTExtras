@@ -11,7 +11,9 @@ import com.lovetropics.extras.client.entity.GlassFrogRenderer;
 import com.lovetropics.extras.client.entity.PartyBeamRenderer;
 import com.lovetropics.extras.client.entity.RaveKoaRenderer;
 import com.lovetropics.extras.client.entity.SeatRenderer;
+import com.lovetropics.extras.client.entity.SeeSawRenderer;
 import com.lovetropics.extras.client.entity.SpinningSignRenderer;
+import com.lovetropics.extras.client.entity.SwingRenderer;
 import com.lovetropics.extras.client.entity.WaterCoolerRenderer;
 import com.lovetropics.extras.entity.glass_frog.GlassFrog;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntity;
@@ -206,6 +208,30 @@ public class ExtraEntities {
                     .fireImmune()
             )
             .renderer(() -> ThrownItemRenderer::new)
+            .register();
+
+    public static final EntityEntry<SwingEntity> SWING = REGISTRATE.entity("swing", SwingEntity::new, MobCategory.MISC)
+            .lang("Swing")
+            .properties(builder -> builder
+                    .sized(1.4f, 2.1f)
+                    .clientTrackingRange(8)
+                    .passengerAttachments(new Vec3(0.0f, 0.3f, 0.0f))
+                    .updateInterval(3)
+            )
+            .loot(noDrops())
+            .renderer(() -> SwingRenderer::new)
+            .register();
+
+    public static final EntityEntry<SeeSawEntity> SEE_SAW = REGISTRATE.entity("see_saw", SeeSawEntity::new, MobCategory.MISC)
+            .lang("See Saw")
+            .properties(builder -> builder
+                    .sized(1.4f, 2.1f)
+                    .clientTrackingRange(8)
+                    .passengerAttachments(new Vec3(0.0f, 0.3f, 0.0f))
+                    .updateInterval(3)
+            )
+            .loot(noDrops())
+            .renderer(() -> SeeSawRenderer::new)
             .register();
 
     public static void init() {
