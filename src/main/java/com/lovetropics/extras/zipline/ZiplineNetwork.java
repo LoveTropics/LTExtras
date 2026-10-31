@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Every rope in a level. It is saved with the level and synced in full to all of its players, rather than stored in the
@@ -111,14 +112,14 @@ public final class ZiplineNetwork {
     }
 
     /**
-     * @return the segment leaving the given pole that is best aligned with the given direction
+     * @return the rideable segment leaving the given pole that is best aligned with the given direction
      */
     public @Nullable ZiplineSegment pickSegmentFrom(BlockPos pos, Vec3 direction) {
         ZiplineSegment best = null;
         double bestAlignment = Double.NEGATIVE_INFINITY;
         for (ZiplineSegment segment : getSegmentsFrom(pos)) {
             double alignment = direction.dot(segment.tangent(0.0));
-            if (alignment > bestAlignment) {
+            if (segment.isRideable() && alignment > bestAlignment) {
                 best = segment;
                 bestAlignment = alignment;
             }
@@ -127,11 +128,11 @@ public final class ZiplineNetwork {
     }
 
     /**
-     * @return the segment that leads on from the given pole, away from the pole that the rider arrived from
+     * @return the rideable segment that leads on from the given pole, away from the pole that the rider arrived from
      */
     public @Nullable ZiplineSegment getContinuation(BlockPos pos, BlockPos arrivedFrom) {
         for (ZiplineSegment segment : getSegmentsFrom(pos)) {
-            if (!segment.to().equals(arrivedFrom)) {
+            if (segment.isRideable() && !segment.to().equals(arrivedFrom)) {
                 return segment;
             }
         }
@@ -169,11 +170,11 @@ public final class ZiplineNetwork {
         return ropes;
     }
 
-    public ZiplineSegment.@Nullable Hit raycast(Vec3 start, Vec3 end, double radius) {
+    public ZiplineSegment.@Nullable Hit raycast(Vec3 start, Vec3 end, double radius, Predicate<ZiplineSegment> filter) {
         AABB rayBounds = new AABB(start, end).inflate(radius);
         ZiplineSegment.Hit closest = null;
         for (ZiplineSegment segment : getRopes()) {
-            if (!segment.bounds().inflate(radius).intersects(rayBounds)) {
+            if (!filter.test(segment) || !segment.bounds().inflate(radius).intersects(rayBounds)) {
                 continue;
             }
             ZiplineSegment.Hit hit = segment.raycast(start, end, radius);

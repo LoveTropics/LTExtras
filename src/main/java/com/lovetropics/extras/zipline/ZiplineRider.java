@@ -127,8 +127,8 @@ public final class ZiplineRider {
         }
 
         boolean canLetGo = isPlayer && ride.segment().settings().canLetGo();
-        boolean jumpedOff = canLetGo && jumping;
-        boolean leaving = (isPlayer && entity.isSpectator()) || (canLetGo && (entity.isShiftKeyDown() || jumping));
+        boolean jumpedOff = ride.updateJump(jumping) && canLetGo;
+        boolean leaving = (isPlayer && entity.isSpectator()) || jumpedOff || (canLetGo && entity.isShiftKeyDown());
         Vec3 moveInput = isPlayer ? getMoveInput(entity, input) : Vec3.ZERO;
         if (leaving || !ride.tick(ZiplineNetwork.get(entity.level()), moveInput)) {
             stopRiding(entity);
@@ -160,7 +160,7 @@ public final class ZiplineRider {
             return;
         }
         ZiplineSegment segment = ZiplineNetwork.get(player.level()).getSegment(ride.segment().from(), ride.segment().to());
-        if (segment == null || !isNearRope(player, segment)) {
+        if (segment == null || !segment.isRideable() || !isNearRope(player, segment)) {
             stopRiding(player);
             return;
         }

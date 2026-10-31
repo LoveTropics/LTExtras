@@ -47,6 +47,10 @@ public final class ZiplineSegment {
         return settings;
     }
 
+    public boolean isRideable() {
+        return !settings.decorative();
+    }
+
     public ZiplineSegment reversed() {
         return new ZiplineSegment(to, end, from, start, settings);
     }

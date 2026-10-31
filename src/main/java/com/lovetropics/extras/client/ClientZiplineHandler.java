@@ -70,7 +70,7 @@ public final class ClientZiplineHandler {
         if (hitResult != null && hitResult.getType() != HitResult.Type.MISS) {
             reach = Math.min(reach, eyePosition.distanceTo(hitResult.getLocation()));
         }
-        ZiplineSegment.@Nullable Hit ropeHit = network.raycast(eyePosition, eyePosition.add(lookVector.scale(reach)), ROPE_PICK_RADIUS);
+        ZiplineSegment.@Nullable Hit ropeHit = network.raycast(eyePosition, eyePosition.add(lookVector.scale(reach)), ROPE_PICK_RADIUS, segment -> holdingWrench || segment.isRideable());
         if (ropeHit == null) {
             return;
         }

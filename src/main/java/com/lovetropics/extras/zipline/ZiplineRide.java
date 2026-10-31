@@ -36,6 +36,7 @@ public final class ZiplineRide {
     private int direction;
     // Braking against the current velocity before building up speed the other way
     private boolean turning;
+    private boolean jumpHeld = true;
     private @Nullable Vec3 lastPosition;
 
     public ZiplineRide(ZiplineSegment segment, double t, double velocity, int direction) {
@@ -93,17 +94,23 @@ public final class ZiplineRide {
         return lastPosition != null && entity.position().distanceToSqr(lastPosition) > MAX_DISPLACEMENT * MAX_DISPLACEMENT;
     }
 
+    public boolean updateJump(boolean jumping) {
+        boolean pressed = jumping && !jumpHeld;
+        jumpHeld = jumping;
+        return pressed;
+    }
+
     public Vec3 motion() {
         return segment.tangent(t).scale(velocity);
     }
 
     /**
      * @param moveInput horizontal direction that the rider is pressing towards, in world space
-     * @return false once the rider has reached the end of the line, or the rope has been removed
+     * @return false once the rider has reached the end of the line, or the rope has been removed or can no longer be ridden
      */
     public boolean tick(ZiplineNetwork network, Vec3 moveInput) {
         ZiplineSegment current = network.getSegment(segment.from(), segment.to());
-        if (current == null) {
+        if (current == null || !current.isRideable()) {
             return false;
         }
         segment = current;

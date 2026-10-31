@@ -6,6 +6,7 @@ import com.lovetropics.extras.zipline.ZiplineSegment;
 import com.lovetropics.extras.zipline.ZiplineSettings;
 import com.lovetropics.extras.zipline.ZiplineStyle;
 import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -21,6 +22,8 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleFunction;
@@ -42,6 +45,9 @@ public class ZiplineSettingsScreen extends Screen {
     private float minUpwardSpeed;
     private boolean canLetGo;
     private ZiplineStyle style;
+    private boolean decorative;
+
+    private final List<AbstractWidget> ridingWidgets = new ArrayList<>();
 
     public ZiplineSettingsScreen(ZiplineSegment segment) {
         super(TITLE);
@@ -52,6 +58,7 @@ public class ZiplineSettingsScreen extends Screen {
         minUpwardSpeed = settings.minUpwardSpeed();
         canLetGo = settings.canLetGo();
         style = settings.style();
+        decorative = settings.decorative();
     }
 
     @Override
@@ -64,18 +71,29 @@ public class ZiplineSettingsScreen extends Screen {
                 value -> ExtraLangKeys.ZIPLINE_SLACK.format((int) value),
                 value -> slack = (int) value
         )).setTooltip(Tooltip.create(ExtraLangKeys.ZIPLINE_SLACK_TOOLTIP.get()));
-        contents.addChild(new SteppedSlider(
-                ZiplineSettings.LOWEST_MIN_UPWARD_SPEED, ZiplineSettings.HIGHEST_MIN_UPWARD_SPEED, SPEED_STEP, minUpwardSpeed,
-                value -> ExtraLangKeys.ZIPLINE_MIN_UPWARD_SPEED.format(SPEED_FORMAT.format(value)),
-                value -> minUpwardSpeed = (float) value
-        )).setTooltip(Tooltip.create(ExtraLangKeys.ZIPLINE_MIN_UPWARD_SPEED_TOOLTIP.get()));
-        contents.addChild(CycleButton.onOffBuilder(canLetGo)
-                .create(0, 0, WIDGET_WIDTH, Button.DEFAULT_HEIGHT, ExtraLangKeys.ZIPLINE_CAN_LET_GO.get(), (button, value) -> canLetGo = value)
-        ).setTooltip(Tooltip.create(ExtraLangKeys.ZIPLINE_CAN_LET_GO_TOOLTIP.get()));
         contents.addChild(CycleButton.builder(ZiplineStyle::displayName, style)
                 .withValues(ZiplineStyle.values())
                 .create(0, 0, WIDGET_WIDTH, Button.DEFAULT_HEIGHT, ExtraLangKeys.ZIPLINE_STYLE.get(), (button, value) -> style = value)
         );
+        contents.addChild(CycleButton.onOffBuilder(decorative)
+                .create(0, 0, WIDGET_WIDTH, Button.DEFAULT_HEIGHT, ExtraLangKeys.ZIPLINE_DECORATIVE.get(), (button, value) -> {
+                    decorative = value;
+                    updateRidingWidgets();
+                })
+        ).setTooltip(Tooltip.create(ExtraLangKeys.ZIPLINE_DECORATIVE_TOOLTIP.get()));
+
+        ridingWidgets.clear();
+        ridingWidgets.add(contents.addChild(new SteppedSlider(
+                ZiplineSettings.LOWEST_MIN_UPWARD_SPEED, ZiplineSettings.HIGHEST_MIN_UPWARD_SPEED, SPEED_STEP, minUpwardSpeed,
+                value -> ExtraLangKeys.ZIPLINE_MIN_UPWARD_SPEED.format(SPEED_FORMAT.format(value)),
+                value -> minUpwardSpeed = (float) value
+        )));
+        ridingWidgets.getLast().setTooltip(Tooltip.create(ExtraLangKeys.ZIPLINE_MIN_UPWARD_SPEED_TOOLTIP.get()));
+        ridingWidgets.add(contents.addChild(CycleButton.onOffBuilder(canLetGo)
+                .create(0, 0, WIDGET_WIDTH, Button.DEFAULT_HEIGHT, ExtraLangKeys.ZIPLINE_CAN_LET_GO.get(), (button, value) -> canLetGo = value)
+        ));
+        ridingWidgets.getLast().setTooltip(Tooltip.create(ExtraLangKeys.ZIPLINE_CAN_LET_GO_TOOLTIP.get()));
+        updateRidingWidgets();
 
         LinearLayout footer = layout.addToFooter(LinearLayout.horizontal().spacing(8));
         footer.addChild(Button.builder(CommonComponents.GUI_DONE, button -> onDone()).build());
@@ -90,8 +108,14 @@ public class ZiplineSettingsScreen extends Screen {
         layout.arrangeElements();
     }
 
+    private void updateRidingWidgets() {
+        for (AbstractWidget widget : ridingWidgets) {
+            widget.visible = !decorative;
+        }
+    }
+
     private void onDone() {
-        ClientPacketDistributor.sendToServer(new ServerboundZiplineSettingsPacket(from, to, new ZiplineSettings(slack, minUpwardSpeed, canLetGo, style)));
+        ClientPacketDistributor.sendToServer(new ServerboundZiplineSettingsPacket(from, to, new ZiplineSettings(slack, minUpwardSpeed, canLetGo, style, decorative)));
         onClose();
     }
 

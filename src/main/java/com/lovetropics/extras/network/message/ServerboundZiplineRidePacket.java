@@ -28,7 +28,7 @@ public record ServerboundZiplineRidePacket(Optional<Segment> segment) implements
         ZiplineSegment segment = packet.segment
                 .map(s -> ZiplineNetwork.get(player.level()).getSegment(s.from(), s.to()))
                 .orElse(null);
-        if (segment == null || !ZiplineRider.isNearRope(player, segment)) {
+        if (segment == null || !segment.isRideable() || !ZiplineRider.isNearRope(player, segment)) {
             ZiplineRider.stopRiding(player);
             return;
         }

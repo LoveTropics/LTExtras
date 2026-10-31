@@ -53,6 +53,8 @@ public enum ExtraLangKeys {
     ZIPLINE_MIN_UPWARD_SPEED_TOOLTIP("zipline", "min_upward_speed.tooltip", "How fast riders are pulled along when the rope climbs."),
     ZIPLINE_CAN_LET_GO("zipline", "can_let_go", "Riders Can Let Go"),
     ZIPLINE_CAN_LET_GO_TOOLTIP("zipline", "can_let_go.tooltip", "Whether riders can let go of the rope by sneaking or jumping. Otherwise, they hold on until the end of the line."),
+    ZIPLINE_DECORATIVE("zipline", "decorative", "Decorative"),
+    ZIPLINE_DECORATIVE_TOOLTIP("zipline", "decorative.tooltip", "Whether the rope can be ridden at all or not."),
     ZIPLINE_STYLE("zipline", "style", "Style"),
     ZIPLINE_STYLE_OLD_ROPE("zipline", "style.old_rope", "Old Rope"),
     ZIPLINE_STYLE_BAMBOO("zipline", "style.bamboo", "Bamboo")

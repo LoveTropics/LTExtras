@@ -591,6 +591,8 @@
   "zipline.ltextras.can_let_go": "Riders Can Let Go",
   "zipline.ltextras.can_let_go.tooltip": "Whether riders can let go of the rope by sneaking or jumping. Otherwise, they hold on until the end of the line.",
   "zipline.ltextras.connected": "Poles connected.",
+  "zipline.ltextras.decorative": "Decorative",
+  "zipline.ltextras.decorative.tooltip": "Whether the rope can be ridden at all or not.",
   "zipline.ltextras.disconnected": "Poles disconnected.",
   "zipline.ltextras.min_upward_speed": "Min. Upward Speed: %s blocks/s",
   "zipline.ltextras.min_upward_speed.tooltip": "How fast riders are pulled along when the rope climbs.",
