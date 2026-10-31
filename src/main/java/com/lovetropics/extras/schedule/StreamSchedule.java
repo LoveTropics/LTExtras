@@ -56,6 +56,13 @@ public record StreamSchedule(List<Entry> entries) {
                 });
     }
 
+    public @Nullable Entry atIndex(int index) {
+        if (index < 0 || index >= entries.size()) {
+            return null;
+        }
+        return entries.get(index);
+    }
+
     public @Nullable Entry currentAt(Instant time) {
         for (Entry entry : entries) {
             if (!entry.startTime().isAfter(time) && !time.isAfter(entry.endTime())) {

@@ -1,9 +1,11 @@
 package com.lovetropics.extras.schedule;
 
 import com.lovetropics.extras.LTExtras;
+import eu.pb4.placeholders.api.ArgumentParser;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -24,6 +26,17 @@ public class SchedulePlaceholders {
     private static final PlaceholderResult UNKNOWN = PlaceholderResult.value("?");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("EEE HH:mm");
 
+    private static final ArgumentParser<Integer> INT_PARSER = string -> {
+        if (string == null) {
+            return -1;
+        }
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    };
+
     private static final Duration FETCH_INTERVAL = Duration.ofMinutes(5);
 
     private static CompletableFuture<?> fetchFuture = CompletableFuture.completedFuture(null);
@@ -31,32 +44,40 @@ public class SchedulePlaceholders {
     private static Instant lastFetchTime = Instant.EPOCH;
 
     static {
-        registerForEntry(false);
-        registerForEntry(true);
+        registerPlaceholder("description", (ctx, entry) -> PlaceholderResult.value(entry.description()));
+        registerPlaceholder("hosts", (ctx, entry) -> formatHosts(entry));
+        registerPlaceholder("start", (ctx, entry) -> formatLocalTime(ctx, entry.startTime()));
+        registerPlaceholder("end", (ctx, entry) -> formatLocalTime(ctx, entry.endTime()));
+        registerPlaceholder("time_until", (ctx, entry) -> formatTimeUntil(entry));
     }
 
-    private static void registerForEntry(boolean next) {
-        String prefix = next ? "next" : "current";
-        registerPlaceholder(prefix + "/description", next, (ctx, entry) -> PlaceholderResult.value(entry.description()));
-        registerPlaceholder(prefix + "/hosts", next, (ctx, entry) -> formatHosts(entry));
-        registerPlaceholder(prefix + "/start", next, (ctx, entry) -> formatLocalTime(ctx, entry.startTime()));
-        registerPlaceholder(prefix + "/end", next, (ctx, entry) -> formatLocalTime(ctx, entry.endTime()));
-        registerPlaceholder(prefix + "/time_until", next, (ctx, entry) -> formatTimeUntil(entry));
-    }
-
-    private static void registerPlaceholder(String id, boolean next, PlaceholderFunction function) {
-        Placeholders.registerServer(LTExtras.id("schedule/" + id), (ctx, arg) -> {
+    private static void registerPlaceholder(String id, PlaceholderFunction function) {
+        Placeholders.registerServer(LTExtras.id("schedule/next/" + id), (ctx, arg) -> resolvePlaceholder(true, function, ctx));
+        Placeholders.registerServer(LTExtras.id("schedule/current/" + id), (ctx, arg) -> resolvePlaceholder(false, function, ctx));
+        Placeholders.registerServer(LTExtras.id("schedule/index/" + id), INT_PARSER, (ctx, index) -> {
             StreamSchedule schedule = SchedulePlaceholders.schedule;
             if (schedule == null) {
                 return UNKNOWN;
             }
-            Instant time = Instant.now();
-            StreamSchedule.Entry entry = next ? schedule.nextAfter(time) : schedule.currentAt(time);
+            StreamSchedule.Entry entry = schedule.atIndex(index);
             if (entry != null) {
                 return function.get(ctx, entry);
             }
             return UNKNOWN;
         });
+    }
+
+    private static PlaceholderResult resolvePlaceholder(boolean next, PlaceholderFunction function, ServerPlaceholderContext ctx) {
+        StreamSchedule schedule = SchedulePlaceholders.schedule;
+        if (schedule == null) {
+            return UNKNOWN;
+        }
+        Instant time = Instant.now();
+        StreamSchedule.Entry entry = next ? schedule.nextAfter(time) : schedule.currentAt(time);
+        if (entry != null) {
+            return function.get(ctx, entry);
+        }
+        return UNKNOWN;
     }
 
     private static PlaceholderResult formatHosts(StreamSchedule.Entry entry) {
