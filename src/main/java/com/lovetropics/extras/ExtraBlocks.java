@@ -637,10 +637,12 @@ public class ExtraBlocks {
             .block("full_path", Block::new)
             .initialProperties(() -> Blocks.DIRT_PATH)
             .tag(BlockTags.MINEABLE_WITH_SHOVEL)
-            .blockstate(() -> (ctx, prov) ->
-                    prov.createTrivialBlock(ctx.get(), TexturedModel.CUBE.updateTexture(textureMapping -> {
-                        textureMapping.put(TextureSlot.ALL, prov.mcBlockTexture("dirt_path_top"));
-                    })))
+            .blockstate(() -> (ctx, prov) -> {
+                Identifier model = TexturedModel.CUBE.updateTexture(textureMapping -> {
+                    textureMapping.put(TextureSlot.ALL, prov.mcBlockTexture("dirt_path_top"));
+                }).create(ctx.get(), prov.modelOutput);
+                prov.blockStateOutput.accept(dispatch(ctx.get(), createRotatedVariants(plainModel(model))));
+            })
             .simpleItem()
             .register();
 
@@ -821,8 +823,7 @@ public class ExtraBlocks {
             .add(Blocks.PACKED_MUD, SpeedyBlock::opaque)
             .add(Blocks.MUD_BRICKS, SpeedyBlock::opaque)
             .add(Blocks.ROOTED_DIRT, SpeedyBlock::opaque)
-            .add(Identifier.fromNamespaceAndPath("tropicraft", "chunk"), SpeedyBlock::opaque)
-            .add(FULL_PATH, SpeedyBlock::opaque);
+            .add(Identifier.fromNamespaceAndPath("tropicraft", "chunk"), SpeedyBlock::opaque);
 
     public static final Map<Holder<Block>, BlockEntry<? extends SpeedyBlock>> SPEEDY_BLOCKS = SPEEDY_BLOCK_TEMPLATES
             .build((object, factory) -> REGISTRATE
@@ -835,6 +836,18 @@ public class ExtraBlocks {
                     .simpleItem()
                     .register()
             );
+
+    public static final BlockEntry<SpeedyBlock> SPEEDY_FULL_PATH = REGISTRATE
+            .block("speedy_full_path", SpeedyBlock::opaque)
+            .initialProperties(() -> FULL_PATH.get())
+            .blockstate(() -> (ctx, prov) -> {
+                Variant variant = plainModel(ModelLocationUtils.getModelLocation(FULL_PATH.get()));
+                prov.blockStateOutput.accept(dispatch(ctx.get(), createRotatedVariants(variant)));
+            })
+            .item()
+            .model(() -> (ctx, prov) -> Models.generateBlockItem(ctx, prov, FULL_PATH.get()))
+            .build()
+            .register();
 
     public static final BlockEntry<SpeedyBlock> SPEEDY_BROWN_MUSHROOM_BLOCK = REGISTRATE
             .block("speedy_brown_mushroom_block", SpeedyBlock::opaque)
