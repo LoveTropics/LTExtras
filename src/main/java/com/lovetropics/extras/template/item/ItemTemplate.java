@@ -1,32 +1,30 @@
 package com.lovetropics.extras.template.item;
 
 import com.lovetropics.extras.data.Named;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.functions.FunctionReference;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctions;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * LTExtras
@@ -34,9 +32,22 @@ import java.util.Optional;
  */
 public class ItemTemplate {
 
+    // TODO[26.3]: Use this instead, as we can be hooked up better into normal registry loading where we can reference unbound holders during load
+//    private static final Codec<HolderSet<LootItemFunction>> MODIFIERS_CODEC = RegistryCodecs.homogeneousList(Registries.ITEM_MODIFIER, LootItemFunctions.TYPED_CODEC);
+    private static final Codec<HolderSet<LootItemFunction>> MODIFIERS_CODEC = Codec.either(ResourceKey.codec(Registries.ITEM_MODIFIER), LootItemFunctions.ROOT_CODEC).listOf().<HolderSet<LootItemFunction>>xmap(
+            eithers -> HolderSet.direct(eithers.stream()
+                    .map(e -> e.map(i -> FunctionReference.functionReference(i).build(), Function.identity()))
+                    .map(Holder::direct)
+                    .toList()),
+            // Not encoding reference for simplicity - doesn't matter for us
+            holders -> holders.stream()
+                    .map(h -> Either.<ResourceKey<LootItemFunction>, LootItemFunction>right(h.value()))
+                    .toList()
+    );
+
     public static final Codec<ItemTemplate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ItemStackTemplate.CODEC.fieldOf("item").forGetter(template -> template.item),
-            RegistryCodecs.homogeneousList(Registries.ITEM_MODIFIER, LootItemFunctions.TYPED_CODEC).optionalFieldOf("modifiers", HolderSet.empty()).forGetter(template -> template.functions)
+            MODIFIERS_CODEC.optionalFieldOf("modifiers", HolderSet.empty()).forGetter(template -> template.functions)
     ).apply(instance, ItemTemplate::new));
 
     private final ItemStackTemplate item;
