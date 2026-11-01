@@ -67,6 +67,12 @@ repositories {
         }
     }
     maven {
+        url = 'https://maven.lovetropics.org/snapshots'
+        content {
+            includeGroup 'org.lovetropics'
+        }
+    }
+    maven {
         url = 'https://maven.gegy.dev/releases'
         content {
             includeGroup 'com.tterrag.registrate'
@@ -100,7 +106,11 @@ dependencies {
     jarJar(implementation("org.lovetropics:LTLib:$ltlib_version"))
     jarJar(implementation("eu.pb4:placeholder-api-lt:$placeholder_api_version"))
     jarJar(implementation("org.lovetropics:peekaboo-api:$peekaboo_version"))
-    
+
+    runtimeOnly ("org.lovetropics:DummyPlayers:$dummyplayers_version") {
+        transitive = false
+    }
+
     runtimeOnly("curse.maven:contex-1296805:$contex_cf_file_id")
     runtimeOnly "maven.modrinth:tropicraft:$tropicraft_version"
     runtimeOnly("org.lovetropics:peekaboo:$peekaboo_version") {
