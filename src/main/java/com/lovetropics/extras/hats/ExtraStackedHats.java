@@ -3,7 +3,7 @@ package com.lovetropics.extras.hats;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.ExtraItems;
 import com.lovetropics.lib.item.StackedHat;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -30,24 +30,24 @@ public class ExtraStackedHats
             }
 
             @Override
-            public List<StackedHat> getPlayersHats(Player serverPlayer) {
-                StackedHatStore store = StackedHatStore.getOrDefault(serverPlayer);
+            public List<StackedHat> getEntityHats(Entity entity) {
+                StackedHatStore store = StackedHatStore.getOrDefault(entity);
                 return store.stackedHats();
             }
 
             @Override
-            public void setPlayersHats(Player serverPlayer, List<StackedHat> hats) {
-                StackedHatStore.setHats(serverPlayer, hats);
+            public void setEntityHats(Entity entity, List<StackedHat> hats) {
+                StackedHatStore.setHats(entity, hats);
             }
 
             @Override
-            public void addHatToPlayer(Player player, StackedHat hat) {
-                StackedHatStore.addHat(player, hat);
+            public void addHatToEntity(Entity entity, StackedHat hat) {
+                StackedHatStore.addHat(entity, hat);
             }
 
             @Override
-            public void removeHatFromPlayer(Player player, StackedHat hat) {
-                StackedHatStore.removeHat(player, hat);
+            public void removeHatFromEntity(Entity entity, StackedHat hat) {
+                StackedHatStore.removeHat(entity, hat);
             }
         });
     }
