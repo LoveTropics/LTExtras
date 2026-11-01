@@ -177,16 +177,15 @@ public class ExtrasConfig {
         if (StringUtil.isBlank(profileSessionServiceUrl)) {
             profileSessionServiceUrl = null;
         }
-
-        if ((profileServiceUrl == null) != (profileSessionServiceUrl == null)) {
-            LOGGER.warn("Both profileServiceUrlOverride and profileSessionServiceUrlOverride must be set");
-            return;
-        }
+        LOGGER.debug("Setting up services for profileServiceUrl={}, profileSessionServiceUrl={}", profileServiceUrl, profileSessionServiceUrl);
 
         Services newServices;
-        if (profileServiceUrl != null) {
+        if (profileServiceUrl != null && profileSessionServiceUrl != null) {
             newServices = setupServices(initialServices, server.getProxy(), profileServiceUrl, profileSessionServiceUrl);
         } else {
+            if (profileServiceUrl != null || profileSessionServiceUrl != null) {
+                LOGGER.warn("Both profileServiceUrlOverride and profileSessionServiceUrlOverride must be set");
+            }
             newServices = initialServices;
         }
         ((ServicesHolder) server).lt$setServices(newServices);
@@ -237,7 +236,7 @@ public class ExtrasConfig {
 
             private @Nullable ProfileResult fetchProfileUncached(UUID profileId, boolean requireSecure) {
                 try {
-                    URL url = HttpAuthenticationService.constantURL(serviceUrl + "/session/minecraft/profile/" + UndashedUuid.toString(profileId));
+                    URL url = HttpAuthenticationService.constantURL(serviceUrl + "session/minecraft/profile/" + UndashedUuid.toString(profileId));
                     url = HttpAuthenticationService.concatenateURL(url, "unsigned=" + !requireSecure);
                     MinecraftProfilePropertiesResponse response = client.get(url, MinecraftProfilePropertiesResponse.class);
                     if (response == null) {
