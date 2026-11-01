@@ -29,7 +29,9 @@ public class SeeSawBlock extends Block {
                 SeeSawEntity seeSawEntity = SeeSawEntity.create(level, blockFormation);
                 seeSawEntity.setPos(pos.getX(), pos.getY(), pos.getZ());
                 level.addFreshEntity(seeSawEntity);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
     }

@@ -108,13 +108,13 @@ public class SeeSawEntity extends BlockFormationEntity implements PlayerRideable
         float seeSawLevel = getLevel();
         float frontWeight = hasPlayer(0) ? 1f : 0f;
         float backWeight = hasPlayer(1) ? 1f : 0f;
-        float weight = frontWeight + backWeight + 0.5f;
+        float weight = frontWeight + backWeight + 0.2f;
 
         // Figure out who's pushing?
-        if(isPushing(0) && frontWeight > 0f && seeSawLevel >= 1f) {
+        if(isPushing(0) && frontWeight > 0f && seeSawLevel <= -1f) {
             velocity = -4f * (1.5f / weight);
         }
-        if(isPushing(1) && backWeight > 0f && seeSawLevel <= -1f) {
+        if(isPushing(1) && backWeight > 0f && seeSawLevel >= 1f) {
             velocity = 4f * (1.5f / weight);
         }
 
