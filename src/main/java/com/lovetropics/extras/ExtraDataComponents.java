@@ -182,10 +182,6 @@ public class ExtraDataComponents {
 
     private static final AtlasSprite LOCK_SPRITE = new AtlasSprite(AtlasIds.GUI, LTExtras.id("lock"));
 
-    static {
-
-    }
-
     @SubscribeEvent
     public static void registerTooltipAppenders(RegisterTooltipAppendersEvent event) {
         event.registerComponentAppenderBeforeAll(ExtraDataComponents.MAP, (stack, _, _, _, _, builder) -> {
