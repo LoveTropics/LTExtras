@@ -17,6 +17,8 @@ import com.lovetropics.extras.item.TradingCards;
 import com.lovetropics.extras.item.TropicMapItem;
 import com.lovetropics.extras.item.WalkSound;
 import com.lovetropics.extras.item.loot.ConfigurableCrossbowItem;
+import com.lovetropics.extras.item.loot.CrumblingItem;
+import com.lovetropics.extras.item.loot.CrumblingItemData;
 import com.lovetropics.extras.item.loot.JarOfMobsItem;
 import com.lovetropics.extras.item.loot.JarredMobsData;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
@@ -81,6 +83,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 
 import static net.minecraft.client.data.models.model.ItemModelUtils.*;
 
@@ -130,7 +133,6 @@ public class ExtraItems {
     public static final ItemEntry<Item> ORANGE_GLASSES = sunglasses("orange_glasses").register();
     public static final ItemEntry<Item> BLUE_GLASSES = sunglasses("blue_glasses").register();
     public static final ItemEntry<Item> GREEN_GLASSES = sunglasses("green_glasses").register();
-    public static final ItemEntry<Item> WALLHACK_GLASSES = sunglasses("wallhack_glasses").register();
 
     public static final ItemEntry<Item> HUGE_GLASSES = REGISTRATE.item("huge_glasses", Item::new)
             .properties(p -> p.stacksTo(1).equippable(EquipmentSlot.HEAD))
@@ -345,6 +347,17 @@ public class ExtraItems {
             .defaultModel()
             .register();
 
+    public static final ItemEntry<CrumblingItem> WALLHACK_GLASSES = REGISTRATE.item("wallhack_glasses", CrumblingItem::new)
+            .properties(p -> p
+                    .stacksTo(1)
+                    .equippable(EquipmentSlot.HEAD)
+                    .durability(20)
+                    .component(ExtraDataComponents.CRUMBLING_ITEM, new CrumblingItemData(Set.of(EquipmentSlot.HEAD), 5.0f, 1, false))
+            )
+            .model(() -> Models::generateGlasses)
+            .register();
+
+
     public static void init() {
     }
 
@@ -368,14 +381,14 @@ public class ExtraItems {
             ));
         }
 
-        private static void generateGlasses(DataGenContext<Item, Item> ctx, RegistrateItemModelGenerator prov) {
+        private static <T extends Item> void generateGlasses(DataGenContext<Item, T> ctx, RegistrateItemModelGenerator prov) {
             generateHeadEquippable(ctx, prov,
                     ModelTemplates.FLAT_ITEM.create(ctx.get(), TextureMapping.layer0(ctx.get()), prov.modelOutput),
                     GLASSES_EQUIPPED_TEMPLATE.create(ctx.get(), TextureMapping.layer0(TextureMapping.getItemTexture(ctx.get(), "_equipped")), prov.modelOutput)
             );
         }
 
-        private static void generateHeadEquippable(DataGenContext<Item, Item> ctx, RegistrateItemModelGenerator prov, Identifier model, Identifier equippedModel) {
+        private static <T extends Item> void generateHeadEquippable(DataGenContext<Item, T> ctx, RegistrateItemModelGenerator prov, Identifier model, Identifier equippedModel) {
             prov.itemModelOutput.accept(ctx.get(), select(
                     new DisplayContext(),
                     plainModel(model),
