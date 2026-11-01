@@ -17,6 +17,7 @@ import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec2;
 
 import java.util.HashSet;
@@ -29,12 +30,14 @@ public record PlayerSensor(
         List<String> tags,
         List<String> roles,
         Set<UUID> players,
+        List<GameType> gamemodes,
         Appearance appearance
 ) {
     public static final Codec<PlayerSensor> DIRECT_CODEC = RecordCodecBuilder.create(i -> i.group(
             ExtraCodecs.compactListCodec(Codec.STRING).optionalFieldOf("tag", List.of()).forGetter(PlayerSensor::tags),
             ExtraCodecs.compactListCodec(Codec.STRING).optionalFieldOf("roles", List.of()).forGetter(PlayerSensor::roles),
             ExtraCodecs.compactListCodec(UUIDUtil.STRING_CODEC).xmap(Set::copyOf, List::copyOf).optionalFieldOf("players", Set.of()).forGetter(PlayerSensor::players),
+            ExtraCodecs.compactListCodec(GameType.CODEC).optionalFieldOf("gamemodes", List.of()).forGetter(PlayerSensor::gamemodes),
             Appearance.CODEC.fieldOf("appearance").forGetter(PlayerSensor::appearance)
     ).apply(i, PlayerSensor::new));
 
@@ -42,6 +45,7 @@ public record PlayerSensor(
             ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), PlayerSensor::tags,
             ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), PlayerSensor::roles,
             UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.collection(HashSet::new)), PlayerSensor::players,
+            GameType.STREAM_CODEC.apply(ByteBufCodecs.list()), PlayerSensor::gamemodes,
             Appearance.STREAM_CODEC, PlayerSensor::appearance,
             PlayerSensor::new
     );
@@ -64,6 +68,9 @@ public record PlayerSensor(
                 }
             }
         }
+        if (gamemodes.contains(player.gameMode())) {
+            return true;
+        }
         if (players.contains(player.getUUID())) {
             return true;
         }
@@ -73,16 +80,25 @@ public record PlayerSensor(
     public record Appearance(
             List<Decoration> decorations,
             // TODO: Could this be generalised to a normal decoration?
-            Optional<Integer> markerBoxColor
+            Optional<Integer> markerBoxColor,
+            Boolean wallsOcclude,
+            Boolean onlyWhenOccluded,
+            Boolean allowFade
     ) {
         public static final Codec<Appearance> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Decoration.CODEC.listOf().optionalFieldOf("decorations", List.of()).forGetter(Appearance::decorations),
-                ExtraCodecs.ARGB_COLOR_CODEC.optionalFieldOf("marker_box_color").forGetter(Appearance::markerBoxColor)
+                ExtraCodecs.ARGB_COLOR_CODEC.optionalFieldOf("marker_box_color").forGetter(Appearance::markerBoxColor),
+                Codec.BOOL.optionalFieldOf("walls_occlude", true).forGetter(Appearance::wallsOcclude),
+                Codec.BOOL.optionalFieldOf("only_when_occluded", false).forGetter(Appearance::onlyWhenOccluded),
+                Codec.BOOL.optionalFieldOf("allow_fade", true).forGetter(Appearance::onlyWhenOccluded)
         ).apply(i, Appearance::new));
 
         public static final StreamCodec<ByteBuf, Appearance> STREAM_CODEC = StreamCodec.composite(
                 Decoration.STREAM_CODEC.apply(ByteBufCodecs.list()), Appearance::decorations,
                 ByteBufCodecs.INT.apply(ByteBufCodecs::optional), Appearance::markerBoxColor,
+                ByteBufCodecs.BOOL, Appearance::wallsOcclude,
+                ByteBufCodecs.BOOL, Appearance::onlyWhenOccluded,
+                ByteBufCodecs.BOOL, Appearance::allowFade,
                 Appearance::new
         );
     }
@@ -93,6 +109,7 @@ public record PlayerSensor(
             Vec2 size,
             Vec2 offset,
             boolean fixedSize,
+            boolean ignoreFaceViewAngle,
             int color
     ) {
         private static final StreamCodec<ByteBuf, Vec2> VEC2_STREAM_CODEC = StreamCodec.composite(
@@ -107,6 +124,7 @@ public record PlayerSensor(
                 Vec2.CODEC.fieldOf("size").forGetter(Decoration::size),
                 Vec2.CODEC.fieldOf("offset").forGetter(Decoration::offset),
                 Codec.BOOL.optionalFieldOf("fixed_size", true).forGetter(Decoration::fixedSize),
+                Codec.BOOL.optionalFieldOf("ignore_face_view_angle", false).forGetter(Decoration::ignoreFaceViewAngle),
                 ExtraCodecs.ARGB_COLOR_CODEC.optionalFieldOf("color", CommonColors.WHITE).forGetter(Decoration::color)
         ).apply(i, Decoration::new));
 
@@ -116,6 +134,7 @@ public record PlayerSensor(
                 VEC2_STREAM_CODEC, Decoration::size,
                 VEC2_STREAM_CODEC, Decoration::offset,
                 ByteBufCodecs.BOOL, Decoration::fixedSize,
+                ByteBufCodecs.BOOL, Decoration::ignoreFaceViewAngle,
                 ByteBufCodecs.INT, Decoration::color,
                 Decoration::new
         );

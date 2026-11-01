@@ -113,7 +113,7 @@ public class ClientPlayerSensorEffects {
         GuiBox face = faceBox.toGui(graphics);
         int faceSize = Math.max(face.width(), face.height());
 
-        float alpha = Mth.clampedMap(faceSize, 10, 20, 0.0f, 1.0f);
+        float alpha = appearance.allowFade() ? Mth.clampedMap(faceSize, 10, 20, 0.0f, 1.0f) : 1.0f;
         if (alpha <= Mth.EPSILON) {
             return;
         }
@@ -135,7 +135,7 @@ public class ClientPlayerSensorEffects {
             if (decoration.faceAnchor().isPresent()) {
                 Vector3f directionToFace = capturedPose.toWorldMatrix.transformPosition(new Vector3f(0.0f, 0.0f, 0.0f)).normalize();
                 Vector3f faceForward = capturedPose.toWorldMatrix.transformDirection(new Vector3f(0.0f, 0.0f, 1.0f));
-                if (faceForward.dot(directionToFace) < 0.15f) {
+                if (!decoration.ignoreFaceViewAngle() && faceForward.dot(directionToFace) < 0.15f) {
                     continue;
                 }
                 Vec2 anchor = decoration.faceAnchor().get();
@@ -173,10 +173,14 @@ public class ClientPlayerSensorEffects {
     private static void refreshVisiblePlayers(LocalPlayer player) {
         VISIBLE_MARKED_PLAYERS.clear();
         Level level = player.level();
-        for (UUID playerId : MARKED_PLAYERS.keySet()) {
-            Player target = level.getPlayerByUUID(playerId);
-            if (target != null && player.hasLineOfSight(target)) {
-                VISIBLE_MARKED_PLAYERS.add(target.getUUID());
+        for (Map.Entry<UUID, PlayerSensor.Appearance> entry : MARKED_PLAYERS.entrySet()) {
+            Player target = level.getPlayerByUUID(entry.getKey());
+            PlayerSensor.Appearance appearance = entry.getValue();
+            boolean hasLineOfSight = player.hasLineOfSight(target);
+            if (target != null) {
+                if ((hasLineOfSight && !appearance.onlyWhenOccluded()) || (!hasLineOfSight && !appearance.wallsOcclude())) {
+                    VISIBLE_MARKED_PLAYERS.add(target.getUUID());
+                }
             }
         }
     }
