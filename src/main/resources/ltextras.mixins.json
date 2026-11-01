@@ -25,6 +25,7 @@
     "LecternBlockMixin",
     "LivingEntityMixin",
     "MinecraftServerAccessor",
+    "MinecraftServerMixin",
     "PlayerMixin",
     "ProjectileWeaponItemMixin",
     "ReloadableServerRegistriesMixin",
