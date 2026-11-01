@@ -27,6 +27,7 @@ neoForge {
         client {
             client()
             programArguments.addAll '--username', '"Dev###"'
+            jvmArgument '-Dneoforge.warnings.logofile.hide=true'
         }
 
         server {
