@@ -27,6 +27,7 @@
     "MinecraftServerAccessor",
     "PlayerMixin",
     "ProjectileWeaponItemMixin",
+    "ReloadableServerRegistriesMixin",
     "ResourceKeyArgumentAccessor",
     "RideCommandMixin",
     "ScaffoldingBlockMixin",

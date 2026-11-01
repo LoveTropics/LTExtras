@@ -3,6 +3,7 @@ package com.lovetropics.extras.registry;
 import com.lovetropics.extras.data.Named;
 import com.lovetropics.extras.data.SimpleDataPackLister;
 import com.lovetropics.lib.codec.CodecRegistry;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.resource.ContextAwareReloadListener;
 
@@ -25,7 +26,7 @@ public class CustomRegistryReloadListener<T> extends ContextAwareReloadListener 
 
     @Override
     public CompletableFuture<Void> reload(SharedState currentReload, Executor taskExecutor, PreparationBarrier barrier, Executor reloadExecutor) {
-        return dataPackLister.load(getRegistryLookup(), currentReload.resourceManager(), taskExecutor)
+        return dataPackLister.load(getRegistryLookup().createSerializationContext(JsonOps.INSTANCE), currentReload.resourceManager(), taskExecutor)
                 .thenCompose(barrier::wait)
                 .thenAcceptAsync(mounts -> {
                     registry.clear();

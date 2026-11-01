@@ -6,12 +6,9 @@ import com.google.gson.JsonParser;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.JsonOps;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -34,8 +31,7 @@ public record SimpleDataPackLister<T>(String root, ResourceKey<Registry<T>> regi
         return FileToIdConverter.json(root);
     }
 
-    public CompletableFuture<List<Named<T>>> load(HolderLookup.Provider provider, ResourceManager resourceManager, Executor executor) {
-        RegistryOps<JsonElement> ops = provider.createSerializationContext(JsonOps.INSTANCE);
+    public CompletableFuture<List<Named<T>>> load(DynamicOps<JsonElement> ops, ResourceManager resourceManager, Executor executor) {
         return CompletableFuture.supplyAsync(() -> listEntries(ops, resourceManager, executor), executor).thenCompose(Function.identity());
     }
 

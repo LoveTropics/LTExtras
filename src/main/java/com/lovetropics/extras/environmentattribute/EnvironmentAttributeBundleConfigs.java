@@ -5,6 +5,7 @@ import com.lovetropics.extras.data.Named;
 import com.lovetropics.extras.data.SimpleDataPackLister;
 import com.lovetropics.extras.registry.ExtraRegistries;
 import com.lovetropics.lib.codec.CodecRegistry;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -25,7 +26,7 @@ public class EnvironmentAttributeBundleConfigs {
         event.addListener(LTExtras.id("environment_attribute_bundles"), new ContextAwareReloadListener() {
             @Override
             public CompletableFuture<Void> reload(SharedState currentReload, Executor taskExecutor, PreparationBarrier barrier, Executor reloadExecutor) {
-                return LISTER.load(getRegistryLookup(), currentReload.resourceManager(), taskExecutor)
+                return LISTER.load(getRegistryLookup().createSerializationContext(JsonOps.INSTANCE), currentReload.resourceManager(), taskExecutor)
                         .thenCompose(barrier::wait)
                         .thenAcceptAsync(bundles -> {
                             REGISTRY.clear();

@@ -7,6 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -24,7 +25,7 @@ public class ItemTemplateLootEntry extends LootPoolSingletonContainer {
 
     private final Identifier templateName;
 
-    private ItemTemplateLootEntry(Identifier templateName, int weight, int quality, List<LootItemCondition> conditions, List<LootItemFunction> functions) {
+    public ItemTemplateLootEntry(Identifier templateName, int weight, int quality, List<LootItemCondition> conditions, List<LootItemFunction> functions) {
         super(weight, quality, conditions, functions);
         this.templateName = templateName;
     }
@@ -41,5 +42,27 @@ public class ItemTemplateLootEntry extends LootPoolSingletonContainer {
             throw new IllegalStateException("Item template not found: " + templateName);
         }
         output.accept(itemTemplate.value().createItemStack(context));
+    }
+
+    public static Builder builder(Identifier templateName) {
+        return new Builder(templateName);
+    }
+
+    public static class Builder extends LootPoolSingletonContainer.Builder<Builder> {
+        private final Identifier templateName;
+
+        public Builder(Identifier templateName) {
+            this.templateName = templateName;
+        }
+
+        @Override
+        protected Builder getThis() {
+            return this;
+        }
+
+        @Override
+        public LootPoolEntryContainer build() {
+            return new ItemTemplateLootEntry(templateName, weight, quality, getConditions(), getFunctions());
+        }
     }
 }
