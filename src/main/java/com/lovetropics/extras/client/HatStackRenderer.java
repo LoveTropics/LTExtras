@@ -3,20 +3,30 @@ package com.lovetropics.extras.client;
 import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.LTExtras;
-import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.hats.StackedHatStore;
 import com.lovetropics.lib.item.StackedHat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartNames;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.ChickenRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.context.ContextKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -25,7 +35,9 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
@@ -73,7 +85,7 @@ public class HatStackRenderer {
 
     public static boolean submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, int outlineColor, LivingEntityRenderState state) {
         StackRenderState hatStack = state.getRenderData(HAT_STACK);
-        if (hatStack == null) {
+        if (hatStack == null || hatStack.stack.isEmpty()) {
             return false;
         }
 
@@ -108,11 +120,95 @@ public class HatStackRenderer {
         return true;
     }
 
+    private static final DeferredHolder<EntityType<?>, ?> GIBNUT = DeferredHolder.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("tropicraft", "gibnut"));
+    private static final DeferredHolder<EntityType<?>, ?> TROPIBEE = DeferredHolder.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("tropicraft", "tropibee"));
+
+    @SubscribeEvent
+    public static void registerLayers(EntityRenderersEvent.AddLayers event) {
+        if (event.getRenderer(EntityTypes.CHICKEN) instanceof ChickenRenderer chicken) {
+            chicken.addLayer(new CustomMobHatLayer<>(chicken, (poseStack, model) -> {
+                model.root().translateAndRotate(poseStack);
+                model.root().getChild(PartNames.HEAD).translateAndRotate(poseStack);
+                poseStack.translate(0.0f, -0.215f, 0.0f);
+                float scale = 0.325f;
+                poseStack.scale(scale, -scale, -scale);
+            }));
+        }
+
+        addCustomMobHatLayerUntyped(event, GIBNUT, (poseStack, model) -> {
+            ModelPart root = model.root();
+            root.translateAndRotate(poseStack);
+            ModelPart body = root.getChild("body_base");
+            body.translateAndRotate(poseStack);
+            body.getChild("head_base").translateAndRotate(poseStack);
+            poseStack.translate(0.0f, 0.07f, -0.125f);
+            float scale = 0.325f;
+            poseStack.scale(scale, -scale, -scale);
+        });
+
+        addCustomMobHatLayerUntyped(event, TROPIBEE, (poseStack, model) -> {
+            ModelPart root = model.root();
+            root.translateAndRotate(poseStack);
+            ModelPart bone = root.getChild("bone");
+            bone.translateAndRotate(poseStack);
+            bone.getChild("body").translateAndRotate(poseStack);
+            poseStack.translate(0.0f, -0.275f, 0.0f);
+            float scale = 0.5f;
+            poseStack.scale(scale, -scale, -scale);
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <S extends LivingEntityRenderState> void addCustomMobHatLayerUntyped(EntityRenderersEvent.AddLayers event, Holder<EntityType<?>> entityType, HeadAttachment<EntityModel<?>> headAttachment) {
+        if (entityType.isBound() && event.getRenderer(entityType.value()) instanceof LivingEntityRenderer<?, ?, ?> renderer) {
+            if (renderer instanceof LivingEntityRenderer) {
+                addCustomMobHatLayer((LivingEntityRenderer<?, S, ?>) renderer, headAttachment);
+            }
+        }
+    }
+
+    private static <S extends LivingEntityRenderState, M extends EntityModel<? super S>> void addCustomMobHatLayer(LivingEntityRenderer<?, S, M> renderer, HeadAttachment<? super M> headAttachment) {
+        renderer.addLayer(new CustomMobHatLayer<>(renderer, headAttachment));
+    }
+
     public record StackRenderState(
             List<HatRenderState> stack
     ) {
     }
 
     private record HatRenderState(ItemStackRenderState item, float width, float height, float bounciness) {
+    }
+
+    private static class CustomMobHatLayer<S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends RenderLayer<S, M> {
+        private final HeadAttachment<? super M> headAttachment;
+
+        public CustomMobHatLayer(RenderLayerParent<S, M> renderer, HeadAttachment<? super M> headAttachment) {
+            super(renderer);
+            this.headAttachment = headAttachment;
+        }
+
+        @Override
+        public void submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, S state, float yRot, float xRot) {
+            HatStackRenderer.StackRenderState stackRenderState = state.getRenderData(HatStackRenderer.HAT_STACK);
+            if (state.headItem.isEmpty() && (stackRenderState == null || stackRenderState.stack.isEmpty())) {
+                return;
+            }
+
+            poseStack.pushPose();
+
+            M parentModel = getParentModel();
+            headAttachment.translateToHead(poseStack, parentModel);
+            poseStack.mulPose(Axis.YP.rotationDegrees(180.0f));
+
+            if (!HatStackRenderer.submit(poseStack, submitNodeCollector, lightCoords, state.outlineColor, state)) {
+                state.headItem.submit(poseStack, submitNodeCollector, lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
+            }
+
+            poseStack.popPose();
+        }
+    }
+
+    private interface HeadAttachment<M extends EntityModel<?>> {
+        void translateToHead(PoseStack poseStack, M model);
     }
 }
