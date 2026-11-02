@@ -85,6 +85,26 @@ public class ItemExtensions {
             ItemStack stack = event.getItem();
             applyCooldownOverride(player, stack);
 
+            if(stack.has(ExtraDataComponents.TRANSPORT_TO_DIMENSION) && event.getEntity().level() instanceof ServerLevel serverLevel){
+                if (stack.has(DataComponents.CONSUMABLE) && stack.has(DataComponents.MAX_DAMAGE)) {
+                    stack.hurtAndBreak(1, serverLevel, null, _ -> {});
+                }
+                TransportToDimensionData transportToDimensionData = stack.get(ExtraDataComponents.TRANSPORT_TO_DIMENSION);
+                if(transportToDimensionData != null) {
+                    ServerLevel level = serverLevel.getServer().getLevel(transportToDimensionData.destinationLevel());
+                    TransportToDimensionData transportToDimensionData1 = new TransportToDimensionData(
+                            player.level().dimension(), Optional.of(player.position()));
+                    player.teleport(new TeleportTransition(
+                            level,
+                            transportToDimensionData.destinationPos().orElseThrow(),
+                            player.getDeltaMovement(),
+                            player.getYRot(), player.getXRot(), TeleportTransition.DO_NOTHING));
+                    stack.set(ExtraDataComponents.TRANSPORT_TO_DIMENSION, transportToDimensionData1);
+                }
+                event.setResultStack(stack);
+                return;
+            }
+
             InteractActionData actionData = stack.get(ExtraDataComponents.INTERACT_ACTION);
             if (actionData != null) {
                 actionData.performCommands(player);
@@ -112,23 +132,6 @@ public class ItemExtensions {
             if (itemStack.has(DataComponents.CONSUMABLE)) {
                 return;
             }
-
-            if(itemStack.has(ExtraDataComponents.TRANSPORT_TO_DIMENSION) && event.getLevel() instanceof ServerLevel serverLevel){
-                TransportToDimensionData transportToDimensionData = itemStack.get(ExtraDataComponents.TRANSPORT_TO_DIMENSION);
-                if(transportToDimensionData != null) {
-                    ServerLevel level = serverLevel.getServer().getLevel(transportToDimensionData.destinationLevel());
-                    TransportToDimensionData transportToDimensionData1 = new TransportToDimensionData(
-                            player.level().dimension(), Optional.of(player.position()));
-                    player.teleport(new TeleportTransition(
-                            level,
-                            transportToDimensionData.destinationPos().orElseThrow(),
-                            player.getDeltaMovement(),
-                            player.getYRot(), player.getXRot(), TeleportTransition.DO_NOTHING));
-                    itemStack.set(ExtraDataComponents.TRANSPORT_TO_DIMENSION, transportToDimensionData1);
-                }
-                return;
-            }
-
             InteractActionData actionData = itemStack.get(ExtraDataComponents.INTERACT_ACTION);
             if (actionData != null) {
                 if (actionData.cancelEvent()) {
