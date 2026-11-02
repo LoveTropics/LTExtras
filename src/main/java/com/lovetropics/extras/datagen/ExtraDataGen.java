@@ -101,6 +101,8 @@ public class ExtraDataGen {
                         .yScale(1.5f)
                         .build())
                 .build());
+
+        context.register(ExtraModelModifiers.BACKFLIP, new AnimationType(LTExtras.id("backflip")));
     }
 
     public static class AttachmentTypeTags extends TagsProvider<AttachmentType<?>> {

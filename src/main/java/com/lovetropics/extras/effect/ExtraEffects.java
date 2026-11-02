@@ -53,6 +53,7 @@ public class ExtraEffects {
     });
     public static final DeferredHolder<MobEffect, ModelModifierEffect> STIFF_LEGS = modelEffect(ExtraModelModifiers.STIFF_LEGS);
     public static final DeferredHolder<MobEffect, ModelModifierEffect> HOP_WALK = modelEffect(ExtraModelModifiers.HOP_WALK);
+    public static final DeferredHolder<MobEffect, ModelModifierEffect> BACKFLIP = modelEffect(ExtraModelModifiers.BACKFLIP);
 
 
     private static DeferredHolder<MobEffect, ModelModifierEffect> modelEffect(ResourceKey<ModelModifier> modifier, UnaryOperator<ModelModifierEffect> builder) {
