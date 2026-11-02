@@ -1,7 +1,6 @@
 package com.lovetropics.extras.template.item.modifers;
 
 import com.lovetropics.extras.ExtraDataComponents;
-import com.lovetropics.extras.translation.TranslationPromptScreen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -89,7 +88,7 @@ public final class STTLootItemTemplateModifier extends LootItemConditionalFuncti
         }
 
         // Give the stack our loot category data component so we know how to render the underlay
-        itemStack.set(ExtraDataComponents.STT_LOOT_CATEGORY_DISPLAY, new STTLootCategoryDisplayData(lootCategory.name(), lootCategory.rgbaIntColor()));
+        itemStack.set(ExtraDataComponents.COLOR_BACKGROUND, lootCategory.rgbaIntColor());
 
         return itemStack;
     }

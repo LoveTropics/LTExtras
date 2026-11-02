@@ -2,7 +2,6 @@ package com.lovetropics.extras.mixin.client.gui;
 
 import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.client.screen.container.LootInventoryScreenUnderlay;
-import com.lovetropics.extras.template.item.modifers.STTLootCategoryDisplayData;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Hud;
@@ -22,8 +21,11 @@ public class HudMixin {
 
     @Inject(method = "extractSlot", at = @At("HEAD"))
     private void extractSlot(GuiGraphicsExtractor graphics, int x, int y, DeltaTracker deltaTracker, Player player, ItemStack itemStack, int seed, CallbackInfo ci) {
-        if (!itemStack.isEmpty() && itemStack.get(ExtraDataComponents.STT_LOOT_CATEGORY_DISPLAY) instanceof STTLootCategoryDisplayData displayData) {
-            LootInventoryScreenUnderlay.injectHotbarUnderlay(graphics, displayData, x, y);
+        if (!itemStack.isEmpty()) {
+            Integer displayData = itemStack.get(ExtraDataComponents.COLOR_BACKGROUND);
+            if (displayData != null) {
+                LootInventoryScreenUnderlay.injectHotbarUnderlay(graphics, displayData, x, y);
+            }
         }
     }
 }

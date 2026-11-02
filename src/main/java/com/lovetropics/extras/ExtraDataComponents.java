@@ -20,7 +20,6 @@ import com.lovetropics.extras.item.sensor.PlayerSensor;
 import com.lovetropics.extras.model_modifer.Emote;
 import com.lovetropics.extras.model_modifer.ExtraModelModifiers;
 import com.lovetropics.extras.model_modifer.ModelModifier;
-import com.lovetropics.extras.template.item.modifers.STTLootCategoryDisplayData;
 import com.lovetropics.lib.item.StackedHat;
 import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
@@ -172,9 +171,9 @@ public class ExtraDataComponents {
             "crossbow_charge_time",
             builder -> builder.persistent(ExtraCodecs.POSITIVE_FLOAT).networkSynchronized(ByteBufCodecs.FLOAT)
     );
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<STTLootCategoryDisplayData>> STT_LOOT_CATEGORY_DISPLAY = REGISTER.registerComponentType(
-            "stt_loot_category_display",
-            builder -> builder.persistent(STTLootCategoryDisplayData.CODEC).networkSynchronized(STTLootCategoryDisplayData.STREAM_CODEC).cacheEncoding()
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> COLOR_BACKGROUND = REGISTER.registerComponentType(
+            "color_background",
+            builder -> builder.persistent(ExtraCodecs.ARGB_COLOR_CODEC).networkSynchronized(ByteBufCodecs.INT).cacheEncoding()
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<JarredMobsData>> JARRED_MOBS = REGISTER.registerComponentType(
             "jarred_mobs",
