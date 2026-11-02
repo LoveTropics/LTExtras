@@ -2,6 +2,7 @@ package com.lovetropics.extras.item;
 
 import com.lovetropics.extras.ExtraDataComponents;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.TriState;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -9,12 +10,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+
+import java.util.Optional;
 
 @EventBusSubscriber
 public class ItemExtensions {
@@ -106,6 +110,22 @@ public class ItemExtensions {
             ItemStack itemStack = event.getItemStack();
             // Food is handled above in LivingEntityUseItemEvent.Finish
             if (itemStack.has(DataComponents.CONSUMABLE)) {
+                return;
+            }
+
+            if(itemStack.has(ExtraDataComponents.TRANSPORT_TO_DIMENSION) && event.getLevel() instanceof ServerLevel serverLevel){
+                TransportToDimensionData transportToDimensionData = itemStack.get(ExtraDataComponents.TRANSPORT_TO_DIMENSION);
+                if(transportToDimensionData != null) {
+                    ServerLevel level = serverLevel.getServer().getLevel(transportToDimensionData.destinationLevel());
+                    TransportToDimensionData transportToDimensionData1 = new TransportToDimensionData(
+                            player.level().dimension(), Optional.of(player.position()));
+                    player.teleport(new TeleportTransition(
+                            level,
+                            transportToDimensionData.destinationPos().orElseThrow(),
+                            player.getDeltaMovement(),
+                            player.getYRot(), player.getXRot(), TeleportTransition.DO_NOTHING));
+                    itemStack.set(ExtraDataComponents.TRANSPORT_TO_DIMENSION, transportToDimensionData1);
+                }
                 return;
             }
 
