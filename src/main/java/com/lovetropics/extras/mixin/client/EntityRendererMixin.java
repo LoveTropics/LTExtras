@@ -1,6 +1,7 @@
 package com.lovetropics.extras.mixin.client;
 
 import com.lovetropics.extras.ExtraItems;
+import com.lovetropics.lib.item.StackedHat;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -17,7 +18,7 @@ public class EntityRendererMixin<T extends Entity> {
     private void affectedByCulling(T entity, CallbackInfoReturnable<Boolean> cir) {
         if (entity instanceof LivingEntity living) {
             ItemStack headItem = living.getItemBySlot(EquipmentSlot.HEAD);
-            if (headItem.is(ExtraItems.STACK_OF_HATS)) {
+            if (headItem.is(ExtraItems.STACK_OF_HATS) || !StackedHat.getEntityHats(entity).isEmpty()) {
                 cir.setReturnValue(false);
             }
         }
