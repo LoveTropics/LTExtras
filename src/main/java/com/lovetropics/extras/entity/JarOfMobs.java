@@ -128,15 +128,8 @@ public class JarOfMobs extends ThrowableItemProjectile {
 
                 Vec3 spawnLoc = location.add((1-(random.nextDouble()*2))*spread, random.nextDouble()*spread, (1-(random.nextDouble()*2))*spread);
                 BlockPos blockPos = BlockPos.containing(spawnLoc);
-                BlockState blockstate = serverLevel.getBlockState(blockPos);
 
                 entity.snapTo(spawnLoc);
-
-                //if (blockstate.isValidSpawn(serverLevel, blockPos, entityType)) {
-                //
-                //} else {
-                //    entity.snapTo(this.position());
-                //}
 
                 if (entity.is(EntityTypes.BEE)) {
                     this.makeBeeAngry(serverLevel, (Bee) entity);
@@ -178,8 +171,6 @@ public class JarOfMobs extends ThrowableItemProjectile {
         if (target.isEmpty()) {
             return;
         }
-
-        target.get().sendSystemMessage(Component.literal("You are a bee target"));
 
         // Make da' bee angry and also cut short its existence
         bee.setPersistentAngerTarget(EntityReference.of(target.get()));
