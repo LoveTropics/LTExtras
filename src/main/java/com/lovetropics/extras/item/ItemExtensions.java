@@ -99,10 +99,10 @@ public class ItemExtensions {
             applyCooldownOverride(player, stack);
 
             if(stack.has(ExtraDataComponents.TRANSPORT_TO_DIMENSION) && event.getEntity().level() instanceof ServerLevel serverLevel){
+                TransportToDimensionData transportToDimensionData = stack.get(ExtraDataComponents.TRANSPORT_TO_DIMENSION);
                 if (stack.has(DataComponents.CONSUMABLE) && stack.has(DataComponents.MAX_DAMAGE)) {
                     stack.hurtAndBreak(1, serverLevel, null, _ -> {});
                 }
-                TransportToDimensionData transportToDimensionData = stack.get(ExtraDataComponents.TRANSPORT_TO_DIMENSION);
                 if(transportToDimensionData != null) {
                     ServerLevel level = serverLevel.getServer().getLevel(transportToDimensionData.destinationLevel());
                     TransportToDimensionData transportToDimensionData1 = new TransportToDimensionData(
