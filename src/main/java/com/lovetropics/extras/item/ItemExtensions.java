@@ -38,6 +38,9 @@ public class ItemExtensions {
             player.addItem(stack);
             return true;
         }
+        if (stack.has(ExtraDataComponents.INFINITE)) {
+            stack.remove(ExtraDataComponents.INFINITE);
+        }
         return false;
     }
 
