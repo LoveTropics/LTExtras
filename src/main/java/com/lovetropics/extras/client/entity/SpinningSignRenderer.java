@@ -59,8 +59,8 @@ public class SpinningSignRenderer extends EntityRenderer<SpinningSignEntity, Spi
             float y = -0.17f;
             if (width > 22) {
                 int biggerThan = width - 22;
-                scale = 0.18f - Mth.abs(biggerThan * 0.004f);
-                y = Mth.lerp(scale / 0.18f, 0.35f, y);
+                scale = Math.max(0.04f, 0.18f - (biggerThan * 0.004f));
+                y = Mth.lerp(scale / 0.18f, 0.08f, y);
             }
             for (int i = 0; i < 4; i++) {
                 poseStack.pushPose();
