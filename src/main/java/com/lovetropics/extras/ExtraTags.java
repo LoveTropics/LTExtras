@@ -35,6 +35,7 @@ public class ExtraTags {
         public static final TagKey<Item> LIME = tag(TROPICRAFT_ID, "lime");
         public static final TagKey<Item> HONIES = modTag("honies");
         public static final TagKey<Item> STT_NO_PRE_PVP = tag("ltminigames", "stt_no_pre_pvp");
+        public static final TagKey<Item> HAT = modTag("hat");
 
         static TagKey<Item> tag(String modid, String name) {
             return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(modid, name));

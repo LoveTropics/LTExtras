@@ -215,6 +215,7 @@ public class ExtraItems {
                             .setEquipSound(SoundEvents.ARMOR_EQUIP_GENERIC)
                             .build())
             )
+            .tag(ExtraTags.Items.HAT)
             .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.id("item/hard_hat")))
             .register();
 
@@ -269,6 +270,7 @@ public class ExtraItems {
                                 .build())
                         .stacksTo(1)
                 )
+                .tag(ExtraTags.Items.HAT)
                 .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.id("item/hat/" + type.getId())))
                 .register();
     }
@@ -283,6 +285,7 @@ public class ExtraItems {
                                 .build())
                         .stacksTo(1)
                 )
+                .tag(ExtraTags.Items.HAT)
                 .model(() -> Models::generateTopHat);
     }
 

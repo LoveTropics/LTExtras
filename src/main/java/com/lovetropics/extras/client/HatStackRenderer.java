@@ -2,6 +2,8 @@ package com.lovetropics.extras.client;
 
 import com.google.common.reflect.TypeToken;
 import com.lovetropics.extras.ExtraDataComponents;
+import com.lovetropics.extras.ExtraItems;
+import com.lovetropics.extras.ExtraTags;
 import com.lovetropics.extras.LTExtras;
 import com.lovetropics.extras.hats.StackedHatStore;
 import com.lovetropics.lib.item.StackedHat;
@@ -79,7 +81,8 @@ public class HatStackRenderer {
                 itemState,
                 hat.width(),
                 hat.height(),
-                hat.bounciness()
+                hat.bounciness(),
+                !hat.item().is(ExtraTags.Items.HAT)
         );
     }
 
@@ -94,8 +97,9 @@ public class HatStackRenderer {
         Quaternionf wobble = Axis.ZP.rotationDegrees(Mth.sin(state.walkAnimationPos * 0.5f) * state.walkAnimationSpeed * 2.0f);
         Quaternionf bend = Axis.XP.rotationDegrees(state.walkAnimationSpeed * 2.0f);
 
+        float topOfHeadOffset = (8.0f / 16.0f) * 1.6f - 0.4f;
         poseStack.pushPose();
-        poseStack.translate(0.0f, (8.0f / 16.0f) * 1.6f - 0.4f, 0.0f);
+        poseStack.translate(0.0f, topOfHeadOffset, 0.0f);
 
         for (HatRenderState hat : hatStack.stack) {
             AABB boundingBox = hat.item.getModelBoundingBox();
@@ -106,15 +110,23 @@ public class HatStackRenderer {
             float squash = (bounce * hat.bounciness) + 1.0f;
             float yScale = hat.height * squash;
 
-            // Position each hat consistently by its base - essentially ignoring the y of the transform
-            // This is particularly important because full blocks are set to fully cover the head, while top hats are set on top
             poseStack.pushPose();
+            double sizeY;
+            if (hat.fixHeadTransform) {
+                // Position each hat consistently by its base - essentially ignoring the y of the transform
+                // This is particularly important because full blocks are set to fully cover the head, while top hats are set on top
+                poseStack.translate(0.0f, -boundingBox.minY * yScale, 0.0f);
+                sizeY = boundingBox.getYsize();
+            } else {
+                poseStack.translate(0.0f, -topOfHeadOffset, 0.0f);
+                sizeY = boundingBox.maxY - topOfHeadOffset;
+            }
+
             poseStack.scale(hat.width, yScale, hat.width);
-            poseStack.translate(0.0f, -boundingBox.minY, 0.0f);
             hat.item.submit(poseStack, submitNodeCollector, lightCoords, OverlayTexture.NO_OVERLAY, outlineColor);
             poseStack.popPose();
 
-            poseStack.translate(0.0f, boundingBox.getYsize() * yScale, 0.0f);
+            poseStack.translate(0.0f, sizeY * yScale, 0.0f);
         }
 
         poseStack.popPose();
@@ -178,7 +190,7 @@ public class HatStackRenderer {
     ) {
     }
 
-    private record HatRenderState(ItemStackRenderState item, float width, float height, float bounciness) {
+    private record HatRenderState(ItemStackRenderState item, float width, float height, float bounciness, boolean fixHeadTransform) {
     }
 
     private static class CustomMobHatLayer<S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends RenderLayer<S, M> {
