@@ -95,7 +95,7 @@ public class HatStackRenderer {
         Quaternionf bend = Axis.XP.rotationDegrees(state.walkAnimationSpeed * 2.0f);
 
         poseStack.pushPose();
-        poseStack.translate(0.0f, 0.3f, 0.0f);
+        poseStack.translate(0.0f, (8.0f / 16.0f) * 1.6f - 0.4f, 0.0f);
 
         for (HatRenderState hat : hatStack.stack) {
             AABB boundingBox = hat.item.getModelBoundingBox();
