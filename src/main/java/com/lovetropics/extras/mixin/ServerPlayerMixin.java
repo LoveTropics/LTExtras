@@ -1,8 +1,14 @@
 package com.lovetropics.extras.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.lovetropics.extras.ExtraDataComponents;
 import com.lovetropics.extras.ExtraStats;
+import com.lovetropics.extras.item.ItemExtensions;
 import com.lovetropics.extras.zipline.ZiplineRider;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,5 +27,11 @@ public abstract class ServerPlayerMixin {
             }
             ci.cancel();
         }
+    }
+
+    @WrapOperation(method = "drop(Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;removeFromSelected(Z)Lnet/minecraft/world/item/ItemStack;"))
+    private ItemStack drop(Inventory inventory, boolean all, Operation<ItemStack> original) {
+        ItemStack stack = ItemExtensions.dropSelected(inventory, all);
+        return stack != null ? stack : original.call(inventory, all);
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.TriState;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ChargedProjectiles;
@@ -17,11 +18,20 @@ import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
 @EventBusSubscriber
 public class ItemExtensions {
+    public static @Nullable ItemStack dropSelected(Inventory inventory, boolean all) {
+        ItemStack selectedItem = inventory.getItem(inventory.getSelectedSlot());
+        if (!selectedItem.has(ExtraDataComponents.UNDROPPABLE) && selectedItem.has(ExtraDataComponents.INFINITE)) {
+            return all ? selectedItem.copy() : selectedItem.copyWithCount(1);
+        }
+        return null;
+    }
+
     public static boolean onItemToss(Player player, ItemEntity item) {
         ItemStack stack = item.getItem();
         if (stack.has(ExtraDataComponents.UNDROPPABLE)) {
