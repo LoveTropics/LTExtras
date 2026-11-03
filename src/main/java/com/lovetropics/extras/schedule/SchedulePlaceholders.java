@@ -46,6 +46,7 @@ public class SchedulePlaceholders {
     static {
         registerPlaceholder("description", (ctx, entry) -> PlaceholderResult.value(entry.description()));
         registerPlaceholder("hosts", (ctx, entry) -> formatHosts(entry));
+        registerPlaceholder("title", (ctx, entry) -> PlaceholderResult.value(entry.title()));
         registerPlaceholder("start", (ctx, entry) -> formatLocalTime(ctx, entry.startTime()));
         registerPlaceholder("end", (ctx, entry) -> formatLocalTime(ctx, entry.endTime()));
         registerPlaceholder("time_until", (ctx, entry) -> formatTimeUntil(entry));
