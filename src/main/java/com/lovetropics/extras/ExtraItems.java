@@ -31,8 +31,6 @@ import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.generators.RegistrateItemModelGenerator;
 import com.tterrag.registrate.util.entry.ItemEntry;
-import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.data.models.model.ItemModelUtils;
@@ -79,11 +77,13 @@ import net.minecraft.world.item.equipment.EquipmentAssets;
 import net.minecraft.world.item.equipment.Equippable;
 
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static net.minecraft.client.data.models.model.ItemModelUtils.*;
 
@@ -222,6 +222,57 @@ public class ExtraItems {
     public static final ItemEntry<Item> BRONZE_TOP_HAT = createTopHat("bronze_top_hat").register();
     public static final ItemEntry<Item> SILVER_TOP_HAT = createTopHat("silver_top_hat").register();
     public static final ItemEntry<Item> GOLD_TOP_HAT = createTopHat("gold_top_hat").register();
+
+    public enum HatType {
+        BACKWARDS_CAP("backwards_cap"),
+        BAKER_BOY_HAT("baker_boy_hat"),
+        BLOODBORNE_HAT("bloodborne_hat"),
+        CHEF_HAT("chef_hat"), // It's official where chefs now
+        CHEST_HAT("chest_hat"),
+        CHICKEN_HAT("chicken_hat"),
+        COWBOY_HAT("cowboy_hat"),
+        CROWN_HAT("crown_hat"),
+        DUCK_HAT("duck_hat"),
+        FROG_CAP("frog_cap"),
+        HAMBURGER_HAT("hamburger_hat"),
+        MUSHROOM_HAT("mushroom_hat"),
+        PIE_FACE_HORIZONTAL_HAT("pie_face_horizontal_hat"),
+        PIE_FACE_VERTICAL_HAT("pie_face_vertical_hat"),
+        PIRATE_HAT("pirate_hat"),
+        POLICE_CAP("police_cap"),
+        SANTA_HAT("santa_hat"),
+        STRAW_HAT("straw_hat"),
+        SUNGLASSES_CAP("sunglasses_cap"),
+        WIZARD_HAT("wizard_hat"),
+        ;
+
+        private final String id;
+
+        HatType(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+    }
+
+    private static final Map<HatType, ItemEntry<Item>> HAT_ITEMS = Arrays.stream(HatType.values())
+            .collect(Collectors.toMap(hatType -> hatType, ExtraItems::createBasicHat));
+
+    private static ItemEntry<Item> createBasicHat(HatType type) {
+        return REGISTRATE.item(type.getId(), Item::new)
+                .properties(properties -> properties
+                        .component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                                .setEquipSound(SoundEvents.ARMOR_EQUIP_GENERIC)
+                                .setDamageOnHurt(false)
+                                .build())
+                        .stacksTo(1)
+                )
+                .model(() -> (ctx, prov) -> prov.createWithExistingModel(ctx.get(), LTExtras.id("item/hat/" + type.getId())))
+                .register();
+    }
+
 
     private static ItemBuilder<Item, Registrate> createTopHat(String id) {
         return REGISTRATE.item(id, Item::new)

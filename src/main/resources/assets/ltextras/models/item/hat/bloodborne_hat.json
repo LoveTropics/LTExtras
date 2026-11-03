@@ -1,0 +1,110 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 64],
+	"textures": {
+		"5": "ltextras:item/hat/bloodborne_hat",
+		"particle": "ltextras:item/hat/crown_hat"
+	},
+	"elements": [
+		{
+			"from": [1.67421, 0.01, 3.04249],
+			"to": [12.65421, 1.99, 13.02249],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8.41421, 0, 7.28249]},
+			"faces": {
+				"north": {"uv": [2.5, 2.5, 5.25, 3], "texture": "#5"},
+				"east": {"uv": [0, 2.5, 2.5, 3], "texture": "#5"},
+				"south": {"uv": [7.75, 2.5, 10.5, 3], "texture": "#5"},
+				"west": {"uv": [5.25, 2.5, 7.75, 3], "texture": "#5"},
+				"up": {"uv": [5.25, 2.5, 2.5, 0], "texture": "#5"},
+				"down": {"uv": [8, 0, 5.25, 2.5], "texture": "#5"}
+			}
+		},
+		{
+			"from": [3.67421, 2.01, 3.04249],
+			"to": [12.65421, 3.99, 11.02249],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8.41421, 0, 7.28249]},
+			"faces": {
+				"north": {"uv": [8.5, 5, 10.75, 5.5], "texture": "#5"},
+				"east": {"uv": [6.5, 5, 8.5, 5.5], "texture": "#5"},
+				"south": {"uv": [12.75, 5, 15, 5.5], "texture": "#5"},
+				"west": {"uv": [10.75, 5, 12.75, 5.5], "texture": "#5"},
+				"up": {"uv": [10.75, 5, 8.5, 3], "texture": "#5"},
+				"down": {"uv": [13, 3, 10.75, 5], "texture": "#5"}
+			}
+		},
+		{
+			"from": [-0.33579, 0, 3.03249],
+			"to": [12.66421, 5, 3.03249],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8.41421, 0, 7.28249]},
+			"faces": {
+				"north": {"uv": [3.25, 6.25, 0, 7.5], "texture": "#5"},
+				"east": {"uv": [3.25, 6.25, 3.25, 7.5], "texture": "#5"},
+				"south": {"uv": [6.5, 6.25, 3.25, 7.5], "texture": "#5"},
+				"west": {"uv": [0, 6.25, 0, 7.5], "texture": "#5"},
+				"up": {"uv": [0, 6.25, 3.25, 6.25], "texture": "#5"},
+				"down": {"uv": [3.25, 6.25, 6.5, 6.25], "texture": "#5"}
+			}
+		},
+		{
+			"from": [12.66421, 0, 3.03249],
+			"to": [12.66421, 5, 16.03249],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8.41421, 0, 7.28249]},
+			"faces": {
+				"north": {"uv": [3.25, 6.25, 3.25, 7.5], "texture": "#5"},
+				"east": {"uv": [6.5, 6.25, 3.25, 7.5], "texture": "#5"},
+				"south": {"uv": [6.5, 6.25, 6.5, 7.5], "texture": "#5"},
+				"west": {"uv": [3.25, 6.25, 0, 7.5], "texture": "#5"},
+				"up": {"uv": [3.25, 6.25, 3.25, 3], "texture": "#5"},
+				"down": {"uv": [3.25, 3, 3.25, 6.25], "texture": "#5"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "5. Bloodborne",
+			"origin": [8, 8, 8],
+			"scope": 0,
+			"color": 0,
+			"children": [0, 1, 2, 3]
+		}
+	],
+  "gui_light": "front",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 2.5, 0],
+      "scale": [0.3, 0.3, 0.3]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 2.5, 0],
+      "scale": [0.3, 0.3, 0.3]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 45, 0],
+      "translation": [0, 2.5, -0.75],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 45, 0],
+      "translation": [0, 2.5, -0.75],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "ground": {
+      "translation": [0, 3, 0],
+      "scale": [0.25, 0.25, 0.25]
+    },
+    "gui": {
+      "rotation": [30, 135, 0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "head": {
+      "rotation": [2, -90, 0],
+      "translation": [0, 12.75, 0.25]
+    },
+    "fixed": {
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}

@@ -1,0 +1,123 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 64],
+	"textures": {
+		"22": "ltextras:item/hat/hamburguer_hat",
+		"particle": "ltextras:item/hat/crown_hat"
+	},
+	"elements": [
+		{
+			"from": [3, 0, 3],
+			"to": [13, 2, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [2.5, 15.5, 5, 16], "texture": "#22"},
+				"east": {"uv": [0, 15.5, 2.5, 16], "texture": "#22"},
+				"south": {"uv": [7.5, 15.5, 10, 16], "texture": "#22"},
+				"west": {"uv": [5, 15.5, 7.5, 16], "texture": "#22"},
+				"up": {"uv": [5, 15.5, 2.5, 13], "texture": "#22"},
+				"down": {"uv": [7.5, 13, 5, 15.5], "texture": "#22"}
+			}
+		},
+		{
+			"from": [4, 2, 4],
+			"to": [12, 6, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [3.25, 7.75, 5.25, 8.75], "texture": "#22"},
+				"east": {"uv": [1.25, 7.75, 3.25, 8.75], "texture": "#22"},
+				"south": {"uv": [7.25, 7.75, 9.25, 8.75], "texture": "#22"},
+				"west": {"uv": [5.25, 7.75, 7.25, 8.75], "texture": "#22"},
+				"up": {"uv": [5.25, 7.75, 3.25, 5.75], "texture": "#22"},
+				"down": {"uv": [7.25, 5.75, 5.25, 7.75], "texture": "#22"}
+			}
+		},
+		{
+			"from": [3, 6, 3],
+			"to": [13, 9, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [2.75, 4.5, 5.25, 5.25], "texture": "#22"},
+				"east": {"uv": [0.25, 4.5, 2.75, 5.25], "texture": "#22"},
+				"south": {"uv": [7.75, 4.5, 10.25, 5.25], "texture": "#22"},
+				"west": {"uv": [5.25, 4.5, 7.75, 5.25], "texture": "#22"},
+				"up": {"uv": [5.25, 4.5, 2.75, 2], "texture": "#22"},
+				"down": {"uv": [7.75, 2, 5.25, 4.5], "texture": "#22"}
+			}
+		},
+		{
+			"from": [3, 5, 3],
+			"to": [13, 5, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [3.25, 12.25, 5.75, 12.25], "texture": "#22"},
+				"east": {"uv": [0.5, 12.25, 3.25, 12.25], "texture": "#22"},
+				"south": {"uv": [8.5, 12.25, 11, 12.25], "texture": "#22"},
+				"west": {"uv": [5.75, 12.25, 8.5, 12.25], "texture": "#22"},
+				"up": {"uv": [5.75, 12.25, 3.25, 9.5], "texture": "#22"},
+				"down": {"uv": [8.25, 9.5, 5.75, 12.25], "texture": "#22"}
+			}
+		},
+		{
+			"from": [3, 3, 3],
+			"to": [13, 4, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [8.75, 12.25, 11.25, 12.5], "texture": "#22"},
+				"east": {"uv": [6.25, 12.25, 8.75, 12.5], "texture": "#22"},
+				"south": {"uv": [13.75, 12.25, 16.25, 12.5], "texture": "#22"},
+				"west": {"uv": [11.25, 12.25, 13.75, 12.5], "texture": "#22"},
+				"up": {"uv": [11.25, 12.25, 8.75, 9.75], "texture": "#22"},
+				"down": {"uv": [13.75, 9.75, 11.25, 12.25], "texture": "#22"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "13. Hambuerguer hat",
+			"origin": [8, 8, 8],
+			"scope": 0,
+			"color": 0,
+			"children": [0, 1, 2, 3, 4]
+		}
+	],
+  "gui_light": "front",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 2.5, 0],
+      "scale": [0.3, 0.3, 0.3]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 2.5, 0],
+      "scale": [0.3, 0.3, 0.3]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 45, 0],
+      "translation": [0, 2.5, -0.75],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 45, 0],
+      "translation": [0, 2.5, -0.75],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "ground": {
+      "translation": [0, 3, 0],
+      "scale": [0.25, 0.25, 0.25]
+    },
+    "gui": {
+      "rotation": [30, 135, 0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "head": {
+      "rotation": [2, -90, 0],
+      "translation": [0, 12.75, 0.25]
+    },
+    "fixed": {
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}
