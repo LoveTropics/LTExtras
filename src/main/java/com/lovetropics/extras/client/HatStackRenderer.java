@@ -169,6 +169,16 @@ public class HatStackRenderer {
             float scale = 0.5f;
             poseStack.scale(scale, -scale, -scale);
         });
+
+        addCustomMobHatLayerUntyped(event, EntityTypes.GHAST.builtInRegistryHolder(), (poseStack, model) -> {
+            ModelPart root = model.root();
+            root.translateAndRotate(poseStack);
+            ModelPart body = root.getChild("body");
+            body.translateAndRotate(poseStack);
+            poseStack.translate(0.0f, -5.0f / 16.0f, 0.0f);
+            float scale = 0.5f;
+            poseStack.scale(scale, -scale, -scale);
+        });
     }
 
     @SuppressWarnings("unchecked")
