@@ -56,11 +56,11 @@ public class HatStackRenderer {
 
     private static void extract(LivingEntity entity, LivingEntityRenderState state, ItemModelResolver itemModelResolver) {
         ItemStack headItem = entity.getItemBySlot(EquipmentSlot.HEAD);
-        List<StackedHat> hats = headItem.getOrDefault(ExtraDataComponents.HAT_STACK, List.of());
+        List<StackedHat> itemHats = headItem.getOrDefault(ExtraDataComponents.HAT_STACK, List.of());
         List<StackedHat> attachmentHats = StackedHatStore.getHats(entity);
-        List<HatRenderState> itemStates = new ArrayList<>(hats.size() + attachmentHats.size());
+        List<HatRenderState> itemStates = new ArrayList<>(itemHats.size() + attachmentHats.size());
 
-        for (StackedHat hat : hats) {
+        for (StackedHat hat : itemHats) {
             itemStates.add(getStateFromStackedHat(hat, entity, itemModelResolver));
         }
 
@@ -69,7 +69,7 @@ public class HatStackRenderer {
             itemStates.add(getStateFromStackedHat(hat, entity, itemModelResolver));
         }
 
-        state.setRenderData(HAT_STACK, new StackRenderState(itemStates));
+        state.setRenderData(HAT_STACK, new StackRenderState(itemStates, !itemHats.isEmpty()));
     }
 
     private static HatRenderState getStateFromStackedHat(StackedHat hat, LivingEntity entity, ItemModelResolver itemModelResolver) {
@@ -83,6 +83,7 @@ public class HatStackRenderer {
         );
     }
 
+    /// @return `true` if the head item should be hidden
     public static boolean submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, int outlineColor, LivingEntityRenderState state) {
         StackRenderState hatStack = state.getRenderData(HAT_STACK);
         if (hatStack == null || hatStack.stack.isEmpty()) {
@@ -117,7 +118,7 @@ public class HatStackRenderer {
         }
 
         poseStack.popPose();
-        return true;
+        return hatStack.hideItem;
     }
 
     private static final DeferredHolder<EntityType<?>, ?> GIBNUT = DeferredHolder.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("tropicraft", "gibnut"));
@@ -172,7 +173,8 @@ public class HatStackRenderer {
     }
 
     public record StackRenderState(
-            List<HatRenderState> stack
+            List<HatRenderState> stack,
+            boolean hideItem
     ) {
     }
 
