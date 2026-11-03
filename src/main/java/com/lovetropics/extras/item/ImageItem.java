@@ -17,14 +17,10 @@ public class ImageItem extends Item {
             new ImageData(Component.literal("Team Cents Poster"), LTExtras.id("textures/images/team_cents_poster.png"), 1.0f, 1.0f),
             new ImageData(Component.literal("Team No Cents Poster"), LTExtras.id("textures/images/team_no_cents_poster.png"), 1.0f, 1.0f),
             imageWithHeight("Love Tropics", "love_tropics", 1.0f, 128, 128),
-            imageWithWidth("Certificates", "certificates", 2.0f, 500, 306),
-            imageWithWidth("Class 1", "class_1", 2.0f, 350, 263),
-            imageWithHeight("EVA", "eva_1", 1.0f, 400, 180),
-            imageWithWidth("Group School", "group_school", 2.0f, 400, 267),
-            imageWithWidth("Longhouse Meet", "longhouse_meet", 2.0f, 400, 300),
-            imageWithWidth("Student Seated", "students_seated", 2.0f, 350, 234),
-            imageWithWidth("Tree Planting", "tree_planting", 2.0f, 300, 200),
-            imageWithWidth("Longhouse Meal", "longhouse_meal", 2.0f, 300, 225)
+            imageWithWidth("Dulao Forest", "2026/dulao_forest", 3.0f, 300, 216),
+            imageWithWidth("Dulao 1", "2026/dulao_1", 4.0f, 600, 308),
+            imageWithWidth("Dulao 2", "2026/dulao_2", 4.0f, 600, 328),
+            imageWithWidth("Dulao Map", "2026/dulao_map", 3.0f, 500, 375)
     );
 
     private static ImageData imageWithWidth(String name, String path, float blockWidth, int textureWidth, int textureHeight) {
