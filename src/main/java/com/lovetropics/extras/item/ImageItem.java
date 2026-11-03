@@ -16,6 +16,15 @@ public class ImageItem extends Item {
             new ImageData(Component.literal("Shoebill"), LTExtras.id("textures/images/shoebill.png"), 2.5f, 3.0f),
             new ImageData(Component.literal("Team Cents Poster"), LTExtras.id("textures/images/team_cents_poster.png"), 1.0f, 1.0f),
             new ImageData(Component.literal("Team No Cents Poster"), LTExtras.id("textures/images/team_no_cents_poster.png"), 1.0f, 1.0f),
+
+            imageWithHeight("Cracked Cubes", "sponsor/cracked_cubes", 1.0f, 400, 80),
+            imageWithHeight("Creeperhost", "sponsor/creeperhost", 1.0f, 400, 80),
+            imageWithHeight("Essential", "sponsor/essential", 1.0f, 400, 80),
+            imageWithHeight("Modrinth", "sponsor/modrinth", 1.0f, 400, 80),
+            imageWithHeight("Mojang", "sponsor/mojang", 1.0f, 250, 211),
+            imageWithHeight("Pathway Studios", "sponsor/pathway_studios", 1.0f, 282, 160),
+            imageWithHeight("Spark Universe", "sponsor/spark_universe", 1.0f, 400, 80),
+
             imageWithHeight("Love Tropics", "love_tropics", 1.0f, 128, 128),
             imageWithWidth("Dulao Forest", "2026/dulao_forest", 3.0f, 300, 216),
             imageWithWidth("Dulao 1", "2026/dulao_1", 4.0f, 600, 308),
