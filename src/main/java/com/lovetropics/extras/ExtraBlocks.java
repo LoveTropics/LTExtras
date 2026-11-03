@@ -137,6 +137,7 @@ import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.level.block.DaylightDetectorBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.MultifaceBlock;
@@ -407,13 +408,18 @@ public class ExtraBlocks {
 
     public static final BlockEntityEntry<ParticleEmitterBlockEntity> PARTICLE_EMITTER_BE = BlockEntityEntry.cast(PARTICLE_EMITTER.getSibling(Registries.BLOCK_ENTITY_TYPE));
 
-    public static final BlockEntry<Block> PIPE_STRETCH = REGISTRATE.block("pipe_stretch", Block::new)
+    public static final BlockEntry<com.lovetropics.extras.block.PipeBlock> PIPE_STRETCH = REGISTRATE.block("pipe_stretch", com.lovetropics.extras.block.PipeBlock::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<Block> PIPE_STRETCH_VERTICAL = REGISTRATE.block("pipe_stretch_vertical", Block::new)
             .initialProperties(() -> Blocks.IRON_BLOCK)
             .blockstate(() -> (ctx, prov) ->
                     prov.generate(ctx.get(), TexturedModel.CUBE_TOP_BOTTOM
-                            .updateTexture(textures -> textures.put(TextureSlot.SIDE, prov.modBlockTexture("pipe_stretch"))
-                                    .put(TextureSlot.TOP, prov.modBlockTexture("pipe_stretch_top"))
-                                    .put(TextureSlot.BOTTOM, prov.modBlockTexture("pipe_stretch_bottom"))))
+                            .updateTexture(textures -> textures.put(TextureSlot.SIDE, prov.modBlockTexture("pipe_stretch_vertical"))
+                                    .put(TextureSlot.TOP, prov.modBlockTexture("pipe_stretch_vertical"))
+                                    .put(TextureSlot.BOTTOM, prov.modBlockTexture("pipe_stretch_vertical"))))
             )
             .simpleItem()
             .register();

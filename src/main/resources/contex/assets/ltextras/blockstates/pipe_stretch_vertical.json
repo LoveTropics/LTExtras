@@ -1,0 +1,18 @@
+{
+  "neoforge:definition_type": "contex:definition",
+  "contex_meta": [
+    {
+      "type": "contex:simple",
+      "predicate": {"type": "contex:same_block"},
+      "textures": [
+        {"main_texture": "ltextras:block/pipe_stretch_vertical" },
+        {"main_texture": "ltextras:block/pipe_stretch_vertical_top" },
+        {"main_texture": "ltextras:block/pipe_stretch_vertical_bottom" }
+      ]
+    }
+  ],
+  "strategy": "contex:full",
+  "variants": {
+    "":  { "model": "ltextras:block/pipe_stretch_vertical"}
+  }
+}

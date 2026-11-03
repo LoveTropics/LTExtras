@@ -1,8 +1,6 @@
 {
-  "parent": "minecraft:block/cube_bottom_top",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "bottom": "ltextras:block/pipe_stretch_bottom",
-    "side": "ltextras:block/pipe_stretch",
-    "top": "ltextras:block/pipe_stretch_top"
+    "all": "ltextras:block/pipe_stretch"
   }
 }

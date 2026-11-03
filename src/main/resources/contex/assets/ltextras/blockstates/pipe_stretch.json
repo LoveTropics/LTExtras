@@ -7,12 +7,15 @@
       "textures": [
         {"main_texture": "ltextras:block/pipe_stretch" },
         {"main_texture": "ltextras:block/pipe_stretch_top" },
-        {"main_texture": "ltextras:block/pipe_stretch_bottom" }
+        {"main_texture": "ltextras:block/pipe_stretch_bottom" },
+        {"main_texture": "ltextras:block/pipe_stretch_top_x" },
+        {"main_texture": "ltextras:block/pipe_stretch_bottom_x" }
       ]
     }
   ],
   "strategy": "contex:full",
   "variants": {
-    "":  { "model": "ltextras:block/pipe_stretch"}
+    "axis=x":  { "model": "ltextras:block/pipe_stretch_x"},
+    "axis=z":  { "model": "ltextras:block/pipe_stretch_z"}
   }
 }
