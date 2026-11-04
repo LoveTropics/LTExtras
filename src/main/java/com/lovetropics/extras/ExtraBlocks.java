@@ -103,10 +103,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
@@ -137,7 +137,6 @@ import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.level.block.DaylightDetectorBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.MultifaceBlock;
@@ -153,7 +152,6 @@ import net.minecraft.world.level.block.TallSeagrassBlock;
 import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
 import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.WallBlock;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -1011,7 +1009,8 @@ public class ExtraBlocks {
             .add(Blocks.TUFF, Models.TextureType.normal())
             .add(Blocks.HONEY_BLOCK, Models.TextureType.sideTopSuffix())
             .add(Blocks.HONEYCOMB_BLOCK, Models.TextureType.normal())
-            .add(Blocks.SCULK, Models.TextureType.normal());
+            .add(Blocks.SCULK, Models.TextureType.normal())
+            .addHolders(EDGELESS_GLASS_BLOCKS.stream().collect(Collectors.toUnmodifiableList()), Models.TextureType.normalWithPathPrefix("edgeless"));
 
     private static final TemplateBuilder<FenceBlock, Models.TextureType> FENCE_TEMPLATES = new TemplateBuilder<FenceBlock, Models.TextureType>()
             .add(Blocks.GOLD_BLOCK, Models.TextureType.normal())
@@ -1645,6 +1644,13 @@ public class ExtraBlocks {
             return add(DeferredHolder.create(Registries.BLOCK, id), parameter);
         }
 
+        public TemplateBuilder<T, P> addHolders(List<Holder<Block>> blocks, P parameter) {
+            for (Holder<Block> block : blocks) {
+                add(block, parameter);
+            }
+            return this;
+        }
+
         public TemplateBuilder<T, P> add(Holder<Block> block, P parameter) {
             String namespace = block.unwrapKey().orElseThrow().identifier().getNamespace();
             if (ModList.get().isLoaded(namespace)) {
@@ -2103,6 +2109,13 @@ public class ExtraBlocks {
                 return TextureType.allTexture(ignored -> {
                     Holder<Block> block = donor.builtInRegistryHolder();
                     return TextureMapping.getBlockTexture(block.value(), "_" + suffix).sprite();
+                });
+            }
+
+            static TextureType normalWithPathPrefix(String path) {
+                return TextureType.allTexture(block -> {
+                    Identifier id = BuiltInRegistries.BLOCK.getKey(block.value());
+                    return new Material(id.withPath(thePath -> "block/" + path + "/" + thePath)).sprite();
                 });
             }
 

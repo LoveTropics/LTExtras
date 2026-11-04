@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "ltextras:block/edgeless_yellow_stained_glass_slab"
+    },
+    "type=double": {
+      "model": "ltextras:block/edgeless_yellow_stained_glass"
+    },
+    "type=top": {
+      "model": "ltextras:block/edgeless_yellow_stained_glass_slab_top"
+    }
+  }
+}

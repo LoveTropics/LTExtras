@@ -75,6 +75,22 @@
     "ltextras:tuff_slab",
     "ltextras:honey_block_slab",
     "ltextras:honeycomb_block_slab",
-    "ltextras:sculk_slab"
+    "ltextras:sculk_slab",
+    "ltextras:edgeless_light_blue_stained_glass_slab",
+    "ltextras:edgeless_light_gray_stained_glass_slab",
+    "ltextras:edgeless_green_stained_glass_slab",
+    "ltextras:edgeless_pink_stained_glass_slab",
+    "ltextras:edgeless_purple_stained_glass_slab",
+    "ltextras:edgeless_brown_stained_glass_slab",
+    "ltextras:edgeless_red_stained_glass_slab",
+    "ltextras:edgeless_lime_stained_glass_slab",
+    "ltextras:edgeless_orange_stained_glass_slab",
+    "ltextras:edgeless_white_stained_glass_slab",
+    "ltextras:edgeless_blue_stained_glass_slab",
+    "ltextras:edgeless_magenta_stained_glass_slab",
+    "ltextras:edgeless_black_stained_glass_slab",
+    "ltextras:edgeless_yellow_stained_glass_slab",
+    "ltextras:edgeless_gray_stained_glass_slab",
+    "ltextras:edgeless_cyan_stained_glass_slab"
   ]
 }
