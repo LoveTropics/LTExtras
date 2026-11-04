@@ -1,6 +1,9 @@
 package com.lovetropics.extras.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.lovetropics.extras.entity.ForkliftEntity;
+import com.lovetropics.extras.gamerules.ExtraGamerules;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.MinecraftServer;
@@ -39,6 +42,14 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
             return instance.getVehicle();
         }
         return instance.getRootVehicle();
+    }
+
+    @WrapOperation(method = "handleMoveVehicle", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;isSingleplayerOwner()Z"))
+    public boolean onBadMovementCheck(ServerGamePacketListenerImpl instance, Operation<Boolean> original) {
+        if (!player.level().getGameRules().get(ExtraGamerules.CHECK_VEHICLE_MOVEMENT.get())) {
+            return false;
+        }
+        return original.call(instance);
     }
 
     @Redirect(method="tickPlayer", at= @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;getRootVehicle()Lnet/minecraft/world/entity/Entity;"))
