@@ -32,6 +32,8 @@ public record ChatGroup(String id, String prefix, TextColor color, String comman
     private static final ChatGroup ORGANISER = createGroup("organiser", "[OG]", TextColor.GOLD,  "oc");
     private static final ChatGroup MODERATOR = createGroup("moderator", "[MOD]", TextColor.DARK_AQUA, "mc");
 
+    private static final RoleOverrideType<Boolean> NO_CHAT = RoleOverrideType.register("chat/no_chat", Codec.BOOL);
+
     @SubscribeEvent
     public static void onRegisterCommand(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
@@ -65,6 +67,10 @@ public record ChatGroup(String id, String prefix, TextColor color, String comman
 
             for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
                 RoleOverrideReader overrides = PermissionsApi.lookup().byPlayer(player).overrides();
+                if (overrides.test(NO_CHAT)) {
+                    continue;
+                }
+                
                 if (overrides.test(group.roleOverride)) {
                     player.sendSystemMessage(text);
                 }
