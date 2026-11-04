@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
@@ -30,16 +31,18 @@ public class SeeSawRenderer extends BlockFormedEntityRenderer<SeeSawEntity, SeeS
     }
 
     @Override
-    public SeeSawState createRenderState() {
-        return new SeeSawState();
+    public void submitTransforms(SeeSawState state, PoseStack poseStack) {
+        poseStack.translate(0.5, 0.5, 0.5);
+        if(Direction.fromYRot(state.yRot).getAxis() == Direction.Axis.X){
+            poseStack.mulPose(Axis.ZP.rotationDegrees(-Mth.lerp(state.partialTick, state.prevSeeSawAngle, state.seeSawAngle)));
+        } else {
+            poseStack.mulPose(Axis.XP.rotationDegrees(-Mth.lerp(state.partialTick, state.prevSeeSawAngle, state.seeSawAngle)));
+        }
+        poseStack.translate(-0.5, -0.5, -0.5);
     }
 
     @Override
-    public void submit(SeeSawState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
-        poseStack.pushPose();
-        poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(state.partialTick, state.prevSeeSawAngle, state.seeSawAngle)));
-        super.submit(state, poseStack, submitNodeCollector, camera);
-        poseStack.popPose();
-
+    public SeeSawState createRenderState() {
+        return new SeeSawState();
     }
 }

@@ -1,8 +1,10 @@
 package com.lovetropics.extras.entity;
 
 import com.lovetropics.extras.network.message.ServerboundSwingPacket;
+import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -30,10 +32,13 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public abstract class BlockFormationEntity extends Entity implements IEntityWithComplexSpawn, PlayerRideable {
@@ -121,8 +126,10 @@ public abstract class BlockFormationEntity extends Entity implements IEntityWith
     @Override
     public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         if (!level().isClientSide() && !player.isShiftKeyDown()) {
-            player.startRiding(this);
-            return InteractionResult.SUCCESS;
+            if(!getBlockFormation().getSeats().isEmpty()){
+                player.startRiding(this);
+                return InteractionResult.SUCCESS;
+            }
         } else if(!level().isClientSide() && player.isShiftKeyDown()){
             deform();
             return InteractionResult.SUCCESS;
@@ -135,10 +142,11 @@ public abstract class BlockFormationEntity extends Entity implements IEntityWith
     protected Vec3 getPassengerAttachmentPoint(Entity passenger, EntityDimensions dimensions, float scale) {
         if(getPassengers().isEmpty()){
             return Vec3.atCenterOf(getBlockFormation().getSeats().get(0)
-                    .offset(getBlockFormation().getAnchorBlock())).subtract(position());
+                    .offset(getBlockFormation().getAnchorBlock())).subtract(position()).subtract(0, 0.5, 0);
         }
         int index = getPassengers().indexOf(passenger);
         return Vec3.atCenterOf(getBlockFormation().getSeats().get(index)
-                .offset(getBlockFormation().getAnchorBlock())).subtract(position());
+                .offset(getBlockFormation().getAnchorBlock())).subtract(position()).subtract(0, 0.5, 0);
     }
 }
+

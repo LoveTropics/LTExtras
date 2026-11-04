@@ -1479,7 +1479,13 @@ public class ExtraBlocks {
 
     public static final BlockEntry<SeeSawBlock> SEE_SAW_BLOCK = REGISTRATE.block("see_saw", SeeSawBlock::new)
             .initialProperties(() -> Blocks.IRON_BLOCK)
+            .blockstate(() -> (ctx, prov) ->
+                    {
+                        MultiVariant variant = plainVariant(ModelLocationUtils.getModelLocation(ctx.get()));
+                        prov.blockStateOutput.accept(dispatch(ctx.get(), variant).with(BlockModelGenerators.ROTATION_FACING));
+                    })
             .lang("See Saw")
+            .tag(ExtraTags.Blocks.DONT_MOVE)
             .simpleItem()
             .register();
 

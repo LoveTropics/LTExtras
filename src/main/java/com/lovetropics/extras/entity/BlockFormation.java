@@ -118,6 +118,7 @@ public class BlockFormation {
         visitedBlocks.add(pos);
 
         if(this.anchorBlock.equals(pos)) {
+            addBlock(level, pos, captureBlock(level, pos));
             blockPosQueue.add(pos.above());
             return true;
         }

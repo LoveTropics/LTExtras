@@ -1,7 +1,27 @@
 {
   "variants": {
-    "": {
+    "facing=down": {
+      "model": "ltextras:block/see_saw",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "ltextras:block/see_saw",
+      "y": 90
+    },
+    "facing=north": {
       "model": "ltextras:block/see_saw"
+    },
+    "facing=south": {
+      "model": "ltextras:block/see_saw",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "ltextras:block/see_saw",
+      "x": 270
+    },
+    "facing=west": {
+      "model": "ltextras:block/see_saw",
+      "y": 270
     }
   }
 }
