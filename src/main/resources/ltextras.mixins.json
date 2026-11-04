@@ -50,7 +50,8 @@
     "placeholder.TextDisplayAccessor",
     "placeholder.TextDisplayMixin",
     "placeholder.TransformationMixin",
-    "rejoiner.StopCommandMixin"
+    "rejoiner.StopCommandMixin",
+    "text.ComponentSerializationMixin"
   ],
   "client": [
     "client.AbstractWidgetAccess",
@@ -76,6 +77,8 @@
     "client.menu.TitleScreenMixin",
     "client.packcontrol.PackSelectionModelMixin",
     "client.rejoiner.ClientCommonPacketListenerImplMixin",
+    "client.text.ChatComponentMixin",
+    "client.text.ChatGraphicsAccessMixin",
     "client.translation.GuiMixin"
   ],
   "injectors": {
