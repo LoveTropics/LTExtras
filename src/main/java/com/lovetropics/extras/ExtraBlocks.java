@@ -446,9 +446,9 @@ public class ExtraBlocks {
             .simpleItem()
             .register();
 
-    public static final Set<BlockEntry<StainedGlassBlock>> EDGELESS_GLASS_BLOCKS = Stream.of(DyeColor.values())
+    public static final List<BlockEntry<StainedGlassBlock>> EDGELESS_GLASS_BLOCKS = Stream.of(DyeColor.values())
             .map(ExtraBlocks::edgelessGlass)
-            .collect(Collectors.toSet());
+            .toList();
 
     private static BlockEntry<StainedGlassBlock> edgelessGlass(DyeColor dyeColor) {
         final String color = dyeColor.getName();
@@ -1010,7 +1010,7 @@ public class ExtraBlocks {
             .add(Blocks.HONEY_BLOCK, Models.TextureType.sideTopSuffix())
             .add(Blocks.HONEYCOMB_BLOCK, Models.TextureType.normal())
             .add(Blocks.SCULK, Models.TextureType.normal())
-            .addHolders(EDGELESS_GLASS_BLOCKS.stream().collect(Collectors.toUnmodifiableList()), Models.TextureType.normalWithPathPrefix("edgeless"));
+            .addHolders(EDGELESS_GLASS_BLOCKS, Models.TextureType.normalWithPathPrefix("edgeless"));
 
     private static final TemplateBuilder<FenceBlock, Models.TextureType> FENCE_TEMPLATES = new TemplateBuilder<FenceBlock, Models.TextureType>()
             .add(Blocks.GOLD_BLOCK, Models.TextureType.normal())
@@ -1644,7 +1644,7 @@ public class ExtraBlocks {
             return add(DeferredHolder.create(Registries.BLOCK, id), parameter);
         }
 
-        public TemplateBuilder<T, P> addHolders(List<Holder<Block>> blocks, P parameter) {
+        public TemplateBuilder<T, P> addHolders(Iterable<? extends Holder<Block>> blocks, P parameter) {
             for (Holder<Block> block : blocks) {
                 add(block, parameter);
             }
