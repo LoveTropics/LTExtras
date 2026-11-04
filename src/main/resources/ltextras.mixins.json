@@ -6,6 +6,7 @@
   "mixins": [
     "AbstractArrowMixin",
     "AbstractContainerMenuAccess",
+    "AbstractContainerMenuMixin",
     "AreaEffectCloudMixin",
     "BlockBehaviourMixin",
     "BlockMixin",

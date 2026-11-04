@@ -14,6 +14,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.ItemStackedOnOtherEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
@@ -42,6 +43,15 @@ public class ItemExtensions {
             stack.remove(ExtraDataComponents.INFINITE);
         }
         return false;
+    }
+
+    @SubscribeEvent
+    public static void onItemSpawn(ItemStackedOnOtherEvent event) {
+        if(event.getCarriedItem().has(ExtraDataComponents.UNDROPPABLE)){
+            if(event.getSlot().container != event.getPlayer().getInventory()){
+                event.setCanceled(true);
+            }
+        }
     }
 
     @SubscribeEvent
