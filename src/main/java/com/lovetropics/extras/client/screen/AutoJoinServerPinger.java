@@ -1,5 +1,6 @@
 package com.lovetropics.extras.client.screen;
 
+import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.resolver.ResolvedServerAddress;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
@@ -15,6 +16,8 @@ import net.minecraft.server.network.EventLoopGroupHolder;
 import net.minecraft.util.Util;
 
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+
 import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.time.Instant;
@@ -22,6 +25,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class AutoJoinServerPinger {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     private static final Duration INTERVAL = Duration.ofSeconds(5);
     private static final Duration TIMEOUT = Duration.ofSeconds(30);
 
@@ -44,6 +49,7 @@ public class AutoJoinServerPinger {
         if (timeSinceLastPing.compareTo(INTERVAL) > 0) {
             pendingPing = sendPing().handle((result, throwable) -> {
                 if (throwable != null) {
+                    LOGGER.debug("Ping failed with exception", throwable);
                     return false;
                 }
                 return result;
@@ -60,6 +66,7 @@ public class AutoJoinServerPinger {
             pendingPing = null;
             lastPingTime = Instant.now();
         } else if (timeSinceLastPing.compareTo(TIMEOUT) > 0) {
+            LOGGER.debug("Ping timed out, retrying");
             pendingPing = null;
         }
         return false;
@@ -73,6 +80,7 @@ public class AutoJoinServerPinger {
             if (resolvedAddress.isEmpty()) {
                 return CompletableFuture.completedFuture(false);
             }
+            LOGGER.debug("Sending ping to server at {}", resolvedAddress.get());
             return doPing(resolvedAddress.get());
         }, EXECUTOR);
     }
@@ -84,6 +92,7 @@ public class AutoJoinServerPinger {
         ClientStatusPacketListener listener = new ClientStatusPacketListener() {
             @Override
             public void handleStatusResponse(ClientboundStatusResponsePacket packet) {
+                LOGGER.debug("Got successful ping response from server");
                 future.complete(true);
                 connection.disconnect(Component.translatable("multiplayer.status.finished"));
             }
@@ -95,7 +104,9 @@ public class AutoJoinServerPinger {
             @Override
             public void onDisconnect(DisconnectionDetails details) {
                 // Won't trigger if it was already completed
-                future.complete(false);
+                if (future.complete(false)) {
+                    LOGGER.debug("Disconnected while pinging server: {}", details.reason().getString());
+                }
             }
 
             @Override
