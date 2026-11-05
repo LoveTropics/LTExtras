@@ -15,6 +15,7 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -61,12 +62,12 @@ public abstract class StyleMixin implements ExtendedStyle {
 
     @WrapOperation(method = "getFont", at = @At(value = "FIELD", target = "Lnet/minecraft/network/chat/Style;font:Lnet/minecraft/network/chat/FontDescription;", opcode = Opcodes.GETFIELD))
     private @Nullable FontDescription getFont(Style style, Operation<@Nullable FontDescription> original) {
-        return font instanceof ExtraStyleFontDescription extraDesc ? extraDesc.delegate() : font;
+        return lt$getUnwrappedFont();
     }
 
     @WrapOperation(method = "withFont", at = @At(value = "FIELD", target = "Lnet/minecraft/network/chat/Style;font:Lnet/minecraft/network/chat/FontDescription;", opcode = Opcodes.GETFIELD))
     private @Nullable FontDescription getFontWithFont(Style style, Operation<@Nullable FontDescription> original) {
-        return font instanceof ExtraStyleFontDescription extraDesc ? extraDesc.delegate() : font;
+        return lt$getUnwrappedFont();
     }
 
     @WrapOperation(method = "withFont", at = @At(value = "NEW", target = "(Lnet/minecraft/network/chat/TextColor;Ljava/lang/Integer;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lnet/minecraft/network/chat/ClickEvent;Lnet/minecraft/network/chat/HoverEvent;Ljava/lang/String;Lnet/minecraft/network/chat/FontDescription;)Lnet/minecraft/network/chat/Style;"))
@@ -83,13 +84,19 @@ public abstract class StyleMixin implements ExtendedStyle {
 
     @Override
     public Style lt$withExtraStyle(ExtraStyle style) {
-        ExtraStyleFontDescription newFont;
-        if (font instanceof ExtraStyleFontDescription desc) {
-            newFont = new ExtraStyleFontDescription(desc.delegate(), style);
+        FontDescription unwrappedFont = lt$getUnwrappedFont();
+        FontDescription newFont;
+        if (ExtraStyle.EMPTY.equals(style)) {
+            newFont = FontDescription.DEFAULT.equals(unwrappedFont) ? null : unwrappedFont;
         } else {
-            newFont = new ExtraStyleFontDescription(font != null ? font : FontDescription.DEFAULT, style);
+            newFont = new ExtraStyleFontDescription(unwrappedFont != null ? unwrappedFont : FontDescription.DEFAULT, style);
         }
         return invokeCreate(color, shadowColor, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent, insertion, newFont);
+    }
+
+    @Unique
+    private @Nullable FontDescription lt$getUnwrappedFont() {
+        return font instanceof ExtraStyleFontDescription extraDesc ? extraDesc.delegate() : font;
     }
 
     @Override

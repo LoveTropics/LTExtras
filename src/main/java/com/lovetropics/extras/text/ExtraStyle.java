@@ -40,9 +40,6 @@ public record ExtraStyle(
     }
 
     public Style applyTo(Style style) {
-        if (equals(EMPTY)) {
-            return style;
-        }
         return ((ExtendedStyle) (Object) style).lt$withExtraStyle(this);
     }
 }

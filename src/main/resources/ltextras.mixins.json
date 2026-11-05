@@ -52,7 +52,6 @@
     "placeholder.TransformationMixin",
     "rejoiner.StopCommandMixin",
     "text.ComponentSerializationMixin",
-    "text.FontDescriptionMixin",
     "text.StyleMixin",
     "text.StyleSerializerMixin"
   ],
