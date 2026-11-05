@@ -81,11 +81,12 @@ public record StreamSchedule(List<Entry> entries) {
         return null;
     }
 
-    public record Entry(String description, String title, Optional<URI> imageUrl, Instant startTime, Instant endTime, List<Host> hosts) {
+    public record Entry(String description, String title, String hostText, Optional<URI> imageUrl, Instant startTime, Instant endTime, List<Host> hosts) {
         public static final Codec<Entry> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Codec.STRING.fieldOf("desc").forGetter(Entry::description),
                 // No URL is an empty string
                 Codec.STRING.fieldOf("title").forGetter(Entry::title),
+                Codec.STRING.fieldOf("host_text").forGetter(Entry::hostText),
                 ExtraCodecs.UNTRUSTED_URI.lenientOptionalFieldOf("image_url").forGetter(Entry::imageUrl),
                 ExtraCodecs.INSTANT_ISO8601.fieldOf("start_time").forGetter(Entry::startTime),
                 ExtraCodecs.INSTANT_ISO8601.fieldOf("end_time").forGetter(Entry::endTime),

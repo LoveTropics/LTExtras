@@ -44,9 +44,10 @@ public class SchedulePlaceholders {
     private static Instant lastFetchTime = Instant.EPOCH;
 
     static {
-        registerPlaceholder("description", (ctx, entry) -> PlaceholderResult.value(entry.description()));
-        registerPlaceholder("hosts", (ctx, entry) -> formatHosts(entry));
-        registerPlaceholder("title", (ctx, entry) -> PlaceholderResult.value(entry.title()));
+        registerPlaceholder("description", (_, entry) -> PlaceholderResult.value(entry.description()));
+        registerPlaceholder("hosts", (_, entry) -> formatHosts(entry));
+        registerPlaceholder("title", (_, entry) -> PlaceholderResult.value(entry.title()));
+        registerPlaceholder("host_text", (_, entry) -> PlaceholderResult.value(entry.hostText()));
         registerPlaceholder("start", (ctx, entry) -> formatLocalTime(ctx, entry.startTime()));
         registerPlaceholder("end", (ctx, entry) -> formatLocalTime(ctx, entry.endTime()));
         registerPlaceholder("time_until", (ctx, entry) -> formatTimeUntil(entry));
