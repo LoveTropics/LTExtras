@@ -5,6 +5,7 @@ import com.lovetropics.extras.data.poi.MapConfig;
 import com.lovetropics.extras.data.poi.MapManager;
 import com.lovetropics.extras.data.poi.PoiConfig;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -51,6 +52,17 @@ public class TropicalMapScreen extends Screen {
         for (PoiButton button : poiButtons) {
             button.tick();
         }
+    }
+
+    @Override
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        List<PoiButton> hoveredOrFocused = poiButtons.stream()
+                .filter(AbstractWidget::isHoveredOrFocused)
+                .toList();
+        // Put them on top :))))
+        renderables.removeAll(hoveredOrFocused);
+        renderables.addAll(hoveredOrFocused);
+        super.extractRenderState(graphics, mouseX, mouseY, a);
     }
 
     @Override
