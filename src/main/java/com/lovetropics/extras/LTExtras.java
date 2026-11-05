@@ -12,6 +12,7 @@ import com.lovetropics.extras.command.PoiCommand;
 import com.lovetropics.extras.command.SetMaxPlayersCommand;
 import com.lovetropics.extras.command.ShieldCommand;
 import com.lovetropics.extras.command.TpCommand;
+import com.lovetropics.extras.command.TropiCoinsCommand;
 import com.lovetropics.extras.command.WarpCommand;
 import com.lovetropics.extras.data.attachment.ExtraAttachments;
 import com.lovetropics.extras.data.spawnitems.SpawnItemsCommand;
@@ -201,6 +202,7 @@ public class LTExtras {
         TpCommand.register(dispatcher);
         EnvironmentAttributeCommand.register(dispatcher, buildContext);
         WarpCommand.register(dispatcher);
+        TropiCoinsCommand.register(dispatcher);
         PoiCommand.register(dispatcher, buildContext);
         ModelModifierCommand.register(dispatcher, buildContext);
         MountCommand.register(dispatcher, buildContext);
