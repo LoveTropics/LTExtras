@@ -7,8 +7,12 @@ import com.lovetropics.extras.client.entity.CleaningItemFrameRender;
 import com.lovetropics.extras.client.entity.CollectibleEntityRenderer;
 import com.lovetropics.extras.client.entity.FallingPropaguleRenderer;
 import com.lovetropics.extras.client.entity.ForkliftRenderer;
+import com.lovetropics.extras.client.entity.GiantCloudRatRenderer;
 import com.lovetropics.extras.client.entity.GlassFrogRenderer;
 import com.lovetropics.extras.client.entity.PartyBeamRenderer;
+import com.lovetropics.extras.client.entity.PhilippineEagleRenderer;
+import com.lovetropics.extras.client.entity.PhilippineWartyPigRenderer;
+import com.lovetropics.extras.client.entity.RafflesiaRenderer;
 import com.lovetropics.extras.client.entity.RaveKoaRenderer;
 import com.lovetropics.extras.client.entity.SeatRenderer;
 import com.lovetropics.extras.client.entity.SpinningSignRenderer;
@@ -19,7 +23,6 @@ import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDJ;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDance1;
 import com.lovetropics.extras.entity.ravekoa.RaveKoaEntityDance2;
 import com.lovetropics.extras.entity.vfx.PartyBeamEntity;
-import com.lovetropics.extras.item.loot.JarOfMobsItem;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.loot.RegistrateEntityLootTables;
 import com.tterrag.registrate.util.entry.EntityEntry;
@@ -206,6 +209,49 @@ public class ExtraEntities {
                     .fireImmune()
             )
             .renderer(() -> ThrownItemRenderer::new)
+            .register();
+
+    public static final EntityEntry<RafflesiaEntity> RAFFLESIA = REGISTRATE.entity("rafflesia", RafflesiaEntity::new, MobCategory.MISC)
+            .lang("Rafflesia")
+            .properties(builder -> builder
+                    .noLootTable()
+                    .sized(0.8F, 0.4F)
+                    .fireImmune()
+            )
+            .renderer(() -> RafflesiaRenderer::new)
+            .register();
+
+    public static final EntityEntry<PhilippineEagleEntity> PHILIPPINE_EAGLE = REGISTRATE.entity("philippine_eagle", PhilippineEagleEntity::new, MobCategory.MISC)
+            .lang("Philippine Eagle")
+            .properties(builder -> builder
+                    .noLootTable()
+                    .sized(0.6F, 1.1F)
+                    .fireImmune()
+            )
+            .attributes(PhilippineEagleEntity::createAttributes)
+            .renderer(() -> PhilippineEagleRenderer::new)
+            .register();
+
+    public static final EntityEntry<PhilippineWartyPigEntity> PHILIPPINE_WARTY_PIG = REGISTRATE.entity("philippine_warty_pig", PhilippineWartyPigEntity::new, MobCategory.MISC)
+            .lang("Philippine Warty Pig")
+            .properties(builder -> builder
+                    .noLootTable()
+                    .sized(0.8F, 0.8F)
+                    .fireImmune()
+            )
+            .attributes(PhilippineWartyPigEntity::createAttributes)
+            .renderer(() -> PhilippineWartyPigRenderer::new)
+            .register();
+
+    public static final EntityEntry<GiantCloudRatEntity> GIANT_CLOUD_RAT = REGISTRATE.entity("giant_cloud_rat", GiantCloudRatEntity::new, MobCategory.MISC)
+            .lang("Giant Cloud Rat")
+            .properties(builder -> builder
+                    .noLootTable()
+                    .sized(0.4F, 0.4F)
+                    .fireImmune()
+            )
+            .attributes(GiantCloudRatEntity::createAttributes)
+            .renderer(() -> GiantCloudRatRenderer::new)
             .register();
 
     public static void init() {

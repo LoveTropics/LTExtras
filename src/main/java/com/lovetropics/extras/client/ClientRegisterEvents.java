@@ -6,8 +6,12 @@ import com.lovetropics.extras.client.block.DisplayBlockRender;
 import com.lovetropics.extras.client.block.WordBoxBlockEntityRenderer;
 import com.lovetropics.extras.client.entity.model.AmazonRiverDolphinModel;
 import com.lovetropics.extras.client.entity.model.ForkliftModel;
+import com.lovetropics.extras.client.entity.model.GiantCloudRatModel;
 import com.lovetropics.extras.client.entity.model.GlassFrogModel;
 import com.lovetropics.extras.client.entity.model.HighHeelsModel;
+import com.lovetropics.extras.client.entity.model.PhilippineWartyPigModel;
+import com.lovetropics.extras.client.entity.model.PhilippineEagleModel;
+import com.lovetropics.extras.client.entity.model.RafflesiaModel;
 import com.lovetropics.extras.client.entity.model.RaveKoaModel;
 import com.lovetropics.extras.client.entity.model.SpinningSignModel;
 import com.lovetropics.extras.client.entity.model.WaterCoolerModel;
@@ -75,6 +79,10 @@ public class ClientRegisterEvents {
         event.registerLayerDefinition(AmazonRiverDolphinModel.LAYER, AmazonRiverDolphinModel::createBodyLayer);
         event.registerLayerDefinition(AmazonRiverDolphinModel.BABY_LAYER, () -> AmazonRiverDolphinModel.createBodyLayer().apply(AmazonRiverDolphinModel.BABY_TRANSFORMER));
         event.registerLayerDefinition(GlassFrogModel.LAYER, GlassFrogModel::createBodyLayer);
+        event.registerLayerDefinition(RafflesiaModel.LAYER, RafflesiaModel::createBodyLayer);
+        event.registerLayerDefinition(PhilippineEagleModel.LAYER, PhilippineEagleModel::createBodyLayer);
+        event.registerLayerDefinition(PhilippineWartyPigModel.LAYER, PhilippineWartyPigModel::createBodyLayer);
+        event.registerLayerDefinition(GiantCloudRatModel.LAYER, GiantCloudRatModel::createBodyLayer);
     }
 
     @SubscribeEvent

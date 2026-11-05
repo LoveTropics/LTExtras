@@ -37,7 +37,6 @@ public class WaterCoolerModel<T extends Entity> extends EntityModel<WaterCoolerR
         this.shake2Animation = WaterCoolerAnimation.SHAKE_2.bake(root);
         this.shake3Animation = WaterCoolerAnimation.SHAKE_3.bake(root);
         this.shakeDispenseAnimation = WaterCoolerAnimation.SHAKE_DISPENSE.bake(root);
-
 	}
 
 	public static LayerDefinition createBodyLayer() {
