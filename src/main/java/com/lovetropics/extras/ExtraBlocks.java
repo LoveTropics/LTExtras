@@ -531,7 +531,7 @@ public class ExtraBlocks {
                 String name = dyeName + "_glow_sticks";
                 return REGISTRATE.block(name, GlowSticksBlock::new)
                         .properties(p -> p.instabreak().noCollision().sound(SoundType.GLASS).noOcclusion().instrument(NoteBlockInstrument.HAT)
-                                .lightLevel(value -> 6)
+                                .lightLevel(value -> 13)
                         )
                         .blockstate(() -> (ctx, prov) -> {
                             Identifier model = prov.getBuilder()
