@@ -29,7 +29,19 @@ public class ImageItem extends Item {
             imageWithWidth("Dulao Forest", "2026/dulao_forest", 3.0f, 300, 216),
             imageWithWidth("Dulao 1", "2026/dulao_1", 4.0f, 600, 308),
             imageWithWidth("Dulao 2", "2026/dulao_2", 4.0f, 600, 328),
-            imageWithWidth("Dulao Map", "2026/dulao_map", 3.0f, 500, 375)
+            imageWithWidth("Dulao Map", "2026/dulao_map", 3.0f, 500, 375),
+
+            imageWithWidth("Direct Relief 2017", "charities/lt_2017", 5.0f, 256, 256),
+            imageWithWidth("Team Rubicon 2018", "charities/lt_2018", 5.0f, 200, 71),
+            imageWithWidth("Cool Earth 2019", "charities/lt_2019", 5.0f, 200, 75),
+            imageWithWidth("Oceana 2020", "charities/lt_2020", 5.0f, 200, 40),
+            imageWithWidth("Osa Conservation 2021", "charities/lt_2021", 5.0f, 256, 282),
+            imageWithWidth("Project Seagrass 2022", "charities/lt_2022", 5.0f, 256, 101),
+            imageWithWidth("Sustainable Harvest International 2023", "charities/lt_2023", 5.0f, 256, 163),
+            imageWithWidth("WEA 2024", "charities/lt_2024", 5.0f, 256, 83),
+            imageWithWidth("Pachamama Alliance 2025", "charities/lt_2025", 5.0f, 256, 256),
+            imageWithWidth("Seacology 2026", "charities/lt_2026", 5.0f, 256, 177),
+            imageWithWidth("Seacology 2026 1x1", "charities/lt_2026", 1.0f, 256, 177)
     );
 
     private static ImageData imageWithWidth(String name, String path, float blockWidth, int textureWidth, int textureHeight) {
