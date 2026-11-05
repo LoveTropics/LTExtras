@@ -8,6 +8,8 @@ import net.minecraft.client.gui.font.TextRenderable;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.CommonColors;
 import org.jspecify.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -32,6 +34,9 @@ public class PreparedTextBuilderMixin {
     private float x;
     @Shadow
     private float y;
+    @Shadow
+    @Final
+    private int color;
 
     @Unique
     private @Nullable Identifier lt$buildingBackground;
@@ -78,7 +83,8 @@ public class PreparedTextBuilderMixin {
                     y - 1.0f,
                     endX + 1.0f,
                     y + this$0.lineHeight,
-                    0.0f
+                    0.0f,
+                    ARGB.color(ARGB.alpha(color), CommonColors.WHITE)
             ));
             lt$buildingBackground = null;
         }

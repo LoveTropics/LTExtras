@@ -22,7 +22,8 @@ import org.joml.Matrix4fc;
 
 public record TextBackgroundRenderable(
         Identifier sprite,
-        float left, float top, float right, float bottom, float z
+        float left, float top, float right, float bottom, float z,
+        int color
 ) implements TextRenderable {
     @Override
     public void render(Matrix4fc pose, VertexConsumer buffer, int packedLightCoords, boolean flat) {
@@ -300,10 +301,10 @@ public record TextBackgroundRenderable(
         if (right <= left || bottom <= top) {
             return;
         }
-        builder.addVertex(pose, left, top, z).setUv(u0, v0).setColor(CommonColors.WHITE).setLight(packedLight);
-        builder.addVertex(pose, left, bottom, z).setUv(u0, v1).setColor(CommonColors.WHITE).setLight(packedLight);
-        builder.addVertex(pose, right, bottom, z).setUv(u1, v1).setColor(CommonColors.WHITE).setLight(packedLight);
-        builder.addVertex(pose, right, top, z).setUv(u1, v0).setColor(CommonColors.WHITE).setLight(packedLight);
+        builder.addVertex(pose, left, top, z).setUv(u0, v0).setColor(color).setLight(packedLight);
+        builder.addVertex(pose, left, bottom, z).setUv(u0, v1).setColor(color).setLight(packedLight);
+        builder.addVertex(pose, right, bottom, z).setUv(u1, v1).setColor(color).setLight(packedLight);
+        builder.addVertex(pose, right, top, z).setUv(u1, v0).setColor(color).setLight(packedLight);
     }
 
     private void addTiledQuad(
