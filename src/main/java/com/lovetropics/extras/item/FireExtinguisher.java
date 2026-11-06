@@ -11,14 +11,18 @@ public record FireExtinguisher(
     float impulseOnMiss,
     int durabilityLossPerTick,
     boolean shouldExtinguish,
-    float shootDist
+    float shootDist,
+    boolean pushOtherPlayers,
+    boolean pushSelf
 ) {
     public static final Codec<FireExtinguisher> CODEC = RecordCodecBuilder.create(i -> i.group(
             Codec.FLOAT.optionalFieldOf("impulse_on_hit", FireExtinguisherItem.DEFAULT_IMPULSE_ON_HIT).forGetter(FireExtinguisher::impulseOnHit),
             Codec.FLOAT.optionalFieldOf("impulse_on_miss", FireExtinguisherItem.DEFAULT_IMPULSE_ON_MISS).forGetter(FireExtinguisher::impulseOnMiss),
-            Codec.INT.fieldOf("durability_loss_per_tick").forGetter(FireExtinguisher::durabilityLossPerTick),
-            Codec.BOOL.fieldOf("should_extinguish").forGetter(FireExtinguisher::shouldExtinguish),
-            Codec.FLOAT.optionalFieldOf("shoot_dist", FireExtinguisherItem.DEFAULT_SHOOT_DIST).forGetter(FireExtinguisher::shootDist)
+            Codec.INT.optionalFieldOf("durability_loss_per_tick", 1).forGetter(FireExtinguisher::durabilityLossPerTick),
+            Codec.BOOL.optionalFieldOf("should_extinguish", true).forGetter(FireExtinguisher::shouldExtinguish),
+            Codec.FLOAT.optionalFieldOf("shoot_dist", FireExtinguisherItem.DEFAULT_SHOOT_DIST).forGetter(FireExtinguisher::shootDist),
+            Codec.BOOL.optionalFieldOf("push_other_players", false).forGetter(FireExtinguisher::pushOtherPlayers),
+            Codec.BOOL.optionalFieldOf("push_self", true).forGetter(FireExtinguisher::pushSelf)
     ).apply(i, FireExtinguisher::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, FireExtinguisher> STREAM_CODEC = StreamCodec.composite(
@@ -27,16 +31,21 @@ public record FireExtinguisher(
         ByteBufCodecs.INT, FireExtinguisher::durabilityLossPerTick,
         ByteBufCodecs.BOOL, FireExtinguisher::shouldExtinguish,
         ByteBufCodecs.FLOAT, FireExtinguisher::shootDist,
+        ByteBufCodecs.BOOL, FireExtinguisher::pushOtherPlayers,
+        ByteBufCodecs.BOOL, FireExtinguisher::pushSelf,
         FireExtinguisher::new
     );
 
     public static FireExtinguisher getDefault() {
         return new FireExtinguisher(
-            FireExtinguisherItem.DEFAULT_IMPULSE_ON_HIT,
-            FireExtinguisherItem.DEFAULT_IMPULSE_ON_MISS,
-            1,
-            true,
-            FireExtinguisherItem.DEFAULT_SHOOT_DIST
+                FireExtinguisherItem.DEFAULT_IMPULSE_ON_HIT,
+                FireExtinguisherItem.DEFAULT_IMPULSE_ON_MISS,
+                1,
+                true,
+                FireExtinguisherItem.DEFAULT_SHOOT_DIST,
+                FireExtinguisherItem.DEFAULT_PUSH_OTHER_ENTITIES,
+                true
         );
     }
+
 }

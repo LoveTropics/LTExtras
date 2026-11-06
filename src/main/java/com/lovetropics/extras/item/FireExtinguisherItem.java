@@ -39,6 +39,7 @@ public class FireExtinguisherItem extends BlockItem {
     public static final float DEFAULT_SHOOT_DIST = 12;
     public static final float DEFAULT_IMPULSE_ON_HIT = 0.25f;
     public static final float DEFAULT_IMPULSE_ON_MISS = 0.05f;
+    public static final boolean DEFAULT_PUSH_OTHER_ENTITIES = false;
 
     public static final float SPRAY = 6.0f;
     public static final int HOW_FAR_IN_FRONT_TO_SHOOT_FROM = 2;
@@ -68,6 +69,11 @@ public class FireExtinguisherItem extends BlockItem {
         Vec3 right = Vec3.directionFromRotation(0.0f, livingEntity.getYRot() + 90.0f);
         boolean hit = false;
 
+        final float scale = hit ? extinguisherComponent.impulseOnHit() : extinguisherComponent.impulseOnMiss();
+        final int usedTicks = getUseDuration(stack, livingEntity) - remainingUseDuration;
+        final float spinUp = Math.min(1.0f, (usedTicks + 1) / (float) THRUST_SPIN_UP_TICKS);
+        final Vec3 thrustDir = lookVec.reverse();
+
         for (int i = -5; i <= 5; i++) {
             final Vec3 sprayDir = lookVec.add(right.scale(i / SPRAY));
 
@@ -87,41 +93,53 @@ public class FireExtinguisherItem extends BlockItem {
             HitResult result = getHitResultOnViewVector(livingEntity, to, Entity::isPickable);
             if (result.getType() != HitResult.Type.MISS) {
                 hit = true;
-                if (!level.isClientSide() && extinguisherComponent.shouldExtinguish()) {
+                if (!level.isClientSide()) {
+
                     if (result instanceof final EntityHitResult entityHitResult) {
-                        if (entityHitResult.getEntity().isOnFire()) {
-                            entityHitResult.getEntity().extinguishFire();
+                        if (extinguisherComponent.pushOtherPlayers()) {
+                            Entity entity = entityHitResult.getEntity();
+                            if (entity instanceof Player && entity != livingEntity) {
+                                Vec3 pushDir = sprayDir.normalize().scale(extinguisherComponent.impulseOnHit());
+                                entity.setDeltaMovement(entity.getDeltaMovement().add(pushDir));
+                            }
                         }
-                    } else if (result instanceof final BlockHitResult blockHitResult) {
-                        BlockPos hitPos = blockHitResult.getBlockPos();
-                        FluidState hitFluidState = level.getFluidState(hitPos);
+                    }
 
-                        if (hitFluidState.is(FluidTags.LAVA)) {
-                            level.playSound(null, hitPos.getX(), hitPos.getY(), hitPos.getZ(), SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 0.2f, 1f);
-                            level.setBlockAndUpdate(hitPos, Blocks.OBSIDIAN.defaultBlockState());
-                        }
+                    if (extinguisherComponent.shouldExtinguish()) {
+                        if (result instanceof final EntityHitResult entityHitResult) {
+                            if (entityHitResult.getEntity().isOnFire()) {
+                                entityHitResult.getEntity().extinguishFire();
+                            }
+                        } else if (result instanceof final BlockHitResult blockHitResult) {
+                            BlockPos hitPos = blockHitResult.getBlockPos();
+                            FluidState hitFluidState = level.getFluidState(hitPos);
 
-                        BlockPos above = hitPos.above();
-                        BlockState aboveState = level.getBlockState(above);
+                            if (hitFluidState.is(FluidTags.LAVA)) {
+                                level.playSound(null, hitPos.getX(), hitPos.getY(), hitPos.getZ(), SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 0.2f, 1f);
+                                level.setBlockAndUpdate(hitPos, Blocks.OBSIDIAN.defaultBlockState());
+                            }
 
-                        if (aboveState.is(BlockTags.FIRE)) {
-                            level.destroyBlock(above, false, livingEntity);
-                        } else if (AbstractCandleBlock.isLit(aboveState)) {
-                            AbstractCandleBlock.extinguish(null, aboveState, level, above);
-                        } else if (CampfireBlock.isLitCampfire(aboveState)) {
-                            level.levelEvent(null, 1009, above, 0);
-                            CampfireBlock.dowse(livingEntity, level, above, aboveState);
-                            level.setBlockAndUpdate(above, aboveState.setValue(CampfireBlock.LIT, false));
+                            BlockPos above = hitPos.above();
+                            BlockState aboveState = level.getBlockState(above);
+
+                            if (aboveState.is(BlockTags.FIRE)) {
+                                level.destroyBlock(above, false, livingEntity);
+                            } else if (AbstractCandleBlock.isLit(aboveState)) {
+                                AbstractCandleBlock.extinguish(null, aboveState, level, above);
+                            } else if (CampfireBlock.isLitCampfire(aboveState)) {
+                                level.levelEvent(null, 1009, above, 0);
+                                CampfireBlock.dowse(livingEntity, level, above, aboveState);
+                                level.setBlockAndUpdate(above, aboveState.setValue(CampfireBlock.LIT, false));
+                            }
                         }
                     }
                 }
             }
         }
 
-        final float scale = hit ? extinguisherComponent.impulseOnHit() : extinguisherComponent.impulseOnMiss();
-        final int usedTicks = getUseDuration(stack, livingEntity) - remainingUseDuration;
-        final float spinUp = Math.min(1.0f, (usedTicks + 1) / (float) THRUST_SPIN_UP_TICKS);
-        final Vec3 thrustDir = lookVec.reverse();
+        if (!extinguisherComponent.pushSelf()) {
+            return;
+        }
 
         if(livingEntity.getVehicle() != null && !level.isClientSide()){
             Entity vehicle = livingEntity.getVehicle();
