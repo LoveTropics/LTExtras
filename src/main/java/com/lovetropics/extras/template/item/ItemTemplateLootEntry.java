@@ -2,6 +2,7 @@ package com.lovetropics.extras.template.item;
 
 import com.lovetropics.extras.data.Named;
 import com.lovetropics.extras.template.TemplateConfigs;
+import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.Identifier;
@@ -11,11 +12,14 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ItemTemplateLootEntry extends LootPoolSingletonContainer {
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     public static final MapCodec<ItemTemplateLootEntry> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             Identifier.CODEC.fieldOf("template").forGetter(e -> e.templateName))
@@ -39,7 +43,8 @@ public class ItemTemplateLootEntry extends LootPoolSingletonContainer {
     public void createItemStack(Consumer<ItemStack> output, LootContext context) {
         Named<ItemTemplate> itemTemplate = TemplateConfigs.ITEM_TEMPLATES.get(templateName);
         if (itemTemplate == null) {
-            throw new IllegalStateException("Item template not found: " + templateName);
+            LOGGER.error("Missing item template with id {}", templateName);
+            return;
         }
         output.accept(itemTemplate.value().createItemStack(context));
     }
