@@ -11,6 +11,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.util.Mth;
 
 public class PhilippineEagleModel extends EntityModel<LivingEntityRenderState> {
@@ -46,7 +47,7 @@ public class PhilippineEagleModel extends EntityModel<LivingEntityRenderState> {
 	private final ModelPart wing_right_tip;
 
 	public PhilippineEagleModel(ModelPart root) {
-        super(root);
+        super(root, RenderTypes::entityCutoutCull);
 		this.body_base = root.getChild("body_base");
 		this.leg_left1a = this.body_base.getChild("leg_left1a");
 		this.leg_left1b = this.leg_left1a.getChild("leg_left1b");
