@@ -12,7 +12,7 @@ public record WeightedListNumberProvider(
         WeightedList<NumberProvider> distribution
 ) implements NumberProvider {
     public static final MapCodec<WeightedListNumberProvider> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            WeightedList.nonEmptyCodec(NumberProviders.CODEC).fieldOf("distributions").forGetter(WeightedListNumberProvider::distribution)
+            WeightedList.nonEmptyCodec(NumberProviders.CODEC).fieldOf("distribution").forGetter(WeightedListNumberProvider::distribution)
     ).apply(i, WeightedListNumberProvider::new));
 
     @Override
