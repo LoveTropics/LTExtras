@@ -43,6 +43,8 @@ public class ImageItem extends Item {
             imageWithWidth("Fauna 5", "2026/fauna_5", 2.0f, 256, 171),
             imageWithWidth("Fauna 6", "2026/fauna_6", 2.0f, 256, 191),
             imageWithWidth("Flora 1", "2026/flora_1", 2.0f, 256, 384),
+            imageWithWidth("School", "2026/school", 2.0f, 512, 385),
+            imageWithWidth("Micro hydro", "2026/micro_hydro", 1.0f, 230, 512),
 
             imageWithWidth("Direct Relief 2017", "charities/lt_2017", 5.0f, 256, 256),
             imageWithWidth("Team Rubicon 2018", "charities/lt_2018", 5.0f, 200, 71),
