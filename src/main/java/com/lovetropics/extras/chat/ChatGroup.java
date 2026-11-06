@@ -29,7 +29,7 @@ public record ChatGroup(String id, String prefix, TextColor color, String comman
 
     private static final List<ChatGroup> GROUPS = new ArrayList<>();
 
-    private static final ChatGroup ORGANISER = createGroup("organiser", "[OG]", TextColor.GOLD,  "oc");
+    private static final ChatGroup ORGANISER = createGroup("organiser", "[ORG]", TextColor.GOLD,  "oc");
     private static final ChatGroup MODERATOR = createGroup("moderator", "[MOD]", TextColor.DARK_AQUA, "mc");
 
     private static final RoleOverrideType<Boolean> NO_CHAT = RoleOverrideType.register("chat/no_chat", Codec.BOOL);
