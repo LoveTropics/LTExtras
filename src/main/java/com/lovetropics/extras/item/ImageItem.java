@@ -14,6 +14,7 @@ public class ImageItem extends Item {
             new ImageData(Component.literal("Plantain Ent"), LTExtras.id("textures/images/plantain_ent.png"), 2.5f, 3.0f),
             new ImageData(Component.literal("Manatee"), LTExtras.id("textures/images/manatee.png"), 2.5f, 3.0f),
             new ImageData(Component.literal("Shoebill"), LTExtras.id("textures/images/shoebill.png"), 2.5f, 3.0f),
+            new ImageData(Component.literal("Rafflesia"), LTExtras.id("textures/images/rafflesia.png"), 2.5f, 3.0f),
             new ImageData(Component.literal("Team Cents Poster"), LTExtras.id("textures/images/team_cents_poster.png"), 1.0f, 1.0f),
             new ImageData(Component.literal("Team No Cents Poster"), LTExtras.id("textures/images/team_no_cents_poster.png"), 1.0f, 1.0f),
 
