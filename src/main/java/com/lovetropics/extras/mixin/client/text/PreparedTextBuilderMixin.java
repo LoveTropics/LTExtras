@@ -41,6 +41,8 @@ public class PreparedTextBuilderMixin {
     @Unique
     private @Nullable Identifier lt$buildingBackground;
     @Unique
+    private int lt$buildingBackgroundColor = CommonColors.WHITE;
+    @Unique
     private float lt$backgroundStartX;
     @Unique
     private @Nullable List<TextRenderable> lt$backgroundElements;
@@ -48,13 +50,13 @@ public class PreparedTextBuilderMixin {
     @Inject(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;createGlyph(FFIILnet/minecraft/network/chat/Style;FF)Lnet/minecraft/client/gui/font/TextRenderable$Styled;"))
     private void accept(int position, Style style, BakedGlyph glyph, CallbackInfoReturnable<Boolean> cir, @Local(name = "advance") float advance) {
         ExtraStyle extra = ExtraStyle.get(style);
-        lt$updateBackground(extra.background().orElse(null));
+        lt$updateBackground(extra.background().orElse(null), extra.backgroundColor());
     }
 
     @Inject(method = "visit", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/Font$PreparedTextBuilder;glyphs:Ljava/util/List;", opcode = Opcodes.GETFIELD))
     private void visit(Font.GlyphVisitor visitor, CallbackInfo ci) {
         // We might have run out of text, but never ended the background - make sure to end it now
-        lt$updateBackground(null);
+        lt$updateBackground(null, CommonColors.WHITE);
         if (lt$backgroundElements != null) {
             for (TextRenderable element : lt$backgroundElements) {
                 visitor.acceptEffect(element);
@@ -63,15 +65,12 @@ public class PreparedTextBuilderMixin {
     }
 
     @Unique
-    private void lt$updateBackground(@Nullable Identifier backgroundSprite) {
-        if (Objects.equals(lt$buildingBackground, backgroundSprite)) {
+    private void lt$updateBackground(@Nullable Identifier backgroundSprite, int backgroundColor) {
+        if (Objects.equals(lt$buildingBackground, backgroundSprite) && lt$buildingBackgroundColor == backgroundColor) {
             return;
         }
 
-        if (backgroundSprite != null) {
-            lt$backgroundStartX = x;
-            lt$buildingBackground = backgroundSprite;
-        } else {
+        if (lt$buildingBackground != null) {
             float startX = lt$backgroundStartX;
             float endX = x;
             if (lt$backgroundElements == null) {
@@ -84,9 +83,14 @@ public class PreparedTextBuilderMixin {
                     endX + 1.0f,
                     y + this$0.lineHeight,
                     0.0f,
-                    ARGB.color(ARGB.alpha(color), CommonColors.WHITE)
+                    ARGB.color(ARGB.alpha(color), lt$buildingBackgroundColor)
             ));
             lt$buildingBackground = null;
+        }
+        if (backgroundSprite != null) {
+            lt$backgroundStartX = x;
+            lt$buildingBackground = backgroundSprite;
+            lt$buildingBackgroundColor = backgroundColor;
         }
     }
 }
