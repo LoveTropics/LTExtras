@@ -27,6 +27,8 @@
     "LivingEntityMixin",
     "MinecraftServerAccessor",
     "MinecraftServerMixin",
+    "MixinEntitySelectorOptions",
+    "MixinEntitySelectorReader",
     "PlayerMixin",
     "ProjectileWeaponItemMixin",
     "ReloadableServerRegistriesMixin",

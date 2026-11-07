@@ -1,4 +1,6 @@
 {
+  "argument.entity.options.force.description": "Force-allow more than 50 entities targeted with no distance filter",
+  "argument.entity.selector.limit.unforced": "Targeting too many entities at once! Add 'force=true' to the selector if you're sure!",
   "block.ltextras.acacia_zipline_pole": "Acacia Zipline Pole",
   "block.ltextras.adjustable_lamp": "Adjustable Lamp",
   "block.ltextras.anemone_tentacles": "Anemone Tentacles",
