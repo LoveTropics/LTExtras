@@ -78,13 +78,6 @@ public class GlassFrogAi {
                         Pair.of(0, SetEntityLookTargetSometimes.create(EntityTypes.PLAYER, 6.0F, UniformInt.of(30, 60))),
                         Pair.of(0, new AnimalMakeLove(ExtraEntities.GLASS_FROG.get())),
                         Pair.of(1, new FollowTemptation(livingEntity -> 1.25F)),
-                        Pair.of(
-                                2,
-                                StartAttacking.create(
-                                        (level, frog) -> canAttack(frog),
-                                        (level, frog) -> frog.getBrain().getMemory(MemoryModuleType.NEAREST_ATTACKABLE)
-                                )
-                        ),
                         Pair.of(3, TryFindLand.create(6, 1.0F)),
                         Pair.of(
                                 4,
