@@ -23,7 +23,9 @@ import com.mojang.logging.LogUtils;
 import com.mojang.util.UndashedUuid;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.Services;
+import net.minecraft.server.players.CachedUserNameToIdResolver;
 import net.minecraft.server.players.ProfileResolver;
+import net.minecraft.server.players.UserNameToIdResolver;
 import net.minecraft.util.StringUtil;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -181,7 +183,7 @@ public class ExtrasConfig {
 
         Services newServices;
         if (profileServiceUrl != null && profileSessionServiceUrl != null) {
-            newServices = setupServices(initialServices, server.getProxy(), profileServiceUrl, profileSessionServiceUrl);
+            newServices = setupServices(server, initialServices, server.getProxy(), profileServiceUrl, profileSessionServiceUrl);
         } else {
             if (profileServiceUrl != null || profileSessionServiceUrl != null) {
                 LOGGER.warn("Both profileServiceUrlOverride and profileSessionServiceUrlOverride must be set");
@@ -191,7 +193,7 @@ public class ExtrasConfig {
         ((ServicesHolder) server).lt$setServices(newServices);
     }
 
-    private static Services setupServices(Services initialServices, Proxy proxy, String profileServiceUrl, String profileSessionServiceUrl) {
+    private static Services setupServices(MinecraftServer server, Services initialServices, Proxy proxy, String profileServiceUrl, String profileSessionServiceUrl) {
         if (!profileServiceUrl.endsWith("/")) {
             profileServiceUrl = profileServiceUrl + "/";
         }
@@ -203,12 +205,15 @@ public class ExtrasConfig {
 
         MinecraftSessionService sessionService = createSessionService(profileSessionServiceUrl, proxy, defaultEnv, initialServices.servicesKeySet());
 
+        GameProfileRepository profileRepository = createProfileRepository(proxy, profileServiceUrl);
+        UserNameToIdResolver profileCache = new CachedUserNameToIdResolver(profileRepository, server.getServerDirectory().resolve("usercache.json").toFile());
+
         return new Services(
                 sessionService,
                 initialServices.servicesKeySet(),
-                createProfileRepository(proxy, profileServiceUrl),
-                initialServices.nameToIdCache(),
-                new ProfileResolver.Cached(sessionService, initialServices.nameToIdCache())
+                profileRepository,
+                profileCache,
+                new ProfileResolver.Cached(sessionService, profileCache)
         );
     }
 
