@@ -175,12 +175,13 @@ public class ClientPlayerSensorEffects {
         Level level = player.level();
         for (Map.Entry<UUID, PlayerSensor.Appearance> entry : MARKED_PLAYERS.entrySet()) {
             Player target = level.getPlayerByUUID(entry.getKey());
+            if (target == null) {
+                continue;
+            }
             PlayerSensor.Appearance appearance = entry.getValue();
             boolean hasLineOfSight = player.hasLineOfSight(target);
-            if (target != null) {
-                if ((hasLineOfSight && !appearance.onlyWhenOccluded()) || (!hasLineOfSight && !appearance.wallsOcclude())) {
-                    VISIBLE_MARKED_PLAYERS.add(target.getUUID());
-                }
+            if ((hasLineOfSight && !appearance.onlyWhenOccluded()) || (!hasLineOfSight && !appearance.wallsOcclude())) {
+                VISIBLE_MARKED_PLAYERS.add(target.getUUID());
             }
         }
     }
