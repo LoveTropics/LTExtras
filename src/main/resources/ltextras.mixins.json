@@ -12,6 +12,7 @@
     "BlockMixin",
     "BlockPropertiesMixin",
     "BlockStateExtensionMixin",
+    "CompassItemMixin",
     "ConsumableMixin",
     "CreatureEntityMixin",
     "CrossbowItemMixin",
