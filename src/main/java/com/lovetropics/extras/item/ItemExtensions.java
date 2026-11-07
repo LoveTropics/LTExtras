@@ -5,13 +5,19 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.TriState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.portal.TeleportTransition;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemStackedOnOtherEvent;
@@ -21,6 +27,7 @@ import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 @EventBusSubscriber
@@ -117,11 +124,19 @@ public class ItemExtensions {
                     ServerLevel level = serverLevel.getServer().getLevel(transportToDimensionData.destinationLevel());
                     TransportToDimensionData transportToDimensionData1 = new TransportToDimensionData(
                             player.level().dimension(), Optional.of(player.position()));
-                    player.teleport(new TeleportTransition(
+                    List<Entity> entities = player.level().getEntities(player, AABB.ofSize(player.position(),
+                            20, 20, 20));
+                    TeleportTransition transition = new TeleportTransition(
                             level,
                             transportToDimensionData.destinationPos().orElseThrow(),
                             player.getDeltaMovement(),
-                            player.getYRot(), player.getXRot(), TeleportTransition.DO_NOTHING));
+                            player.getYRot(), player.getXRot(), TeleportTransition.DO_NOTHING);
+                    player.teleport(transition);
+                    entities.forEach(wolf -> {
+                        if(wolf instanceof OwnableEntity entity && entity.getOwner() != null && entity.getOwner().is(player)){
+                            wolf.teleport(transition);
+                        }
+                    });
                     stack.set(ExtraDataComponents.TRANSPORT_TO_DIMENSION, transportToDimensionData1);
                 }
                 event.setResultStack(stack);
