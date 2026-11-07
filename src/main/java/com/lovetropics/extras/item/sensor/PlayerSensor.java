@@ -90,7 +90,7 @@ public record PlayerSensor(
                 ExtraCodecs.ARGB_COLOR_CODEC.optionalFieldOf("marker_box_color").forGetter(Appearance::markerBoxColor),
                 Codec.BOOL.optionalFieldOf("walls_occlude", true).forGetter(Appearance::wallsOcclude),
                 Codec.BOOL.optionalFieldOf("only_when_occluded", false).forGetter(Appearance::onlyWhenOccluded),
-                Codec.BOOL.optionalFieldOf("allow_fade", true).forGetter(Appearance::onlyWhenOccluded)
+                Codec.BOOL.optionalFieldOf("allow_fade", true).forGetter(Appearance::allowFade)
         ).apply(i, Appearance::new));
 
         public static final StreamCodec<ByteBuf, Appearance> STREAM_CODEC = StreamCodec.composite(
