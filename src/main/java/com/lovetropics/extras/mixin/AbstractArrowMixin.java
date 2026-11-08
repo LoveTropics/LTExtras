@@ -1,5 +1,6 @@
 package com.lovetropics.extras.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -11,14 +12,17 @@ import com.lovetropics.extras.item.loot.ArrowItemProjectileOverrideData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
@@ -44,7 +48,11 @@ public abstract class AbstractArrowMixin {
         }
     }
 
-
+    @ModifyReturnValue(method = "getPickupItem", at = @At("TAIL"))
+    private ItemStack ltextras$removeArrowData(ItemStack original) {
+        original.remove(ExtraDataComponents.ARROW_PROJECTILE_OVERRIDE);
+        return original;
+    }
 
     @WrapOperation(method = "onHitEntity", at = @At(value = "INVOKE", target="Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     protected boolean onHitEntity(Entity instance, DamageSource source, float damage, Operation<Boolean> original, @Local(name = "damageSource") DamageSource damageSource, @Local() LocalFloatRef damageRef) {
