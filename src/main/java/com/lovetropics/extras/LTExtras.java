@@ -158,6 +158,9 @@ public class LTExtras {
                     p.add(ExtraEffects.SHRUGGY_ARMS.get(), "Shruggy Arms");
                     p.add(ExtraEffects.STIFF_LEGS.get(), "Stiff Legs");
                     p.add(ExtraEffects.HOP_WALK.get(), "Hop Walk");
+
+                    p.add("argument.entity.selector.limit.unforced", "Targeting too many entities at once! Add 'force=true' to the selector if you're sure!");
+                    p.add("argument.entity.options.force.description", "Force-allow more than 50 entities targeted with no distance filter");
                 })
                 .addDataGenerator(ProviderType.BLOCK_TAGS, block -> {
                     block.tag(ExtraTags.Blocks.PLUMBERS_TNT_EXPLODES)
