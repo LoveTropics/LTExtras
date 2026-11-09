@@ -37,12 +37,12 @@ import java.util.List;
 import static net.minecraft.commands.Commands.literal;
 
 @EventBusSubscriber
-public record ChatGroup(String id, String prefix, TextColor color, String command, RoleOverrideType<Boolean> roleOverride) {
+public record ChatGroup(String id, String prefix, TextColor color, List<String> commands, RoleOverrideType<Boolean> roleOverride) {
 
     private static final List<ChatGroup> GROUPS = new ArrayList<>();
 
-    private static final ChatGroup ORGANISER = createGroup("organiser", "[ORG]", TextColor.GOLD,  "oc");
-    private static final ChatGroup MODERATOR = createGroup("moderator", "[MOD]", TextColor.DARK_AQUA, "mc");
+    private static final ChatGroup ORGANISER = createGroup("organiser", "[ORG]", TextColor.GOLD,  "oc", "og", "org");
+    private static final ChatGroup MODERATOR = createGroup("moderator", "[MOD]", TextColor.DARK_AQUA, "mc", "mod");
 
     private static final RoleOverrideType<Boolean> NO_CHAT = RoleOverrideType.register("chat/no_chat", Codec.BOOL);
 
@@ -58,13 +58,15 @@ public record ChatGroup(String id, String prefix, TextColor color, String comman
 
         public static void register(CommandDispatcher<CommandSourceStack> dispatcher, ChatGroup group) {
             // @formatter:off
-            dispatcher.register(
-                    literal(group.command())
-                            .requires(Commands.hasPermission(Commands.LEVEL_OWNERS))
-                            .then(Commands.argument("message", StringArgumentType.greedyString())
-                                    .executes(ctx -> sendMessage(ctx, group))
-                            )
-            );
+            for (String command : group.commands()) {
+                dispatcher.register(
+                        literal(command)
+                                .requires(Commands.hasPermission(Commands.LEVEL_OWNERS))
+                                .then(Commands.argument("message", StringArgumentType.greedyString())
+                                        .executes(ctx -> sendMessage(ctx, group))
+                                )
+                );
+            }
             // @formatter:on
         }
 
@@ -110,8 +112,8 @@ public record ChatGroup(String id, String prefix, TextColor color, String comman
         }
     }
 
-    private static ChatGroup createGroup(String id, String prefix, TextColor color, String command) {
-        ChatGroup group = new ChatGroup(id, prefix, color, command, RoleOverrideType.register("chat/" + id, Codec.BOOL));
+    private static ChatGroup createGroup(String id, String prefix, TextColor color, String... command) {
+        ChatGroup group = new ChatGroup(id, prefix, color, List.of(command), RoleOverrideType.register("chat/" + id, Codec.BOOL));
         GROUPS.add(group);
         return group;
     }
